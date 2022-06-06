@@ -75,7 +75,7 @@ select distinct
 				end
 			end
 		end
-	end as TIPO_CUSTO,
+	end as TIPO_CUSTO,/*
 
 	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST0.T0_ESPECIA, isnull(ST1.T1_CODFUNC, '-')))
 	else
@@ -88,8 +88,9 @@ select distinct
 				end
 			end
 		end
-	end as INSUMO,
-
+	end as INSUMO,*/
+	
+	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
 	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST1.T1_NOME, isnull(ST0.T0_NOME, '-')))
 	else
 		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then trim(SB1.B1_DESC)
