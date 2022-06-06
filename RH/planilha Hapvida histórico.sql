@@ -1,0 +1,82 @@
+select
+	FOLHA.RD_FILIAL as FILIAL,
+	FOLHA.RD_MAT as MATRICULA,
+	DADOS_FUNC.RB_COD as DEPENDENTE,
+	FOLHA.RD_MAT as CONTADOR_FUNC,
+	DADOS_FUNC.RB_COD as CONTADOR_DEP,
+
+	DADOS_FUNC.RA_NOME as NOME,
+	FOLHA.RD_CC as COD_CC,
+	FOLHA.RD_PD as VERBA,
+	CC.CTT_DESC01 as CENTRO_CUSTO,
+	year(concat(FOLHA.RD_PERIODO, '01')) as PERIODO_ANO,
+	month(concat(FOLHA.RD_PERIODO, '01')) as PERIODO_MES,
+	
+	DADOS_FUNC.RA_SEXO as SEXO,
+	/*case when FOLHA.RD_PD in ('088', '565', '571') then count(distinct DADOS_FUNC.RD_MAT) + DADOS_FUNC.NUM_DEP else 0.0 end as QUANT,*/
+	case when FOLHA.RD_PD in ('088', '565', '571') then sum(DADOS_FUNC.RD_VALOR) else 0.0 end as VALOR_FUNCIONARIO,
+	case when FOLHA.RD_PD in ('738') then sum(DADOS_FUNC.RD_VALOR) else 0.0 end as VALOR_EMPRESA
+
+from SRD010 as FOLHA (nolock)
+	inner join CTT010 as CC (nolock)
+    	on CC.D_E_L_E_T_ = ''
+    	and substring(FOLHA.RD_FILIAL, 1, 4) = CC.CTT_FILIAL
+    	and FOLHA.RD_CC = CC.CTT_CUSTO
+    inner join
+    (
+    	select
+    		SRD010.RD_FILIAL,
+    		SRD010.RD_MAT,
+    		SRA010.RA_NOME,
+    		SRA010.RA_SEXO,
+    		SRA010.RA_SITFOLH,
+    		SRD010.RD_PD,
+    		SRD010.RD_PERIODO,
+    		SRD010.RD_VALOR,
+			SRB010.RB_COD,
+			SRB010.RB_SEXO,
+    		count(SRB010.RB_COD) as QTD_DEP
+		from SRD010 (nolock)
+			inner join SRA010 (nolock)
+				on SRA010.D_E_L_E_T_ = ''
+				and SRA010.RA_FILIAL = SRD010.RD_FILIAL
+				and SRA010.RA_MAT = SRD010.RD_MAT
+				and SRA010.RA_SITFOLH != 'D'
+
+				left join SRB010 (nolock)
+					on SRB010.D_E_L_E_T_ = ''
+					and SRB010.RB_FILIAL = SRA010.RA_FILIAL
+					and SRB010.RB_MAT = SRA010.RA_MAT
+					and SRB010.RB_PLSAUDE = 1
+		where
+					SRD010.D_E_L_E_T_ = ''
+		group by
+    		SRD010.RD_FILIAL,
+    		SRD010.RD_MAT,
+    		SRA010.RA_NOME,
+    		SRA010.RA_SEXO,
+    		SRA010.RA_SITFOLH,
+    		SRD010.RD_PD,
+    		SRD010.RD_PERIODO,
+    		SRD010.RD_VALOR,
+			SRB010.RB_SEXO,
+			SRB010.RB_COD
+    ) as DADOS_FUNC
+    	on DADOS_FUNC.RD_MAT = FOLHA.RD_MAT
+        and DADOS_FUNC.RD_FILIAL = FOLHA.RD_FILIAL
+        and DADOS_FUNC.RD_PD = FOLHA.RD_PD
+        and DADOS_FUNC.RD_PERIODO = FOLHA.RD_PERIODO
+where
+		FOLHA.D_E_L_E_T_ = ''
+	and year(concat(FOLHA.RD_PERIODO, '01')) > 2021
+	and FOLHA.RD_PD in ('088', '565', '571', '738')
+group by
+	FOLHA.RD_FILIAL,
+	FOLHA.RD_MAT,
+	FOLHA.RD_CC,
+	FOLHA.RD_PD,
+	CC.CTT_DESC01,
+	FOLHA.RD_PERIODO,
+	DADOS_FUNC.RA_SEXO,
+	DADOS_FUNC.RA_NOME,
+	DADOS_FUNC.RB_COD

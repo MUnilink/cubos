@@ -1,0 +1,151 @@
+select
+	DF1.DF1_NUMAGE as AGENDAMENTO,
+	DF1.DF1_ITEAGE as ITEM,
+	
+    convert(date, DF0.DF0_DATCAD, 103) as DATA_AGENDAMENTO,
+	year(DF0.DF0_DATCAD) as AGENDAMENTO_ANO,
+	month(DF0.DF0_DATCAD) as AGENDAMENTO_MES,
+
+	DF1.DF1_CLIDEV as DEVEDOR_QTD,
+
+	SA1.A1_NOME as DEVEDOR,
+
+	case DF0.DF0_STATUS
+		when '1' then 'A Confirmar'
+		when '2' then 'Confirmado'
+		when '3' then 'Em Processo'
+		when '4' then 'Encerrado'
+		when '5' then 'Planejado'
+		when '9' then 'Cancelado'
+	end as STATUS,
+
+	DF1.DF1_YCONT as CONTÊINER,
+	DF1.DF1_YOSCLI as OS_CLIENTE,
+	DF1.DF1_SERVIC as SERVIÇO, /*VER NOME DO SERVIÇO DE NEGOCIAÇÃO, ÍNDICE DF1_FILIAL+DF1_NCONTR+DF1_CODNEG+DF1_SERVIC*/
+	SX5.X5_DESCRI as NOME_SERVICO,
+	DF1.DF1_YDIBOO as BOOKING,
+	DF1.DF1_TIPTRA as TRANSPORTE,
+	DF1.DF1_DOC as COLETA,
+
+	DTC.DTC_YDSARM as AMARRADORA,
+	DTC.DTC_NUMNFC as NOTA_CLI,
+	DTC.DTC_VALOR as NOTA_VALOR,
+
+	DT6.DT6_DOC as NFE_CTE,
+	DT6.DT6_SERIE as SERIE,
+	DT6.DT6_VALTOT as VALOR_CTE,
+	DT6.DT6_PESO as PESO,
+
+	convert(date, DT6.DT6_DATEMI, 103) as DATA_CTE,
+	year(DT6.DT6_DATEMI) as ANO_CTE,
+	month(DT6.DT6_DATEMI) as MES_CTE,
+
+	REG_COL.EST_COL as UF_COLETA,
+	REG_COL.MUN_COL as MUN_COLETA,
+	REG_ENT.EST_ENT as UF_ENTREGA,
+	REG_ENT.MUN_ENT as MUN_ENTREGA,
+
+	VGA.VGA_VGA as VIAGEM,
+	VGA.VGA_MOTNOM as MOTORISTA,
+	VGA.VGA_CODVEI as FROTA,
+	VGA.VGA_VEIPLA as PLACA
+
+from DF0010 DF0 (nolock)
+	inner join DF1010 DF1 (nolock)
+		on DF1.D_E_L_E_T_ = ''
+		and DF1.DF1_FILIAL = DF0.DF0_FILIAL
+		and DF1.DF1_NUMAGE = DF0.DF0_NUMAGE
+
+		inner join SX5010 SX5 (nolock)
+			on SX5.D_E_L_E_T_ = ' '
+			and SX5.X5_TABELA = 'L4'
+			and SX5.X5_CHAVE = DF1.DF1_SERVIC
+	
+    inner join SA1010 SA1 (nolock)
+		on SA1.D_E_L_E_T_ = ''
+		and DF1.DF1_CLIDEV = SA1.A1_COD
+		and DF1.DF1_LOJDEV = SA1.A1_LOJA
+	left join DTC010 DTC (nolock)
+		on DTC.D_E_L_E_T_ = ''
+		and DTC.DTC_FILORI = DF1.DF1_FILDOC
+		and DTC.DTC_NUMSOL = DF1.DF1_DOC
+
+		left join DT6010 DT6 (nolock)
+			on DT6.D_E_L_E_T_ = ''
+			and DT6.DT6_FILDOC = DTC.DTC_FILDOC
+			and DT6.DT6_DOC = DTC.DTC_DOC
+			and DT6.DT6_SERIE = DTC.DTC_SERIE
+
+	inner join
+	(
+		select
+			DUY010.DUY_GRPVEN as GRP_COL,
+			DUY010.DUY_EST as EST_COL,
+			DUY010.DUY_DESCRI as MUN_COL
+		from DUY010 (nolock)
+		where DUY010.D_E_L_E_T_ = ''
+	) AS REG_COL
+	on REG_COL.GRP_COL = DF1.DF1_CDRORI
+
+	inner join
+	(
+		select
+			DUY010.DUY_GRPVEN as GRP_ENT,
+			DUY010.DUY_EST as EST_ENT,
+			DUY010.DUY_DESCRI as MUN_ENT
+		from DUY010 (nolock)
+		where DUY010.D_E_L_E_T_ = ''
+	) AS REG_ENT
+	on REG_ENT.GRP_ENT = DF1.DF1_CDRDES
+
+	left join
+	(
+		select
+			DUD010.DUD_FILORI AS VGA_FIL, 
+			DUD010.DUD_FILDOC AS VGA_FILDOC,
+			DUD010.DUD_DOC AS VGA_DOC,
+			DUD010.DUD_SERIE AS VGA_SERIE,
+			DUD010.DUD_VIAGEM  AS VGA_VGA,
+			
+			DTR010.DTR_CODVEI AS VGA_CODVEI,
+			DA3_VEI.DA3_PLACA AS VGA_VEIPLA,
+			
+			DTR010.DTR_CODRB1 AS VGA_CODRB1,
+			DA3_RB1.DA3_PLACA AS VGA_DB1PLA,
+			
+			DTR010.DTR_CODRB2 AS VGA_CODRB2,
+			DA3_RB2.DA3_PLACA AS VGA_RB2PLA,
+			
+			DTR010.DTR_CODRB3 AS VGA_CODRB3,
+			DA3_RB3.DA3_PLACA AS VGA_RB3PLA,
+			
+			DUP010.DUP_CODMOT AS VGA_MOT,
+			DA4010.DA4_NOME AS VGA_MOTNOM
+		
+		from DUD010 (nolock)
+			left join DTR010 (nolock)
+				on DTR010.D_E_L_E_T_ = ''
+				and DTR010.DTR_FILORI = DUD010.DUD_FILORI
+				and DTR010.DTR_VIAGEM = DUD010.DUD_VIAGEM
+			left join DUP010 (nolock)
+				on DUP010.D_E_L_E_T_ = ''
+				and DUP010.DUP_FILORI = DUD010.DUD_FILORI
+				and DUP010.DUP_VIAGEM = DUD010.DUD_VIAGEM
+			left join DA4010 (nolock)
+				on DA4010.D_E_L_E_T_ = ''
+				and DA4010.DA4_COD = DUP010.DUP_CODMOT
+			
+			left join DA3010 as DA3_VEI (nolock)
+				on DA3_VEI.DA3_COD = DTR010.DTR_CODVEI
+			left join DA3010 as DA3_RB1 (nolock)
+				on DA3_RB1.DA3_COD = DTR010.DTR_CODRB1
+			left join DA3010 as DA3_RB2 (nolock)
+				on DA3_RB2.DA3_COD = DTR010.DTR_CODRB2
+			left join DA3010 as DA3_RB3 (nolock)
+				on DA3_RB3.DA3_COD = DTR010.DTR_CODRB3
+		where
+				DUP010.D_E_L_E_T_ = ' '
+		) AS VGA
+		on VGA.VGA_DOC = substring(concat(isnull(DT6.DT6_DOC, ''), DF1.DF1_DOC), 1, 9)
+		and VGA.VGA_SERIE = isnull(DT6.DT6_SERIE, 'COL')
+where DF0.D_E_L_E_T_ = ''

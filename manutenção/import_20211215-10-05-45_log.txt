@@ -1,0 +1,2566 @@
+================================================================================
+INICIANDO O LOG - I M P O R T A C A O   D E   D A D O S
+--------------------------------------------------------------------------------
+DATABASE...........: 15/12/2021
+DATA...............: 15/12/2021
+HORA...............: 10:05:45
+ENVIRONMENT........: cv0qd8_dev
+PATCH..............: /system/
+ROOT...............: /outsourcing/totvs/protheus_data
+VERS√ÉO.............: TOTVS DistribuiÁ„o e LogÌstica MSSQL Cv0qd8_dev
+M√ìDULO.............: SIGACOM
+EMPRESA / FILIAL...: 01/010102      
+NOME EMPRESA.......: Unilink
+NOME FILIAL........: Pecem
+USU√ÅRIO............: totvs          
+TABELA IMPORT......: SB9
+ARQUIVO IMPORT.....: c:\users\ernesto\desktop\peÁas fora de estoque\carga de dados saldo inicial localizaÁ„o 80 csv.csv
+DELIMITADOR........: ;
+MODO PROCESSAMENTO.: Atualizacao
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Import = INICIO - Data 15/12/2021 as 10:05:45
+ Import = Linha 000000000002 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000003 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000004 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000005 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000006 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000007 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000008 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000009 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000010 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000011 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000012 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000013 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000014 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000015 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000016 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000017 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000018 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000019 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000020 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000021 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000022 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000023 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000024 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000025 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000026 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000027 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000028 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000029 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000030 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:05:52
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330158        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              3
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              4118
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1372
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000031 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000032 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000033 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:05:52
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330159        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              6
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3733
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              622
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000034 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000035 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000036 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:05:53
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330185        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              3
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000037 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000038 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000039 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000040 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000041 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000042 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000043 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000044 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000045 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000046 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000047 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000048 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000049 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000050 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000051 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000052 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000053 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000054 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000055 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000056 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000057 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000058 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000059 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000060 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:05:57
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330141        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              260342
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              260342
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000061 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000062 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000063 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000064 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000065 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000066 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000067 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000068 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000069 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000070 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000071 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000072 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000073 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000074 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000075 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000076 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000077 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000078 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000079 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000080 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000081 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000082 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000083 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000084 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000085 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000086 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:01
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330167        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              4
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              4
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000087 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000088 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000089 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:02
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330184        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              4
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              4
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000090 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000091 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000092 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000093 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000094 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000095 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000096 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000097 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000098 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000099 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000100 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000101 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:04
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330142        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              31050
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              31050
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000102 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:04
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330143        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              31050
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              31050
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000103 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000104 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000105 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000106 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000107 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000108 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000109 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000110 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000111 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:06
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330152        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2695
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              2695
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000112 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000113 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000114 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000115 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000116 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000117 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:07
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330163        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              7983
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              3991
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000118 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000119 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:08
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330153        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              6275
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              6275
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000120 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000121 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000122 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000123 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000124 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000125 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000126 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000127 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000128 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000129 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000130 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000131 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000132 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000133 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000134 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000135 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000136 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000137 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000138 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000139 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000140 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000141 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000142 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000143 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000144 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:12
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330168        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000145 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000146 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000147 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000148 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000149 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000150 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000151 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:13
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330154        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000152 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000153 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000154 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000155 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000156 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000157 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000158 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:14
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330144        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000159 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000160 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000161 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000162 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000163 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:16
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330155        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              3
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000164 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000165 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000166 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000167 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000168 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000169 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000170 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000171 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000172 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000173 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000174 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000175 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000176 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000177 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:18
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330166        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              8469
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              8469
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000178 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000179 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000180 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000181 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000182 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000183 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000184 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000185 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000186 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000187 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000188 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000189 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000190 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000191 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000192 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000193 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000194 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000195 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000196 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000197 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000198 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000199 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000200 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000201 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000202 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:22
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330169        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000203 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000204 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000205 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000206 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000207 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000208 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000209 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000210 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000211 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000212 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000213 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000214 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000215 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000216 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000217 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000218 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000219 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000220 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000221 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000222 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000223 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000224 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000225 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000226 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000227 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000228 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000229 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000230 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000231 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000232 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000233 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000234 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000235 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000236 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000237 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000238 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000239 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000240 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000241 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000242 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000243 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000244 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000245 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000246 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000247 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000248 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000249 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000250 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000251 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000252 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000253 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000254 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000255 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000256 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000257 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000258 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000259 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000260 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000261 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000262 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000263 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000264 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000265 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000266 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000267 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000268 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:33
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330147        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              15
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              15189
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1012
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000269 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:34
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330148        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              14
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              12725
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              908
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000270 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000271 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000272 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000273 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000274 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000275 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000276 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000277 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000278 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:35
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330151        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              20931
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              10465
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000279 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000280 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000281 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000282 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000283 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000284 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000285 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000286 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000287 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000288 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000289 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000290 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000291 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000292 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000293 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000294 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000295 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000296 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000297 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000298 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000299 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000300 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000301 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000302 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000303 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000304 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000305 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000306 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000307 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000308 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000309 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000310 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000311 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000312 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:41
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330149        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              58
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              4681
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              80
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000313 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:41
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330150        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              60
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1750
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              29
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000314 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000315 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000316 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000317 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000318 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000319 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000320 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000321 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000322 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000323 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000324 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000325 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000326 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000327 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:44
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11220482        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              10
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              56
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              5
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000328 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000329 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000330 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000331 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000332 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000333 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000334 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000335 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000336 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000337 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000338 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000339 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000340 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000341 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000342 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000343 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000344 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000345 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000346 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:47
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330145        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000347 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:48
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330186        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000348 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000349 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000350 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000351 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:49
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330160        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              4
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              4
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000352 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000353 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000354 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000355 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000356 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000357 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000358 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000359 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000360 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000361 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000362 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000363 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000364 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000365 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000366 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000367 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000368 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000369 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000370 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000371 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000372 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000373 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000374 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000375 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000376 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000377 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000378 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000379 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000380 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000381 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000382 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000383 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000384 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000385 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000386 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000387 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000388 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000389 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000390 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000391 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000392 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000393 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000394 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000395 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000396 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000397 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000398 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000399 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000400 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000401 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000402 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000403 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000404 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000405 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000406 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000407 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000408 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:57
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11150635        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              4
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              4
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000409 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:06:58
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11150636        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000410 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000411 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000412 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000413 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000414 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000415 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000416 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000417 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000418 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000419 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000420 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000421 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000422 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000423 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000424 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000425 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000426 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:01
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330165        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              22410
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              11205
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000427 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000428 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000429 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000430 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:02
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330146        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              3
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000431 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000432 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000433 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:03
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330170        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000434 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:03
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330171        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1180
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              590
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000435 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:04
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330172        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000436 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:04
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330164        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=             0
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=             0
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000437 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:05
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330173        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              5
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              5
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000438 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000439 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000440 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:06
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330174        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=             0
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=             0
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000441 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000442 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000443 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000444 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000445 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000446 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000447 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000448 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000449 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:07
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330175        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              752
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              752
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000450 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:08
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330176        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              3
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000451 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:08
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330177        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              6010
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              6010
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000452 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000453 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000454 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000455 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000456 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000457 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000458 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000459 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000460 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000461 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000462 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000463 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000464 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000465 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:11
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330178        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              8
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              8
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000466 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000467 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000468 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:11
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330179        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              15
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              9824
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              654
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000469 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000470 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000471 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000472 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000473 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000474 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000475 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000476 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000477 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000478 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000479 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000480 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000481 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000482 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000483 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000484 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000485 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000486 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000487 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000488 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000489 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:15
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330187        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=             0
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=             0
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000490 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000491 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:15
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330180        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000492 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000493 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000494 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000495 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000496 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000497 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000498 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000499 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:17
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330162        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              3
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1071
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              357
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000500 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000501 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000502 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000503 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:18
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330181        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              140
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              140
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000504 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000505 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000506 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000507 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:19
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330161        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              4
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3867
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              966
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000508 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000509 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000510 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000511 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000512 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:20
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330182        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1546
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1546
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000513 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000514 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000515 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000516 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000517 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:21
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330156        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              590
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              590
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000518 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000519 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000520 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:22
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330183        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              2
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              2
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000521 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000522 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000523 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000524 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000525 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:REGNOIS   
+N„o existe registro relacionado a chave informada no alias SB1, ordenaÁ„o 1.
+
+Tabela SB9 15/12/2021 10:07:23
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11330157        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              3386
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              3386
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000526 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000527 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000528 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000529 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000530 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000531 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000532 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000533 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000534 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000535 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000536 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000537 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000538 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000539 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000540 =  LOG = OK MOT:REGISTRO INCLUIDO
+ Import = Linha 000000000541 =  LOG = OK MOT:REGISTRO INCLUIDO
+Import = Total de Registros = 540
+Import = Registros Nao importados = 50
+Import = Registros importados = 490
+Import = FIM Data 15/12/2021 as 10:07:25

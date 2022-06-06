@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Styles>
+<Style ss:ID="Default" ss:Name="Normal">
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="PrintSHeader">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s1">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s2">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s3">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s4">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s5">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s6">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s7">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s8">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s9">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s10">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s11">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s12">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s13">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s14">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s15">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s16">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s17">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s18">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s19">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s20">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s21">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s22">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s23">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s24">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s25">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s26">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s27">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s28">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s29">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="Short Date"/></Style>
+<Style ss:ID="s30">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s31">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s32">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s33">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s34">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s35">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s36">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s37">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s38">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s39">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s40">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s41">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s42">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s43">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s44">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s45">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s46">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s47">
+<Alignment ss:Horizontal="Left" ss:WrapText="1">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s48">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s49">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.000"/></Style>
+<Style ss:ID="s50">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.0000"/></Style>
+<Style ss:ID="s51">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s52">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s53">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s54">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s55">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s56">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s57">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s58">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s59">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s60">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s61">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s62">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s63">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s64">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s65">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s66">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s67">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s68">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s69">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s70">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s71">
+<Alignment ss:Horizontal="Left" ss:WrapText="1">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s72">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s73">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s74">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s75">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s76">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s77">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s78">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s79">
+<Alignment ss:Horizontal="Left">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="s80">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s81">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s82">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s83">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s84">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s85">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s86">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s87">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s88">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s89">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s90">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s91">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s92">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s93">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s94">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s95">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s96">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="3">
+</Border>
+</Borders>
+</Style>
+<Style ss:ID="s97">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s98">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s99">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s100">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+<Style ss:ID="s101">
+<Alignment ss:Horizontal="Right">
+</Alignment>
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+<NumberFormat ss:Format="0.00"/></Style>
+</Styles>
+<Worksheet ss:Name="01-010101 - Boletim de Entrada">
+<Table>
+<Column ss:Index="1" ss:Width="1000">
+</Column>
+<Column ss:Index="2" ss:Width="149">
+</Column>
+<Column ss:Index="3" ss:Width="280">
+</Column>
+<Column ss:Index="4" ss:Width="186">
+</Column>
+<Column ss:Index="5" ss:Width="149">
+</Column>
+<Column ss:Index="6" ss:Width="93">
+</Column>
+<Column ss:Index="7" ss:Width="93">
+</Column>
+<Column ss:Index="8" ss:Width="93">
+</Column>
+<Column ss:Index="9" ss:Width="116">
+</Column>
+<Column ss:Index="10" ss:Width="93">
+</Column>
+<Column ss:Index="11" ss:Width="140">
+</Column>
+<Column ss:Index="12" ss:Width="23">
+</Column>
+<Column ss:Index="13" ss:Width="51">
+</Column>
+<Row ss:Index="1">
+<Cell ss:Index="1" ss:StyleID="s1">
+<Data ss:Type="String"><![CDATA[Usuario: Manoel Jose]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s2">
+<Data ss:Type="String"><![CDATA[ Data Base: 13/09/2021]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s3">
+<Data ss:Type="String"><![CDATA[               Data Impressao 13/09/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="3">
+<Cell ss:Index="1" ss:StyleID="s4">
+<Data ss:Type="String"><![CDATA[Boletim de Entrada   N.]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s5">
+<Data ss:Type="String"><![CDATA[Material Recebido em: 13/09/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="5">
+<Cell ss:Index="1" ss:StyleID="s6">
+<Data ss:Type="String"><![CDATA[Unilink]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s7">
+<Data ss:Type="String"><![CDATA[Matriz]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s8">
+<Data ss:Type="String"><![CDATA[  - CNPJ/CPF: 04009865000170]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="6">
+<Cell>
+<Data ss:Type="String"><![CDATA[Dados do Fornecedor]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="8">
+<Cell ss:Index="1" ss:StyleID="s9">
+<Data ss:Type="String"><![CDATA[002088]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s10">
+<Data ss:Type="String"><![CDATA[0001]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s11">
+<Data ss:Type="String"><![CDATA[ARCH4LIFE ARQUITETURA, PLANEJAMENTO E ME]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s12">
+<Data ss:Type="String"><![CDATA[R TORRES CAMARA , 600, BOX E 59]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="10">
+<Cell ss:Index="1" ss:StyleID="s13">
+<Data ss:Type="String"><![CDATA[FORTALEZA]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s14">
+<Data ss:Type="String"><![CDATA[CE]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s15">
+<Data ss:Type="String"><![CDATA[CNPJ/CPF: 40.972.361/0001-14]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s16">
+<Data ss:Type="String"><![CDATA[INS. ESTAD.: ISENTO]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s17">
+<Data ss:Type="String"><![CDATA[INS. MUNICIP: 6348270]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="12">
+<Cell>
+<Data ss:Type="String"><![CDATA[------------------------------------------------------- DADOS DA NOTA FISCAL -------------------------------------------------------]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="14">
+<Cell ss:Index="1" ss:StyleID="s18">
+<Data ss:Type="String"><![CDATA[Serie]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s19">
+<Data ss:Type="String"><![CDATA[Numero]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s20">
+<Data ss:Type="String"><![CDATA[Espec.Docum.]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s21">
+<Data ss:Type="String"><![CDATA[Tipo da Nota]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s22">
+<Data ss:Type="String"><![CDATA[DT Emissao]]></Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s23">
+<Data ss:Type="String"><![CDATA[Vencimento]]></Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="s24">
+<Data ss:Type="String"><![CDATA[Vlr.Bruto]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="15">
+<Cell ss:Index="1" ss:StyleID="s25">
+<Data ss:Type="String"><![CDATA[000]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s26">
+<Data ss:Type="String"><![CDATA[000000017]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s27">
+<Data ss:Type="String"><![CDATA[NFS]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s28">
+<Data ss:Type="String"><![CDATA[NORMAL]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s29">
+<Data ss:Type="DateTime">2021-09-01T00:00:00</Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s30">
+<Data ss:Type="String"><![CDATA[Não há]]></Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="s31">
+<Data ss:Type="Number">0</Data>
+</Cell>
+</Row>
+<Row ss:Index="17">
+<Cell ss:Index="1" ss:StyleID="s32">
+<Data ss:Type="String"><![CDATA[Produto]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s33">
+<Data ss:Type="String"><![CDATA[UM]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s34">
+<Data ss:Type="String"><![CDATA[Descricao]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s35">
+<Data ss:Type="String"><![CDATA[Armazem]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s36">
+<Data ss:Type="String"><![CDATA[Quantidade]]></Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s37">
+<Data ss:Type="String"><![CDATA[Vlr.Unitario]]></Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="s38">
+<Data ss:Type="String"><![CDATA[Vlr.Total]]></Data>
+</Cell>
+<Cell ss:Index="8" ss:StyleID="s39">
+<Data ss:Type="String"><![CDATA[%IPI]]></Data>
+</Cell>
+<Cell ss:Index="9" ss:StyleID="s40">
+<Data ss:Type="String"><![CDATA[%ICMS]]></Data>
+</Cell>
+<Cell ss:Index="10" ss:StyleID="s41">
+<Data ss:Type="String"><![CDATA[C Contabil]]></Data>
+</Cell>
+<Cell ss:Index="11" ss:StyleID="s42">
+<Data ss:Type="String"><![CDATA[TES]]></Data>
+</Cell>
+<Cell ss:Index="12" ss:StyleID="s43">
+<Data ss:Type="String"><![CDATA[CFO]]></Data>
+</Cell>
+<Cell ss:Index="13" ss:StyleID="s44">
+<Data ss:Type="String"><![CDATA[Custo Unit.]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="18">
+<Cell ss:Index="1" ss:StyleID="s45">
+<Data ss:Type="String"><![CDATA[000332]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s46">
+<Data ss:Type="String"><![CDATA[UN]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s47">
+<Data ss:Type="String"><![CDATA[ITEM PARA CONTROLE DE MANUTENCAO]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s48">
+<Data ss:Type="String"><![CDATA[01]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s49">
+<Data ss:Type="Number">1</Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s50">
+<Data ss:Type="Number">3750</Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="s51">
+<Data ss:Type="Number">3750</Data>
+</Cell>
+<Cell ss:Index="8" ss:StyleID="s52">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="9" ss:StyleID="s53">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="10" ss:StyleID="s54">
+<Data ss:Type="String"><![CDATA[320301006]]></Data>
+</Cell>
+<Cell ss:Index="11" ss:StyleID="s55">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+<Cell ss:Index="12" ss:StyleID="s56">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+<Cell ss:Index="13" ss:StyleID="s57">
+<Data ss:Type="Number">0</Data>
+</Cell>
+</Row>
+<Row ss:Index="24">
+<Cell>
+<Data ss:Type="String"><![CDATA[--------------------------------------------- DIVERGENCIAS COM O PEDIDO DE COMPRA --------------------------------------------------]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="26">
+<Cell ss:Index="1" ss:StyleID="s58">
+<Data ss:Type="String"><![CDATA[Div]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s59">
+<Data ss:Type="String"><![CDATA[Numero PC]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s60">
+<Data ss:Type="String"><![CDATA[Descricao]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s61">
+<Data ss:Type="String"><![CDATA[Quantidade]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s62">
+<Data ss:Type="String"><![CDATA[Prc Unitario]]></Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s63">
+<Data ss:Type="String"><![CDATA[DT Emissao]]></Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="s64">
+<Data ss:Type="String"><![CDATA[Dt. Entrega]]></Data>
+</Cell>
+<Cell ss:Index="8" ss:StyleID="s65">
+<Data ss:Type="String"><![CDATA[Numero da SC]]></Data>
+</Cell>
+<Cell ss:Index="9" ss:StyleID="s66">
+<Data ss:Type="String"><![CDATA[Solicitante]]></Data>
+</Cell>
+<Cell ss:Index="10" ss:StyleID="s67">
+<Data ss:Type="String"><![CDATA[Centro Custo]]></Data>
+</Cell>
+<Cell ss:Index="11" ss:StyleID="s68">
+<Data ss:Type="String"><![CDATA[Descricao]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="27">
+<Cell ss:Index="1" ss:StyleID="s69">
+<Data ss:Type="String"><![CDATA[  E]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s70">
+<Data ss:Type="String"><![CDATA[005779/0001]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s71">
+<Data ss:Type="String"><![CDATA[ITEM PARA CONTROLE DE MANUTENCAO]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s72">
+<Data ss:Type="String"><![CDATA[      1,000]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s73">
+<Data ss:Type="String"><![CDATA[   3.750,0000]]></Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s74">
+<Data ss:Type="String"><![CDATA[01/09/2021]]></Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="s75">
+<Data ss:Type="String"><![CDATA[09/09/2021]]></Data>
+</Cell>
+<Cell ss:Index="8" ss:StyleID="s76">
+<Data ss:Type="String"><![CDATA[/]]></Data>
+</Cell>
+<Cell ss:Index="9" ss:StyleID="s77">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+<Cell ss:Index="10" ss:StyleID="s78">
+<Data ss:Type="String"><![CDATA[211]]></Data>
+</Cell>
+<Cell ss:Index="11" ss:StyleID="s79">
+<Data ss:Type="String"><![CDATA[7 DIAS]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="31">
+<Cell>
+<Data ss:Type="String"><![CDATA[------------------------------------------------------- TOTAIS DA NOTA FISCAL ------------------------------------------------------]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="33">
+<Cell ss:Index="1" ss:StyleID="s80">
+<Data ss:Type="String"><![CDATA[Base p/ICMS]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s81">
+<Data ss:Type="String"><![CDATA[Vlr.ICMS]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s82">
+<Data ss:Type="String"><![CDATA[Base ICM Sol]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s83">
+<Data ss:Type="String"><![CDATA[ICMS Solid.]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s84">
+<Data ss:Type="String"><![CDATA[Vlr.Mercad]]></Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s85">
+<Data ss:Type="String"><![CDATA[Descontos]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="34">
+<Cell ss:Index="1" ss:StyleID="s86">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s87">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s88">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s89">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s90">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="s91">
+<Data ss:Type="Number">0</Data>
+</Cell>
+</Row>
+<Row ss:Index="36">
+<Cell ss:Index="1" ss:StyleID="s92">
+<Data ss:Type="String"><![CDATA[Vlr.Frete]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s93">
+<Data ss:Type="String"><![CDATA[Vlr.Seguro]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s94">
+<Data ss:Type="String"><![CDATA[Vlr.Despesas]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s95">
+<Data ss:Type="String"><![CDATA[Vlr.IPI]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s96">
+<Data ss:Type="String"><![CDATA[Vlr.Bruto]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="37">
+<Cell ss:Index="1" ss:StyleID="s97">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="s98">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="s99">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="s100">
+<Data ss:Type="Number">0</Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="s101">
+<Data ss:Type="Number">0</Data>
+</Cell>
+</Row>
+<Row ss:Index="44">
+<Cell>
+<Data ss:Type="String"><![CDATA[------------------------------------------------------------------- VISTOS ---------------------------------------------------------]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="45">
+<Cell>
+<Data ss:Type="String"><![CDATA[|                               |                                |                                  |                              |]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="46">
+<Cell>
+<Data ss:Type="String"><![CDATA[| Recebimento  Fiscal           | Contabil/Custos                | Departamento Fiscal              | Administracao                |]]></Data>
+</Cell>
+</Row>
+</Table>
+</Worksheet>
+</Workbook>

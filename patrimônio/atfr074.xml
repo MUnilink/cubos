@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Styles>
+<Style ss:ID="Parametros">
+<Font ss:FontName="Arial" ss:Size="11">
+</Font>
+</Style>
+<Style ss:ID="Default" ss:Name="Normal">
+<Font ss:FontName="Courier New" ss:Size="8">
+</Font>
+</Style>
+<Style ss:ID="PrintSHeader">
+<Borders>
+<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2">
+</Border>
+</Borders>
+</Style>
+</Styles>
+<Worksheet ss:Name="Parametros">
+<Table ss:StyleID="Parametros">
+<Column ss:Index="1" ss:Width="233">
+</Column>
+<Column ss:Index="2" ss:Width="233">
+</Column>
+<Row ss:Index="1">
+<Cell>
+<Data ss:Type="String"><![CDATA[Dt.Ref: 20/09/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="3">
+<Cell>
+<Data ss:Type="String"><![CDATA[Hora: 11:18:42]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="5">
+<Cell>
+<Data ss:Type="String"><![CDATA[Emissão: 20/09/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="8">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 01 : Tipo de relatório ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[Bens/Entidades]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="9">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 02 : Data inicial ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[01/01/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="10">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 03 : Data Final ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[20/09/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="11">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 04 : Do grupo ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="12">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 05 : Ao grupo ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="13">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 06 : Codigo Inicial ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="14">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 07 : Item Inicial ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="15">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 08 : Codigo Final ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZZZZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="16">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 09 : Item Final ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="17">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 10 : Aquisição de ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[01/01/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="18">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 11 : Aquisição ate ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[20/09/2021]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="19">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 12 : Da Conta ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="20">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 13 : Ate Conta ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZZZZZZZZZZZZZZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="21">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 14 : Do Centro de Custo ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="22">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 15 : Ate Centro de Custo ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZZZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="23">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 16 : Do Item Contabil ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="24">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 17 : Ate Item Contabil ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZZZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="25">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 18 : Da Classe de Valor ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="26">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 19 : Ate Classe de Valor ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[ZZZZZZZZZ]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="27">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 20 : Seleciona Filiais ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[Nao]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="28">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 21 : Moeda ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[01]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="29">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 22 : Tipo Saldo ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[*]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="30">
+<Cell ss:Index="1">
+<Data ss:Type="String"><![CDATA[Pergunta 23 : Entidade Contabil ?]]></Data>
+</Cell>
+<Cell ss:Index="2">
+<Data ss:Type="String"><![CDATA[Conta Contabil]]></Data>
+</Cell>
+</Row>
+</Table>
+</Worksheet>
+<Worksheet ss:Name="01-010101 - Demonstrativo de d">
+<Table>
+<Column ss:Index="1" ss:Width="135">
+</Column>
+<Column ss:Index="2" ss:Width="60">
+</Column>
+<Column ss:Index="3" ss:Width="60">
+</Column>
+<Column ss:Index="4" ss:Width="186">
+</Column>
+<Column ss:Index="5" ss:Width="74">
+</Column>
+<Column ss:Index="6" ss:Width="60">
+</Column>
+<Column ss:Index="7" ss:Width="74">
+</Column>
+<Column ss:Index="8" ss:Width="79">
+</Column>
+<Row ss:Index="1">
+<Cell ss:Index="1" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Filial]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Codigo do Bem]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Item]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Descricao]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Tipo]]></Data>
+</Cell>
+<Cell ss:Index="6" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Tipo de Saldo]]></Data>
+</Cell>
+<Cell ss:Index="7" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Valor Original]]></Data>
+</Cell>
+<Cell ss:Index="8" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Deprec. Acumulada]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="2">
+<Cell ss:Index="1" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Conta Contab.]]></Data>
+</Cell>
+<Cell ss:Index="2" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Centro Custo]]></Data>
+</Cell>
+<Cell ss:Index="3" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Item da Conta]]></Data>
+</Cell>
+<Cell ss:Index="4" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Classe de valor]]></Data>
+</Cell>
+<Cell ss:Index="5" ss:StyleID="PrintSHeader">
+<Data ss:Type="String"><![CDATA[Valor Rateado]]></Data>
+</Cell>
+</Row>
+<Row ss:Index="3">
+<Cell>
+<Data ss:Type="String"><![CDATA[Não há dados a serem exibidos]]></Data>
+</Cell>
+</Row>
+</Table>
+</Worksheet>
+</Workbook>

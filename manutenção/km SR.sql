@@ -1,0 +1,41 @@
+select
+	convert(date, CALCULOHODO.TP_DTLEITU, 103) as TP_DTLEITU,
+	trim(CALCULOHODO.TP_CODBEM) as TP_CODBEM,
+	CALCULOHODO.HOD_ATU,
+	CALCULOHODO.HOD_ANT,
+	CALCULOHODO.DIFF,
+
+	year(CALCULOHODO.TP_DTLEITU) as ANO_LEITURA,
+	month(CALCULOHODO.TP_DTLEITU) as MES_LEITURA
+
+from
+	(
+		select
+			STP.TP_DTLEITU,
+			STP.TP_CODBEM,
+			STP.TP_ACUMCON as HOD_ATU,
+			max(CONTADOR.TP_ACUMCON) as HOD_ANT,
+			STP.TP_ACUMCON - max(CONTADOR.TP_ACUMCON) as DIFF
+		from STP010 STP (nolock)
+			inner join
+			(
+				select
+					STP010.TP_CODBEM,
+					STP010.TP_ACUMCON,
+					STP010.TP_DTLEITU
+				from STP010 (nolock)
+				where STP010.D_E_L_E_T_ = ''
+			) CONTADOR
+				on CONTADOR.TP_CODBEM = STP.TP_CODBEM
+				and CONTADOR.TP_DTLEITU <= STP.TP_DTLEITU
+	
+			left join ST9010 ST9 (nolock)
+				on ST9.D_E_L_E_T_ = ''
+				and ST9.T9_CODBEM = STP.TP_CODBEM
+		where trim(STP.TP_CODBEM) like 'SR%'
+		group by
+			STP.TP_DTLEITU,
+			STP.TP_CODBEM,
+			STP.TP_ACUMCON
+	) CALCULOHODO
+where CALCULOHODO.DIFF >= 0

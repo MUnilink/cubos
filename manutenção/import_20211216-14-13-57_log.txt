@@ -1,0 +1,108 @@
+================================================================================
+INICIANDO O LOG - I M P O R T A C A O   D E   D A D O S
+--------------------------------------------------------------------------------
+DATABASE...........: 16/12/2021
+DATA...............: 16/12/2021
+HORA...............: 14:13:57
+ENVIRONMENT........: cv0qd8_dev
+PATCH..............: /system/
+ROOT...............: /outsourcing/totvs/protheus_data
+VERS√ÉO.............: TOTVS DistribuiÁ„o e LogÌstica MSSQL Cv0qd8_dev
+M√ìDULO.............: SIGACOM
+EMPRESA / FILIAL...: 01/010102      
+NOME EMPRESA.......: Unilink
+NOME FILIAL........: Pecem
+USU√ÅRIO............: totvs          
+TABELA IMPORT......: SB9
+ARQUIVO IMPORT.....: c:\users\ernesto\desktop\peÁas fora de estoque\carga de dados saldo inicial valores csv.csv
+DELIMITADOR........: ;
+MODO PROCESSAMENTO.: Atualizacao
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Import = INICIO - Data 16/12/2021 as 14:13:57
+ Import = Linha 000000000002 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:JAGRAVADO 
+J· existe registro com esta informaÁ„o.
+
+Tabela SB9 16/12/2021 14:13:58
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11180074        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              1
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              1
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+ Import = Linha 000000000003 =  LOG = NO MOT: PROBLEMAS NA GRAVACAO ROTINA AUTOMATICA - MATA220 - AJUDA:JAGRAVADO 
+J· existe registro com esta informaÁ„o.
+
+Tabela SB9 16/12/2021 14:13:59
+Filial              - B9_FILIAL   :=010102
+Produto             - B9_COD      :=11250548        < -- Invalido
+Descricao           - B9_YDESC    :=                                                                                
+Data Saldo          - B9_DATA     :=  /  /    
+Armazem             - B9_LOCAL    :=80
+Qtd.Inic.Mes        - B9_QINI     :=              1
+Qt.Ini.2a UM        - B9_QISEGUM  :=             0
+Sld.Ini.Mes         - B9_VINI1    :=              85
+Sld.Ini.2a M        - B9_VINI2    :=             0
+Sld.Ini.3a M        - B9_VINI3    :=             0
+Sld.Ini.4a M        - B9_VINI4    :=             0
+Sld.Ini.5a M        - B9_VINI5    :=             0
+Sld.Ini.FIF1        - B9_VINIFF1  :=             0
+Sld.Ini.FIF2        - B9_VINIFF2  :=             0
+Sld.Ini.FIF3        - B9_VINIFF3  :=             0
+Sld.Ini.FIF4        - B9_VINIFF4  :=             0
+Sld.Ini.FIF5        - B9_VINIFF5  :=             0
+Custo Stand.        - B9_CUSTD    :=             0
+Moeda C.Std         - B9_MCUSTD   := 
+C Unit 1a M         - B9_CM1      :=              85
+C Unit 2a M         - B9_CM2      :=             0
+C Unit 3a M         - B9_CM3      :=             0
+C Unit 4a M         - B9_CM4      :=             0
+C Unit 5a M         - B9_CM5      :=             0
+R Unitario          - B9_CMRP1    :=             0
+Rep. Inicial        - B9_VINIRP1  :=             0
+Rep.Uni.2a M        - B9_CMRP2    :=             0
+Rep.Ini.2a M        - B9_VINIRP2  :=             0
+Rep.Uni.3a M        - B9_CMRP3    :=             0
+Rep.Ini.3a M        - B9_VINIRP3  :=             0
+Rep.Uni.4a M        - B9_CMRP4    :=             0
+Rep.Ini.4a M        - B9_VINIRP4  :=             0
+Rep.Uni.5a M        - B9_CMRP5    :=             0
+Rep.Ini.5a M        - B9_VINIRP5  :=             0
+Chave               - B9_YCHVOS   :=                    
+--------------------------------------------------------------------------------
+
+Import = Total de Registros = 2
+Import = Registros Nao importados = 2
+Import = Registros importados = 0
+Import = FIM Data 16/12/2021 as 14:13:59

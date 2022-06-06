@@ -1,0 +1,123 @@
+select
+	OS.TJ_FILIAL as FILIAL,
+	OS.TJ_ORDEM as NUM_OS,
+	ARMAZEM.CP_OP as NUM_OP,
+	ARMAZEM.CP_NUMOS as NUM_OS,
+	ARMAZEM.CP_NUM as NUM_SA,
+	ARMAZEM.CP_ITEM as ITEM_SA,
+	ARMAZEM.CP_PRODUTO as COD_PRODUTO,
+	ARMAZEM.CP_DESCRI as PRODUTO,
+	ARMAZEM.CP_SOLICIT as SOLICITANTE,
+	ARMAZEM.CP_EMISSAO as DATA_SA,
+	OS.TJ_DTORIGI as DATA_OS,
+	ARMAZEM.CP_QUANT as QTD_PEDIDA,
+	ARMAZEM.CP_QUJE as QTD_ATENDIDA,
+	substring(ARMAZEM.CP_OP, 1, 6) as OS_SA,
+
+	(
+		select top 1 SC1010.C1_NUM
+	 	from SC1010 (nolock)
+		where SC1010.C1_OP = ARMAZEM.CP_OP
+	) as SOLICITACOES_1,
+	(
+		select top 1 SC1010.C1_NUM
+	 	from SC1010 (nolock)
+		where substring(ARMAZEM.CP_OP, 1, 6) = OS.TJ_ORDEM
+	) as SOLICITACOES_2,
+	(
+		select top 1 SC1010.C1_NUM
+	 	from SC1010 (nolock)
+		where substring(SC1010.C1_OBS, 7, 12) = OS.TJ_ORDEM
+	) as SOLICITACOES_3,
+
+	row_number() over
+	(
+		partition by
+			OS.TJ_FILIAL,
+			OS.TJ_ORDEM,
+			ARMAZEM.CP_OP,
+			ARMAZEM.CP_NUMOS,
+			ARMAZEM.CP_NUM,
+			ARMAZEM.CP_ITEM
+
+		order by
+			OS.TJ_FILIAL,
+			OS.TJ_ORDEM,
+			ARMAZEM.CP_OP,
+			ARMAZEM.CP_NUMOS,
+			ARMAZEM.CP_NUM
+	) as contador,
+
+	year(OS.TJ_DTORIGI) as ANO_DTORIGI,
+	month(OS.TJ_DTORIGI) as MES_DTORIGI,
+	year(ARMAZEM.CP_EMISSAO) as ANO_EMISSAO,
+	month(ARMAZEM.CP_EMISSAO) as MES_EMISSAO
+
+from SCP010 as ARMAZEM (nolock)
+	inner join STJ010 as OS (nolock)
+		on 	OS.D_E_L_E_T_ = ''
+		and OS.TJ_FILIAL = ARMAZEM.CP_FILIAL
+		and OS.TJ_ORDEM = substring(ARMAZEM.CP_OP, 1, 6)
+
+where ARMAZEM.D_E_L_E_T_ = ''
+order by
+	ARMAZEM.CP_EMISSAO,
+	OS.TJ_DTORIGI,
+	ARMAZEM.CP_QUJE
+
+select
+	SC1010.C1_OP,
+	SC1010.C1_OBS,
+	SC1010.C1_DESCRI,
+	SC1010.C1_DATPRF,
+	SC1010.C1_EMISSAO,
+	SC1010.C1_YSERVIC,
+	SC1010.C1_YNOMSER,
+	SC1010.C1_QUJE,
+	row_number() over (order by SC1010.C1_OP) as contador, *
+from SC1010 (nolock)
+where
+		SC1010.D_E_L_E_T_ = '' 
+	and SC1010.C1_OBS like 'MNT%'
+order by contador desc
+
+select top 64
+	SC1010.C1_FILIAL,
+	SCP010.CP_OP,
+	SC1010.C1_OP,
+	SCP010.CP_NUM as NUM_SA,
+	SCP010.CP_ITEM as ITEM_SA,
+	SCP010.CP_PRODUTO,
+	SCP010.CP_DESCRI,
+	SC1010.C1_NUM as NUM_SC,
+	SC1010.C1_ITEM as ITEM_SC,
+	SCP010.CP_SOLICIT,
+	SCP010.CP_QUJE,
+	SC1010.C1_OBS as OBS_SC,
+	SCP010.CP_OBS as OBS_SA,
+
+	row_number() over
+	(
+		partition by
+			SC1010.C1_FILIAL,
+			SCP010.CP_OP,
+			SCP010.CP_NUM,
+			SCP010.CP_ITEM,
+			SC1010.C1_NUM,
+			SC1010.C1_ITEM
+
+		order by
+			SC1010.C1_FILIAL,
+			SCP010.CP_OP,
+			SCP010.CP_NUM,
+			SCP010.CP_ITEM,
+			SC1010.C1_NUM,
+			SC1010.C1_ITEM
+	) as contador
+from SCP010 (nolock)
+	inner join SC1010 (nolock)
+		on  SC1010.C1_FILIAL = SCP010.CP_FILIAL
+		and SC1010.C1_OP = SCP010.CP_OP
+		and SC1010.D_E_L_E_T_ = ''
+where SCP010.D_E_L_E_T_ = ''
+order by contador desc
