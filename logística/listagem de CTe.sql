@@ -1,0 +1,14 @@
+select
+    DT6.DT6_FILIAL as FILIAL,
+    DT6.DT6_DOC as DOCUMENTO,
+    DT6.DT6_SERIE as SERIE,
+    cast(convert(date, DT6.DT6_DATEMI, 103) as varchar) as EMISSAO,
+    DT6.DT6_VALFRE as VALOR_FRETE,
+    DT6.DT6_VALIMP as VALOR_ICMS,
+    DT6.DT6_VALTOT as VALOR_TOTAL,
+    DT6.DT6_CHVCTE as CHAVE,
+
+    year(DT6.DT6_DATEMI) as ANO_EMISSAO,
+    month(DT6.DT6_DATEMI) as MES_EMISSAO
+
+from DT6010 as DT6 (nolock)

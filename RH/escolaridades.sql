@@ -1,0 +1,8 @@
+select
+    'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(X5_CHAVE, ' ')), ' '), '|') AS BK_SERVICO,
+    SX5.X5_CHAVE as COD_ESCOLARIDADE,
+    SX5.X5_DESCRI as DES_ESCOLARIDADE
+from SX5010 SX5 (nolock)
+where
+        SX5.X5_TABELA = '26'
+    and SX5.D_E_L_E_T_ = ''

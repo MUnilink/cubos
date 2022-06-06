@@ -1,0 +1,113 @@
+select
+    DTQ.DTQ_FILORI,
+    DTQ.DTQ_VIAGEM,
+    DT6.DT6_DOC,
+    DT6.DT6_SERIE,
+    REG_COL.EST_COL as UF_COLETA,
+	REG_COL.MUN_COL as MUN_COLETA,
+	REG_ENT.EST_ENT as UF_ENTREGA,
+	REG_ENT.MUN_ENT as MUN_ENTREGA,
+    DA8.DA8_DESC,
+    DTQ.DTQ_KMVGE,
+
+    (
+        select convert(date, DTW010.DTW_DATREA, 103)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '049'
+    ) as DATAINI,
+    (
+        select convert(date, DTW010.DTW_DATREA, 103)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '050'
+    ) as DATAFIM,
+
+    DTR.DTR_ITEM,
+    DUP.DUP_CODMOT,
+    DA4.DA4_MAT,
+    DA4.DA4_NOME,
+    DA4.DA4_FORNEC,
+    DA4.DA4_LOJA,
+
+    DTR.DTR_CODVEI,
+    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_VEI,
+    DTR.DTR_CODRB1,
+    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
+
+    DTR.DTR_CODRB2,
+    DTR.DTR_CODRB3,
+
+    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
+    DT6.DT6_VALFRE as CTE_TOTAL,
+    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
+    DT6.DT6_VALIMP as IMPOSTO_TOTAL,
+    DT6.DT6_VALTOT,
+    DT6.DT6_CLIDEV,
+    DT6.DT6_LOJDEV,
+    SA1.A1_NOME
+
+from DTQ010 DTQ (nolock)
+    inner join DA8010 DA8 (nolock)
+        on DA8.D_E_L_E_T_ = ''
+        and DA8.DA8_COD = DTQ.DTQ_ROTA
+    inner join DTR010 DTR (nolock)
+        on DTR.D_E_L_E_T_ = ''
+        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+
+        inner join DUP010 DUP (nolock)
+            on DUP.D_E_L_E_T_ = ''
+            and DUP.DUP_FILORI = DTR.DTR_FILORI
+            and DUP.DUP_VIAGEM = DTR.DTR_VIAGEM
+            and DUP.DUP_ITEDTR = DTR.DTR_ITEM
+            and DUP.DUP_CODVEI = DTR.DTR_CODVEI
+
+            inner join DA4010 DA4 (nolock)
+                on DA4.DA4_COD = DUP.DUP_CODMOT
+
+    left join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+
+		left join DT6010 DT6 (nolock)
+			on DT6.D_E_L_E_T_ = ''
+			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+			and DT6.DT6_DOC = DUD.DUD_DOC
+			and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+            left join SA1010 SA1 (nolock)
+                on SA1.D_E_L_E_T_ = ''
+                and SA1.A1_COD = DT6.DT6_CLIDEV
+                and SA1.A1_LOJA = DT6.DT6_LOJDEV
+            
+            inner join
+            (
+                select
+                    trim(DUY010.DUY_GRPVEN) as GRP_COL,
+                    trim(DUY010.DUY_EST) as EST_COL,
+                    trim(DUY010.DUY_DESCRI) as MUN_COL
+                from DUY010 (nolock)
+                where DUY010.D_E_L_E_T_ = ''
+            ) AS REG_COL
+            on REG_COL.GRP_COL = DT6.DT6_CDRORI
+
+            inner join
+            (
+                select
+                    trim(DUY010.DUY_GRPVEN) as GRP_ENT,
+                    trim(DUY010.DUY_EST) as EST_ENT,
+                    trim(DUY010.DUY_DESCRI) as MUN_ENT
+                from DUY010 (nolock)
+                where DUY010.D_E_L_E_T_ = ''
+            ) AS REG_ENT
+            on REG_ENT.GRP_ENT = DT6.DT6_CDRDES
+where 
+        DTQ.D_E_L_E_T_ = ''
+    and DTQ.DTQ_DATENC > 20211231
