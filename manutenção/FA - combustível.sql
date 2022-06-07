@@ -32,7 +32,8 @@ from
 			substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD
-		from ZD3010
+		from ZD3010 (nolock)
+			inner join TQN010 (nolock)
 		where ZD3010.D_E_L_E_T_ = ''
 	) as ZD3
 
@@ -51,7 +52,7 @@ from
 			TQI010.TQI_CODCOM,
 			TQI010.TQI_PRODUT,
 			TQI010.TQI_FABRIC
-		from TQI010
+		from TQI010 (nolock)
 		where TQI010.D_E_L_E_T_ = ''
 	) as TQI
 		on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
@@ -66,15 +67,15 @@ from
 				end as TQF_FILIAL,
 				TQF010.TQF_CODIGO,
 				TQF010.TQF_LOJA
-			from TQF010
+			from TQF010 (nolock)
 			where TQF010.D_E_L_E_T_ = ''
 		) as TQF
 			on TQF.TQF_FILIAL = TQI.TQI_FILIAL
 			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
 
-	left join ST9010 as ST9
+	left join ST9010 ST9 (nolock)
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-	left join TQM010 as TQM
+	left join TQM010 TQM (nolock)
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
