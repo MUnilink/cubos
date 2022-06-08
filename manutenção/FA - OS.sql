@@ -2,6 +2,7 @@ select distinct
 	STL.TL_SEQRELA,
 	ST9.T9_ITEMCTA,
 	STJ.TJ_CCUSTO,
+	convert(date, STJ.TJ_DTORIGI, 103) as TJ_DTORIGI,
 	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
 	STJ.TJ_ORDEM as CONTADOR_OS,
 	
@@ -138,7 +139,6 @@ select distinct
 
 	year(STL.TL_DTINICI) as ANO_APP_OS,
 	month(STL.TL_DTINICI) as MES_APP_OS
-
 
 from STJ010 STJ
 	inner join ST9010 ST9
