@@ -39,6 +39,17 @@ select distinct
 	end*/
 	STL.TL_QUANTID,
 
+	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
+	else
+		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO
+		else
+			case when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID
+			else
+				0.0
+			end
+		end
+	end as TL_UNI,
+
 	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO * STL.TL_QUANTID
