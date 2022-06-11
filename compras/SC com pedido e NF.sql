@@ -56,6 +56,7 @@ select
 			end
 		end
 	end as STATUS_COMPRA,
+	
  	case when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
 	else
 		case when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.0 and cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2)) then 'REC. PARCIAL' /* AMARELO */
