@@ -89,3 +89,4 @@ from SC7010 SC7 (nolock)
 		and CTD.CTD_ITEM = SC7.C7_ITEMCTA
 where
 		SC7.D_E_L_E_T_ = ''
+	and SB1.B1_GRUPO like '1%'
