@@ -63,15 +63,6 @@ from DTQ010 DTQ (nolock)
                 and DF1.DF1_SERIE = DT6.DT6_SERIE
                 and DF1.DF1_CLIDEV = DT6.DT6_CLIDEV
                 and DF1.DF1_LOJDEV = DT6.DT6_LOJDEV
-
-                left join SF3010 SF3 (nolock)
-                    on SF3.D_E_L_E_T_ = ''
-                    and SF3.F3_ESPECIE = 'RPS'
-                    and SF3.F3_NFISCAL = DT6.DT6_DOC
-                    and SF3.F3_SERIE = DT6.DT6_SERIE
-                    and SF3.F3_CLIEFOR = DT6.DT6_CLIDEV
-                    and SF3.F3_LOJA = DT6.DT6_LOJDEV
-
             left join SA1010 SA1 (nolock)
                 on SA1.D_E_L_E_T_ = ''
                 and SA1.A1_COD = DT6.DT6_CLIDEV
