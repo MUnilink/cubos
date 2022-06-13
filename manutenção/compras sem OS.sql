@@ -33,8 +33,8 @@ select
 	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
 	month(SC7.C7_EMISSAO) as MES_PEDIDO,
 
-	SC7.C7_QUANT,
-	SC7.C7_QUJE,
+	SC7.C7_QUANT as QTD_PEDIDA,
+	SC7.C7_QUJE as QTD_ENTREGUE,
 	SC7.C7_PRECO,
 	SC7.C7_TOTAL,
 
@@ -55,7 +55,12 @@ select
 				end
 			end
 		end
-	end as STATUS_COMPRA
+	end as STATUS_COMPRA,
+
+	trim(isnull(SD1.D1_DOC, '-')) as D1_DOC,
+	trim(isnull(SD1.D1_SERIE, '-')) as D1_SERIE,
+	convert(date, SD1.D1_DTDIGIT, 103) DATA_EMI_NF,
+	convert(date, SD1.D1_DTDIGIT, 103) DATA_NF
 
 from SC7010 SC7 (nolock)
 	inner join SB1010 SB1 (nolock)
