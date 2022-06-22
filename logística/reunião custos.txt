@@ -1,0 +1,11 @@
+ -> custo operação portuária
+- ainda não são feitos os lançamentos de todos os valores que compõem o custo: nem MDO nem peças nem equipamentos. A partir do funcionamento correto do app, será possível avaliar como os custos são apropriados.
+ficou para segunda dia 27/06 o início do teste e da validação. Porto sugeriu criar uma base de dados inicial para realizar o primeiro teste das informações para compor o custo.
+
+ -> custo transporte
+- explicação do custo do TMS feito em planilha com a extração manual de cada informação que compõe o custo
+- detectados problemas na composição do custo; inconsistências em data/hora de viagens, distância etc.
+- até cerca de março, os apontamentos da viagem não eram em tempo real, ocorrendo em muitas divergências
+- definição dos custos por viagem, calculado a partir do fim da viagem
+- modus operandi do custo do TMS automático
+- 

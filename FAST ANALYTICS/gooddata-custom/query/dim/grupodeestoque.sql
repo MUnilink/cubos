@@ -1,0 +1,9 @@
+select
+	trim(SBM.BM_GRUPO) as BM_GRUPO,
+	trim(SBM.BM_DESC) as BM_DESC,
+	trim(SBM.BM_YGRUPO) as BM_YGRUPO,
+	trim(SBM.BM_YDEGRUP) as BM_YDEGRUP,
+	trim(SBM.BM_YSUBGRU) as BM_YSUBGRU,
+	trim(SBM.BM_YDESUBG) as BM_YDESUBG
+from SBM010 as SBM
+where SBM.D_E_L_E_T_ = ''

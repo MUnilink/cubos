@@ -1,0 +1,3 @@
+	select '010101' as CODFILIAL, 'MATRIZ' as DESFILIAL
+union
+	select '010102' as CODFILIAL, 'PECÉM' as DESFILIAL
