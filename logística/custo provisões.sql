@@ -37,3 +37,5 @@ from SRT010 SRT (nolock)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 where
         SRT.D_E_L_E_T_ = ''
+	and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
+    and SRT.RT_DATACAL > 202112
