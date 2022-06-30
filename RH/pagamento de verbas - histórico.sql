@@ -22,7 +22,8 @@ select
 	end as RV_TIPOCOD,
 
 	sum(SRD.RD_VALOR) as RD_VALOR,
-	sum(SRD.RD_HORAS) as RD_HORAS
+	sum(SRD.RD_HORAS) as RD_HORAS,
+	sum(SRA.RA_SALARIO) as RA_SALARIO
 from SRD010 SRD (nolock)
     inner join SRV010 SRV (nolock)
     	on SRV.D_E_L_E_T_ = ''
@@ -37,11 +38,11 @@ from SRD010 SRD (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-        inner join CTT010 CTT (nolock)
+        left join CTT010 CTT (nolock)
 	    	on CTT.D_E_L_E_T_ = ''
 	    	and substring(SRA.RA_FILIAL, 1, 4) = CTT.CTT_FILIAL
 	    	and SRA.RA_CC = CTT.CTT_CUSTO
-		inner join CTD010 CTD (nolock)
+		left join CTD010 CTD (nolock)
 	    	on CTD.D_E_L_E_T_ = ''
 	    	and SRA.RA_ITEM = CTD.CTD_ITEM
 where
