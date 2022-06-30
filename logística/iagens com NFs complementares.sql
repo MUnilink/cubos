@@ -1,0 +1,72 @@
+select
+    DTQ.DTQ_FILORI,
+    DTQ.DTQ_VIAGEM,
+    DT6.DT6_DOC,
+    DT6.DT6_SERIE,
+    convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI,
+    DA8.DA8_DESC,
+    DTQ.DTQ_KMVGE,
+
+    DTR.DTR_ITEM,
+    DUP.DUP_CODMOT,
+    DA4.DA4_MAT,
+    DA4.DA4_NOME,
+    DA4.DA4_FORNEC,
+    DA4.DA4_LOJA,
+
+    DTR.DTR_CODVEI,
+    DTR.DTR_CODRB1,
+    DTR.DTR_CODRB2,
+    DTR.DTR_CODRB3,
+    
+    DT6.DT6_VALFRE as CTE_TOTAL,
+    DT6.DT6_VALIMP as IMPOSTO_TOTAL,
+    DT6.DT6_VALTOT,
+    DT6.DT6_CLIDEV,
+    DT6.DT6_LOJDEV,
+    SA1.A1_NOME,
+    DF1.DF1_NUMAGE,
+    DF1.DF1_ITEAGE
+
+from DTQ010 DTQ (nolock)
+    inner join DA8010 DA8 (nolock)
+        on DA8.D_E_L_E_T_ = ''
+        and DA8.DA8_COD = DTQ.DTQ_ROTA
+    inner join DTR010 DTR (nolock)
+        on DTR.D_E_L_E_T_ = ''
+        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+
+        inner join DUP010 DUP (nolock)
+            on DUP.D_E_L_E_T_ = ''
+            and DUP.DUP_FILORI = DTR.DTR_FILORI
+            and DUP.DUP_VIAGEM = DTR.DTR_VIAGEM
+            and DUP.DUP_ITEDTR = DTR.DTR_ITEM
+            and DUP.DUP_CODVEI = DTR.DTR_CODVEI
+
+            inner join DA4010 DA4 (nolock)
+                on DA4.DA4_COD = DUP.DUP_CODMOT
+
+    left join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+
+		left join DT6010 DT6 (nolock)
+			on DT6.D_E_L_E_T_ = ''
+			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+			and DT6.DT6_DOC = DUD.DUD_DOC
+			and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+            left join DF1010 DF1 (nolock)
+                on DF1.D_E_L_E_T_ = ''
+                and DF1.DF1_DOC = DT6.DT6_DOC
+                and DF1.DF1_SERIE = DT6.DT6_SERIE
+                and DF1.DF1_CLIDEV = DT6.DT6_CLIDEV
+                and DF1.DF1_LOJDEV = DT6.DT6_LOJDEV
+            left join SA1010 SA1 (nolock)
+                on SA1.D_E_L_E_T_ = ''
+                and SA1.A1_COD = DT6.DT6_CLIDEV
+                and SA1.A1_LOJA = DT6.DT6_LOJDEV
+where 
+        DTQ.D_E_L_E_T_ = ''
+    /*and DF1.DF1_NUMAGE in ('000015', '000016', '000220', '000253', '000253', '000746', '001076', '001090', '001161', '001163', '001164', '001166', '001167', '001168', '001215', '001216', '001216', '001227', '001228', '001241', '001318', '001384', '001512', '001652', '001655', '001721', '001722', '001724', '001725', '001749', '001752', '001780', '001781', '001782', '001819', '001826', '001840', '001841', '001842', '001843', '001893', '001895', '001896', '002864', '003384', '003392', '003436', '003437', '003490', '003491', '005728', '005739', '005746', '005829', '005830', '005845', '005861', '005861', '005862', '005862', '005863', '005863', '005868', '005869', '005870', '005883', '005883', '005949', '005950', '005951', '005960', '005961', '005962', '005974', '005977', '005978', '006019', '006021', '006037', '006039', '006040', '006044', '006045', '006049', '006050', '006101', '006201', '006204', '006280', '006280', '006280', '006280', '006289', '006316', '006323', '006333', '006333', '006334', '006342', '006342', '006343', '006346', '006353', '006354', '006360', '006360', '006376', '006376', '006377', '006377', '006378', '006378', '006382', '006384', '006385', '006386', '006388', '006389', '006400', '006400', '006401', '006401', '006403', '006412', '006413', '006414', '006415', '006431', '006433', '006434', '006435', '006436', '006437', '006441', '006442', '006443', '006444', '006448', '006449', '006453', '006454', '006455', '006456', '006457', '006461', '006462', '006477', '006478', '006479', '006480', '006481', '006482', '006483', '006484', '006485', '006517', '006517', '006596', '006619', '006723', '006723', '006726', '006726')*/
