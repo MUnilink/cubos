@@ -27,7 +27,6 @@ from SRA010 SRA (nolock)
         and SRA.RA_CODFUNC = SRJ.RJ_FUNCAO
     inner join CTT010 CTT (nolock)
     	on CTT.D_E_L_E_T_ = ''
-    	and substring(SRA.RA_FILIAL, 1, 4) = CTT.CTT_FILIAL
     	and SRA.RA_CC = CTT.CTT_CUSTO
     inner join CTD010 CTD (nolock)
     	on CTD.D_E_L_E_T_ = ''
