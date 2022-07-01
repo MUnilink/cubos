@@ -13,7 +13,7 @@ select
 	REG_ENT.MUN_ENT as MUN_ENTREGA,
 
     (
-        select isnull(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0), '-')
+        select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -22,7 +22,7 @@ select
             and DTW010.DTW_ATIVID = '049'
     ) as DATAINI,
     (
-        select isnull(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0), '-')
+        select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -60,8 +60,13 @@ select
     DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
+
+
+
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
+    SA1.A1_COD,
+    SA1.A1_LOJA,
     SA1.A1_NOME,
     SD2.D2_DOC,
     SD2.D2_SERIE,
@@ -71,7 +76,9 @@ select
     SD2.D2_TIPO,
     SD2.D2_TOTAL,
     SD2.D2_VALIPI,
-    SD2.D2_VALICM
+    SD2.D2_VALICM,
+    DF1.DF1_NUMAGE,
+    DF1.DF1_ITEAGE
 
 from DTQ010 DTQ (nolock)
     inner join DA8010 DA8 (nolock)
@@ -134,5 +141,11 @@ from DTQ010 DTQ (nolock)
                 on SA1.D_E_L_E_T_ = ''
                 and SA1.A1_COD = DT6.DT6_CLIDEV
                 and SA1.A1_LOJA = DT6.DT6_LOJDEV
+            left join DF1010 DF1 (nolock)
+                on DF1.D_E_L_E_T_ = ''
+                and DF1.DF1_DOC = DT6.DT6_DOC
+                and DF1.DF1_SERIE = DT6.DT6_SERIE
+                and DF1.DF1_CLIDEV = DT6.DT6_CLIDEV
+                and DF1.DF1_LOJDEV = DT6.DT6_LOJDEV
 where 
         DTQ.D_E_L_E_T_ = ''
