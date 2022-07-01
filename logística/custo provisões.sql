@@ -1,6 +1,6 @@
 select
 	trim(isnull(SRT.RT_FILIAL, '-')) as RT_FILIAL,
-	convert(date, SRT.RT_DATACAL, 103) as RT_PERIODO,
+	substring(SRT.RT_DATACAL, 1, 6) as RT_PERIODO,
     trim(isnull(SRT.RT_TIPPROV, '-')) as RT_TIPPROV,
 	trim(isnull(SRT.RT_MAT, '-')) as RT_MAT,
 	trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
