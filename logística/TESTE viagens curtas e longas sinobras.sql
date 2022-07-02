@@ -66,19 +66,14 @@ select
     (
         select SD2010.D2_TOTAL
         from SD2010 (nolock)
-            inner join DT6010 (nolock)
-                on DT6010.D_E_L_E_T_ = ''
-                and DT6010.DT6_DOC = SD2010.D2_NFORI
-                and DT6010.DT6_SERIE = SD2010.D2_SERIORI
-                and DT6010.DT6_CLIDEV = SD2010.D2_CLIENTE
-                and DT6010.DT6_LOJDEV = SD2010.D2_LOJA
+            inner join DUD010 (nolock)
+                on DUD010.D_E_L_E_T_ = ''
+                and SD2010.D2_FILIAL = DUD010.DUD_FILDOC
+                and SD2010.D2_NFORI = DUD010.DUD_DOC
+                and SD2010.D2_SERIORI = DUD010.DUD_SERIE
         where
                 SD2010.D_E_L_E_T_ = ''
-            and SD2010.D2_NFORI = DT6.DT6_DOC
-            and SD2010.D2_SERIORI = DT6.DT6_SERIE
-            and SD2010.D2_CLIENTE = DT6.DT6_CLIDEV
-            and SD2010.D2_LOJA = DT6.DT6_LOJDEV
-            and DT6010.DT6_NUMVGA = DTQ.DTQ_VIAGEM
+            and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
     )
     else 0.0 end as custo_sinobras,
 
