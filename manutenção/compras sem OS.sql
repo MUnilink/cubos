@@ -63,14 +63,14 @@ select
 	convert(date, SD1.D1_DTDIGIT, 103) DATA_NF
 
 from SC7010 SC7 (nolock)
-	inner join SB1010 SB1 (nolock)
+	left join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
-	inner join SA2010 SA2 (nolock)
+	left join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SC7.C7_FORNECE
 		and SA2.A2_LOJA = SC7.C7_LOJA
-	left join SC1010 SC1 (nolock)
+	right join SC1010 SC1 (nolock)
 		on SC1.D_E_L_E_T_ = ''
 		and SC1.C1_FILIAL = SC7.C7_FILIAL
 		and SC1.C1_PRODUTO = SC7.C7_PRODUTO
