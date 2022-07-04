@@ -39,6 +39,36 @@ select
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = '050'
     ) as COMPETENCIA,
+    (
+        select cast(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)) as float)
+        from DTW010 (nolock)
+            inner join ZB1010 (nolock)
+                on ZB1010.D_E_L_E_T_ = ''
+        where
+                    datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0)
+                    =
+                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+            and DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID in ('050')
+            and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+    ) as qtd_fim,
+    (
+        select cast(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)) as float)
+        from DTW010 (nolock)
+            inner join ZB1010 (nolock)
+                on ZB1010.D_E_L_E_T_ = ''
+        where
+                    datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0)
+                    =
+                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+            and DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID in ('049')
+            and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+    ) as qtd_ini,
 
     DTR.DTR_ITEM,
     DUP.DUP_CODMOT,
@@ -60,11 +90,9 @@ select
     DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
-
-
-
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
+
     SA1.A1_COD,
     SA1.A1_LOJA,
     SA1.A1_NOME,
