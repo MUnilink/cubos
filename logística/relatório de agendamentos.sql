@@ -31,7 +31,7 @@ select
 
 	DT6.DT6_DOC as NFE_CTE,
 	DT6.DT6_SERIE as SERIE,
-	DT6.DT6_VALTOT / (select isnull(count(DTR010.DTR_CODVEI), 1) from DTR010 where DTR010.DTR_VIAGEM = VGA.VGA_VGA) as VALOR_CTE,
+	DT6.DT6_VALTOT / case when (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = VGA.VGA_VGA) = 0 then 1 else (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = VGA.VGA_VGA) end as VALOR_CTE,
 	DT6.DT6_PESO as PESO,
 
 	convert(date, DT6.DT6_DATEMI, 103) as DATA_CTE,
