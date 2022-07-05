@@ -13,7 +13,7 @@ select
 	REG_ENT.MUN_ENT as MUN_ENTREGA,
 
     (
-        select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+        select cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -22,7 +22,16 @@ select
             and DTW010.DTW_ATIVID = '049'
     ) as DATAINI,
     (
-        select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+        select DTW010.DTW_HORREA
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '049'
+    ) as HORAINI,
+    (
+        select cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -30,6 +39,15 @@ select
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = '050'
     ) as DATAFIM,
+    (
+        select DTW010.DTW_HORREA
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '050'
+    ) as HORAFIM,
     (
         select substring(DTW010.DTW_DATREA, 1, 6)
         from DTW010 (nolock)
@@ -40,7 +58,7 @@ select
             and DTW010.DTW_ATIVID = '050'
     ) as COMPETENCIA,
     (
-        select ZB1010.ZB1_MSGTXT
+        select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -53,10 +71,11 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
             and DTW010.DTW_ATIVID in ('050')
-    ) as qtd_fim,
+    ) as km_fim,
     (
-        select ZB1010.ZB1_MSGTXT
+        select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -69,8 +88,9 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
             and DTW010.DTW_ATIVID in ('049')
-    ) as qtd_ini,
+    ) as km_ini,
 
     DTR.DTR_ITEM,
     DUP.DUP_CODMOT,
