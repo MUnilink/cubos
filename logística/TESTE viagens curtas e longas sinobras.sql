@@ -39,43 +39,20 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_DATREA between '20210101' and '20220531'
     ) as COMPETENCIA,
 
     DTR.DTR_ITEM,
     DUP.DUP_CODMOT,
-    DA4.DA4_MAT,
-    DA4.DA4_NOME,
-    DA4.DA4_FORNEC,
-    DA4.DA4_LOJA,
 
     DTR.DTR_CODVEI,
-    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_VEI,
     DTR.DTR_CODRB1,
-    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
-
-    DTR.DTR_CODRB2,
-    DTR.DTR_CODRB3,
     
     DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
     DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
-
-    case when DA8.DA8_COD = '000081' then
-    (
-        select SD2010.D2_TOTAL
-        from SD2010 (nolock)
-            inner join DUD010 (nolock)
-                on DUD010.D_E_L_E_T_ = ''
-                and SD2010.D2_FILIAL = DUD010.DUD_FILDOC
-                and SD2010.D2_NFORI = DUD010.DUD_DOC
-                and SD2010.D2_SERIORI = DUD010.DUD_SERIE
-        where
-                SD2010.D_E_L_E_T_ = ''
-            and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
-    )
-    else 0.0 end as custo_sinobras,
 
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
@@ -109,9 +86,6 @@ from DTQ010 DTQ (nolock)
             and DUP.DUP_VIAGEM = DTR.DTR_VIAGEM
             and DUP.DUP_ITEDTR = DTR.DTR_ITEM
             and DUP.DUP_CODVEI = DTR.DTR_CODVEI
-
-            inner join DA4010 DA4 (nolock)
-                on DA4.DA4_COD = DUP.DUP_CODMOT
 
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
