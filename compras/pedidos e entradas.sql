@@ -9,6 +9,7 @@ select
 	trim(isnull(SC7.C7_ITEMCTA, '-')) as C7_ITEMCTA,
 	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE,
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
+	trim(isnull(SC7.C7_OBS, '-')) as C7_OBS,
 	
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -16,8 +17,7 @@ select
 		when 'R' then 'REJEITADO'
 		else 'OUTROS'
 	end as APROVAPEDIDO,
-	convert(date, substring(APRSC7.CR_DATALIB, 1, 8), 103) as DATAAPR_PC,
-
+	
 	SC7.C7_QUANT,
 	SC7.C7_QUJE,
 	SC7.C7_PRECO,
@@ -25,12 +25,7 @@ select
 	SC7.C7_VALIPI,
 	SC7.C7_VALICM,
 
-	case SC7.C7_EMISSAO
-		when null then '-'
-		when '' then '-'
-		when '        ' then '-'
-		else convert(date, substring(SC7.C7_EMISSAO, 1 ,8), 103)
-	end as DATA_PEDIDO,
+	convert(date, substring(SC7.C7_EMISSAO, 1 ,8), 103) as DATA_PEDIDO,
 
 	trim(isnull(SD1.D1_DOC, '-')) as DOC,
 	trim(isnull(SD1.D1_SERIE, '-')) as SERIE,
@@ -51,12 +46,7 @@ select
 	SD1.D1_DESC,
 	SD1.D1_VALDESC,
 
-	case SD1.D1_DTDIGIT
-		when null then '-'
-		when '' then '-'
-		when '        ' then '-'
-		else convert(date, substring(SD1.D1_DTDIGIT, 1 ,8), 103)
-	end as DATA_NF,
+	convert(date, substring(SD1.D1_DTDIGIT, 1 ,8), 103) as DATA_NF,
 
 	SA2.A2_COD,
 	SA2.A2_LOJA,
@@ -68,14 +58,16 @@ select
 
 	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
 	month(SC7.C7_EMISSAO) as MES_PEDIDO,
+	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PEDIDO,
 	year(SD1.D1_DTDIGIT) as ANO_ENTRADA,
-	month(SD1.D1_DTDIGIT) as MES_ENTRADA
+	month(SD1.D1_DTDIGIT) as MES_ENTRADA,
+	substring(SD1.D1_DTDIGIT, 1, 6) as PERIODO_ENTRADA
 
 from SC7010 SC7 (nolock)
 	left join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
-	left join SA2010 SA2 (nolock)
+	inner join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SC7.C7_FORNECE
 		and SA2.A2_LOJA = SC7.C7_LOJA
@@ -95,7 +87,4 @@ from SC7010 SC7 (nolock)
 		and SD1.D1_FORNECE = SC7.C7_FORNECE
 		and SD1.D1_LOJA = SC7.C7_LOJA
 		and SD1.D1_COD = SC7.C7_PRODUTO
-	left join SCR010 APRSC7 (nolock)
-		on APRSC7.D_E_L_E_T_ = ''
-		and APRSC7.CR_NUM = SC7.C7_NUM
 where SC7.D_E_L_E_T_ = ''
