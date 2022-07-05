@@ -4,6 +4,9 @@ select
     DTR010.DTR_CODVEI,
     DTW010.DTW_ATIVID,
     ZB1010.ZB1_MSGTXT,
+    ZB1010.ZB1_MSGTIM,
+    DTW010.DTW_DATREA,
+    DTW010.DTW_HORREA,
     datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0) as AUTOTRAC_DATAHORA,
     datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) as DTW_DATAHORA,
     cast(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)) as float)
@@ -12,7 +15,7 @@ from DTW010 (nolock)
     left join ZB1010 (nolock)
         on ZB1010.D_E_L_E_T_ = ''
         and
-            datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0)
+            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
             =
             datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
     inner join DTQ010 (nolock)
@@ -27,4 +30,3 @@ from DTW010 (nolock)
 where
         DTW010.D_E_L_E_T_ = ''
     and DTW010.DTW_VIAGEM = '007950'
-    and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
