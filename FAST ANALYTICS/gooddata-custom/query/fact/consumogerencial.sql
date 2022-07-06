@@ -11,7 +11,7 @@ select
 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
 	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
-	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT,
+	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT
 from
 	(
 		select
