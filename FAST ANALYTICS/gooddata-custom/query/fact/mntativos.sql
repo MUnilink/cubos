@@ -64,6 +64,7 @@ select
 	trim(isnull(STJ.TJ_FILIAL, '-')) as COD_FILIAL,
 	trim(isnull(ST4.T4_SERVICO, '-')) as T4_SERVICO,
 	trim(isnull(STJ.TJ_CCUSTO, '-')) as CC,
+	trim(isnull(STJ.TJ_YITMCT, '-')) as ATIVIDADE,
 	null as B1_UPRC,
 	null as T1_SALARIO
 
