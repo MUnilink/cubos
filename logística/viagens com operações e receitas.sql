@@ -9,54 +9,22 @@ select
 
     REG_COL.EST_COL as UF_COLETA,
 	REG_COL.MUN_COL as MUN_COLETA,
+
+    case when DT6.DT6_SERIE = '1' then
+    (
+        select
+            trim(DUY010.DUY_GRPVEN) as GRP_ENT,
+            trim(DUY010.DUY_EST) as EST_ENT,
+            trim(DUY010.DUY_DESCRI) as MUN_ENT
+        from DUY010 (nolock)
+        where
+                DUY010.D_E_L_E_T_ = ''
+            and DUY010.GRP_ENT = DT6.DT6_CDRDES
+            and DT6.DT6_SERIE = 'COL'
+    )
 	REG_ENT.EST_ENT as UF_ENTREGA,
 	REG_ENT.MUN_ENT as MUN_ENTREGA,
 
-    (
-        select cast(DTW010.DTW_DATREA as date)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
-    ) as DATAINI,
-    (
-        select DTW010.DTW_HORREA
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
-    ) as HORAINI,
-    (
-        select cast(DTW010.DTW_DATREA as date)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
-    ) as DATAFIM,
-    (
-        select DTW010.DTW_HORREA
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
-    ) as HORAFIM,
-    (
-        select substring(DTW010.DTW_DATREA, 1, 6)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
-    ) as COMPETENCIA,
     (
         select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
@@ -128,7 +96,52 @@ select
     SD2.D2_VALIPI,
     SD2.D2_VALICM,
     DF1.DF1_NUMAGE,
-    DF1.DF1_ITEAGE
+    DF1.DF1_ITEAGE,    
+    (
+        select cast(DTW010.DTW_DATREA as date)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '049'
+    ) as DATAINI,
+    (
+        select DTW010.DTW_HORREA
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '049'
+    ) as HORAINI,
+    (
+        select cast(DTW010.DTW_DATREA as date)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '050'
+    ) as DATAFIM,
+    (
+        select DTW010.DTW_HORREA
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '050'
+    ) as HORAFIM,
+    (
+        select substring(DTW010.DTW_DATREA, 1, 6)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '050'
+    ) as COMPETENCIA
 
 from DTQ010 DTQ (nolock)
     inner join DA8010 DA8 (nolock)
@@ -191,11 +204,15 @@ from DTQ010 DTQ (nolock)
                 on SA1.D_E_L_E_T_ = ''
                 and SA1.A1_COD = DT6.DT6_CLIDEV
                 and SA1.A1_LOJA = DT6.DT6_LOJDEV
-            left join DF1010 DF1 (nolock)
-                on DF1.D_E_L_E_T_ = ''
-                and DF1.DF1_DOC = DT6.DT6_DOC
-                and DF1.DF1_SERIE = DT6.DT6_SERIE
-                and DF1.DF1_CLIDEV = DT6.DT6_CLIDEV
-                and DF1.DF1_LOJDEV = DT6.DT6_LOJDEV
+            left join DTC010 DTC (nolock)
+                on DTC.D_E_L_E_T_ = ''
+                and DTC.DTC_FILORI = DT6.DT6_FILDOC
+                and DTC.DTC_DOC = DT6.DT6_DOC
+                and DTC.DTC_SERIE = DT6.DT6_SERIE
+
+                left join DF1010 DF1 (nolock)
+                    on DF1.D_E_L_E_T_ = ''
+                    and DF1.DF1_FILDOC = DTC.DTC_FILORI
+                    and DF1.DF1_DOC = DTC.DTC_NUMSOL
 where 
         DTQ.D_E_L_E_T_ = ''
