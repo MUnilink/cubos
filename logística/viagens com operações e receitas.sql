@@ -96,7 +96,7 @@ select
     SD2.D2_VALIPI,
     SD2.D2_VALICM,
     DF1.DF1_NUMAGE,
-    DF1.DF1_ITEAGE,    
+    DF1.DF1_ITEAGE,
     (
         select cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
