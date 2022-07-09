@@ -9,17 +9,24 @@ select
 
 	REG_COL_DT6.*,
 	REG_ENT_DUD.*,
-	REG_ENT_DT6.*,
-    
-    case when DT6.DT6_SERIE != 'COL' then
+
     (
-        select
-            trim(DUY010.DUY_GRPVEN) as GRP_ENT_doc,
-            trim(DUY010.DUY_EST) as EST_ENT_doc,
-            trim(DUY010.DUY_DESCRI) as MUN_ENT_doc
-        from DUY010 (nolock)
-        where DUY010.D_E_L_E_T_ = ''
-    ) else DT6.DT6_CDRDES end,
+        select trim(DUY010.DUY_GRPVEN)
+        from DUD010 (nolock)
+            left join DT6010 (nolock)
+                on DT6010.D_E_L_E_T_ = ''
+                and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
+                and DT6010.DT6_DOC = DUD010.DUD_DOC
+                and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+                
+                inner join DUY010 (nolock)
+                    on DUY010.D_E_L_E_T_ = ''
+                    and DUY010.DUY_GRPVEN = DT6010.DT6_CDRDES
+        where
+                DUD010.D_E_L_E_T_ = ''
+            and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
+            and trim(DUD010.DUD_SERIE) = 'COL'
+    ) as GRP_ENT_doc,
     
     DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
@@ -80,31 +87,6 @@ from DTQ010 DTQ (nolock)
                 where DUY010.D_E_L_E_T_ = ''
             ) AS REG_COL_DT6
             on REG_COL_DT6.GRP_COL = DT6.DT6_CDRORI
-
-            left join
-            (
-                select
-                    trim(DUY010.DUY_GRPVEN) as GRP_ENT_doc,
-                    trim(DUY010.DUY_EST) as EST_ENT_doc,
-                    trim(DUY010.DUY_DESCRI) as MUN_ENT_doc
-                from DUY010 (nolock)
-                where DUY010.D_E_L_E_T_ = ''
-            ) AS REG_ENT_DT6
-            on REG_ENT_DT6.GRP_ENT_doc
-            =
-            case when DT6.DT6_SERIE = 'COL' then
-            (
-                select DT6010.DT6_CDRDES
-                from DT6010 (nolock)
-                where
-                        DUD010.D_E_L_E_T_ = ''
-                    and DUD010.DUD_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DUD.DUD_FILDOC = DUD010.DUD_FILDOC
-                    and DUD.DUD_DOC = DUD010.DUD_DOC
-                    and DUD.DUD_SERIE = DUD010.DUD_SERIE
-                    and DUD.DUD_SERIE = '1'
-            )
-            else DT6.DT6_CDRDES end
 
             left join SA1010 SA1 (nolock)
                 on SA1.D_E_L_E_T_ = ''
