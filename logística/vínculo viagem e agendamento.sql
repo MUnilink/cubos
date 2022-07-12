@@ -1,21 +1,30 @@
 select
-    DUD010.DUD_VIAGEM,
-    DT6010.DT6_FILDOC as DT6_FILDOC,
-    DT6010.DT6_DOC as DT6_DOC,
-    DT6010.DT6_SERIE as DT6_SERIE,
-    trim(DUY010.DUY_GRPVEN) as DUY_GRPVEN
+    DUD.DUD_VIAGEM,
+    DT6.DT6_FILDOC,
+    DT6.DT6_DOC,
+    DT6.DT6_SERIE,
+    DF1.DF1_NUMAGE,
+    DF1.DF1_ITEAGE,
+    DF1.DF1_FILDOC,
+    DF1.DF1_DOC,
+    DF1.DF1_SERVIC
     
-from DUD010 (nolock)
-    left join DT6010 (nolock)
-        on DT6010.D_E_L_E_T_ = ''
-        and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
-        and DT6010.DT6_DOC = DUD010.DUD_DOC
-        and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+from DUD010 DUD (nolock)
+    left join DT6010 DT6 (nolock)
+        on DT6.D_E_L_E_T_ = ''
+        and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+        and DT6.DT6_DOC = DUD.DUD_DOC
+        and DT6.DT6_SERIE = DUD.DUD_SERIE
         
-        left join DUY010 (nolock)
-            on DUY010.D_E_L_E_T_ = ''
-            and DUY010.DUY_GRPVEN = DT6010.DT6_CDRDES
+        left join DTC010 DTC (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_DOC = DT6.DT6_DOC
+            and DTC.DTC_SERIE = DT6.DT6_SERIE
+
+            left join DF1010 DF1 (nolock)
+                on DF1.D_E_L_E_T_ = ''
+                and DF1.DF1_FILDOC = DTC.DTC_FILORI
+                and DF1.DF1_DOC = DTC.DTC_NUMSOL
 where
-        DUD010.D_E_L_E_T_ = ''
-    and DUD010.DUD_VIAGEM = '007080'
-    
+        DUD.D_E_L_E_T_ = ''

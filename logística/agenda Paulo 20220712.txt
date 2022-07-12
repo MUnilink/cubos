@@ -1,0 +1,35 @@
+custos motoristas - detalhe por motoristas (por dias)
+custos pessoal logística e manutenção - apenas o consolidado (por km)
+emissão de CTE não é permitida sem início da viagem
+consistência da informação ainda está sendo buscada
+ausência de apontamentos pode ser contornada com o campo padrão de distância
+falta de apontamentos de data e hora sem alternativa visível: se a quantidade de dias da viagem é menor que a quantidade de viagens, ou algum critério que passe a considerar o apontamento ou não
+ver se de fato as viagens pagas são as realizadas
+bloqueio de lançamento de diárias para motoristas que não são da viagem
+coluna para verificar se o veículo viajou
+manutenção, combustível e pneus são apropriados à viagem de acordo com o km de cada viagem
+ver processo de seguro da frota, já que atualmente é por planilha
+atualizações > custos transporte > depreciação veículo (tabela DFG): amortizações gerenciais
+ver custos de pneus, ver km previsto do pneu
+endereço do destinatário diferente
+frete próprio no faturamento em vez de no TMS
+cliente cancelou NF após 24 h de emissão do manifesto
+agendamento fica desvinculado da viagem
+ocorrência: coleta cancelada
+encerramento de viagem em vez de cancelamento, para ficar o registro da ocorrência de cancelamento (entrega não realizada)
+para entrega o manifesto é gerado antes do início da viagem
+
+RPS de estadia, insumos do serviço de transporte (corda e lona), notas de débito e pedido de venda.
+PONTO DE ENTRADA para complemento do cliente sinobras, para obrigar a inclusão da viagem
+
+SN4 depreciação mensal
+
+sinobras
+múltiplas coletas no aeroporto
+encerramento de manifesto
+ocorrência de transferência
+CTE de complemento Fortaleza - Marabá
+
+status da coleta tabela DT6 para puxar fretes mortos e fretes internos
+
+CTE normal e complemento se viagem de complemento, ignorar viagem do CTE original e, depois, buscar viagens sem complemento

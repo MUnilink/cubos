@@ -9,19 +9,6 @@ select
 
     REG_COL.EST_COL as UF_COLETA,
 	REG_COL.MUN_COL as MUN_COLETA,
-
-    case when DT6.DT6_SERIE = '1' then
-    (
-        select
-            trim(DUY010.DUY_GRPVEN) as GRP_ENT,
-            trim(DUY010.DUY_EST) as EST_ENT,
-            trim(DUY010.DUY_DESCRI) as MUN_ENT
-        from DUY010 (nolock)
-        where
-                DUY010.D_E_L_E_T_ = ''
-            and DUY010.GRP_ENT = DT6.DT6_CDRDES
-            and DT6.DT6_SERIE = 'COL'
-    )
 	REG_ENT.EST_ENT as UF_ENTREGA,
 	REG_ENT.MUN_ENT as MUN_ENTREGA,
 
@@ -192,7 +179,7 @@ from DTQ010 DTQ (nolock)
                 from DUY010 (nolock)
                 where DUY010.D_E_L_E_T_ = ''
             ) AS REG_ENT
-            on REG_ENT.GRP_ENT = DT6.DT6_CDRDES
+            on REG_ENT.GRP_ENT = DT6.DT6_CDRCAL
 
             left join SD2010 SD2 (nolock)
                 on SD2.D_E_L_E_T_ = ''
