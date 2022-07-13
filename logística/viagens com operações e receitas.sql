@@ -70,6 +70,16 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
+    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
+
+    DT5.DT5_NUMSOL,
+    DT5.DT5_DOC,
+    DT5.DT5_SERIE,
+    DT5.DT5_STATUS,
+    DT5.DT5_TIPCOL,
+    DT5.DT5_CODSOL,
+    DT5.DT5_CODOBC,
+
     SA1.A1_COD,
     SA1.A1_LOJA,
     SA1.A1_NOME,
@@ -152,6 +162,12 @@ from DTQ010 DTQ (nolock)
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+
+        left join DT5010 DT5 (nolock)
+            on DT5.D_E_L_E_T_ = ''
+            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
+            and DT5.DT5_NUMSOL = DUD.DUD_DOC
+            and DUD.DUD_SERIE = 'COL'
 
 		left join DT6010 DT6 (nolock)
 			on DT6.D_E_L_E_T_ = ''

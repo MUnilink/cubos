@@ -19,3 +19,11 @@ logística/CUSTO TMS planilha/base de cálculo seguro de carga clientes safra.xl
 .gitignore
 logística/CUSTO TMS planilha/base viagens.xlsx
 FAST ANALYTICS/gooddata-custom/log/agent.log
+manutenção/Solicitações de serviços externos.xlsx
+.gitignore
+manutenção/Solicitações de compra de peças.xlsx
+logística/CUSTO TMS planilha/viagens com receita.xlsx
+.gitignore
+logística/CUSTO TMS planilha/rota viagens.xlsx
+logística/viagens com operações e receitas.sql
+logística/CUSTO TMS planilha/base viagens, receita e rota.xlsx
