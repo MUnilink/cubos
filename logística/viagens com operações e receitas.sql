@@ -70,6 +70,27 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
+    DTC.DTC_FILORI,
+    DTC.DTC_DOC,
+    DTC.DTC_SERIE,
+    DTC.DTC_VALOR,
+
+    DTC.DTC_VALOR *
+    (
+        select case DU5010.DU5_INTERV when 1000 then DU5010.DU5_VALOR/10 else DU5010.DU5_VALOR end
+        from DU5010 (nolock)
+            inner join DTC010 (nolock)
+                on DTC010.D_E_L_E_T_ = ''
+                and DU5010.DU5_CDRORI = DTC010.DTC_CDRORI
+                and DU5010.DU5_CDRDES = DTC010.DTC_CDRCAL
+        where
+                DU5010.D_E_L_E_T_ = ''
+            and DTC010.DTC_FILORI = DTC.DTC_FILORI
+            and DTC010.DTC_NUMNFC = DTC.DTC_NUMNFC
+            and DTC010.DTC_SERNFC = DTC.DTC_SERNFC
+    ) as SEGURO,
+    .0738 * 1 as SEGURO_IOF,
+
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
     DT5.DT5_NUMSOL,
@@ -138,7 +159,17 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = '050'
-    ) as COMPETENCIA
+    ) as COMPETENCIA,
+
+    case DTQ.DTQ_STATUS
+        when '1' then 'EXCLUÍDA'
+        when '2' then 'EM TRANSITO'
+        when '3' then 'ENCERRADA'
+        when '4' then 'CHEGADA EM FILIAL'
+        when '5' then 'FECHADA'
+        when '9' then 'CANCELADA'
+        else 'OUTROS'
+    end as DTQ_STATUS
 
 from DTQ010 DTQ (nolock)
     inner join DA8010 DA8 (nolock)
