@@ -77,7 +77,7 @@ select
 
     DTC.DTC_VALOR *
     (
-        select case DU5010.DU5_INTERV when 1000 then DU5010.DU5_VALOR/10 else DU5010.DU5_VALOR end
+        select case DU5010.DU5_INTERV when 1000 then (DU5010.DU5_VALOR/10)/100 else (DU5010.DU5_VALOR)/100 end
         from DU5010 (nolock)
             inner join DTC010 (nolock)
                 on DTC010.D_E_L_E_T_ = ''
@@ -88,8 +88,28 @@ select
             and DTC010.DTC_FILORI = DTC.DTC_FILORI
             and DTC010.DTC_NUMNFC = DTC.DTC_NUMNFC
             and DTC010.DTC_SERNFC = DTC.DTC_SERNFC
+            and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+            and DTC010.DTC_DOC = DT6.DT6_DOC
+            and DTC010.DTC_SERIE = DT6.DT6_SERIE
     ) as SEGURO,
-    .0738 * 1 as SEGURO_IOF,
+
+    DTC.DTC_VALOR * .0738 *
+    (
+        select case DU5010.DU5_INTERV when 1000 then (DU5010.DU5_VALOR/10)/100 else (DU5010.DU5_VALOR)/100 end
+        from DU5010 (nolock)
+            inner join DTC010 (nolock)
+                on DTC010.D_E_L_E_T_ = ''
+                and DU5010.DU5_CDRORI = DTC010.DTC_CDRORI
+                and DU5010.DU5_CDRDES = DTC010.DTC_CDRCAL
+        where
+                DU5010.D_E_L_E_T_ = ''
+            and DTC010.DTC_FILORI = DTC.DTC_FILORI
+            and DTC010.DTC_NUMNFC = DTC.DTC_NUMNFC
+            and DTC010.DTC_SERNFC = DTC.DTC_SERNFC
+            and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+            and DTC010.DTC_DOC = DT6.DT6_DOC
+            and DTC010.DTC_SERIE = DT6.DT6_SERIE
+    ) as SEGURO_IOF,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
