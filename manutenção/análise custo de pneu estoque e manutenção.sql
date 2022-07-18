@@ -1,0 +1,58 @@
+select
+	ST9.T9_CODBEM as CONTADOR,
+	ST9.T9_CODBEM,
+	ST9.T9_CCUSTO,
+	ST9.T9_ITEMCTA,
+	trim(ST7.T7_NOME) as T7_NOME,
+	trim(isnull(TQT.TQT_DESMED, '-')) as TQT_DESMED,
+	STJ.TJ_CUSTTER,
+	ST9.T9_SITBEM,
+
+	ST9.T9_VALCPA,
+
+	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
+	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
+
+	TQS.TQS_KMOR,
+	TQS.TQS_KMR1,
+	TQS.TQS_KMR2,
+	TQS.TQS_KMR3,
+	TQS.TQS_KMR4,
+	TQS.TQS_KMR5,
+	TQS.TQS_KMR6,
+	TQS.TQS_KMR7,
+
+	isnull(STJ.TJ_CUSTTER, 0.0) + ST9.T9_VALCPA as CUSTOPN,
+	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT
+
+from TQS010 TQS (nolock)
+	left join 
+	(
+		select
+			STJ010.TJ_CODBEM,
+			STJ010.TJ_SERVICO,
+			sum(STJ010.TJ_CUSTTER) as TJ_CUSTTER
+		from STJ010 (nolock)
+		where STJ010.D_E_L_E_T_ = ''
+		group by
+			STJ010.TJ_CODBEM,
+			STJ010.TJ_SERVICO
+	) STJ
+		on STJ.TJ_CODBEM = TQS.TQS_CODBEM
+	inner join ST9010 ST9
+		on ST9.D_E_L_E_T_ = ''
+		and ST9.T9_CODBEM = TQS.TQS_CODBEM
+
+		inner join ST7010 ST7
+			on ST7.D_E_L_E_T_ = ''
+			and ST7.T7_FABRICA = ST9.T9_FABRICA
+
+	inner join TQT010 TQT (nolock)
+		on TQT.D_E_L_E_T_ = ''
+		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+
+		left join SB1010 SB1 (nolock)
+			on SB1.D_E_L_E_T_ = ''
+			and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
+where
+		TQS.D_E_L_E_T_ = ''
