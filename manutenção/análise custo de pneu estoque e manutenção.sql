@@ -7,9 +7,13 @@ select
 	trim(isnull(TQT.TQT_DESMED, '-')) as TQT_DESMED,
 	STJ.TJ_CUSTTER,
 	ST9.T9_SITBEM,
+    ST9.T9_VALCPA,
 
-	ST9.T9_VALCPA,
-
+    substring(SB9.B9_DATA, 1, 6) as B9_DATA,
+    SB9.B9_LOCAL,
+    SB9.B9_QINI,
+    SB9.B9_VINI1,
+    case when SB9.B9_QINI = 0 then 0.0 else SB9.B9_VINI1/SB9.B9_QINI end as B9_CM,
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
 
@@ -54,5 +58,9 @@ from TQS010 TQS (nolock)
 		left join SB1010 SB1 (nolock)
 			on SB1.D_E_L_E_T_ = ''
 			and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
+
+            left join SB9010 SB9 (nolock)
+                on SB9.D_E_L_E_T_ = ''
+                and SB9.B9_COD = SB1.B1_COD
 where
 		TQS.D_E_L_E_T_ = ''
