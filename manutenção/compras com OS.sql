@@ -66,7 +66,6 @@ select
 	trim(isnull(SC7.C7_ITEM, '-')) as ITEM,
 	trim(isnull(SC7.C7_PRODUTO, '-')) as PRODUTO,
 	trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
-	trim(isnull(SC7.C7_OP, '-')) as C7_OP,
 	trim(isnull(SC7.C7_CC, '-')) as C7_CC,
 	trim(isnull(SC7.C7_ITEMCTA, '-')) as C7_ITEMCTA,
 	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE,
