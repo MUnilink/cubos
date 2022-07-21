@@ -23,14 +23,14 @@ select
 from SRA010 SRA (nolock)
 	inner join SRJ010 SRJ (nolock)
 		on SRJ.D_E_L_E_T_ = ''
-		and substring(SRA.RA_FILIAL, 1, 4) = SRJ.RJ_FILIAL
-        and SRA.RA_CODFUNC = SRJ.RJ_FUNCAO
+		and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+        and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
     inner join CTT010 CTT (nolock)
     	on CTT.D_E_L_E_T_ = ''
-    	and SRA.RA_CC = CTT.CTT_CUSTO
+    	and CTT.CTT_CUSTO = SRA.RA_CC
     inner join CTD010 CTD (nolock)
     	on CTD.D_E_L_E_T_ = ''
-    	and SRA.RA_ITEM = CTD.CTD_ITEM
+    	and CTD.CTD_ITEM = SRA.RA_ITEM
 	inner join SX5010 SX5 (nolock)
 		on SX5.D_E_L_E_T_ = ''
 		and SX5.X5_CHAVE = SRA.RA_GRINRAI
