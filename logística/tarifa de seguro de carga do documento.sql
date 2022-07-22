@@ -9,6 +9,7 @@ select
     DTC.DTC_FILORI,
     DTC.DTC_NUMNFC,
     DTC.DTC_SERNFC,
+    DTC.DTC_VALOR,
     (
         select count(*)
         from DTC010 (nolock)
