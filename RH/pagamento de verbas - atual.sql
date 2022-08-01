@@ -5,7 +5,12 @@ select
 	trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
 	trim(isnull(SRC.RC_PD, '-')) as RC_PD,
 	trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
-	trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
+	
+	case SRC.RC_PD
+		when '183' then 'VALOR A RECEBER'
+		when '999' then 'VALOR A RECEBER'
+	else '' end as RV_DESCDET,
+	
 	trim(isnull(SRJ.RJ_DESC, '-')) as RJ_DESC,
 
 	trim(SRA.RA_CC) + ' - ' + trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
