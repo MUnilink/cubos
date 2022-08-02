@@ -45,7 +45,7 @@ from SRA010 SRA (nolock)
             where SRV010.D_E_L_E_T_ = ''
         ) SRV
             on SRV.RV_FILIAL = substring(SRD.RD_FILIAL, 1, 4)
-            and SRV.RV_COD = SRD.RD_PD
+            and SRV.RV_COD = SRD.RD_PD/*
 
     inner join
     (
@@ -65,6 +65,7 @@ from SRA010 SRA (nolock)
         where SRT010.D_E_L_E_T_ = ''
     ) SRT
         on SRT.RV_FILIAL = substring(SRD.RD_FILIAL, 1, 4)
-        and SRT.RT_COD = SRD.RD_PD
+        and SRT.RT_COD = SRD.RD_PD*/
 where
         SRA.D_E_L_E_T_ = ''
+    and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
