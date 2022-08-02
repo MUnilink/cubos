@@ -1,9 +1,9 @@
 select
+	STJ.TJ_FILIAL,
 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
 	STJ.TJ_ORDEM,
 	convert(date, substring(STJ.TJ_DTORIGI, 1, 8), 103) as TJ_DTORIGI,
 	trim(isnull(STJ.TJ_TERMINO, '-')) as TJ_TERMINO,
-	STJ.TJ_FILIAL,
 	trim(isnull(STL.TL_CODIGO, '-')) as PRODUTO,
 	STL.TL_QUANREC,
 	STL.TL_QUANTID,
@@ -32,8 +32,8 @@ select
 
 	case when year(SCP.CP_DATPRF) = 1900 then datediff(day, STJ.TJ_DTORIGI, getdate()) else datediff(day, STJ.TJ_DTORIGI, SCP.CP_DATPRF) end as TEMPO_INIMNT_SA,
 	case when year(SC1.C1_EMISSAO) = 1900 then datediff(day, SCP.CP_DATPRF, getdate()) else datediff(day, SCP.CP_DATPRF, SC1.C1_EMISSAO) end as DIAS_SA_SC,
-	case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,
-	case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,
+	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
+	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
 
 	trim(isnull(SC1.C1_OP, '-')) as C1_OP,
 	trim(isnull(SC1.C1_NUM, '-')) as NUM_SC,
@@ -48,8 +48,32 @@ select
 		when 'L' then 'APROVADO'
 		when 'R' then 'REJEITADO'
 		else 'OUTROS'
-	end as APROVASOLICIT,
-	convert(date, substring(APRSC1.CR_DATALIB, 1, 8), 103) as DATAAPR_SC,
+	end as STATUS_APRSC,
+	
+	case when SC1.C1_APROV = 'L' then
+	(
+		select distinct convert(date, substring(SCR010.CR_DATALIB, 1, 8), 103)
+		from SCR010 (nolock)
+		where
+				SCR010.D_E_L_E_T_ = ''
+			and SCR010.CR_TIPO = 'SC'
+			and SCR010.CR_DATALIB is not null
+			and SCR010.CR_NUM = SC1.C1_NUM
+	) else null end as DATAAPR_SC,
+
+	case when SC1.C1_APROV = 'L' then
+	(
+		select distinct SAK010.AK_NOME
+		from SCR010 (nolock)
+			inner join SAK010 (nolock)
+				on SAK010.D_E_L_E_T_ = ''
+				and SAK010.AK_USER = SCR010.CR_USERLIB
+		where
+				SCR010.D_E_L_E_T_ = ''
+			and SCR010.CR_TIPO = 'SC'
+			and SCR010.CR_DATALIB is not null
+			and SCR010.CR_NUM = SC1.C1_NUM
+	) else 'PENDENTE' end as APROVASC,
 
 	SC1.C1_QUANT,
 	SC1.C1_QUJE,
@@ -121,12 +145,7 @@ select
 	SD1.D1_DESC,
 	SD1.D1_VALDESC,
 
-	case SD1.D1_DTDIGIT
-		when null then '-'
-		when '' then '-'
-		when '        ' then '-'
-		else convert(date, substring(SD1.D1_DTDIGIT, 1 ,8), 103)
-	end as DATA_NF,
+	convert(date, substring(SD1.D1_DTDIGIT, 1 ,8), 103) as DATA_NF,
 
 	case when year(SD1.D1_DTDIGIT) = 1900 then datediff(day, SCP.CP_DATPRF, getdate()) else datediff(day, SCP.CP_DATPRF, SD1.D1_DTDIGIT) end as TEMPODECOMPRA,
 	case when year(STL.TL_DTINICI) = 1900 then datediff(day, SD1.D1_DTDIGIT, getdate()) else datediff(day, SD1.D1_DTDIGIT, STL.TL_DTINICI) end as TEMPOEMESTOQUE,
@@ -138,9 +157,9 @@ select
 	SA2.A2_NREDUZ,
 	SA2.A2_CGC,
 
-	case when STJ.TJ_CODBEM like 'CM%' then 'VP - CM'
+	case when STJ.TJ_CODBEM like 'CM%' then 'CM'
 	else
-		case when STJ.TJ_CODBEM like 'SR%' then 'VP - SR'
+		case when STJ.TJ_CODBEM like 'SR%' then 'SR'
 		else ST9.T9_CODFAMI
 		end
 	end as T6_CODFAMI,
@@ -210,31 +229,30 @@ from STL010 STL (nolock)
 		and STJ.TJ_ORDEM = STL.TL_ORDEM
 		and STJ.TJ_PLANO = STL.TL_PLANO
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
-	inner join ST9010 ST9 (nolock)
-		on ST9.D_E_L_E_T_ = ''
-		and ST9.T9_CODBEM = STJ.TJ_CODBEM
-
+		
 		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
-			and CTT.CTT_CUSTO = ST9.T9_CCUSTO
+			and CTT.CTT_CUSTO = STJ.TJ_CCUSTO
 		left join CTD010 CTD (nolock)
 			on CTD.D_E_L_E_T_ = ''
-			and CTD.CTD_ITEM = ST9.T9_ITEMCTA
-
+			and CTD.CTD_ITEM = STJ.TJ_YITMCT
+		inner join ST9010 ST9 (nolock)
+			on ST9.D_E_L_E_T_ = ''
+			and ST9.T9_CODBEM = STJ.TJ_CODBEM
+	
+	left join SB1010 SB1 (nolock)
+		on SB1.D_E_L_E_T_ = ''
+		and SB1.B1_COD = STL.TL_CODIGO
 	left join SCP010 as SCP (nolock)
 		on SCP.D_E_L_E_T_ = ''
 		and SCP.CP_FILIAL = STL.TL_FILIAL
 		and substring(SCP.CP_OP, 1, 6) = STL.TL_ORDEM
 		and SCP.CP_PRODUTO = STL.TL_CODIGO
 
-		inner join SC1010 SC1 (nolock)
+		left join SC1010 SC1 (nolock)
 			on SC1.D_E_L_E_T_ = ''
 			and substring(SC1.C1_OP, 1, 6) = substring(SCP.CP_OP, 1, 6)
 			and SC1.C1_PRODUTO = SCP.CP_PRODUTO
-
-			left join SCR010 APRSC1 (nolock)
-				on APRSC1.D_E_L_E_T_ = ''
-				and APRSC1.CR_NUM = SC1.C1_NUM
 
 			left join SC7010 SC7 (nolock)
 				on SC7.D_E_L_E_T_ = ''
@@ -251,9 +269,6 @@ from STL010 STL (nolock)
 					and SD1.D1_FORNECE = SC7.C7_FORNECE
 					and SD1.D1_LOJA = SC7.C7_LOJA
 					and SD1.D1_COD = SC7.C7_PRODUTO
-				left join SB1010 SB1 (nolock)
-					on SB1.D_E_L_E_T_ = ''
-					and SB1.B1_COD = SC7.C7_PRODUTO
 				left join SA2010 SA2 (nolock)
 					on SA2.D_E_L_E_T_ = ''
 					and SA2.A2_COD = SC7.C7_FORNECE
@@ -263,4 +278,4 @@ from STL010 STL (nolock)
 					and SY1.Y1_USER = SC7.C7_USER
 where
 		STL.D_E_L_E_T_ = ''
-	and cast(STL.TL_SEQRELA as int) > 0
+	and STJ.TJ_DTORIGI > '20211031'

@@ -14,6 +14,7 @@ select
 	trim(isnull(STJ.TJ_DTORIGI, '-')) as TJ_DTORIGI,
 
 	STJ.TJ_POSCONT,
+	ST9.T9_TPCONTA,
 	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
 	STJ.TJ_CUSTMDO,
 	STJ.TJ_CUSTMAT,
