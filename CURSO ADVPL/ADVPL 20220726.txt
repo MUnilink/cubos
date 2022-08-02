@@ -1,0 +1,12 @@
+permissões de usuários por grupos e níveis de acessos, algo dificutado pela necessidade de mapear as atividades dos usuários, o que também passa pela definição dos processos dos setores
+o configurador define a quantidade de acessos (programas individuais ou abas no mesmo programa)
+Rochester relata o gargalo na transmissão de documentos sem razão evidente ou constante, apesar de diversos chamados criados
+Dilson sugere reclamação com a ouvidoria devido ao atraso no processo e no faturamento de serviços
+tabela SX3 contém todos os campos do sistema, o que possibilita encontrar quais outros campos relacionam-se com certa tabela indicada pelo campo X3_F3
+migração dos arquivos de configuração dos quais o Protheus depende passou de arquivo para tabela do banco de dados
+arquivo RPO armazena os objetos do sistema, como arquivos e fontes
+até a versão 12.1.33 os fontes customizados ficavam no mesmo RPO dos objetos originais do sistema
+até a versão 12.1.25 o SO nao gerenciava bem a execução dos serviços por período longos
+bin arquivos executáveis, suportados pelo appserver, servidor de aplicação
+lib grava arquivos no RPO
+UPPDISTR 
