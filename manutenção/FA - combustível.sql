@@ -5,16 +5,16 @@ select
 	ZD3.ZD3_KMRD,
 	ZD3.ZD3_KML,
 	ZD3.ZD3_TOTAL,
-	trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,
-	trim(isnull(ZD3.ZD3_HORA, '-')) as ZD3_HORA,
-	ZD3.TQN_CCUSTO,
+	
+    trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,
+    year(ZD3.ZD3_DATA) as ano_ABA,
+    month(ZD3.ZD3_DATA) as mes_ABA,
 
 	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
-
-	year(ZD3.ZD3_DATA) as ano_ABA,
-	month(ZD3.ZD3_DATA) as mes_ABA
+	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
+	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT
 from
 	(
 		select
@@ -32,10 +32,10 @@ from
 			ZD3010.ZD3_TANQUE,
 			ZD3010.ZD3_COMB,
 			substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
-			substring(ZD3010.ZD3_DATA, 10, 14) as ZD3_HORA,
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD,
-			TQN010.TQN_CCUSTO
+			TQN010.TQN_CCUSTO,
+			TQN010.TQN_YITMCT
 		from ZD3010 (nolock)
 			inner join TQN010 (nolock)
 				on TQN010.D_E_L_E_T_ = ''
@@ -44,7 +44,7 @@ from
 		where ZD3010.D_E_L_E_T_ = ''
 	) as ZD3
 
-	left join	
+	left join
 	(
 		select
 			case cast(TQI010.TQI_CODPOS as int)
@@ -59,7 +59,7 @@ from
 			TQI010.TQI_CODCOM,
 			TQI010.TQI_PRODUT,
 			TQI010.TQI_FABRIC
-		from TQI010 (nolock)
+		from TQI010
 		where TQI010.D_E_L_E_T_ = ''
 	) as TQI
 		on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
@@ -74,15 +74,15 @@ from
 				end as TQF_FILIAL,
 				TQF010.TQF_CODIGO,
 				TQF010.TQF_LOJA
-			from TQF010 (nolock)
+			from TQF010
 			where TQF010.D_E_L_E_T_ = ''
 		) as TQF
 			on TQF.TQF_FILIAL = TQI.TQI_FILIAL
 			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
 
-	left join ST9010 ST9 (nolock)
+	left join ST9010 as ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-	left join TQM010 TQM (nolock)
+	left join TQM010 as TQM
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
