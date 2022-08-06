@@ -30,6 +30,13 @@ select
 	convert(date, STJ.TJ_DTMRFIM, 103) as TJ_DTMRFIM,
 	convert(date, STZ.TZ_DATAMOV, 103) as TZ_DATAMOV,
 	convert(date, STZ.TZ_DATASAI, 103) as TZ_DATASAI,
+	convert(date, TR4.TR4_DTANAL, 103) as TR4_DTANAL,
+
+	TR4.TR4_NUMANA,
+	TR4.TR4_DESTIN,
+	TR4.TR4_MOTIVO,
+	TR4.TR4_SULCO,
+	TR4.TR4_PAREC,
 
 	case when year(STZ.TZ_DATASAI) = 1900 then STZ.TZ_POSCONT else STZ.TZ_CONTSAI end - STZ.TZ_POSCONT as km_rodado,
 	STJ.TJ_CUSTTER,
@@ -65,5 +72,32 @@ from TQS010 TQS (nolock)
 	inner join TQT010 TQT (nolock)
 		on TQT.D_E_L_E_T_ = ''
 		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+	inner join TR4010 TR4 (nolock)
+		on TR4.D_E_L_E_T_ = ''
+		and TR4.TR4_CODBEM = TQS.TQS_CODBEM
+
+	inner join
+	(
+		select
+			TR4010.TR4_NUMANA
+		from TR4010 (nolock)
+		where
+				TR4010.D_E_L_E_T_ = ''
+			order by TR4010.TR4_DTANAL asc
+	) ANTEC_SAI
+		on ANTEC_SAI.TR4_CODBEM
+		and ANTEC_SAI.TR4_DTANAL > STZ.TZ_DATASAI
+
+	inner join
+	(
+		select
+			TR4010.TR4_NUMANA
+		from TR4010 (nolock)
+		where
+				TR4010.D_E_L_E_T_ = ''
+			and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
+			and TR4010.TR4_DTANAL > STZ.TZ_DATASAI
+			order by TR4010.TR4_DTANAL asc
+	) ANTEC_ENT
 where
 		TQS.D_E_L_E_T_ = ''
