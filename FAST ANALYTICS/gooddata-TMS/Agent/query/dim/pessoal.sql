@@ -1,10 +1,14 @@
 select
-    SRD.RD_PERIODO + SRD.RD_MAT + substring(SRV.CONTA, 1, 2) as ID_LANCAMENTO,
-    SRD.RD_PERIODO,
-    SRV.CONTA,
+    SRA.RA_FILIAL + VERBAS.PERIODO + VERBAS.MATRICULA + substring(VERBAS.CONTA, 1, 2) as ID_LANCAMENTO,
+    SRA.RA_FILIAL,
+    VERBAS.PERIODO,
+    VERBAS.MATRICULA,
+
+    substring(VERBAS.CONTA, 4, len(VERBAS.CONTA)) as CONTA,
+    VERBAS.RV_COD,
+
     trim(CTD.CTD_DESC01) as ATIVIDADE,
     trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-    trim(SRA.RA_MAT) as MATRICULA,
     trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO
 from SRA010 SRA (nolock)
@@ -18,54 +22,51 @@ from SRA010 SRA (nolock)
     inner join CTD010 CTD (nolock)
         on CTD.D_E_L_E_T_ = ''
         and CTD.CTD_ITEM = SRA.RA_ITEM
-    left join SRD010 SRD (nolock)
-        on SRD.D_E_L_E_T_ = ''
-        and SRD.RD_FILIAL = SRA.RA_FILIAL
-        and SRD.RD_MAT = SRA.RA_MAT
-        and SRD.RD_PERIODO > '20211231'
-
-        inner join
-        (
-            select
-                SRV010.RV_FILIAL,
-                SRV010.RV_COD,
-                case when SRV010.RV_COD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
-                else
-                    case when SRV010.RV_COD in ('029', '111', '113') then '03 Hora Extra'
-                    else
-                        case when SRV010.RV_COD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
-                        else
-                            case when SRV010.RV_COD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
-                            else '01 N/A Custo'
-                            end
-                        end
-                    end
-                end as CONTA
-            from SRV010 (nolock)
-            where SRV010.D_E_L_E_T_ = ''
-        ) SRV
-            on SRV.RV_FILIAL = substring(SRD.RD_FILIAL, 1, 4)
-            and SRV.RV_COD = SRD.RD_PD/*
-
     inner join
     (
         select
-            SRT010.RT_FILIAL,
-            SRT010.RT_VERBA,
-            case when SRT010.RT_VERBA in ('845', '846') then '13º Salário'
+            isnull(SRD010.RD_FILIAL, SRT010.RT_FILIAL) as FILIAL,
+            isnull(SRD010.RD_PERIODO, SRT010.RT_DATACAL) as PERIODO,
+            isnull(SRD010.RD_MAT, SRT010.RT_MAT) as MATRICULA,
+            SRV010.RV_COD, /* VER ELIMINAÇÃO DE VERBAS INDIVIDUAIS, OQ PERMITIRIA USAR DISTINCT NESTA TABELA E VINCULAR AO EMPREGADO SEM DUPLICATAS */
+            isnull(SRD010.RD_PD, SRT010.RT_VERBA) as VERBA,
+            case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
             else
-                case when SRT010.RT_VERBA in ('833', '834', '847', '848') then 'Encargos Sociais (13º e Férias)'
+                case when SRD010.RD_PD in ('029', '111', '113') then '03 Hora Extra'
                 else
-                    case when SRT010.RT_VERBA in ('830', '831', '832') then 'Férias'
-                    else 'N/A Custo'
+                    case when SRD010.RD_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
+                    else
+                        case when SRD010.RD_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
+                        else
+                            case when SRT010.RT_VERBA in ('845', '846') then '06 13º Salário'
+                            else
+                                case when SRT010.RT_VERBA in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
+                                else
+                                    case when SRT010.RT_VERBA in ('830', '831', '832') then '08 Férias'
+                                    else '01 N/A Custo'
+                                    end
+                                end
+                            end
+                        end
                     end
                 end
             end as CONTA
-        from SRT010 (nolock)
-        where SRT010.D_E_L_E_T_ = ''
-    ) SRT
-        on SRT.RV_FILIAL = substring(SRD.RD_FILIAL, 1, 4)
-        and SRT.RT_COD = SRD.RD_PD*/
+        from SRV010 (nolock)
+            left join SRD010 (nolock)
+                on SRD010.D_E_L_E_T_ = ''
+                and SRV010.RV_FILIAL = substring(SRD010.RD_FILIAL, 1, 4)
+                and SRV010.RV_COD = SRD010.RD_PD
+                and SRD010.RD_PERIODO > '20211231'
+            left join SRT010 (nolock)
+                on SRT010.D_E_L_E_T_ = ''
+                and SRV010.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
+                and SRV010.RV_COD = SRT010.RT_VERBA
+                and SRT010.RT_DATACAL > '20211231'
+        where SRV010.D_E_L_E_T_ = ''
+    ) VERBAS
+        on VERBAS.FILIAL = SRA.RA_FILIAL
+        and VERBAS.MATRICULA = SRA.RA_MAT
+        and VERBAS.CONTA != '01 N/A Custo'
 where
         SRA.D_E_L_E_T_ = ''
     and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
