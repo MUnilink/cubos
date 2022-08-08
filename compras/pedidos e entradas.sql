@@ -9,7 +9,9 @@ select
 	trim(isnull(SC7.C7_ITEMCTA, '-')) as C7_ITEMCTA,
 	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE,
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
-	trim(isnull(SC7.C7_OBS, '-')) as C7_OBS,
+	
+	trim(isnull(SC7.C7_OBS, '-')) as OBS,
+	trim(isnull(SC7.C7_OBSM, '-')) as MEMO,
 	
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -27,10 +29,10 @@ select
 
 	convert(date, substring(SC7.C7_EMISSAO, 1 ,8), 103) as DATA_PEDIDO,
 
-	trim(isnull(SD1.D1_DOC, '-')) as DOC,
-	trim(isnull(SD1.D1_SERIE, '-')) as SERIE,
-	trim(isnull(SD1.D1_ITEM, '-')) as ITEM,
-	trim(isnull(SD1.D1_TES, '-')) as TES,
+	trim(isnull(SD1.D1_DOC, '-')) as D1_DOC,
+	trim(isnull(SD1.D1_SERIE, '-')) as D1_SERIE,
+	trim(isnull(SD1.D1_ITEM, '-')) as D1_ITEM,
+	trim(isnull(SD1.D1_TES, '-')) as D1_TES,
 
 	SD1.D1_CC,
 	SD1.D1_ITEMCTA,
