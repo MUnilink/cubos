@@ -1,5 +1,5 @@
 select
-    SRD.RD_PERIODO + SRD.RD_MAT + SRV.CONTA as ID_LANCAMENTO,
+    SRD.RD_PERIODO + SRD.RD_MAT + substring(SRV.CONTA, 1, 2) as ID_LANCAMENTO,
     SRD.RD_PERIODO,
     SRV.CONTA,
     trim(CTD.CTD_DESC01) as ATIVIDADE,
@@ -29,14 +29,14 @@ from SRA010 SRA (nolock)
             select
                 SRV010.RV_FILIAL,
                 SRV010.RV_COD,
-                case when SRV010.RV_COD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then 'Salários e Ordenados'
+                case when SRV010.RV_COD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
                 else
-                    case when SRV010.RV_COD in ('029', '111', '113') then 'Hora Extra'
+                    case when SRV010.RV_COD in ('029', '111', '113') then '03 Hora Extra'
                     else
-                        case when SRV010.RV_COD in ('038', '711', '719', '738', '749', '796') then 'Benefícios'
+                        case when SRV010.RV_COD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
                         else
-                            case when SRV010.RV_COD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then 'Encargos Sociais'
-                            else 'N/A Custo'
+                            case when SRV010.RV_COD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
+                            else '01 N/A Custo'
                             end
                         end
                     end
