@@ -24,10 +24,9 @@ User Function FOP1()
     nResult4 := nNumero1 ** nNumero2
     nResult5 := nNumero1 % nNumero2
 
-    MsgInfo("A soma de " + str(nNumero1) + " e " + str(nNumero2) + "é: " + str(nResult),"Soma")
+    MsgInfo(alltrim("A soma de " + str(nNumero1) + " e " + str(nNumero2) + "é: " + str(nResult)), "Soma")
     MsgInfo(nResult1,"Subtração")
-    MsgInfo(nResult2,"Multiplicação")
-    MsgInfo(nResult3,"Divisão")
-    MsgInfo(nResult4,"Exponenciação")
-    MsgInfo(nResult5,"Resto/Mod")
+    MsgAlert(cText, cTitle)(nResult2,"Multiplicação")
+    MsgStop(cText, cTitle)(nResult3,"Divisão")
+    MsgYesNo(cText, cTitle)(nResult4,"Exponenciação")
 Return
