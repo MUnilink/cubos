@@ -7,7 +7,7 @@ select
     DTR.DTR_CODRB3,
 
     case DTQ.DTQ_STATUS
-        when '1' then 'EXCLUÍDA'
+        when '1' then 'EXCLUIDA'
         when '2' then 'EM TRANSITO'
         when '3' then 'ENCERRADA'
         when '4' then 'CHEGADA EM FILIAL'
