@@ -1,16 +1,16 @@
-select
+select distinct
     SRA.RA_FILIAL + VERBAS.PERIODO + VERBAS.MATRICULA + substring(VERBAS.CONTA, 1, 2) as ID_LANCAMENTO,
     SRA.RA_FILIAL,
     VERBAS.PERIODO,
     VERBAS.MATRICULA,
 
     substring(VERBAS.CONTA, 4, len(VERBAS.CONTA)) as CONTA,
-    VERBAS.RV_COD,
 
     trim(CTD.CTD_DESC01) as ATIVIDADE,
     trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
     trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO
+
 from SRA010 SRA (nolock)
     inner join SRJ010 SRJ (nolock)
         on SRJ.D_E_L_E_T_ = ''
