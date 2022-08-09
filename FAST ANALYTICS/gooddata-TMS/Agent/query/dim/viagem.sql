@@ -4,7 +4,18 @@ select
     DTR.DTR_CODVEI,
     DTR.DTR_CODRB1,
     DTR.DTR_CODRB2,
-    DTR.DTR_CODRB3
+    DTR.DTR_CODRB3,
+
+    case DTQ.DTQ_STATUS
+        when '1' then 'EXCLUÍDA'
+        when '2' then 'EM TRANSITO'
+        when '3' then 'ENCERRADA'
+        when '4' then 'CHEGADA EM FILIAL'
+        when '5' then 'FECHADA'
+        when '9' then 'CANCELADA'
+        else 'OUTROS'
+    end as DTQ_STATUS
+
 from DTQ010 DTQ (nolock)
     inner join DTR010 DTR (nolock)
         on DTR.D_E_L_E_T_ = ''
