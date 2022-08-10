@@ -7,6 +7,7 @@ select
 	ZD3.ZD3_TOTAL,
 	
     trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,
+	ZD3.ZD3_DTPROC,
     year(ZD3.ZD3_DATA) as ano_ABA,
     month(ZD3.ZD3_DATA) as mes_ABA,
 
@@ -28,6 +29,7 @@ from
 			ZD3010.ZD3_LITROS,
 			ZD3010.ZD3_VLUNI,
 			ZD3010.ZD3_TOTAL,
+			ZD3010.ZD3_DTPROC,
 			
 			ZD3010.ZD3_TANQUE,
 			ZD3010.ZD3_COMB,
