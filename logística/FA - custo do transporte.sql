@@ -78,8 +78,8 @@ select
         from DU5010 (nolock)
             inner join DTC010 (nolock)
                 on DTC010.D_E_L_E_T_ = ''
-                and DU5010.DU5_CDRORI = DTC010.DTC_CDRORI
-                and DU5010.DU5_CDRDES = DTC010.DTC_CDRCAL
+                and DTC010.DTC_CDRORI = DU5010.DU5_CDRORI
+                and DTC010.DTC_CDRCAL = DU5010.DU5_CDRDES
         where
                 DU5010.D_E_L_E_T_ = ''
             and DTC010.DTC_FILORI = DTC.DTC_FILORI
