@@ -1,0 +1,75 @@
+select
+	ST9.T9_CODBEM as CONTADOR,
+	ST9.T9_CODBEM,
+	ST9.T9_CCUSTO,
+	ST9.T9_ITEMCTA,
+	trim(ST7.T7_NOME) as T7_NOME,
+	trim(isnull(TQT.TQT_DESMED, '-')) as TQT_DESMED,
+	ST9.T9_SITBEM,
+    ST9.T9_VALCPA,
+
+	TQS.TQS_KMOR,
+	TQS.TQS_KMR1,
+	TQS.TQS_KMR2,
+	TQS.TQS_KMR3,
+	TQS.TQS_KMR4,
+	TQS.TQS_KMR5,
+	TQS.TQS_KMR6,
+	TQS.TQS_KMR7,
+	isnull(STJ.TJ_CUSTTER, 0.0) + ST9.T9_VALCPA as CUSTOPN,
+	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
+
+	STZ.TZ_ORDEM,
+	STZ.TZ_BEMPAI,
+	STZ.TZ_LOCALIZ,
+	STZ.TZ_POSCONT,
+	STZ.TZ_TIPOMOV,
+	STZ.TZ_CONTSAI,
+	STZ.TZ_CAUSA,
+	ST8.T8_NOME,
+
+	convert(date, STJ.TJ_DTMRFIM, 103) as TJ_DTMRFIM,
+	convert(date, STZ.TZ_DATAMOV, 103) as TZ_DATAMOV,
+	convert(date, STZ.TZ_DATASAI, 103) as TZ_DATASAI,
+
+	case when year(STZ.TZ_DATASAI) = 1900 then STZ.TZ_POSCONT else STZ.TZ_CONTSAI end - STZ.TZ_POSCONT as km_rodado,
+	STJ.TJ_CUSTTER,
+	STJ.TJ_SERVICO
+
+from TQS010 TQS (nolock)
+	left join
+	(
+		select
+			STJ010.TJ_CODBEM,
+			STJ010.TJ_SERVICO,
+			STJ010.TJ_DTMRFIM,
+			sum(STJ010.TJ_CUSTTER) as TJ_CUSTTER
+		from STJ010 (nolock)
+		where STJ010.D_E_L_E_T_ = ''
+		group by
+			STJ010.TJ_CODBEM,
+			STJ010.TJ_SERVICO,
+			STJ010.TJ_DTMRFIM
+	) STJ
+		on STJ.TJ_CODBEM = TQS.TQS_CODBEM
+	inner join ST9010 ST9
+		on ST9.D_E_L_E_T_ = ''
+		and ST9.T9_CODBEM = TQS.TQS_CODBEM
+
+		inner join ST7010 ST7
+			on ST7.D_E_L_E_T_ = ''
+			and ST7.T7_FABRICA = ST9.T9_FABRICA
+
+	inner join STZ010 STZ (nolock)
+		on STZ.D_E_L_E_T_ = ''
+		and STZ.TZ_CODBEM = TQS.TQS_CODBEM
+		
+		inner join ST8010 ST8 (nolock)
+			on ST8.D_E_L_E_T_ = ''
+			and ST8.T8_CODOCOR = STZ.TZ_CAUSA
+
+	inner join TQT010 TQT (nolock)
+		on TQT.D_E_L_E_T_ = ''
+		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+where
+		TQS.D_E_L_E_T_ = ''
