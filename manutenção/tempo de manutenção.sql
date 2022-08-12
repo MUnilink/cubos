@@ -9,6 +9,7 @@ select
 	year(STJ.TJ_DTORIGI) as ano_DTORIGI,
 	month(STJ.TJ_DTORIGI) as mes_DTORIGI,
 	ST9.T9_CALENDA,
+	STJ.TJ_TERMINO,
 
 	case when STJ.TJ_CODBEM like 'CM%' then 'CM'
 	else
@@ -37,7 +38,7 @@ select
 	year(STJ.TJ_DTMRFIM) ANO_MNTFIM,
 	month(STJ.TJ_DTMRFIM) MES_MNTFIM,
 
-	convert(datetime, datetimefromparts(year(STJ.TJ_DTMRINI), month(STJ.TJ_DTMRINI), day(STJ.TJ_DTMRINI), substring(STJ.TJ_HOMRINI, 1, 2), substring(STJ.TJ_HOMRINI, 4, 5), 0, 0), 113) as DATAHORA_MNTINI,
+	convert(datetime, datetimefromparts(year(STJ.TJ_DTORIGI), month(STJ.TJ_DTORIGI), day(STJ.TJ_DTORIGI), substring(STJ.TJ_HOMRINI, 1, 2), substring(STJ.TJ_HOMRINI, 4, 5), 0, 0), 113) as DATAHORA_MNTINI,
 	convert(datetime, datetimefromparts(year(STJ.TJ_DTMRFIM), month(STJ.TJ_DTMRFIM), day(STJ.TJ_DTMRFIM), substring(STJ.TJ_HOMRFIM, 1, 2), substring(STJ.TJ_HOMRFIM, 4, 5), 0, 0), 113) as DATAHORA_MNTFIM,
 
 	convert(datetime, datetimefromparts(year(STJ.TJ_DTPRINI), month(STJ.TJ_DTPRINI), day(STJ.TJ_DTPRINI), substring(STJ.TJ_HOPRINI, 1, 2), substring(STJ.TJ_HOPRINI, 4, 5), 0, 0), 113) as DATAHORA_PARINI,
@@ -85,4 +86,6 @@ from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = STJ.TJ_CODBEM
-where STJ.D_E_L_E_T_ = '' and trim(ST9.T9_CODFAMI) != 'PN'
+where
+		STJ.D_E_L_E_T_ = ''
+	and trim(ST9.T9_CODFAMI) != 'PN'
