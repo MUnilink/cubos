@@ -1,8 +1,10 @@
 select
+/* veículos com ao menos uma OS; as OS deverão ficar abertas se, e somente se, os veículo está parado na manutenção*/
 	STJ.TJ_FILIAL,
 	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
 	STJ.TJ_CCUSTO,
 	STJ.TJ_ORDEM,
+	STJ.TJ_ORDEM as QTD_OS,
 	STJ.TJ_PLANO,
 	STJ.TJ_SERVICO,
 	convert(datetime, STJ.TJ_DTORIGI, 113) as TJ_DTORIGI,
