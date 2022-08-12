@@ -1,15 +1,18 @@
 select
 	STJ.TJ_FILIAL,
 	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
+	STJ.TJ_CCUSTO,
 	STJ.TJ_ORDEM,
 	STJ.TJ_PLANO,
 	STJ.TJ_SERVICO,
 	convert(datetime, STJ.TJ_DTORIGI, 113) as TJ_DTORIGI,
+	year(STJ.TJ_DTORIGI) as ano_DTORIGI,
+	month(STJ.TJ_DTORIGI) as mes_DTORIGI,
 	ST9.T9_CALENDA,
 
-	case when STJ.TJ_CODBEM like 'CM%' then 'VP - CM'
+	case when STJ.TJ_CODBEM like 'CM%' then 'CM'
 	else
-		case when STJ.TJ_CODBEM like 'SR%' then 'VP - SR'
+		case when STJ.TJ_CODBEM like 'SR%' then 'SR'
 		else ST9.T9_CODFAMI
 		end
 	end as T6_CODFAMI,
@@ -28,6 +31,11 @@ select
 	month(STJ.TJ_DTPRINI) MES_PARINI,
 	year(STJ.TJ_DTPRFIM) ANO_PARFIM,
 	month(STJ.TJ_DTPRFIM) MES_PARFIM,
+
+	year(STJ.TJ_DTMRINI) ANO_MNTINI,
+	month(STJ.TJ_DTMRINI) MES_MNTINI,
+	year(STJ.TJ_DTMRFIM) ANO_MNTFIM,
+	month(STJ.TJ_DTMRFIM) MES_MNTFIM,
 
 	convert(datetime, datetimefromparts(year(STJ.TJ_DTMRINI), month(STJ.TJ_DTMRINI), day(STJ.TJ_DTMRINI), substring(STJ.TJ_HOMRINI, 1, 2), substring(STJ.TJ_HOMRINI, 4, 5), 0, 0), 113) as DATAHORA_MNTINI,
 	convert(datetime, datetimefromparts(year(STJ.TJ_DTMRFIM), month(STJ.TJ_DTMRFIM), day(STJ.TJ_DTMRFIM), substring(STJ.TJ_HOMRFIM, 1, 2), substring(STJ.TJ_HOMRFIM, 4, 5), 0, 0), 113) as DATAHORA_MNTFIM,
