@@ -1,11 +1,12 @@
 select
 /* veículos com ao menos uma OS; as OS deverão ficar abertas se, e somente se, os veículo está parado na manutenção*/
 	STJ.TJ_FILIAL,
+	case STJ.TJ_PLANO when '000000' then 'CORRETIVA' else 'PREVENTIVA' end as TJ_PLANO,
 	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
-	STJ.TJ_CCUSTO,
+	STJ.TJ_CODBEM as QTD_BENS,
+	trim(STJ.TJ_CCUSTO) as TJ_CCUSTO,
 	STJ.TJ_ORDEM,
 	STJ.TJ_ORDEM as QTD_OS,
-	STJ.TJ_PLANO,
 	STJ.TJ_SERVICO,
 	convert(datetime, STJ.TJ_DTORIGI, 113) as TJ_DTORIGI,
 	year(STJ.TJ_DTORIGI) as ano_DTORIGI,
