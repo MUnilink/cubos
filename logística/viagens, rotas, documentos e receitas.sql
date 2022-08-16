@@ -58,15 +58,9 @@ select
     (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_VEI,
     DTR.DTR_CODRB1,
     (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
-
     DTR.DTR_CODRB2,
     DTR.DTR_CODRB3,
-    
-    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
-    DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
-    DT6.DT6_VALIMP as IMPOSTO_TOTAL,
-    DT6.DT6_VALTOT,
+
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
@@ -121,20 +115,9 @@ select
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
 
-    SA1.A1_COD,
-    SA1.A1_LOJA,
-    SA1.A1_NOME,
-    SD2.D2_DOC,
-    SD2.D2_SERIE,
-    SD2.D2_NFORI,
-    SD2.D2_SERIORI,
-    convert(date, SD2.D2_EMISSAO, 103) as D2_EMISSAO,
-    SD2.D2_TIPO,
-    SD2.D2_TOTAL,
-    SD2.D2_VALIPI,
-    SD2.D2_VALICM,
     DF1.DF1_NUMAGE,
     DF1.DF1_ITEAGE,
+
     (
         select cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
@@ -189,24 +172,7 @@ select
         when '5' then 'FECHADA'
         when '9' then 'CANCELADA'
         else 'OUTROS'
-    end as DTQ_STATUS,
-
-    SE1.E1_NUM as ND_NUM,
-    SE1.E1_PREFIXO as ND_PREFIXO,
-    SE1.E1_TIPO as ND_TIPO,
-    SE1.E1_VALOR as ND_VALOR,
-
-    SC5.C5_NUM as RPS_PEDIDO,
-    RPS.D2_DOC as RPS_DOC,
-    RPS.D2_SERIE as RPS_SERIE,
-    RPS.D2_TOTAL as RPS_TOTAL,
-    RPS.D2_VALIPI as RPS_VALIPI,
-    RPS.D2_VALICM as RPS_VALICM,
-    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
-
-    DOC_ANU.DTC_DOC as DOCAV_DOC,
-    DOC_ANU.DTC_SERIE as DOCAV_SERIE,
-    convert(date, DOC_ANU.DTC_DATENT, 103) as DOCAV_DATEMI
+    end as DTQ_STATUS
 
 from DTQ010 DTQ (nolock)
     inner join DA8010 DA8 (nolock)
@@ -242,40 +208,46 @@ from DTQ010 DTQ (nolock)
 			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
+        
+            INNER JOIN SA1010 REM
+                ON REM.A1_FILIAL = '      '
+                AND REM.A1_COD = DT6.DT6_CLIREM
+                AND REM.A1_LOJA = DT6.DT6_LOJREM
+                AND REM.D_E_L_E_T_ = ' '
+            INNER JOIN SA1010 DES
+                ON DES.A1_FILIAL = '      '
+                AND DES.A1_COD = DT6.DT6_CLIDES
+                AND DES.A1_LOJA = DT6.DT6_LOJDES
+                AND DES.D_E_L_E_T_ = ' '
+            INNER JOIN SA1010 DEV
+                ON DEV.A1_FILIAL = '      '
+                AND DEV.A1_COD = DT6.DT6_CLIDEV
+                AND DEV.A1_LOJA = DT6.DT6_LOJDEV
+                AND DEV.D_E_L_E_T_ = ' '
 
-            left join
-            (
-                select
-                    trim(DUY010.DUY_GRPVEN) as GRP_COL,
-                    trim(DUY010.DUY_EST) as EST_COL,
-                    trim(DUY010.DUY_DESCRI) as MUN_COL
-                from DUY010 (nolock)
-                where DUY010.D_E_L_E_T_ = ''
-            ) AS REG_COL
-            on REG_COL.GRP_COL = DT6.DT6_CDRORI
 
-            left join
-            (
-                select
-                    trim(DUY010.DUY_GRPVEN) as GRP_ENT,
-                    trim(DUY010.DUY_EST) as EST_ENT,
-                    trim(DUY010.DUY_DESCRI) as MUN_ENT
-                from DUY010 (nolock)
-                where DUY010.D_E_L_E_T_ = ''
-            ) AS REG_ENT
-            on REG_ENT.GRP_ENT = DT6.DT6_CDRCAL
+        LEFT JOIN DUY010 DUYORI
+            ON DUYORI.DUY_FILIAL = DT6_FILIAL
+            AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+            AND DUYORI.D_E_L_E_T_ = ' '
+        LEFT JOIN DUY010 DUYDES
+            ON DUYDES.DUY_FILIAL = DT6_FILIAL
+            AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+            AND DUYDES.D_E_L_E_T_ = ' '
+        LEFT JOIN DUY010 DUYDEV
+            ON DUYDEV.DUY_FILIAL = DT6_FILIAL
+            AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+            AND DUYDEV.D_E_L_E_T_ = ' '
+        LEFT JOIN DDB010 DDB
+            ON DDB.DDB_FILIAL = DT6_FILIAL
+            AND DDB.DDB_CODNEG = DT6.DT6_CODNEG
+            AND DDB.D_E_L_E_T_ = ' '
+        INNER JOIN SX5010 SX5
+            ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
+            AND SX5.X5_TABELA = 'L4'
+            AND SX5.X5_CHAVE = DT6.DT6_SERVIC
+            AND SX5.D_E_L_E_T_ = ' '
 
-            left join SD2010 SD2 (nolock)
-                on SD2.D_E_L_E_T_ = ''
-                and SD2.D2_FILIAL = DT6.DT6_FILDOC
-                and SD2.D2_NFORI = DT6.DT6_DOC
-                and SD2.D2_SERIORI = DT6.DT6_SERIE
-                and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
-                and SD2.D2_LOJA = DT6.DT6_LOJDEV
-            left join SA1010 SA1 (nolock)
-                on SA1.D_E_L_E_T_ = ''
-                and SA1.A1_COD = DT6.DT6_CLIDEV
-                and SA1.A1_LOJA = DT6.DT6_LOJDEV
             left join DTC010 DTC (nolock)
                 on DTC.D_E_L_E_T_ = ''
                 and DTC.DTC_FILORI = DT6.DT6_FILDOC
@@ -286,24 +258,5 @@ from DTQ010 DTQ (nolock)
                     on DF1.D_E_L_E_T_ = ''
                     and DF1.DF1_FILDOC = DTC.DTC_FILORI
                     and DF1.DF1_DOC = DTC.DTC_NUMSOL
-    
-    left join SE1010 SE1 (nolock)
-        on SE1.D_E_L_E_T_ = ''
-        and SE1.E1_YVIAGEM = DTQ.DTQ_VIAGEM
-    left join SC5010 SC5 (nolock)
-        on SC5.D_E_L_E_T_ = ''
-        and SC5.C5_YVIAGEM = DTQ.DTQ_VIAGEM
-
-        left join SD2010 RPS (nolock)
-            on RPS.D_E_L_E_T_ = ''
-            and RPS.D2_FILIAL = SC5.C5_FILIAL
-            and RPS.D2_DOC = SC5.C5_NOTA
-            and RPS.D2_SERIE = SC5.C5_SERIE
-            and RPS.D2_CLIENTE = SC5.C5_CLIENTE
-            and RPS.D2_LOJA = SC5.C5_LOJACLI
-
-    left join DTC010 DOC_ANU (nolock)
-        on DOC_ANU.D_E_L_E_T_ = ''
-        and DOC_ANU.DTC_YVIAGE = DTQ.DTQ_VIAGEM
 where 
         DTQ.D_E_L_E_T_ = ''
