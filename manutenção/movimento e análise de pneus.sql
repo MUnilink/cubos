@@ -13,7 +13,9 @@ select
 	STZ.TZ_CAUSA,
 	ST8_MV.T8_NOME,
 
-    TR4.TR4_PAREC,
+    (select top 1 TR4010.TR4_DTANAL +'-'+ TR4010.TR4_MOTIVO from TR4010 (nolock) where TR4010.D_E_L_E_T_ = '' and TR4010.TR4_CODBEM = TQS.TQS_CODBEM and TR4010.TR4_DTANAL > STZ.TZ_DATASAI order by TR4010.TR4_DTANAL asc) as ANALISE_SAI,
+    (select top 1 TR4010.TR4_DTANAL +'-'+ TR4010.TR4_MOTIVO from TR4010 (nolock) where TR4010.D_E_L_E_T_ = '' and TR4010.TR4_CODBEM = TQS.TQS_CODBEM and TR4010.TR4_DTANAL < STZ.TZ_DATAMOV order by TR4010.TR4_DTANAL desc) as ANALISE_ENT
+    /*, TR4.TR4_PAREC,
     TR4.TR4_NUMANA,
     convert(date, TR4.TR4_DTANAL, 103) as TR4_DTANAL,
     ST8_AN.T8_NOME,
@@ -21,7 +23,7 @@ select
     TR4.TR4_LOCORI,
     TR4.TR4_TM,
     TR4.TR4_PRDDES,
-    TR4.TR4_LOCDES
+    TR4.TR4_LOCDES*/
 
 from TQS010 TQS (nolock)
     inner join ST9010 ST9
@@ -33,7 +35,7 @@ from TQS010 TQS (nolock)
 
         inner join ST8010 ST8_MV (nolock)
 			on ST8_MV.D_E_L_E_T_ = ''
-			and ST8_MV.T8_CODOCOR = TR4.TR4_MOTIVO
+			and ST8_MV.T8_CODOCOR = STZ.TZ_CAUSA/*
     
     inner join TR4010 TR4 (nolock)
         on TR4.D_E_L_E_T_ = ''
@@ -41,5 +43,5 @@ from TQS010 TQS (nolock)
 
         inner join ST8010 ST8_AN (nolock)
 			on ST8_AN.D_E_L_E_T_ = ''
-			and ST8_AN.T8_CODOCOR = TR4.TR4_MOTIVO
+			and ST8_AN.T8_CODOCOR = TR4.TR4_MOTIVO*/
 where TQS.D_E_L_E_T_ = ''
