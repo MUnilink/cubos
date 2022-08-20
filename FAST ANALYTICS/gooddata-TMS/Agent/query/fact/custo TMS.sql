@@ -48,9 +48,8 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
-    DTC.DTC_FILORI,
-    DTC.DTC_DOC,
-    DTC.DTC_SERIE,
+    DTC.DTC_NUMNFC,
+    DTC.DTC_SERNFC,
     DTC.DTC_VALOR,
 
     DTC.DTC_VALOR *
@@ -135,72 +134,104 @@ select
         when '5' then 'FECHADA'
         when '9' then 'CANCELADA'
         else 'OUTROS'
-    end as DTQ_STATUS
+    end as DTQ_STATUS,
 
-from DTQ010 DTQ (nolock)
-    inner join DTR010 DTR (nolock)
-        on DTR.D_E_L_E_T_ = ''
-        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
-    left join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILORI = DTQ.DTQ_FILORI
-        and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
-        and DUD.DUD_STATUS = DTQ.DTQ_STATUS
+    DYV.DYV_VIAGEM,
+    DYV.DYV_CODMOT,
+    DA4.DA4_MAT,
+    DA4.DA4_NOME,
+    DA4.DA4_FORNEC,
+    DYV.DYV_IDCDIA,
+    DYX.DYX_ITEM,
+    convert(date, DYX.DYX_DATDIA, 103) as DYX_DATDIA,
+    DYX.DYX_QTDE,
+    DYX.DYX_VLRUNI,
+    SE2.E2_NUM,
+    SE2.E2_VALOR as VALOR_DIARIA
 
-        left join DT5010 DT5 (nolock)
-            on DT5.D_E_L_E_T_ = ''
-            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-            and DT5.DT5_NUMSOL = DUD.DUD_DOC
-            and DUD.DUD_SERIE = 'COL'
+from DUD010 DUD (nolock)
+    left join DTQ010 DTQ (nolock)
+        on DTQ.D_E_L_E_T_ = ''
+        and DTQ.DTQ_FILIAL = DUD.DUD_FILIAL
+        and DTQ.DTQ_FILORI = DUD.DUD_FILORI
+        and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
+        and year(DTQ.DTQ_DATGER) = 2022
 
-		left join DT6010 DT6 (nolock)
-			on DT6.D_E_L_E_T_ = ''
-			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-			and DT6.DT6_DOC = DUD.DUD_DOC
-			and DT6.DT6_SERIE = DUD.DUD_SERIE
+        inner join DTR010 DTR (nolock)
+            on DTR.D_E_L_E_T_ = ''
+            and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+            and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
 
-            left join SA1010 REM
-                on REM.A1_FILIAL = '      '
-                and REM.A1_COD = DT6.DT6_CLIREM
-                and REM.A1_LOJA = DT6.DT6_LOJREM
-                and REM.D_E_L_E_T_ = ' '
-            left join SA1010 DES
-                on DES.A1_FILIAL = '      '
-                and DES.A1_COD = DT6.DT6_CLIDES
-                and DES.A1_LOJA = DT6.DT6_LOJDES
-                and DES.D_E_L_E_T_ = ' '
-            left join SA1010 DEV
-                on DEV.A1_FILIAL = '      '
-                and DEV.A1_COD = DT6.DT6_CLIDEV
-                and DEV.A1_LOJA = DT6.DT6_LOJDEV
-                and DEV.D_E_L_E_T_ = ' '
-            left join DUY010 DUYORI
-                on DUYORI.DUY_FILIAL = DT6_FILIAL
-                and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
-                and DUYORI.D_E_L_E_T_ = ' '
-            left join DUY010 DUYDES
-                on DUYDES.DUY_FILIAL = DT6_FILIAL
-                and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
-                and DUYDES.D_E_L_E_T_ = ' '
-            left join DUY010 DUYDEV
-                on DUYDEV.DUY_FILIAL = DT6_FILIAL
-                and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
-                and DUYDEV.D_E_L_E_T_ = ' '
-            left join DDB010 DDB
-                on DDB.DDB_FILIAL = DT6_FILIAL
-                and DDB.DDB_CODNEG = DT6.DT6_CODNEG
-                and DDB.D_E_L_E_T_ = ' '
-            inner join SX5010 SX5
-                on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
-                and SX5.X5_TABELA = 'L4'
-                and SX5.X5_CHAVE = DT6.DT6_SERVIC
-                and SX5.D_E_L_E_T_ = ' '
-            left join DTC010 DTC (nolock)
-                on DTC.D_E_L_E_T_ = ''
-                and DTC.DTC_FILORI = DT6.DT6_FILDOC
-                and DTC.DTC_DOC = DT6.DT6_DOC
-                and DTC.DTC_SERIE = DT6.DT6_SERIE
+    left join DT5010 DT5 (nolock)
+        on DT5.D_E_L_E_T_ = ''
+        and DT5.DT5_FILDOC = DUD.DUD_FILDOC
+        and DT5.DT5_NUMSOL = DUD.DUD_DOC
+        and DT5.DT5_SERIE = DUD.DUD_SERIE
+
+    left join DT6010 DT6 (nolock)
+        on DT6.D_E_L_E_T_ = ''
+        and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+        and DT6.DT6_DOC = DUD.DUD_DOC
+        and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+        left join SA1010 REM
+            on REM.A1_FILIAL = '      '
+            and REM.A1_COD = DT6.DT6_CLIREM
+            and REM.A1_LOJA = DT6.DT6_LOJREM
+            and REM.D_E_L_E_T_ = ' '
+        left join SA1010 DES
+            on DES.A1_FILIAL = '      '
+            and DES.A1_COD = DT6.DT6_CLIDES
+            and DES.A1_LOJA = DT6.DT6_LOJDES
+            and DES.D_E_L_E_T_ = ' '
+        left join SA1010 DEV
+            on DEV.A1_FILIAL = '      '
+            and DEV.A1_COD = DT6.DT6_CLIDEV
+            and DEV.A1_LOJA = DT6.DT6_LOJDEV
+            and DEV.D_E_L_E_T_ = ' '
+        left join DUY010 DUYORI
+            on DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
+            and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+            and DUYORI.D_E_L_E_T_ = ' '
+        left join DUY010 DUYDES
+            on DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
+            and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+            and DUYDES.D_E_L_E_T_ = ' '
+        left join DUY010 DUYDEV
+            on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
+            and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+            and DUYDEV.D_E_L_E_T_ = ' '
+        left join DDB010 DDB
+            on DDB.DDB_FILIAL = DT6.DT6_FILIAL
+            and DDB.DDB_CODNEG = DT6.DT6_CODNEG
+            and DDB.D_E_L_E_T_ = ' '
+        inner join SX5010 SX5
+            on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
+            and SX5.X5_TABELA = 'L4'
+            and SX5.X5_CHAVE = DT6.DT6_SERVIC
+            and SX5.D_E_L_E_T_ = ' '
+        left join DTC010 DTC (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_DOC = DT6.DT6_DOC
+            and DTC.DTC_SERIE = DT6.DT6_SERIE
+
+    left join DYV010 DYV (nolock)
+        on DYV.D_E_L_E_T_ = ''
+        and DYV.DYV_VIAGEM = DTQ.DTQ_VIAGEM
+
+        inner join DYX010 DYX (nolock)
+            on DYX.D_E_L_E_T_ = ''
+            and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
+            and year(DYX.DYX_DATDIA) = 2022
+            
+            left join SE2010 SE2
+                on SE2.D_E_L_E_T_ = ''
+                and SE2.E2_PREFIXO = DYX.DYX_PRETIT
+                and SE2.E2_NUM = DYX.DYX_NUMTIT
+
+        inner join DA4010 DA4 (nolock)
+            on DA4.D_E_L_E_T_ = ''
+            and DA4.DA4_COD = DYV.DYV_CODMOT
 where
-        DTQ.D_E_L_E_T_ = ''
-    and DTQ.DTQ_DATGER > '20211231'
+        DUD.D_E_L_E_T_ = ''
