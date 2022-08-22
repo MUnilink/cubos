@@ -136,18 +136,9 @@ select
         else 'OUTROS'
     end as DTQ_STATUS,
 
-    DYV.DYV_VIAGEM,
-    DYV.DYV_CODMOT,
-    DA4.DA4_MAT,
-    DA4.DA4_NOME,
-    DA4.DA4_FORNEC,
-    DYV.DYV_IDCDIA,
-    DYX.DYX_ITEM,
-    convert(date, DYX.DYX_DATDIA, 103) as DYX_DATDIA,
-    DYX.DYX_QTDE,
-    DYX.DYX_VLRUNI,
-    SE2.E2_NUM,
-    SE2.E2_VALOR as VALOR_DIARIA
+    DIARIAS.DYV_IDCDIA,
+    DIARIAS.DYX_DATDIA,
+    DIARIAS.DYX_VLRUNI
 
 from DUD010 DUD (nolock)
     left join DTQ010 DTQ (nolock)
@@ -216,22 +207,38 @@ from DUD010 DUD (nolock)
             and DTC.DTC_DOC = DT6.DT6_DOC
             and DTC.DTC_SERIE = DT6.DT6_SERIE
 
-    left join DYV010 DYV (nolock)
-        on DYV.D_E_L_E_T_ = ''
-        and DYV.DYV_VIAGEM = DTQ.DTQ_VIAGEM
-
-        inner join DYX010 DYX (nolock)
-            on DYX.D_E_L_E_T_ = ''
-            and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-            and year(DYX.DYX_DATDIA) = 2022
-            
-            left join SE2010 SE2
-                on SE2.D_E_L_E_T_ = ''
-                and SE2.E2_PREFIXO = DYX.DYX_PRETIT
-                and SE2.E2_NUM = DYX.DYX_NUMTIT
-
-        inner join DA4010 DA4 (nolock)
-            on DA4.D_E_L_E_T_ = ''
-            and DA4.DA4_COD = DYV.DYV_CODMOT
+    left join
+    (
+        select
+            DYV010.DYV_VIAGEM,
+            DYV010.DYV_CODMOT,
+            DYV010.DYV_IDCDIA,
+            DYX010.DYX_ITEM,
+            convert(date, DYX010.DYX_DATDIA, 103) as DYX_DATDIA,
+            DYX010.DYX_QTDE,
+            sum(DYX010.DYX_VLRUNI) as DYX_VLRUNI
+        from DYV010 (nolock)
+            inner join DYX010 (nolock)
+                on DYX010.D_E_L_E_T_ = ''
+                and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
+                and year(DYX010.DYX_DATDIA) = 2022
+        where DYV010.D_E_L_E_T_ = ''
+        group by
+            DYV010.DYV_IDCDIA,
+            DYX010.DYX_IDCDIA,
+            DYX010.DYX_DATDIA,
+            DYX010.DYX_ITEM,
+            DYV010.DYV_VIAGEM,
+            DYV010.DYV_CODMOT,
+            DYX010.DYX_QTDE
+    ) DIARIAS
+        on DIARIAS.DYV_VIAGEM = DTQ.DTQ_VIAGEM
+    left join
+    (
+        select *
+        from STL010 (nolock)
+    ) MANUTENCAO
+        on MANUTENCAO.TL_DTINICI
+        and MANUTENCAO.T9_CODBEM = DTR.DTR_CODVEI
 where
         DUD.D_E_L_E_T_ = ''
