@@ -24,7 +24,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+            and ZB1010.ZB1_CODDA3 = VIAGEM.DTR_CODVEI
             and DTW010.DTW_ATIVID in ('050')
     ) as km_fim,
     (
@@ -41,7 +41,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+            and ZB1010.ZB1_CODDA3 = VIAGEM.DTR_CODVEI
             and DTW010.DTW_ATIVID in ('049')
     ) as km_ini,
 
@@ -79,6 +79,16 @@ select
     DT5.DT5_TIPCOL,
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
+
+    DUA.DUA_FILOCO,
+    DUA.DUA_NUMOCO,
+    DUA.DUA_FILORI,
+    DUA.DUA_VIAGEM,
+    DUA.DUA_SEQOCO,
+    DUA.DUA_DATOCO,
+    DUA.DUA_HOROCO,
+    DT2.DT2_CODOCO,
+    DT2.DT2_DESCRI,
 
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -146,7 +156,8 @@ select
     datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC) TEMPO_ATIVO,
 	DEPRECIACAO.TEMPO_DEPREC,
 	DEPRECIACAO.DEPRECMENSAL,
-    case when (12 * (100 / DEPRECIACAO.TXDEPRECMENSAL)) > datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC) then DEPRECIACAO.N3_VORIG1 * (DEPRECIACAO.TXDEPRECMENSAL / 1200) else 0.0 end as DEPRECATUAL
+    DEPRECIACAO.TXDEPRECMENSAL,
+    case when DEPRECIACAO.TEMPO_DEPREC >= datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC) then DEPRECIACAO.DEPRECMENSAL else 0.0 end as DEPRECATUAL
 
 from DUD010 DUD (nolock)
     left join
@@ -195,6 +206,17 @@ from DUD010 DUD (nolock)
         and DT5.DT5_FILDOC = DUD.DUD_FILDOC
         and DT5.DT5_NUMSOL = DUD.DUD_DOC
         and DT5.DT5_SERIE = DUD.DUD_SERIE
+    
+    left join DUA010 DUA (nolock)
+        on DUA.D_E_L_E_T_ = ''
+        and DUA.DUA_FILIAL = VIAGEM.DTQ_FILIAL
+        and DUA.DUA_FILORI = VIAGEM.DTQ_FILORI
+        and DUA.DUA_VIAGEM = VIAGEM.DTQ_VIAGEM
+
+        left join DT2010 DT2 (nolock)
+            on DT2.D_E_L_E_T_ = ' '
+            and DT2.DT2_FILIAL = DUA.DUA_FILIAL
+            and DT2.DT2_CODOCO = DUA.DUA_CODOCO
 
     left join DT6010 DT6 (nolock)
         on DT6.D_E_L_E_T_ = ''
