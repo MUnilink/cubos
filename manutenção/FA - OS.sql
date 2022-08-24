@@ -117,8 +117,8 @@ select distinct
 	end as DESC_INSUMO,
 
 	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
-	trim(isnull(STL.TL_TAREFA)) as TL_TAREFA,
-	trim(isnull(ST5.T5_TAREFA, '-')) as T5_TAREFA,
+	trim(isnull(STL.TL_TAREFA, '-')) as TL_TAREFA,
+	trim(isnull(ST5.T5_DESCRIC, isnull(TT9.TT9_DESCRI, '-'))) as T5_TAREFA,
 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
 	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
 	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
@@ -178,8 +178,10 @@ from STJ010 STJ
 
 		left join ST5010 ST5
 			on ST5.D_E_L_E_T_ = ''
-			and ST5.T5_CODBEM = STL.TL_CODBEM
 			and ST5.T5_TAREFA = STL.TL_TAREFA
+		left join TT9010 TT9
+			on TT9.D_E_L_E_T_ = ''
+			and TT9.TT9_TAREFA = STL.TL_TAREFA
 		left join SF1010 SF1
 			on SF1.D_E_L_E_T_ = ''
 			and SF1.F1_DOC + SF1.F1_SERIE = STL.TL_DOC + STL.TL_SDOC

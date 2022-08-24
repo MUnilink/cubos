@@ -89,7 +89,6 @@ from STJ010 as STJ /**/
 
 		left join ST5010 as ST5
 			on ST5.D_E_L_E_T_ = ''
-			and ST5.T5_CODBEM = STL.TL_CODBEM
 			and ST5.T5_TAREFA = STL.TL_TAREFA/*
 		left join SB1010 as SB1
 			on SB1.D_E_L_E_T_ = ''
