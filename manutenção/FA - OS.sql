@@ -117,6 +117,7 @@ select distinct
 	end as DESC_INSUMO,
 
 	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
+	trim(isnull(STL.TL_TAREFA)) as TL_TAREFA,
 	trim(isnull(ST5.T5_TAREFA, '-')) as T5_TAREFA,
 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
 	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
