@@ -160,7 +160,7 @@ select
     case when DEPRECIACAO.TEMPO_DEPREC >= datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC) then DEPRECIACAO.DEPRECMENSAL else 0.0 end as DEPRECATUAL
 
 from DUD010 DUD (nolock)
-    left join
+    left join /* ver modelo para adição de dimensão motorista */
     (
         select
             DTQ010.DTQ_FILIAL,
@@ -172,6 +172,10 @@ from DUD010 DUD (nolock)
             DTQ010.DTQ_KMVGE,
             DTR010.DTR_CODVEI,
             DUP010.DUP_CODMOT,
+            DA4010.DA4_MAT,
+            DTR010.DTR_CODRB1,
+            DTR010.DTR_CODRB2,
+            DTR010.DTR_CODRB3,
 
             case DTQ010.DTQ_STATUS
                 when '1' then 'EXCLUÍDA'
@@ -195,6 +199,10 @@ from DUD010 DUD (nolock)
                     and DUP010.DUP_VIAGEM = DTR010.DTR_VIAGEM
                     and DUP010.DUP_ITEDTR = DTR010.DTR_ITEM
                     and DUP010.DUP_CODVEI = DTR010.DTR_CODVEI
+
+                    inner join DA4010 (nolock)
+                        on DA4010.D_E_L_E_T_ = ''
+                        and DA4010.DA4_COD = DUP010.DUP_CODMOT
         where DTQ010.D_E_L_E_T_ = ''
     ) VIAGEM
         on year(VIAGEM.DTQ_DATGER) = 2022
@@ -411,13 +419,19 @@ from DUD010 DUD (nolock)
                 STJ.D_E_L_E_T_ = ''
             and STL.TL_SEQRELA > 0
             and STL.TL_DTINICI > 20211231
-            and STJ.TJ_CCUSTO = 304
+            and STJ.TJ_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
             and ST9.T9_CODFAMI != 'PN'
 
     ) MANUTENCAO
         on MANUTENCAO.NATUREZA_CUSTO != 'MÃO-DE-OBRA'
         and substring(MANUTENCAO.TL_DTINICI, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
-        and MANUTENCAO.TJ_CODBEM = VIAGEM.DTR_CODVEI
+        and
+        (
+            MANUTENCAO.TJ_CODBEM = VIAGEM.DTR_CODVEI or
+            MANUTENCAO.TJ_CODBEM = VIAGEM.DTR_CODRB1 or
+            MANUTENCAO.TJ_CODBEM = VIAGEM.DTR_CODRB2 or
+            MANUTENCAO.TJ_CODBEM = VIAGEM.DTR_CODRB3
+        )
     
     left join
     (
@@ -504,7 +518,7 @@ from DUD010 DUD (nolock)
             left join TQM010 as TQM
                 on TQM.D_E_L_E_T_ = ''
                 and TQM.TQM_CODCOM = ZD3.ZD3_COMB
-        where ZD3.TQN_CCUSTO = 304
+        where ZD3.TQN_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
     ) COMBUSTIVEL
         on COMBUSTIVEL.T9_CODBEM = VIAGEM.DTR_CODVEI
         and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
@@ -545,7 +559,109 @@ from DUD010 DUD (nolock)
                 SN1010.D_E_L_E_T_ = ''
             and cast(SNG010.NG_TXDEPR1 as decimal) > 0
     ) DEPRECIACAO
-        on DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODVEI
-        and (12 * (100 / DEPRECIACAO.TXDEPRECMENSAL)) > datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC)
+        on (12 * (100 / DEPRECIACAO.TXDEPRECMENSAL)) > datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC)
+        and
+        (
+            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODVEI or
+            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB1 or
+            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB2 or
+            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB3
+        )
+    
+    left join /*ver amortização das taxas dos veículos*/
+    (
+        select
+            trim(isnull(TS1010.TS1_DTEMIS, '-')) as TS1_DTEMIS,
+            trim(isnull(SE2010.E2_VENCREA, '-')) as TS1_DTVENC,
+            TS1010.TS1_QTDPAR,
+            SE2010.E2_PARCELA,
+            TS1010.TS1_VALOR/TS1010.TS1_QTDPAR as VALPARC,
+            TS1010.TS1_VALOR,
+
+            trim(isnull(TS0010.TS0_NOMDOC, '-')) as TS0_DOCTO,
+            trim(isnull(ST9010.T9_CODBEM, '-')) as T9_CODBEM,
+
+            year(SE2010.E2_VENCREA) as ano_VENCTO,
+            month(SE2010.E2_VENCREA) as mes_VENCTO
+
+        from TS1010
+            left join TS0010
+                on TS0010.D_E_L_E_T_ = ''
+                and TS0010.TS0_DOCTO = TS1010.TS1_DOCTO
+            left join SE2010
+                on SE2010.D_E_L_E_T_ = ''
+                and trim(SE2010.E2_PREFIXO) = 'MNT'
+                and SE2010.E2_NUM = TS1010.TS1_NUMSE2
+            left join ST9010
+                on ST9010.D_E_L_E_T_ = ''
+                and ST9010.T9_CODBEM = TS1010.TS1_CODBEM
+            left join CTT010
+                on CTT010.D_E_L_E_T_ = ''
+                and CTT010.CTT_CUSTO = TS1010.TS1_YCC
+            left join CTD010
+                on CTD010.D_E_L_E_T_ = ''
+                and CTD010.CTD_ITEM = TS1010.TS1_YITEM
+        where
+                TS1010.D_E_L_E_T_ = ''
+            and SE2010.E2_VENCREA > 20211231
+            and ST9010.T9_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
+    ) DOCUMENTACAO
+        on substring(DOCUMENTACAO.TS1_DTVENC, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
+        and
+        (
+            DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODVEI or
+            DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODRB1 or
+            DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODRB2 or
+            DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODRB3
+        )
+    
+    left join
+    (
+        select
+            trim(isnull(SRD010.RD_FILIAL, '-')) as RD_FILIAL,
+            trim(isnull(SRD010.RD_PERIODO, '-')) as RD_PERIODO,
+            SRD010.RD_MAT,
+            sum(SRD010.RD_VALOR) as RD_VALOR
+        from SRD010 (nolock)
+        where
+                SRD010.D_E_L_E_T_ = ''
+            and SRD010.RD_PERIODO > 202112
+            and
+            (
+                SRD010.RD_CC = 304 or
+                SRD010.RD_CC = 302 or
+                SRD010.RD_CC = 206 or
+                SRD010.RD_MAT = '002282'
+            )
+        group by
+            SRD010.RD_FILIAL,
+            SRD010.RD_PERIODO,
+            SRD010.RD_CC,
+            SRD010.RD_MAT
+    ) FOLHA_TMS
+        on FOLHA_TMS.RD_FILIAL = VIAGEM.DTQ_FILORI
+        and FOLHA_TMS.RD_MAT = VIAGEM.DA4_MAT
+        and FOLHA_TMS.RD_PERIODO = substring(VIAGEM.DTQ_DATENC, 1, 6)
+    
+    left join
+    (
+        select
+            trim(isnull(SRD010.RD_FILIAL, '-')) as RD_FILIAL,
+            trim(isnull(SRD010.RD_PERIODO, '-')) as RD_PERIODO,
+            SRD010.RD_MAT,
+            sum(SRD010.RD_VALOR) as RD_VALOR
+        from SRD010 (nolock)
+        where
+                SRD010.D_E_L_E_T_ = ''
+            and SRD010.RD_PERIODO > 202112
+            and (SRD010.RD_CC = 302 or SRD010.RD_CC = 206)
+        group by
+            SRD010.RD_FILIAL,
+            SRD010.RD_PERIODO,
+            SRD010.RD_CC,
+            SRD010.RD_MAT
+    ) FOLHA_ADM
+        on FOLHA_ADM.RD_FILIAL = VIAGEM.DTQ_FILORI
+        and FOLHA_ADM.RD_PERIODO = substring(VIAGEM.DTQ_DATENC, 1, 6)
 where DUD.DUD_VIAGEM in (7263, 7268, 7269, 7277, 7283, 7284, 7286, 7287, 7291, 7292, 7296, 7298, 7299, 7300, 7301, 7302, 7307, 7308, 7309, 7310, 7311, 7312, 7313, 7314, 7316, 7318, 7320, 7325, 7329, 7330, 7333, 7334, 7336, 7337, 7338, 7339, 7340, 7341, 7349, 7351, 7353, 7354, 7355, 7356, 7357, 7358, 7359, 7362, 7363, 7371, 7372, 7373, 7375, 7376, 7376, 7376, 7376, 7377, 7379, 7380, 7385, 7389, 7390, 7392, 7395, 7398, 7399, 7403, 7404, 7407, 7408, 7409, 7410, 7411, 7413, 7414, 7415, 7416, 7418, 7419, 7420, 7422, 7423, 7424, 7427, 7428, 7429, 7431, 7433, 7438, 7439, 7440, 7441, 7442, 7443, 7444, 7445, 7448, 7449, 7450, 7454, 7455, 7456, 7458, 7459, 7460, 7462, 7463, 7464, 7465, 7468, 7469, 7470, 7471, 7473, 7474, 7476, 7477, 7478, 7479, 7481, 7482, 7483, 7484, 7487, 7488, 7490, 7491, 7492, 7493, 7494, 7495, 7496, 7503, 7504, 7506, 7507, 7509, 7510, 7512, 7516, 7517, 7518, 7519, 7520, 7521, 7523, 7524, 7528, 7533, 7534, 7535, 7536, 7537, 7538, 7539, 7540, 7541, 7542, 7543, 7544, 7545, 7546, 7548, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7559, 7560, 7561, 7562, 7566, 7567, 7568, 7569, 7570, 7571, 7575, 7576, 7577, 7579, 7580, 7581, 7583, 7584, 7585, 7588, 7589, 7590, 7591, 7592, 7594, 7595, 7596, 7597, 7598, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7609, 7610, 7611, 7612, 7613, 7614, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7623, 7623, 7623, 7625, 7626, 7627, 7630, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7644, 7648, 7649, 7650, 7651, 7652, 7653, 7654, 7657, 7659, 7661, 7662, 7663, 7664, 7665, 7666, 7667, 7668, 7669, 7671, 7673, 7674, 7676, 7677, 7678, 7679, 7680, 7681, 7682, 7683, 7684, 7685, 7686, 7687, 7688, 7689, 7690, 7691, 7694, 7695, 7696, 7697, 7698, 7699, 7700, 7707, 7710, 7711, 7712, 7713, 7714, 7715, 7716, 7717, 7718, 7728, 7729, 7732, 7733, 7736, 7740, 7741, 7742, 7743, 7751, 7752, 7753, 7755, 7756, 7757, 7758, 7759, 7760, 7761, 7762, 7763, 7764, 7765, 7766, 7767, 7777, 7778, 7779, 7780, 7781, 7782, 7787, 7790, 7791, 7792, 7793, 7794, 7795, 7796, 7797, 7798, 7799, 7801, 7802, 7805, 7806, 7807, 7808, 7809, 7810, 7811, 7812, 7813, 7814, 7815, 7816, 7823, 7824, 7825, 7826, 7827, 7828, 7829, 7835, 7839, 7841, 7842, 7844, 7846, 7847, 7857, 7861, 7862, 7866, 7867, 7876, 7877, 7878, 7879, 7880, 7882, 7883, 7884, 7885, 7886, 7887, 7888, 7889, 7890, 7892, 7893, 7899, 7900, 7901, 7902, 7903, 7904, 7905, 7906, 7908, 7911, 7912, 7913, 7914, 7916, 7917, 7918, 7921, 7922, 7923, 7925, 7927, 7928, 7929, 7930, 7934, 7935, 7937, 7938, 7939, 7943, 7947, 7948, 7326, 7672, 7321)
     and DUD.D_E_L_E_T_ = ''
