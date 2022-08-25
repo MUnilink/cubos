@@ -52,7 +52,7 @@ select
 	end as DESC_INSUMO,
 
 	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
-	trim(isnull(ST5.T5_TAREFA, '-')) as T5_TAREFA,
+	trim(isnull(STL.TL_TAREFA, '-')) as T5_TAREFA,
 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
 	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
 	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
@@ -87,16 +87,9 @@ from STJ010 as STJ /**/
 		and STL.TL_PLANO = STJ.TJ_PLANO
 		and STL.TL_FILIAL = STJ.TJ_FILIAL
 
-		left join ST5010 as ST5
-			on ST5.D_E_L_E_T_ = ''
-			and ST5.T5_TAREFA = STL.TL_TAREFA/*
-		left join SB1010 as SB1
-			on SB1.D_E_L_E_T_ = ''
-			and SB1.B1_COD = STL.TL_CODIGO
-
-			left join SD1010 as SD1
-				on SD1.D_E_L_E_T_ = ''
-				and SD1.D1_COD = SB1.B1_COD*/
+		left join TT9010 TT9
+			on TT9.D_E_L_E_T_ = ''
+			and TT9.TT9_TAREFA = STL.TL_TAREFA
 				
 		left join
 		(
