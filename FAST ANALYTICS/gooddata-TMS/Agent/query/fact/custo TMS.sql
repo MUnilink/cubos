@@ -629,8 +629,6 @@ from DUD010 DUD (nolock)
             and
             (
                 SRD010.RD_CC = 304 or
-                SRD010.RD_CC = 302 or
-                SRD010.RD_CC = 206 or
                 SRD010.RD_MAT = '002282'
             )
         group by
