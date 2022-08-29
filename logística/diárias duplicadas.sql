@@ -31,12 +31,6 @@ from DYV010 DYV (nolock)
     inner join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = DYV.DYV_CODMOT
-    
-    inner join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = 
-        and DUD.DUD_FILIAL = DYV.DYV_FI
-        and DUD.DUD_FILDOC - DYV.DYV_FI
-        and DUD.DUD_VIAGEM = DYV.DYV_VIAGEM
 where
         DYV.D_E_L_E_T_ = ''
     and exists
@@ -54,6 +48,9 @@ where
                     and SE1010.E1_FILIAL = DT6010.DT6_FILDOC
                     and SE1010.E1_CLIENTE = DT6010.DT6_CLIDEV
                     and SE1010.E1_LOJA = DT6010.DT6_LOJDEV
+                    and SE1010.E1_PREFIXO = DT6010.DT6_PREFIX
+                    and SE1010.E1_NUM = DT6010.DT6_NUM
+                    and SE1010.E1_TIPO = DT6010.DT6_TIPO
         where
                 DUD010.D_E_L_E_T_ = ''
             and DUD010.DUD_VIAGEM = DYV.DYV_VIAGEM
