@@ -518,7 +518,9 @@ from DUD010 DUD (nolock)
             left join TQM010 as TQM
                 on TQM.D_E_L_E_T_ = ''
                 and TQM.TQM_CODCOM = ZD3.ZD3_COMB
-        where ZD3.TQN_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
+        where
+                ZD3.TQN_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
+            and ZD3.ZD3_DATA > 20211231
     ) COMBUSTIVEL
         on COMBUSTIVEL.T9_CODBEM = VIAGEM.DTR_CODVEI
         and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
