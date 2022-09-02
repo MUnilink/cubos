@@ -1,0 +1,57 @@
+SELECT DA3.DA3_COD AS FROTA,
+       ISNULL(DF0_YCDRB1, '') AS [F_CARRETA],
+       DA3.DA3_PLACA AS [PLACA_CM],
+       DA32.DA3_PLACA AS [PLACA_SR],
+       DA4_NOME AS MOTORISTA,
+       CASE
+           WHEN DF0_STATUS IS NOT NULL THEN 'EM ATENDIMENTO'
+           WHEN EXISTS
+                  (SELECT TJ_CODBEM
+                   FROM STJ010 STJ
+                   WHERE STJ.D_E_L_E_T_ = ''
+                     AND TJ_SITUACA= 'L'
+                     AND TJ_TERMINO = 'N'
+                     AND TJ_YBLQTMS='S'
+                     AND TJ_CODBEM = DA3.DA3_COD ) THEN 'FROTA EM MANUTENÇÃO'
+           ELSE 'DISPONÍVEL'
+       END AS STATUS,
+       ISNULL(RTRIM(DEV.A1_NOME), '')+' / '+ISNULL(RTRIM(DEST.A1_NOME), '') AS CLIENTE,
+       DF1_DATPRC AS DT_PROG,
+       DF1_HORPRC AS HR_PROG,
+       DF1_YDTPDI AS [DTPREVDISP],
+       DF1_YHRPDI AS [HRPREVDISP],
+
+  (SELECT DF12.DF1_YDTPDI+' '+DF12.DF1_YHRPDI
+   FROM DF0010 DF02
+   JOIN DF1010 DF12 ON (DF12.DF1_FILIAL+DF12.DF1_NUMAGE = DF02.DF0_FILIAL+DF02.DF0_NUMAGE
+                        AND DF12.D_E_L_E_T_ = '')
+   WHERE DF02.DF0_NUMAGE <> DF0.DF0_NUMAGE
+     AND DF02.DF0_YCDVEI = DA3.DA3_COD
+     AND DF02.DF0_STATUS IN ('1',
+                             '2')) AS [PROXATEND],
+       CASE
+           WHEN DF1_YGRADE = '1' THEN 'BUG20'
+           WHEN DF1_YGRADE = '1' THEN 'GRADE'
+           ELSE ''
+       END AS GRADES
+FROM DA3010 DA3 OUTER APPLY
+  (SELECT TOP 1 *
+   FROM DF0010 DF0
+   WHERE DF0_YCDVEI = DA3.DA3_COD
+     AND DF0.D_E_L_E_T_ = ''
+     AND DF0_STATUS IN ('1', '2') ) AS DF0
+LEFT OUTER JOIN DF1010 DF1 ON (DF1_FILIAL+DF1_NUMAGE = DF0_FILIAL+DF0_NUMAGE
+                               AND DF1.D_E_L_E_T_ = '')
+LEFT OUTER JOIN DA3010 DA32 ON (DF0_YCDRB1 = DA32.DA3_COD
+                                AND DA32.D_E_L_E_T_= '')
+LEFT OUTER JOIN DA4010 DA4 ON (DA4_COD = DF0_YCDMOT
+                               AND DA4.D_E_L_E_T_= '')
+LEFT OUTER JOIN SA1010 DEST ON (DEST .A1_COD+DEST .A1_LOJA = DF1_CLIDES+DF1_LOJDES
+                                AND DEST.D_E_L_E_T_ = '')
+LEFT OUTER JOIN SA1010 DEV ON (DEV.A1_COD+DEV.A1_LOJA = DF1_CLIDEV+DF1_LOJDEV
+                               AND DEV.D_E_L_E_T_ = '')
+WHERE DA3.D_E_L_E_T_ = ''
+  AND DA3.DA3_ATIVO = '1'
+  AND SUBSTRING(DA3.DA3_COD, 1, 2) IN ('CM',
+                                       'VM')
+ORDER BY DA3.DA3_COD
