@@ -55,7 +55,14 @@ select
 				end
 			end
 		end
-	end as STATUS_COMPRA
+	end as STATUS_COMPRA,
+
+	SD1.D1_DOC,
+	SD1.D1_SERIE,
+	SD1.D1_CC,
+	SD1.D1_ITEMCTA,
+	convert(datetima, SD1.D1_EMISSAO, 103) as D1_EMISSAO,
+	convert(datetima, SD1.D1_DTDIGIT, 103) as D1_DTDIGIT
 
 from SC7010 SC7 (nolock)
 	inner join SB1010 SB1 (nolock)
