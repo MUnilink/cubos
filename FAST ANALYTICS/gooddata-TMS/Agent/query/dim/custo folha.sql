@@ -12,7 +12,9 @@ select distinct
 	trim(SRJ.RJ_DESC) as FUNCAO,
     
     VERBAS.EVENTO,
-    VERBAS.VALOR
+    VERBAS.VALOR,
+
+    VIAGEM.DTQ_VIAGEM
 
 from SRA010 SRA (nolock)
     inner join SRJ010 SRJ (nolock)
@@ -54,7 +56,7 @@ from SRA010 SRA (nolock)
                     end
                 end
             end as CONTA,
-            SRD010.RD_VALOR as VALOR
+            isnull(SRD010.RD_VALOR, SRT010.RT_VALOR) as VALOR
         from SRV010 (nolock)
             left join SRD010 (nolock)
                 on SRD010.D_E_L_E_T_ = ''
@@ -71,21 +73,26 @@ from SRA010 SRA (nolock)
         on VERBAS.FILIAL = SRA.RA_FILIAL
         and VERBAS.MATRICULA = SRA.RA_MAT
         and VERBAS.CONTA != '01 N/A Custo'
-    inner join DTQ010 DTQ (nolock)
-        on DTQ.D_E_L_E_T_ = ''
-        and DTQ.DTQ_FILORI = VERBAS.FILIAL
-        and substring(DTQ.DTQ_DATENC, 1, 6) = VERBAS.PERIODO
+
+        inner join
+        (
+            select
+                DTQ.DTQ_FILORI,
+                DTQ.DTQ_VIAGEM,
+                (
+                    select substring(DTW010.DTW_DATREA, 1, 6)
+                    from DTW010 (nolock)
+                    where 
+                            DTW010.D_E_L_E_T_ = ''
+                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                        and DTW010.DTW_ATIVID = '050'
+                ) as PERIODO
+            from DTQ010 DTQ (nolock)
+            where DTQ.D_E_L_E_T_ = ''
+        ) VIAGEM
+            on VIAGEM.DTQ_FILORI = VERBAS.FILIAL
+            and VIAGEM.PERIODO = VERBAS.PERIODO
 where
         SRA.D_E_L_E_T_ = ''
     and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
-group by
-    SRA.RA_FILIAL,
-    VERBAS.PERIODO,
-    VERBAS.MATRICULA,
-    VERBAS.CONTA,
-    CTD.CTD_DESC01,
-    CTT.CTT_DESC01,
-    SRA.RA_NOME,
-	SRJ.RJ_DESC,
-    VERBAS.EVENTO,
-    VERBAS.VALOR

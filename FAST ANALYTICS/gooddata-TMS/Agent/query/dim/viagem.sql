@@ -1,4 +1,15 @@
 select
+    DTQ.DTQ_FILORI +
+    (
+        select cast(DTW010.DTW_DATREA as date)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = '050'
+    )
+    + DTQ.DTQ_VIAGEM, as ID_VIAGEM,
     DTQ.DTQ_VIAGEM,
     DUP.DUP_CODMOT,
     DTR.DTR_CODVEI,
