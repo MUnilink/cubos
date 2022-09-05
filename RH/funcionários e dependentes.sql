@@ -4,12 +4,21 @@ select
 		when '010102' then 'PECÉM'
 		else '-'
 	end as FILIAL,
+
+	trim(CTT.CTT_CUSTO) as COD_CC,
+	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
+	trim(CTD.CTD_ITEM) as COD_ITEM,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+
+	trim(SRJ.RJ_DESC) as FUNCAO,
 	
 	trim(SRA.RA_MAT) as MATRICULA,
 	trim(SRA.RA_NOME) as FUNCIONARIO,
-	convert(date, SRA.RA_NASC, 103) as NASC_FUNC,
 	trim(SRA.RA_SEXO) as SEXO_FUNC,
-	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
+
+	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
+	month(SRA.RA_NASC) as mes_ANIVERSARIO,
+	convert(date, SRA.RA_NASC, 103) as NASC_FUNC,
 
 	trim(SRB.RB_NOME) DEPENDENTE,
 	convert(date, SRB.RB_DTNASC, 103) as NASC_DEP,
@@ -30,10 +39,16 @@ from SRA010 SRA (nolock)
 		on SRB.D_E_L_E_T_ = ''
 		and SRB.RB_FILIAL = SRA.RA_FILIAL
 		and SRB.RB_MAT = SRA.RA_MAT
+	inner join SRJ010 SRJ (nolock)
+		on SRJ.D_E_L_E_T_ = ''
+		and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+        and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 	inner join CTT010 CTT (nolock)
     	on CTT.D_E_L_E_T_ = ''
-    	and substring(SRA.RA_FILIAL, 1, 4) = CTT.CTT_FILIAL
-    	and SRA.RA_CC = CTT.CTT_CUSTO
+    	and CTT.CTT_CUSTO = SRA.RA_CC
+    inner join CTD010 CTD (nolock)
+    	on CTD.D_E_L_E_T_ = ''
+    	and CTD.CTD_ITEM = SRA.RA_ITEM
 where
 		SRA.D_E_L_E_T_ = ''
 	and SRA.RA_SITFOLH != 'D'
