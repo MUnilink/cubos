@@ -5,6 +5,10 @@ select
 	trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	SX5.X5_DESCRI as ESCOLARIDADE,
+
+	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
+	month(SRA.RA_NASC) as mes_ANIVERSARIO,
+	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
 
 	trim(CTT.CTT_CUSTO) as COD_CC,
