@@ -64,7 +64,13 @@ select
 	convert(datetima, SD1.D1_EMISSAO, 103) as D1_EMISSAO,
 	convert(datetima, SD1.D1_DTDIGIT, 103) as D1_DTDIGIT
 
-from SC7010 SC7 (nolock)
+from SC1010 SC1 (nolock)
+	left join SC7010 SC7 (nolock)
+		on SC7.D_E_L_E_T_ = ''
+		and SC7.C7_FILIAL = SC1.C1_FILIAL
+		and SC7.C7_PRODUTO = SC1.C1_PRODUTO
+		and SC7.C7_NUMSC = SC1.C1_NUM
+		and SC7.C7_ITEMSC = SC1.C1_ITEM
 	inner join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
@@ -72,12 +78,6 @@ from SC7010 SC7 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SC7.C7_FORNECE
 		and SA2.A2_LOJA = SC7.C7_LOJA
-	left join SC1010 SC1 (nolock)
-		on SC1.D_E_L_E_T_ = ''
-		and SC1.C1_FILIAL = SC7.C7_FILIAL
-		and SC1.C1_PRODUTO = SC7.C7_PRODUTO
-		and SC1.C1_NUM = SC7.C7_NUMSC
-		and SC1.C1_ITEM = SC7.C7_ITEMSC
 	left join SD1010 SD1 (nolock)
 		on SD1.D_E_L_E_T_ = ''
 		and SD1.D1_FILIAL = SC7.C7_FILIAL
@@ -95,4 +95,4 @@ from SC7010 SC7 (nolock)
 		on CTD.D_E_L_E_T_ = ''
 		and CTD.CTD_ITEM = SC7.C7_ITEMCTA
 where
-		SC7.D_E_L_E_T_ = ''
+		SC1.D_E_L_E_T_ = ''
