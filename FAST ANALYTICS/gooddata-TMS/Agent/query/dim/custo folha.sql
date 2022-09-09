@@ -87,9 +87,12 @@ from SRA010 SRA (nolock)
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                         and DTW010.DTW_ATIVID = '050'
+                        and DTW010.DTW_DATREA > '20211231'
                 ) as PERIODO
             from DTQ010 DTQ (nolock)
-            where DTQ.D_E_L_E_T_ = ''
+            where
+                    DTQ.D_E_L_E_T_ = ''
+                and cast(DTQ.DTQ_STATUS as int) = 3
         ) VIAGEM
             on VIAGEM.DTQ_FILORI = VERBAS.FILIAL
             and VIAGEM.PERIODO = VERBAS.PERIODO

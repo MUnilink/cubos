@@ -1,4 +1,4 @@
-select distinct
+select
 	STL.TL_SEQRELA,
 	ST9.T9_ITEMCTA,
 	STJ.TJ_CCUSTO,
@@ -30,89 +30,33 @@ select distinct
 				end
 			end
 		end
-	end as CC,/*
-
-	case when STL.TL_DTINICI > '20220315' then ST9.T9_ITEMCTA
-	else
-		case when STJ.TJ_CODBEM in ('GR01', 'GR02', 'GRAB01', 'GRAB02', 'GRAB 02', 'MOG01', 'MOG02') then ST9.T9_ITEMCTA
-		case when ('LHM 400', 'VM06') then 
-	end*/
+	end as CC,
+	
 	STL.TL_QUANTID,
 
-	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
-	else
-		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18') then ST1.T1_SALARIO
-		else
-			case when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID
-			else
-				0.0
-			end
-		end
-	end as TL_UNI,
+	case when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID else 0.0 end as TL_UNI,
 
-	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
-	else
-		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO * STL.TL_QUANTID
-		else
-			STL.TL_CUSTO
-		end
-	end as TL_CUSTO,
-
-	case when trim(STL.TL_CODIGO) = PECAS_RECONDICIONADAS.SERV_COD and STL.TL_LOCAL = '04' then (PECAS_RECONDICIONADAS.SERV_TOTAL/PECAS_RECONDICIONADAS.D1_QUANT)
-		else STL.TL_CUSTO
-	end -1 as CUSTO_RECONDICIONADAS,
+	STL.TL_CUSTO,
 
 	convert(datetime, datetimefromparts(year(STL.TL_DTINICI), month(STL.TL_DTINICI), day(STL.TL_DTINICI), substring(STL.TL_HOINICI, 1, 2), substring(STL.TL_HOINICI, 4, 5), 0, 0), 113) as TL_DTINICI,
 	convert(datetime, datetimefromparts(year(STL.TL_DTFIM), month(STL.TL_DTFIM), day(STL.TL_DTFIM), substring(STL.TL_HOFIM, 1, 2), substring(STL.TL_HOFIM, 4, 5), 0, 0), 113) as TL_DTINFIM,
 
 	STL.TL_LOCAL,
-	STJ.TJ_POSCONT,
-	ST1.T1_SALARIO,
 	SB1.B1_UPRC,
 	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
-	STJ.TJ_CUSTMDO,
-	STJ.TJ_CUSTMAT,
-	STJ.TJ_CUSTMAA,
-	STJ.TJ_CUSTMAS,
-	STJ.TJ_CUSTTER,
 
 	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then 'MÃO-DE-OBRA'
 	else
 		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then 'PEÇAS'
-		else
-			case when SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA then 'TERCEIROS'
-			else
-				case when STL.TL_CODIGO = SH4.H4_CODIGO then 'FERRAMENTA'
-				else 'OUTROS'
-				end
-			end
+		else 'OUTROS'
 		end
-	end as TIPO_CUSTO,/*
-
-	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST0.T0_ESPECIA, isnull(ST1.T1_CODFUNC, '-')))
-	else
-		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then trim(SB1.B1_COD)
-		else
-			case when SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA then isnull(trim(SA2.A2_COD) + '-' + trim(SA2.A2_LOJA), '-')
-			else
-				case when STL.TL_CODIGO = SH4.H4_CODIGO then trim(SH4.H4_CODIGO)
-				else 'OUTROS'
-				end
-			end
-		end
-	end as INSUMO,*/
+	end as TIPO_CUSTO,
 	
 	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
 	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST1.T1_NOME, isnull(ST0.T0_NOME, '-')))
 	else
 		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then trim(SB1.B1_DESC)
-		else
-			case when SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA then trim(SA2.A2_NOME)
-			else
-				case when STL.TL_CODIGO = SH4.H4_CODIGO then trim(SH4.H4_DESCRI)
-				else 'OUTROS'
-				end
-			end
+		else 'OUTROS'
 		end
 	end as DESC_INSUMO,
 
@@ -120,7 +64,6 @@ select distinct
 	trim(isnull(STL.TL_TAREFA, '-')) as TL_TAREFA,
 	trim(isnull(ST5.T5_DESCRIC, isnull(TT9.TT9_DESCRI, '-'))) as T5_TAREFA,
 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
-	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
 	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
 	trim(isnull(ST1.T1_CODFUNC, '-')) as T1_CODFUNC,
 	trim(isnull(STI.TI_PLANO, '-')) as TI_PLANO,
@@ -130,11 +73,15 @@ select distinct
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
-	trim(isnull(SA2.A2_COD, '-')) as A2_COD,
-	trim(isnull(SA2.A2_NOME, '-')) as A2_NOME,
 
-	trim(isnull(SF1.F1_DOC, '-')) as F1_DOC,
-	trim(isnull(SF1.F1_SERIE, '-')) as F1_SERIE,
+	STZ.TZ_ORDEM,
+	STZ.TZ_BEMPAI,
+	STZ.TZ_CODBEM,
+    convert(date, STZ.TZ_DATAMOV, 103) as TZ_DATAMOV,
+	convert(date, STZ.TZ_DATASAI, 103) as TZ_DATASAI,
+	STZ.TZ_TIPOMOV,
+	STZ.TZ_CAUSA,
+	ST8.T8_NOME,
 
 	year(STL.TL_DTINICI) as ANO_APP_OS,
 	month(STL.TL_DTINICI) as MES_APP_OS
@@ -157,33 +104,15 @@ from STJ010 STJ
 		and STL.TL_PLANO = STJ.TJ_PLANO
 		and STL.TL_FILIAL = STJ.TJ_FILIAL
 
-		left join SCP010 SCP
-			on SCP.D_E_L_E_T_ = ''
-			and STL.TL_FILIAL = SCP.CP_FILIAL
-			and STL.TL_ORDEM = substring(SCP.CP_OP, 1, 6)
-			and STL.TL_CODIGO = SCP.CP_PRODUTO
-
 		left join ST5010 ST5
 			on ST5.D_E_L_E_T_ = ''
 			and ST5.T5_TAREFA = STL.TL_TAREFA
 		left join TT9010 TT9
 			on TT9.D_E_L_E_T_ = ''
 			and TT9.TT9_TAREFA = STL.TL_TAREFA
-		left join SF1010 SF1
-			on SF1.D_E_L_E_T_ = ''
-			and SF1.F1_DOC + SF1.F1_SERIE = STL.TL_DOC + STL.TL_SDOC
-		left join SA2010 SA2
-			on SA2.D_E_L_E_T_ = ''
-			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
 		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
 			and SB1.B1_COD = STL.TL_CODIGO
-		left join SH4010 SH4
-			on SH4.D_E_L_E_T_ = ''
-			and SH4.H4_CODIGO = STL.TL_CODIGO
-		left join ST0010 ST0
-			on ST0.D_E_L_E_T_ = ''
-			and ST0.T0_ESPECIA = STL.TL_CODIGO
 		left join ST1010 ST1
 			on ST1.D_E_L_E_T_ = ''
 			and ST1.T1_FILIAL = STL.TL_FILIAL
@@ -192,6 +121,16 @@ from STJ010 STJ
 			on STI.D_E_L_E_T_ = ''
 			and STI.TI_FILIAL = STL.TL_FILIAL
 			and STI.TI_PLANO = STL.TL_PLANO
+	
+	left join STZ010 STZ
+		on STZ.D_E_L_E_T_ = ''
+		and STZ.TZ_BEMPAI = STJ.TJ_CODBEM
+		and STZ.TZ_ORDEM = STJ.TJ_ORDEM
+		and STZ.TZ_PLANO = STJ.TJ_PLANO
+
+		left join ST8010 ST8 (nolock)
+			on ST8.D_E_L_E_T_ = ''
+			and ST8.T8_CODOCOR = STZ.TZ_CAUSA
 where
 		STL.D_E_L_E_T_ = ''
-    AND STJ.TJ_SERVICO = 'PNEMOV'
+    and STJ.TJ_SERVICO = 'PNEMOV'
