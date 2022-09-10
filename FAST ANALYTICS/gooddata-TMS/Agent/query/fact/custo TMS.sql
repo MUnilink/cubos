@@ -90,43 +90,10 @@ select
     DT2.DT2_CODOCO,
     DT2.DT2_DESCRI,
 
-    (
-        select cast(DTW010.DTW_DATREA as date)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
-    ) as DATAINI,
-    (
-        select DTW010.DTW_HORREA
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
-    ) as HORAINI,
-    (
-        select cast(DTW010.DTW_DATREA as date)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
-    ) as DATAFIM,
-    (
-        select DTW010.DTW_HORREA
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
-    ) as HORAFIM,
-
+    VIAGEM.DATAINI,
+    VIAGEM.HORAINI,
+    VIAGEM.DATAFIM,
+    VIAGEM.HORAFIM,
     VIAGEM.COMPETENCIA,
     VIAGEM.DTQ_STATUS,
 
@@ -162,13 +129,14 @@ from DUD010 DUD (nolock)
     left join /* ver modelo para adição de dimensão motorista */
     (
         select
-            DTQ010.DTQ_FILIAL,
-            DTQ010.DTQ_FILORI,
-            DTQ010.DTQ_VIAGEM,
-            DTQ010.DTQ_DATGER,
-            DTQ010.DTQ_DATFEC,
-            DTQ010.DTQ_DATENC,
-            DTQ010.DTQ_KMVGE,
+            DTQ.DTQ_FILIAL,
+            DTQ.DTQ_FILORI,
+            DTQ.DTQ_VIAGEM,
+            DTQ.DTQ_DATGER,
+            DTQ.DTQ_DATFEC,
+            DTQ.DTQ_DATENC,
+            DTQ.DTQ_KMVGE,
+            
             DTR010.DTR_CODVEI,
             DUP010.DUP_CODMOT,
             DA4010.DA4_MAT,
@@ -177,16 +145,53 @@ from DUD010 DUD (nolock)
             DTR010.DTR_CODRB3,
 
             (
+                select cast(DTW010.DTW_DATREA as date)
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = '049'
+            ) as DATAINI,
+            (
+                select DTW010.DTW_HORREA
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = '049'
+            ) as HORAINI,
+            (
+                select cast(DTW010.DTW_DATREA as date)
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = '050'
+            ) as DATAFIM,
+            (
+                select DTW010.DTW_HORREA
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = '050'
+            ) as HORAFIM,
+
+            (
                 select substring(DTW010.DTW_DATREA, 1, 6)
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                     and DTW010.DTW_ATIVID = '050'
             ) as COMPETENCIA,
 
-            case DTQ010.DTQ_STATUS
+            case DTQ.DTQ_STATUS
                 when '1' then 'EXCLUÍDA'
                 when '2' then 'EM TRANSITO'
                 when '3' then 'ENCERRADA'
@@ -196,11 +201,11 @@ from DUD010 DUD (nolock)
                 else 'OUTROS'
             end as DTQ_STATUS
 
-        from DTQ010 (nolock)
+        from DTQ010 DTQ (nolock)
             inner join DTR010 (nolock)
                 on DTR010.D_E_L_E_T_ = ''
-                and DTR010.DTR_FILORI = DTQ010.DTQ_FILORI
-                and DTR010.DTR_VIAGEM = DTQ010.DTQ_VIAGEM
+                and DTR010.DTR_FILORI = DTQ.DTQ_FILORI
+                and DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                 
                 inner join DUP010 (nolock)
                     on DUP010.D_E_L_E_T_ = ''
@@ -212,7 +217,7 @@ from DUD010 DUD (nolock)
                     inner join DA4010 (nolock)
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
-        where DTQ010.D_E_L_E_T_ = ''
+        where DTQ.D_E_L_E_T_ = ''
     ) VIAGEM
         on year(VIAGEM.DTQ_DATGER) = 2022
         and VIAGEM.DTQ_FILIAL = DUD.DUD_FILIAL
@@ -625,112 +630,5 @@ from DUD010 DUD (nolock)
             DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODRB2 or
             DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODRB3
         )
-        inner join
-        (
-            select distinct
-                SRA.RA_FILIAL + VERBAS.PERIODO + VERBAS.MATRICULA + substring(VERBAS.CONTA, 1, 2) as ID_LANCAMENTO,
-                SRA.RA_FILIAL,
-                VERBAS.PERIODO,
-                VERBAS.MATRICULA,
-
-                substring(VERBAS.CONTA, 4, len(VERBAS.CONTA)) as CONTA,
-
-                trim(CTD.CTD_DESC01) as ATIVIDADE,
-                trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-                trim(SRA.RA_NOME) as NOME,
-                trim(SRJ.RJ_DESC) as FUNCAO,
-                
-                VERBAS.EVENTO,
-                VERBAS.VALOR,
-
-                VIAGEM.DTQ_VIAGEM
-
-            from SRA010 SRA (nolock)
-                inner join SRJ010 SRJ (nolock)
-                    on SRJ.D_E_L_E_T_ = ''
-                    and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                    and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-                inner join CTT010 CTT (nolock)
-                    on CTT.D_E_L_E_T_ = ''
-                    and CTT.CTT_CUSTO = SRA.RA_CC
-                inner join CTD010 CTD (nolock)
-                    on CTD.D_E_L_E_T_ = ''
-                    and CTD.CTD_ITEM = SRA.RA_ITEM
-                inner join
-                (
-                    select
-                        isnull(SRD010.RD_FILIAL, SRT010.RT_FILIAL) as FILIAL,
-                        isnull(SRD010.RD_PERIODO, SRT010.RT_DATACAL) as PERIODO,
-                        isnull(SRD010.RD_MAT, SRT010.RT_MAT) as MATRICULA,
-                        SRV010.RV_COD, /* VER ELIMINAÇÃO DE VERBAS INDIVIDUAIS, OQ PERMITIRIA USAR DISTINCT NESTA TABELA E VINCULAR AO EMPREGADO SEM DUPLICATAS */
-                        isnull(SRD010.RD_PD, SRT010.RT_VERBA) as EVENTO,
-                        case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
-                        else
-                            case when SRD010.RD_PD in ('029', '111', '113') then '03 Hora Extra'
-                            else
-                                case when SRD010.RD_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
-                                else
-                                    case when SRD010.RD_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
-                                    else
-                                        case when SRT010.RT_VERBA in ('845', '846') then '06 13º Salário'
-                                        else
-                                            case when SRT010.RT_VERBA in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
-                                            else
-                                                case when SRT010.RT_VERBA in ('830', '831', '832') then '08 Férias'
-                                                else '01 N/A Custo'
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        end as CONTA,
-                        isnull(SRD010.RD_VALOR, SRT010.RT_VALOR) as VALOR
-                    from SRV010 (nolock)
-                        left join SRD010 (nolock)
-                            on SRD010.D_E_L_E_T_ = ''
-                            and SRV010.RV_FILIAL = substring(SRD010.RD_FILIAL, 1, 4)
-                            and SRV010.RV_COD = SRD010.RD_PD
-                            and SRD010.RD_PERIODO > '20211231'
-                        left join SRT010 (nolock)
-                            on SRT010.D_E_L_E_T_ = ''
-                            and SRV010.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
-                            and SRV010.RV_COD = SRT010.RT_VERBA
-                            and SRT010.RT_DATACAL > '20211231'
-                    where SRV010.D_E_L_E_T_ = ''
-                ) VERBAS
-                    on VERBAS.FILIAL = SRA.RA_FILIAL
-                    and VERBAS.MATRICULA = SRA.RA_MAT
-                    and VERBAS.CONTA != '01 N/A Custo'
-
-                    inner join
-                    (
-                        select
-                            DTQ.DTQ_FILORI,
-                            DTQ.DTQ_VIAGEM,
-                            (
-                                select substring(DTW010.DTW_DATREA, 1, 6)
-                                from DTW010 (nolock)
-                                where 
-                                        DTW010.D_E_L_E_T_ = ''
-                                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                                    and DTW010.DTW_ATIVID = '050'
-                                    and DTW010.DTW_DATREA > '20211231'
-                            ) as PERIODO
-                        from DTQ010 DTQ (nolock)
-                        where
-                                DTQ.D_E_L_E_T_ = ''
-                            and cast(DTQ.DTQ_STATUS as int) = 3
-                    ) VIAGEM
-                        on VIAGEM.DTQ_FILORI = VERBAS.FILIAL
-                        and VIAGEM.PERIODO = VERBAS.PERIODO
-            where
-                    SRA.D_E_L_E_T_ = ''
-                and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
-        ) FOLHA
-            on FOLHA.DTQ_FILORI = VIAGEM.DTQ_FILORI
-            and FOLHA.PERIODO = VIAGEM.
-            and FOLHA.MATRICULA = VIAGEM.DA4_MAT
 where DUD.DUD_VIAGEM in (7263, 7268, 7269, 7277, 7283, 7284, 7286, 7287, 7291, 7292, 7296, 7298, 7299, 7300, 7301, 7302, 7307, 7308, 7309, 7310, 7311, 7312, 7313, 7314, 7316, 7318, 7320, 7325, 7329, 7330, 7333, 7334, 7336, 7337, 7338, 7339, 7340, 7341, 7349, 7351, 7353, 7354, 7355, 7356, 7357, 7358, 7359, 7362, 7363, 7371, 7372, 7373, 7375, 7376, 7376, 7376, 7376, 7377, 7379, 7380, 7385, 7389, 7390, 7392, 7395, 7398, 7399, 7403, 7404, 7407, 7408, 7409, 7410, 7411, 7413, 7414, 7415, 7416, 7418, 7419, 7420, 7422, 7423, 7424, 7427, 7428, 7429, 7431, 7433, 7438, 7439, 7440, 7441, 7442, 7443, 7444, 7445, 7448, 7449, 7450, 7454, 7455, 7456, 7458, 7459, 7460, 7462, 7463, 7464, 7465, 7468, 7469, 7470, 7471, 7473, 7474, 7476, 7477, 7478, 7479, 7481, 7482, 7483, 7484, 7487, 7488, 7490, 7491, 7492, 7493, 7494, 7495, 7496, 7503, 7504, 7506, 7507, 7509, 7510, 7512, 7516, 7517, 7518, 7519, 7520, 7521, 7523, 7524, 7528, 7533, 7534, 7535, 7536, 7537, 7538, 7539, 7540, 7541, 7542, 7543, 7544, 7545, 7546, 7548, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7559, 7560, 7561, 7562, 7566, 7567, 7568, 7569, 7570, 7571, 7575, 7576, 7577, 7579, 7580, 7581, 7583, 7584, 7585, 7588, 7589, 7590, 7591, 7592, 7594, 7595, 7596, 7597, 7598, 7599, 7600, 7601, 7602, 7603, 7604, 7605, 7606, 7607, 7609, 7610, 7611, 7612, 7613, 7614, 7616, 7617, 7618, 7619, 7620, 7621, 7622, 7623, 7623, 7623, 7623, 7625, 7626, 7627, 7630, 7633, 7634, 7635, 7636, 7637, 7638, 7639, 7640, 7641, 7644, 7648, 7649, 7650, 7651, 7652, 7653, 7654, 7657, 7659, 7661, 7662, 7663, 7664, 7665, 7666, 7667, 7668, 7669, 7671, 7673, 7674, 7676, 7677, 7678, 7679, 7680, 7681, 7682, 7683, 7684, 7685, 7686, 7687, 7688, 7689, 7690, 7691, 7694, 7695, 7696, 7697, 7698, 7699, 7700, 7707, 7710, 7711, 7712, 7713, 7714, 7715, 7716, 7717, 7718, 7728, 7729, 7732, 7733, 7736, 7740, 7741, 7742, 7743, 7751, 7752, 7753, 7755, 7756, 7757, 7758, 7759, 7760, 7761, 7762, 7763, 7764, 7765, 7766, 7767, 7777, 7778, 7779, 7780, 7781, 7782, 7787, 7790, 7791, 7792, 7793, 7794, 7795, 7796, 7797, 7798, 7799, 7801, 7802, 7805, 7806, 7807, 7808, 7809, 7810, 7811, 7812, 7813, 7814, 7815, 7816, 7823, 7824, 7825, 7826, 7827, 7828, 7829, 7835, 7839, 7841, 7842, 7844, 7846, 7847, 7857, 7861, 7862, 7866, 7867, 7876, 7877, 7878, 7879, 7880, 7882, 7883, 7884, 7885, 7886, 7887, 7888, 7889, 7890, 7892, 7893, 7899, 7900, 7901, 7902, 7903, 7904, 7905, 7906, 7908, 7911, 7912, 7913, 7914, 7916, 7917, 7918, 7921, 7922, 7923, 7925, 7927, 7928, 7929, 7930, 7934, 7935, 7937, 7938, 7939, 7943, 7947, 7948, 7326, 7672, 7321)
     and DUD.D_E_L_E_T_ = ''
