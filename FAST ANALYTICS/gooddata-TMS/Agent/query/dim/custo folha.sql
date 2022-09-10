@@ -1,4 +1,4 @@
-select distinct
+select
     SRA.RA_FILIAL + VERBAS.PERIODO + VERBAS.MATRICULA + substring(VERBAS.CONTA, 1, 2) as ID_LANCAMENTO,
     SRA.RA_FILIAL,
     VERBAS.PERIODO,
@@ -10,9 +10,7 @@ select distinct
     trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
     trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
-    
-    VERBAS.EVENTO,
-    VERBAS.VALOR,
+    sum(VERBAS.VALOR) as VALOR,
 
     VIAGEM.DTQ_VIAGEM
 
@@ -69,6 +67,7 @@ from SRA010 SRA (nolock)
                 and SRV010.RV_COD = SRT010.RT_VERBA
                 and SRT010.RT_DATACAL > '20211231'
         where SRV010.D_E_L_E_T_ = ''
+
     ) VERBAS
         on VERBAS.FILIAL = SRA.RA_FILIAL
         and VERBAS.MATRICULA = SRA.RA_MAT
@@ -99,3 +98,13 @@ from SRA010 SRA (nolock)
 where
         SRA.D_E_L_E_T_ = ''
     and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
+group by
+    SRA.RA_FILIAL,
+    VERBAS.PERIODO,
+    VERBAS.MATRICULA,
+    VERBAS.CONTA,
+    CTD.CTD_DESC01,
+    CTT.CTT_DESC01,
+    SRA.RA_NOME,
+	SRJ.RJ_DESC,
+    VIAGEM.DTQ_VIAGEM
