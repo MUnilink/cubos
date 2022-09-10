@@ -8,6 +8,7 @@ select
 
 	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
 	month(SRA.RA_NASC) as mes_ANIVERSARIO,
+	day(SRA.RA_NASC) as dia_ANIVERSARIO,
 	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
 
