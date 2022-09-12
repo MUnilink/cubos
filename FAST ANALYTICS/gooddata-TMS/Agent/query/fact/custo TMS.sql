@@ -79,17 +79,7 @@ select
     DT5.DT5_TIPCOL,
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
-
-    DUA.DUA_FILOCO,
-    DUA.DUA_NUMOCO,
-    DUA.DUA_FILORI,
-    DUA.DUA_VIAGEM,
-    DUA.DUA_SEQOCO,
-    DUA.DUA_DATOCO,
-    DUA.DUA_HOROCO,
-    DT2.DT2_CODOCO,
-    DT2.DT2_DESCRI,
-
+    
     VIAGEM.DATAINI,
     VIAGEM.HORAINI,
     VIAGEM.DATAFIM,
@@ -129,13 +119,13 @@ from DUD010 DUD (nolock)
     left join /* ver modelo para adição de dimensão motorista */
     (
         select
-            DTQ.DTQ_FILIAL,
-            DTQ.DTQ_FILORI,
-            DTQ.DTQ_VIAGEM,
-            DTQ.DTQ_DATGER,
-            DTQ.DTQ_DATFEC,
-            DTQ.DTQ_DATENC,
-            DTQ.DTQ_KMVGE,
+            DTQ_1.DTQ_FILIAL,
+            DTQ_1.DTQ_FILORI,
+            DTQ_1.DTQ_VIAGEM,
+            DTQ_1.DTQ_DATGER,
+            DTQ_1.DTQ_DATFEC,
+            DTQ_1.DTQ_DATENC,
+            DTQ_1.DTQ_KMVGE,
             
             DTR010.DTR_CODVEI,
             DUP010.DUP_CODMOT,
@@ -149,8 +139,8 @@ from DUD010 DUD (nolock)
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
                     and DTW010.DTW_ATIVID = '049'
             ) as DATAINI,
             (
@@ -158,8 +148,8 @@ from DUD010 DUD (nolock)
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
                     and DTW010.DTW_ATIVID = '049'
             ) as HORAINI,
             (
@@ -167,8 +157,8 @@ from DUD010 DUD (nolock)
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
                     and DTW010.DTW_ATIVID = '050'
             ) as DATAFIM,
             (
@@ -176,8 +166,8 @@ from DUD010 DUD (nolock)
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
                     and DTW010.DTW_ATIVID = '050'
             ) as HORAFIM,
 
@@ -186,12 +176,12 @@ from DUD010 DUD (nolock)
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
                     and DTW010.DTW_ATIVID = '050'
             ) as COMPETENCIA,
 
-            case DTQ.DTQ_STATUS
+            case DTQ_1.DTQ_STATUS
                 when '1' then 'EXCLUÍDA'
                 when '2' then 'EM TRANSITO'
                 when '3' then 'ENCERRADA'
@@ -201,11 +191,11 @@ from DUD010 DUD (nolock)
                 else 'OUTROS'
             end as DTQ_STATUS
 
-        from DTQ010 DTQ (nolock)
+        from DTQ010 DTQ_1 (nolock)
             inner join DTR010 (nolock)
                 on DTR010.D_E_L_E_T_ = ''
-                and DTR010.DTR_FILORI = DTQ.DTQ_FILORI
-                and DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                and DTR010.DTR_FILORI = DTQ_1.DTQ_FILORI
+                and DTR010.DTR_VIAGEM = DTQ_1.DTQ_VIAGEM
                 
                 inner join DUP010 (nolock)
                     on DUP010.D_E_L_E_T_ = ''
@@ -217,7 +207,7 @@ from DUD010 DUD (nolock)
                     inner join DA4010 (nolock)
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
-        where DTQ.D_E_L_E_T_ = ''
+        where DTQ_1.D_E_L_E_T_ = ''
     ) VIAGEM
         on year(VIAGEM.DTQ_DATGER) = 2022
         and VIAGEM.DTQ_FILIAL = DUD.DUD_FILIAL
@@ -228,18 +218,6 @@ from DUD010 DUD (nolock)
         and DT5.DT5_FILDOC = DUD.DUD_FILDOC
         and DT5.DT5_NUMSOL = DUD.DUD_DOC
         and DT5.DT5_SERIE = DUD.DUD_SERIE
-    
-    left join DUA010 DUA (nolock)
-        on DUA.D_E_L_E_T_ = ''
-        and DUA.DUA_FILIAL = VIAGEM.DTQ_FILIAL
-        and DUA.DUA_FILORI = VIAGEM.DTQ_FILORI
-        and DUA.DUA_VIAGEM = VIAGEM.DTQ_VIAGEM
-
-        left join DT2010 DT2 (nolock)
-            on DT2.D_E_L_E_T_ = ' '
-            and DT2.DT2_FILIAL = DUA.DUA_FILIAL
-            and DT2.DT2_CODOCO = DUA.DUA_CODOCO
-
     left join DT6010 DT6 (nolock)
         on DT6.D_E_L_E_T_ = ''
         and DT6.DT6_FILDOC = DUD.DUD_FILDOC
@@ -287,7 +265,6 @@ from DUD010 DUD (nolock)
             and DTC.DTC_FILORI = DT6.DT6_FILDOC
             and DTC.DTC_DOC = DT6.DT6_DOC
             and DTC.DTC_SERIE = DT6.DT6_SERIE
-
     left join
     (
         select
@@ -560,7 +537,8 @@ from DUD010 DUD (nolock)
             SN3010.N3_TXDEPR5,
 
             100 / (SNG010.NG_TXDEPR1 /12) as TEMPO_DEPREC,
-            SN3010.N3_VORIG1 * (SNG010.NG_TXDEPR1 / 1200) as DEPRECMENSAL
+            SN3010.N3_VORIG1 * (SNG010.NG_TXDEPR1 / 1200) as DEPRECMENSAL,
+            case when (12 * (100 / SNG.NG_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20220731' as date)) then ((12 * (100 / SNG.NG_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, cast('20220731' as date))) * SN3.N3_VORIG1 * (SNG.NG_TXDEPR1 / 1200) else 0.0 end as RESIDUAL
 
         from SN1010 (nolock)
             inner join SNG010 (nolock)
@@ -575,7 +553,7 @@ from DUD010 DUD (nolock)
                 SN1010.D_E_L_E_T_ = ''
             and cast(SNG010.NG_TXDEPR1 as decimal) > 0
     ) DEPRECIACAO
-        on (12 * (100 / DEPRECIACAO.TXDEPRECMENSAL)) > datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC)
+        on DEPRECIACAO.RESIDUAL != 0.0
         and
         (
             DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODVEI or
