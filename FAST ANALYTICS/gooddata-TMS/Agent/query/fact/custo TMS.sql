@@ -584,7 +584,7 @@ from DUD010 DUD (nolock)
             DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB3
         )
     
-    left join /*ver amortização das taxas dos veículos*/
+    left join /* ver amortização das taxas dos veículos */
     (
         select
             trim(isnull(TS1010.TS1_DTEMIS, '-')) as TS1_DTEMIS,
