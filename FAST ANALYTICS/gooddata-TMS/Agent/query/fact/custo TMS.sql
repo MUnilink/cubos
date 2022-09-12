@@ -6,6 +6,9 @@ select
     convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI,
     VIAGEM.DTQ_KMVGE,
     VIAGEM.DTR_CODVEI,
+    VIAGEM.DTR_CODRB1,
+    VIAGEM.DTR_CODRB3,
+    VIAGEM.DTR_CODRB2,
     DT6.DT6_CDRORI,
     DT6.DT6_CDRDES,
     DT6.DT6_CDRCAL,
@@ -109,7 +112,10 @@ select
 	DEPRECIACAO.TEMPO_DEPREC,
 	DEPRECIACAO.DEPRECMENSAL,
     DEPRECIACAO.TXDEPRECMENSAL,
-    case when DEPRECIACAO.TEMPO_DEPREC >= datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DTQ_DATENC) then DEPRECIACAO.DEPRECMENSAL else 0.0 end as DEPRECATUAL,
+    
+    case when DEPRECIACAO.TEMPO_DEPREC >= datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DATAFIM) then DEPRECIACAO.DEPRECMENSAL else 0.0 end as DEPRECATUAL,
+    case when (12 * (100 / SNG.NG_TXDEPR1)) > datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DATAFIM) then DEPRECIACAO.N3_VORIG1 * (DEPRECIACAO.NG_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
+    case when (12 * (100 / SNG.NG_TXDEPR1)) > datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DATAFIM) then ((12 * (100 / DEPRECIACAO.NG_TXDEPR1)) - datediff(month, DEPRECIACAO.N3_DINDEPR, VIAGEM.DATAFIM)) * DEPRECIACAO.N3_VORIG1 * (DEPRECIACAO.NG_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
 
     1 as SEGURO_CARGA,
     1 as SEGURO_VEI,
@@ -515,52 +521,6 @@ from DUD010 DUD (nolock)
     ) COMBUSTIVEL
         on COMBUSTIVEL.T9_CODBEM = VIAGEM.DTR_CODVEI
         and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
-    left join
-    (
-        select
-            SN1010.N1_GRUPO,
-            trim(isnull(SN1010.N1_CBASE, '-')) as N1_CBASE,
-            trim(isnull(SN1010.N1_CODBEM, '-')) as N1_CODBEM,
-            convert(date, SN3010.N3_DINDEPR, 103) as N3_DINDEPR,
-            SNG010.NG_TXDEPR1 /12 as TXDEPRECMENSAL,
-
-            SN1010.N1_QUANTD,
-            SN3010.N3_VORIG1,
-            SN3010.N3_VORIG2,
-            SN3010.N3_VORIG3,
-            SN3010.N3_VORIG4,
-            SN3010.N3_VORIG5,
-            SN3010.N3_TXDEPR1,
-            SN3010.N3_TXDEPR2,
-            SN3010.N3_TXDEPR3,
-            SN3010.N3_TXDEPR4,
-            SN3010.N3_TXDEPR5,
-
-            100 / (SNG010.NG_TXDEPR1 /12) as TEMPO_DEPREC,
-            SN3010.N3_VORIG1 * (SNG010.NG_TXDEPR1 / 1200) as DEPRECMENSAL,
-            case when (12 * (100 / SNG.NG_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20220731' as date)) then ((12 * (100 / SNG.NG_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, cast('20220731' as date))) * SN3.N3_VORIG1 * (SNG.NG_TXDEPR1 / 1200) else 0.0 end as RESIDUAL
-
-        from SN1010 (nolock)
-            inner join SNG010 (nolock)
-                on SNG010.D_E_L_E_T_ = ''
-                and SNG010.NG_GRUPO = SN1010.N1_GRUPO
-            left join SN3010 (nolock)
-                on SN3010.D_E_L_E_T_ = ''
-                and cast(SN3010.N3_TIPO as int) = 1
-                and SN3010.N3_FILIAL = SN1010.N1_FILIAL
-                and SN3010.N3_CBASE = SN1010.N1_CBASE
-        where
-                SN1010.D_E_L_E_T_ = ''
-            and cast(SNG010.NG_TXDEPR1 as decimal) > 0
-    ) DEPRECIACAO
-        on DEPRECIACAO.RESIDUAL != 0.0
-        and
-        (
-            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODVEI or
-            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB1 or
-            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB2 or
-            DEPRECIACAO.N1_CODBEM = VIAGEM.DTR_CODRB3
-        )
     
     left join /* ver amortização das taxas dos veículos */
     (
