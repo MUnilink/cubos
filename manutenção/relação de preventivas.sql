@@ -1,5 +1,14 @@
-select *
+select
+    ST9.T9_CODBEM,
+    STF.TF_SERVICO,
+    STF.TF_SEQRELA,
+    STF.TF_NOMEMAN,
+    STF.TF_PADRAO,
+    STF.TF_DTULTMA,
+    STF.TF_TIPACOM,
+    STF.TF_PARADA,
+    STF.TF_CONMANU,
+    STF.TF_INENMAN,
+    STF.TF_ATIVO
 from STF010 STF (nolock)
-    inner join ST9010 ST9 (nolock)
-        on ST9.DELE
-where STF.
+where STF.D_E_L_E_T_ = ''
