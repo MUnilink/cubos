@@ -97,7 +97,7 @@ from SRA010 SRA (nolock)
             and VIAGEM.PERIODO = VERBAS.PERIODO
 where
         SRA.D_E_L_E_T_ = ''
-    and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
+    and (SRA.RA_CC = 302 or SRA.RA_CC = 206)
 group by
     SRA.RA_FILIAL,
     VERBAS.PERIODO,
