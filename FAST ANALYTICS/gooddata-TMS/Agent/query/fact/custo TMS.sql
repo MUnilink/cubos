@@ -205,7 +205,7 @@ from DUD010 DUD (nolock)
         where DTQ_1.D_E_L_E_T_ = ''
     ) VIAGEM
         on year(VIAGEM.DTQ_DATGER) = 2022
-        and VIAGEM.DTQ_FILIAL = DUD.DUD_FILIAL
+        and substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
         and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
         and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
     left join DT5010 DT5 (nolock)
@@ -263,6 +263,7 @@ from DUD010 DUD (nolock)
     left join
     (
         select
+            DYV010.DYV_FILORI,
             DYV010.DYV_VIAGEM,
             DYV010.DYV_CODMOT,
             DYV010.DYV_IDCDIA,
@@ -277,7 +278,8 @@ from DUD010 DUD (nolock)
                 and year(DYX010.DYX_DATDIA) = 2022
         where DYV010.D_E_L_E_T_ = ''
     ) DIARIAS
-        on DIARIAS.DYV_VIAGEM = VIAGEM.DTQ_VIAGEM
+        on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
+        and DIARIAS.DYV_VIAGEM = VIAGEM.DTQ_VIAGEM
     left join
     (
         select distinct
@@ -410,7 +412,7 @@ from DUD010 DUD (nolock)
 
     ) MANUTENCAO
         on MANUTENCAO.NATUREZA_CUSTO != 'MÃO-DE-OBRA'
-        and substring(MANUTENCAO.TL_DTINICI, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
+        and substring(MANUTENCAO.TL_DTINICI, 1, 6) = substring(VIAGEM.DATAFIM, 1, 6)
         and
         (
             MANUTENCAO.TJ_CODBEM = VIAGEM.DTR_CODVEI or
@@ -509,7 +511,7 @@ from DUD010 DUD (nolock)
             and ZD3.ZD3_DATA > 20211231
     ) COMBUSTIVEL
         on COMBUSTIVEL.T9_CODBEM = VIAGEM.DTR_CODVEI
-        and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
+        and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = substring(VIAGEM.DATAFIM, 1, 6)
     
     left join /* ver amortização das taxas dos veículos */
     (
@@ -549,7 +551,7 @@ from DUD010 DUD (nolock)
             and SE2010.E2_VENCREA > 20211231
             and ST9010.T9_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
     ) DOCUMENTACAO
-        on substring(DOCUMENTACAO.TS1_DTVENC, 1, 6) = substring(VIAGEM.DTQ_DATENC, 1, 6)
+        on substring(DOCUMENTACAO.TS1_DTVENC, 1, 6) = substring(VIAGEM.DATAFIM, 1, 6)
         and
         (
             DOCUMENTACAO.T9_CODBEM = VIAGEM.DTR_CODVEI or
