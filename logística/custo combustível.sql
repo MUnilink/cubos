@@ -1,16 +1,18 @@
 select
+    case when ZD3.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
     ZD3.ZD3_LITROS,
     ZD3.ZD3_VLUNI,
     ZD3.ZD3_HODOM,
     ZD3.ZD3_KMRD,
     ZD3.ZD3_KML,
-    ZD3.ZD3_TOTAL,
-    ZD3.ZD3_COMB,
-    convert(date, ZD3.ZD3_DATA, 103) as ZD3_DATA,
-    year(ZD3_DATA) as ano_ABASTECE,
-    month(ZD3_DATA) as mes_ABASTECE,
-    trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM
-    from
+    ZD3.ZD3_TOTAL as CUSTO,
+    trim(ZD3.ZD3_DATA) as ZD3_DATA,
+
+    trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
+    trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
+    trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
+    trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO
+from
     (
         select
             case cast(ZD3010.ZD3_TANQUE as int)
@@ -24,13 +26,18 @@ select
             ZD3010.ZD3_VLUNI,
             ZD3010.ZD3_TOTAL,
             
-            ZD3010.ZD3_TANQUE,
+            isnull(ZD3010.ZD3_TANQUE, '00') as ZD3_TANQUE,
             ZD3010.ZD3_COMB,
             substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
             ZD3010.ZD3_KML,
-            ZD3010.ZD3_KMRD
-        from ZD3010
-        where ZD3010.D_E_L_E_T_ = ''  and substring(ZD3010.ZD3_DATA, 1, 8) > 20211231
+            ZD3010.ZD3_KMRD,
+            TQN010.TQN_CCUSTO
+        from ZD3010 (nolock)
+            inner join TQN010 (nolock)
+                on TQN010.D_E_L_E_T_ = ''
+                and TQN010.TQN_FROTA = ZD3010.ZD3_VEICUL
+                and TQN010.TQN_DTABAS + TQN010.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 1, 8) + substring(ZD3010.ZD3_DATA, 10, 14)
+        where ZD3010.D_E_L_E_T_ = ''
     ) as ZD3
 
     left join
@@ -43,7 +50,7 @@ select
 
             TQI010.TQI_CODPOS,
             TQI010.TQI_LOJA,
-            TQI010.TQI_TANQUE,
+            isnull(TQI010.TQI_TANQUE, '00') as TQI_TANQUE,
             TQI010.TQI_YDETAN,
             TQI010.TQI_CODCOM,
             TQI010.TQI_PRODUT,
@@ -72,7 +79,7 @@ select
     left join ST9010 as ST9
         on ST9.D_E_L_E_T_ = ''
         and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-        and ST9.T9_CCUSTO = 304
     left join TQM010 as TQM
         on TQM.D_E_L_E_T_ = ''
         and TQM.TQM_CODCOM = ZD3.ZD3_COMB
+where ZD3.ZD3_DATA > 20211231

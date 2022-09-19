@@ -449,7 +449,7 @@ from DUD010 DUD (nolock)
                     ZD3010.ZD3_VLUNI,
                     ZD3010.ZD3_TOTAL,
                     
-                    isnull(ZD3010.ZD3_TANQUE, '00') as ZD3_TANQUE,
+                    ZD3010.ZD3_TANQUE as ZD3_TANQUE,
                     ZD3010.ZD3_COMB,
                     substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
                     ZD3010.ZD3_KML,
@@ -473,7 +473,7 @@ from DUD010 DUD (nolock)
 
                     TQI010.TQI_CODPOS,
                     TQI010.TQI_LOJA,
-                    isnull(TQI010.TQI_TANQUE, '00') as TQI_TANQUE,
+                    TQI010.TQI_TANQUE as TQI_TANQUE,
                     TQI010.TQI_YDETAN,
                     TQI010.TQI_CODCOM,
                     TQI010.TQI_PRODUT,
