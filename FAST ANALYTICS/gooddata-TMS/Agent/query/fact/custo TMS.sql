@@ -5,6 +5,7 @@ select
     DT6.DT6_SERIE,
     convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI,
     VIAGEM.DTQ_KMVGE,
+    isnull(VIAGEM.DA4_MAT, VIAGEM.DUP_CODMOT) as ID_MOT,
     VIAGEM.DTR_CODVEI,
     VIAGEM.DTR_CODRB1,
     VIAGEM.DTR_CODRB3,
@@ -55,24 +56,6 @@ select
     DTC.DTC_SERNFC,
     DTC.DTC_VALOR,
 
-    DTC.DTC_VALOR *
-    (
-        select case DU5010.DU5_INTERV when 1000 then (DU5010.DU5_VALOR/10)/100 else (DU5010.DU5_VALOR)/100 end
-        from DU5010 (nolock)
-            inner join DTC010 (nolock)
-                on DTC010.D_E_L_E_T_ = ''
-                and DU5010.DU5_CDRORI = DTC010.DTC_CDRORI
-                and DU5010.DU5_CDRDES = DTC010.DTC_CDRCAL
-        where
-                DU5010.D_E_L_E_T_ = ''
-            and DTC010.DTC_FILORI = DTC.DTC_FILORI
-            and DTC010.DTC_NUMNFC = DTC.DTC_NUMNFC
-            and DTC010.DTC_SERNFC = DTC.DTC_SERNFC
-            and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
-            and DTC010.DTC_DOC = DT6.DT6_DOC
-            and DTC010.DTC_SERIE = DT6.DT6_SERIE
-    ) as SEGURO,
-
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
     DT5.DT5_NUMSOL,
@@ -96,19 +79,34 @@ select
 
     MANUTENCAO.TJ_CODBEM,
     MANUTENCAO.TJ_ORDEM,
+    MANUTENCAO.TIPO_CUSTO,
     MANUTENCAO.TL_DTINICI,
     MANUTENCAO.INSUMO,
     MANUTENCAO.DESC_INSUMO,
     MANUTENCAO.TL_CUSTO,
-    COMBUSTIVEL.ZD3_TOTAL,
-    COMBUSTIVEL.ZD3_LITROS,
+    COMBUSTIVEL.CUSTO,
     COMBUSTIVEL.ZD3_VLUNI,
     COMBUSTIVEL.ZD3_DATA,
 
     DOCUMENTACAO.TS0_DOCTO,
-    DOCUMENTACAO.VALPARC,
+    DOCUMENTACAO.VALOR_PARCELA,
+    DOCUMENTACAO.VALOR_TAXA,
 
-    FOLHA.VALOR
+    FOLHA.RA_FILIAL,
+    FOLHA.PERIODO,
+    FOLHA.MATRICULA,
+    FOLHA.CONTA,
+    FOLHA.ATIVIDADE,
+    FOLHA.CENTRO_CUSTO,
+    FOLHA.NOME,
+    FOLHA.FUNCAO,
+    FOLHA.VALOR,
+
+    null as DEPRECIACAO,
+    null as OUTROS_CUSTOS,
+    null as SEGURO_CARGA /* PLANILHA DE SEGURO */,
+    null as SEGURO_VEICULOS,
+    null as SEGURO_CARGA
 
 from DUD010 DUD (nolock)
     left join /* ver modelo para adição de dimensão motorista */
@@ -424,12 +422,13 @@ from DUD010 DUD (nolock)
     left join
     (
         select
+            case when ZD3.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
             ZD3.ZD3_LITROS,
             ZD3.ZD3_VLUNI,
             ZD3.ZD3_HODOM,
             ZD3.ZD3_KMRD,
             ZD3.ZD3_KML,
-            ZD3.ZD3_TOTAL,
+            ZD3.ZD3_TOTAL as CUSTO,
             trim(ZD3.ZD3_DATA) as ZD3_DATA,
 
             trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
@@ -450,7 +449,7 @@ from DUD010 DUD (nolock)
                     ZD3010.ZD3_VLUNI,
                     ZD3010.ZD3_TOTAL,
                     
-                    ZD3010.ZD3_TANQUE,
+                    isnull(ZD3010.ZD3_TANQUE, '00') as ZD3_TANQUE,
                     ZD3010.ZD3_COMB,
                     substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
                     ZD3010.ZD3_KML,
@@ -474,7 +473,7 @@ from DUD010 DUD (nolock)
 
                     TQI010.TQI_CODPOS,
                     TQI010.TQI_LOJA,
-                    TQI010.TQI_TANQUE,
+                    isnull(TQI010.TQI_TANQUE, '00') as TQI_TANQUE,
                     TQI010.TQI_YDETAN,
                     TQI010.TQI_CODCOM,
                     TQI010.TQI_PRODUT,
@@ -520,8 +519,8 @@ from DUD010 DUD (nolock)
             trim(isnull(SE2010.E2_VENCREA, '-')) as TS1_DTVENC,
             TS1010.TS1_QTDPAR,
             SE2010.E2_PARCELA,
-            TS1010.TS1_VALOR/TS1010.TS1_QTDPAR as VALPARC,
-            TS1010.TS1_VALOR,
+            TS1010.TS1_VALOR/TS1010.TS1_QTDPAR as VALOR_PARCELA,
+            TS1010.TS1_VALOR as VALOR_TAXA,
 
             trim(isnull(TS0010.TS0_NOMDOC, '-')) as TS0_DOCTO,
             trim(isnull(ST9010.T9_CODBEM, '-')) as T9_CODBEM,
