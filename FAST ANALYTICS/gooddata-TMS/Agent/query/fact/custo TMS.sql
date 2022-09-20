@@ -102,11 +102,12 @@ select
     FOLHA.FUNCAO,
     FOLHA.VALOR,
 
-    null as DEPRECIACAO,
+    DEPRECIACAO.N4_VLROC1 as DEPRECIACAO,
+
     null as OUTROS_CUSTOS,
     null as SEGURO_CARGA /* PLANILHA DE SEGURO */,
     null as SEGURO_VEICULOS,
-    null as SEGURO_CARGA
+    null as COMISSOES
 
 from DUD010 DUD (nolock)
     left join /* ver modelo para adição de dimensão motorista */
@@ -128,7 +129,7 @@ from DUD010 DUD (nolock)
             DTR010.DTR_CODRB3,
 
             (
-                select cast(DTW010.DTW_DATREA as date)
+                select DTW010.DTW_DATREA
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
@@ -146,7 +147,7 @@ from DUD010 DUD (nolock)
                     and DTW010.DTW_ATIVID = '049'
             ) as HORAINI,
             (
-                select cast(DTW010.DTW_DATREA as date)
+                select DTW010.DTW_DATREA
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
