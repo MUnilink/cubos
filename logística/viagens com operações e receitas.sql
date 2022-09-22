@@ -55,12 +55,20 @@ select
     DA4.DA4_LOJA,
 
     DTR.DTR_CODVEI,
-    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_VEI,
     DTR.DTR_CODRB1,
-    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
 
     DTR.DTR_CODRB2,
     DTR.DTR_CODRB3,
+
+    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
+
+    DT5.DT5_NUMSOL,
+    DT5.DT5_DOC,
+    DT5.DT5_SERIE,
+    DT5.DT5_STATUS,
+    DT5.DT5_TIPCOL,
+    DT5.DT5_CODSOL,
+    DT5.DT5_CODOBC,
     
     DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
@@ -75,55 +83,9 @@ select
     DTC.DTC_SERIE,
     DTC.DTC_VALOR,
 
-    DTC.DTC_VALOR *
-    (
-        select case DU5010.DU5_INTERV when 1000 then (DU5010.DU5_VALOR/10)/100 else (DU5010.DU5_VALOR)/100 end
-        from DU5010 (nolock)
-            inner join DTC010 (nolock)
-                on DTC010.D_E_L_E_T_ = ''
-                and DU5010.DU5_CDRORI = DTC010.DTC_CDRORI
-                and DU5010.DU5_CDRDES = DTC010.DTC_CDRCAL
-        where
-                DU5010.D_E_L_E_T_ = ''
-            and DTC010.DTC_FILORI = DTC.DTC_FILORI
-            and DTC010.DTC_NUMNFC = DTC.DTC_NUMNFC
-            and DTC010.DTC_SERNFC = DTC.DTC_SERNFC
-            and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
-            and DTC010.DTC_DOC = DT6.DT6_DOC
-            and DTC010.DTC_SERIE = DT6.DT6_SERIE
-    ) as SEGURO,
-
-    DTC.DTC_VALOR * .0738 *
-    (
-        select case DU5010.DU5_INTERV when 1000 then (DU5010.DU5_VALOR/10)/100 else (DU5010.DU5_VALOR)/100 end
-        from DU5010 (nolock)
-            inner join DTC010 (nolock)
-                on DTC010.D_E_L_E_T_ = ''
-                and DU5010.DU5_CDRORI = DTC010.DTC_CDRORI
-                and DU5010.DU5_CDRDES = DTC010.DTC_CDRCAL
-        where
-                DU5010.D_E_L_E_T_ = ''
-            and DTC010.DTC_FILORI = DTC.DTC_FILORI
-            and DTC010.DTC_NUMNFC = DTC.DTC_NUMNFC
-            and DTC010.DTC_SERNFC = DTC.DTC_SERNFC
-            and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
-            and DTC010.DTC_DOC = DT6.DT6_DOC
-            and DTC010.DTC_SERIE = DT6.DT6_SERIE
-    ) as SEGURO_IOF,
-
-    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
-
-    DT5.DT5_NUMSOL,
-    DT5.DT5_DOC,
-    DT5.DT5_SERIE,
-    DT5.DT5_STATUS,
-    DT5.DT5_TIPCOL,
-    DT5.DT5_CODSOL,
-    DT5.DT5_CODOBC,
-
     SA1.A1_COD,
     SA1.A1_LOJA,
-    SA1.A1_NOME,
+    SA1.A1_NOME, 
     SD2.D2_DOC,
     SD2.D2_SERIE,
     SD2.D2_NFORI,
@@ -133,6 +95,15 @@ select
     SD2.D2_TOTAL,
     SD2.D2_VALIPI,
     SD2.D2_VALICM,
+
+    SC5.C5_NUM as RPS_PEDIDO,
+    RPS.D2_DOC as RPS_DOC,
+    RPS.D2_SERIE as RPS_SERIE,
+    RPS.D2_TOTAL as RPS_TOTAL,
+    RPS.D2_VALIPI as RPS_VALIPI,
+    RPS.D2_VALICM as RPS_VALICM,
+    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
+
     DF1.DF1_NUMAGE,
     DF1.DF1_ITEAGE,
     (
@@ -268,5 +239,16 @@ from DTQ010 DTQ (nolock)
                     on DF1.D_E_L_E_T_ = ''
                     and DF1.DF1_FILDOC = DTC.DTC_FILORI
                     and DF1.DF1_DOC = DTC.DTC_NUMSOL
+    left join SC5010 SC5 (nolock)
+        on SC5.D_E_L_E_T_ = ''
+        and trim(SC5.C5_YVIAGEM) = DTQ.DTQ_VIAGEM
+
+        left join SD2010 RPS (nolock)
+            on RPS.D_E_L_E_T_ = ''
+            and RPS.D2_FILIAL = SC5.C5_FILIAL
+            and RPS.D2_DOC = SC5.C5_NOTA
+            and RPS.D2_SERIE = SC5.C5_SERIE
+            and RPS.D2_CLIENTE = SC5.C5_CLIENTE
+            and RPS.D2_LOJA = SC5.C5_LOJACLI
 where 
         DTQ.D_E_L_E_T_ = ''
