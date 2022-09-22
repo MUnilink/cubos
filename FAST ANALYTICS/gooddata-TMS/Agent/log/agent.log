@@ -12902,22 +12902,341 @@ Incorrect syntax near the keyword 'as'.
 
 12/09/22 18:00:11:774 ERROR [main] (Main.java:148) - Status de execução: ERROR 
 
+12/09/22 20:00:05:655  INFO [main] (Main.java:133) - Início do processo do agent...
 
+12/09/22 20:00:05:657  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
 
+12/09/22 20:00:09:978 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
 
+12/09/22 20:00:09:978 ERROR [main] (Main.java:148) - Status de execução: ERROR 
 
+12/09/22 22:00:06:003  INFO [main] (Main.java:133) - Início do processo do agent...
 
+12/09/22 22:00:06:006  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
 
+12/09/22 22:00:08:769 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
 
+12/09/22 22:00:08:769 ERROR [main] (Main.java:148) - Status de execução: ERROR 
 
+13/09/22 00:00:07:628  INFO [main] (Main.java:133) - Início do processo do agent...
 
+13/09/22 00:00:07:631  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
 
+13/09/22 00:00:12:381 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
 
+13/09/22 00:00:12:382 ERROR [main] (Main.java:148) - Status de execução: ERROR 
 
+13/09/22 02:00:05:547  INFO [main] (Main.java:133) - Início do processo do agent...
 
+13/09/22 02:00:05:549  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
 
+13/09/22 02:00:10:571 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
 
+13/09/22 02:00:10:572 ERROR [main] (Main.java:148) - Status de execução: ERROR 
 
+13/09/22 04:00:05:976  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 04:00:05:980  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 04:00:09:560 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 04:00:09:560 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 06:00:07:568  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 06:00:07:570  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 06:00:10:363 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 06:00:10:364 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 08:00:06:171  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 08:00:06:183  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 08:00:09:269 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 08:00:09:269 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 10:00:06:096  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 10:00:06:098  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 10:00:13:242 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 10:00:13:243 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 12:00:06:556  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 12:00:06:558  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 12:00:08:471 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 12:00:08:472 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 14:00:05:984  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 14:00:05:987  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 14:00:08:642 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 14:00:08:643 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 16:00:06:003  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 16:00:06:006  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 16:00:11:270 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 16:00:11:271 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 18:00:06:045  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 18:00:06:047  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 18:00:09:963 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 18:00:09:964 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 20:00:06:875  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 20:00:06:877  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 20:00:16:960 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 20:00:16:961 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+13/09/22 22:00:05:658  INFO [main] (Main.java:133) - Início do processo do agent...
+
+13/09/22 22:00:05:660  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+13/09/22 22:00:08:657 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+13/09/22 22:00:08:657 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 00:00:06:235  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 00:00:06:238  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 00:00:08:775 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 00:00:08:775 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 02:00:05:226  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 02:00:05:229  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 02:00:09:765 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 02:00:09:765 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 04:00:05:865  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 04:00:05:867  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 04:00:10:775 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 04:00:10:776 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 06:00:06:744  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 06:00:06:746  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 06:00:10:871 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 06:00:10:872 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 08:00:05:719  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 08:00:05:721  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 08:00:10:562 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 08:00:10:563 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 10:00:05:678  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 10:00:05:680  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 10:00:09:148 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 10:00:09:148 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 12:00:05:666  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 12:00:05:668  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 12:00:08:075 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 12:00:08:075 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 14:00:05:957  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 14:00:05:959  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 14:00:08:063 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 14:00:08:064 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 16:00:05:475  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 16:00:05:477  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 16:00:08:361 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 16:00:08:362 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 18:00:06:004  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 18:00:06:009  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 18:00:07:467 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 18:00:07:467 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 20:00:05:543  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 20:00:05:545  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 20:00:08:562 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 20:00:08:562 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+14/09/22 22:00:06:655  INFO [main] (Main.java:133) - Início do processo do agent...
+
+14/09/22 22:00:06:658  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+14/09/22 22:00:11:663 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+14/09/22 22:00:11:664 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 00:00:05:786  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 00:00:05:789  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 00:00:07:761 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 00:00:07:762 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 02:00:05:810  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 02:00:05:812  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 02:00:10:362 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 02:00:10:363 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 04:00:05:212  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 04:00:05:218  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 04:00:10:545 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 04:00:10:546 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 06:00:06:548  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 06:00:06:550  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 06:00:10:556 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 06:00:10:557 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 08:00:05:514  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 08:00:05:517  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 08:00:09:544 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 08:00:09:544 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 10:00:05:720  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 10:00:05:723  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 10:00:07:867 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 10:00:07:868 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 12:00:05:750  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 12:00:05:753  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 12:00:07:659 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 12:00:07:660 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 14:00:05:429  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 14:00:05:431  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 14:00:07:675 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 14:00:07:675 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 16:00:07:057  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 16:00:07:059  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 16:00:11:452 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 16:00:11:452 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 18:00:06:187  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 18:00:06:190  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 18:00:09:559 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 18:00:09:560 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 20:00:06:533  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 20:00:06:536  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 20:00:10:273 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 20:00:10:274 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+15/09/22 22:00:06:271  INFO [main] (Main.java:133) - Início do processo do agent...
+
+15/09/22 22:00:06:274  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+15/09/22 22:00:08:657 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+15/09/22 22:00:08:658 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+16/09/22 00:00:06:552  INFO [main] (Main.java:133) - Início do processo do agent...
+
+16/09/22 00:00:06:555  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+16/09/22 00:00:09:161 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+16/09/22 00:00:09:162 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+16/09/22 02:00:06:656  INFO [main] (Main.java:133) - Início do processo do agent...
+
+16/09/22 02:00:06:659  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+16/09/22 02:00:10:990 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+16/09/22 02:00:10:991 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+16/09/22 04:00:06:463  INFO [main] (Main.java:133) - Início do processo do agent...
+
+16/09/22 04:00:06:466  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+16/09/22 04:00:08:769 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+16/09/22 04:00:08:770 ERROR [main] (Main.java:148) - Status de execução: ERROR 
+
+16/09/22 06:00:07:341  INFO [main] (Main.java:133) - Início do processo do agent...
+
+16/09/22 06:00:07:343  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+16/09/22 06:00:11:366 ERROR [main] (Main.java:146) - Houve um erro ao iniciar o Agent: password can't be null
+
+16/09/22 06:00:11:367 ERROR [main] (Main.java:148) - Status de execução: ERROR 
 
 16/09/22 08:00:06:946  INFO [main] (Main.java:133) - Início do processo do agent...
 
@@ -13296,6 +13615,177 @@ Incorrect syntax near the keyword 'as'.
 19/09/22 18:00:12:482 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:8d7e5c28-52a1-4219-a056-dc0c93a6ee28
 19/09/22 18:00:12:483 ERROR [main] (Main.java:477) - Status de execução: ERROR 
 
+19/09/22 20:00:05:290  INFO [main] (Main.java:133) - Início do processo do agent...
+
+19/09/22 20:00:05:292  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+19/09/22 20:00:12:082 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+19/09/22 20:00:12:083 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:57a1b5c2-acb8-4056-a0f1-b01940a7008c
+19/09/22 20:00:12:083 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+19/09/22 22:00:05:748  INFO [main] (Main.java:133) - Início do processo do agent...
+
+19/09/22 22:00:05:751  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+19/09/22 22:00:09:300 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+19/09/22 22:00:09:301 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:8248d212-c201-4e22-b6ce-22e7bc56b2f5
+19/09/22 22:00:09:301 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 00:00:06:693  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 00:00:06:696  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 00:00:15:007 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 00:00:15:008 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:cb83e79b-c5a3-4c86-a2f1-f0bca02985ac
+20/09/22 00:00:15:009 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 02:00:08:226  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 02:00:08:229  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 02:00:11:282 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 02:00:11:282 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:9e2d9c4a-ccb4-4a36-b5b4-0649ddf061a5
+20/09/22 02:00:11:283 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 04:00:06:777  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 04:00:06:782  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 04:00:14:032 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 04:00:14:033 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:b9868d9a-7a87-4036-8006-1352c3bd6f18
+20/09/22 04:00:14:034 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 06:00:05:872  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 06:00:05:875  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 06:00:09:296 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 06:00:09:297 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:538f08db-99c6-4d6d-ae66-d7cd59537759
+20/09/22 06:00:09:297 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 08:00:07:580  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 08:00:07:582  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 08:00:11:288 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 08:00:11:288 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:56361ceb-5c8d-4f3b-a878-50a93f03642d
+20/09/22 08:00:11:289 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 10:00:03:862  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 10:00:03:864  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 10:00:10:005 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 10:00:10:006 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:d8ba6795-64d1-4e70-b710-e6986e0187bb
+20/09/22 10:00:10:006 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 12:00:05:215  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 12:00:05:218  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 12:00:09:999 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 12:00:10:000 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:82d84078-362e-4bf5-a92f-8a460f4b3fd3
+20/09/22 12:00:10:001 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 14:00:05:601  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 14:00:05:604  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 14:00:09:606 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 14:00:09:607 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:d31ed8b9-59ec-48e6-b69a-824b1837ed81
+20/09/22 14:00:09:607 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 16:00:06:737  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 16:00:06:739  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 16:00:10:484 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 16:00:10:484 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:d38c9495-89ec-408c-9011-77b18be61704
+20/09/22 16:00:10:485 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 18:00:06:205  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 18:00:06:208  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 18:00:10:577 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 18:00:10:578 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:2930fb55-9412-4712-8e31-d6db2a5a7eab
+20/09/22 18:00:10:578 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 20:00:06:335  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 20:00:06:338  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 20:00:11:687 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 20:00:11:688 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:977de667-0301-490f-a574-d1eaadac6448
+20/09/22 20:00:11:688 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+20/09/22 22:00:06:062  INFO [main] (Main.java:133) - Início do processo do agent...
+
+20/09/22 22:00:06:065  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+20/09/22 22:00:09:504 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+20/09/22 22:00:09:505 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:a2c40c91-8166-4cd5-9ffa-ebef5bfb4a58
+20/09/22 22:00:09:505 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 00:00:07:758  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 00:00:07:761  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 00:00:10:786 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+21/09/22 00:00:10:786 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:481f143d-c0bb-4dd2-9791-8dda6c8365af
+21/09/22 00:00:10:787 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 02:00:05:421  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 02:00:05:423  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 02:00:09:089 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+21/09/22 02:00:09:089 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:7a8dd040-9d8a-4c76-b0cc-0805118640fc
+21/09/22 02:00:09:090 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 04:00:05:846  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 04:00:05:852  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 04:00:10:593 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+21/09/22 04:00:10:593 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:de64da0a-954a-4935-912a-84c9b560b647
+21/09/22 04:00:10:594 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 06:00:04:031  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 06:00:04:034  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 06:00:10:250 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+21/09/22 06:00:10:251 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:463fbd56-bf18-45b7-982b-510b0f409ad2
+21/09/22 06:00:10:252 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 08:00:07:636  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 08:00:07:639  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 08:00:10:626 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+21/09/22 08:00:10:627 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:3a74daa2-fbaf-4f75-b208-ef2f4feb2fab
+21/09/22 08:00:10:628 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
 21/09/22 10:00:06:310  INFO [main] (Main.java:133) - Início do processo do agent...
 
 21/09/22 10:00:06:314  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
@@ -13304,4 +13794,359 @@ Incorrect syntax near the keyword 'as'.
 
 21/09/22 10:00:10:767 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:3d27a466-8325-4121-a24a-cde1d30b30ac
 21/09/22 10:00:10:768 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 12:00:05:965  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 12:00:05:968  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 12:00:10:273 ERROR [main] (Main.java:475) - Erro ao conectar no banco de dados
+
+21/09/22 12:00:10:274 DEBUG [main] (Main.java:476) - Login failed for user 'PROT62WUREAD'. ClientConnectionId:c8c7b910-549d-4699-b5cc-7ad27e3b9dce
+21/09/22 12:00:10:274 ERROR [main] (Main.java:477) - Status de execução: ERROR 
+
+21/09/22 14:00:06:554  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 14:00:06:557  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 14:00:11:190  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+21/09/22 14:00:11:191  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20220921'
+
+21/09/22 14:00:11:191  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20200821'
+
+21/09/22 14:00:11:192  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20220921'
+
+21/09/22 14:00:11:192  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+21/09/22 14:00:11:193  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+21/09/22 14:00:11:198  INFO [main] (JdbcExtractor.java:187) - Início da conexão com GoodData 
+
+21/09/22 14:00:11:213  INFO [main] (GdcRESTApiWrapper.java:194) - Efetuando login no GoodData...
+21/09/22 14:00:12:183  INFO [main] (GdcRESTApiWrapper.java:211) - Login no GoodData efetuado com sucesso
+21/09/22 14:00:12:446 DEBUG [main] (GdcRESTApiWrapper.java:272) - Efetuando logout no GoodData.
+21/09/22 14:00:12:726 DEBUG [main] (GdcRESTApiWrapper.java:278) - Logout no GoodData efetuado com sucesso.
+21/09/22 14:00:12:727  INFO [main] (JdbcExtractor.java:190) - Fim da conexão com GoodData 
+
+21/09/22 14:00:12:734  INFO [main] (JdbcExtractor.java:219) - Início da geração dos arquivos de dados (Via pasta query) 
+
+21/09/22 14:00:12:735  INFO [main] (JdbcExtractor.java:454) - Conectado ao banco de dados 
+
+21/09/22 14:00:12:738 DEBUG [main] (JdbcExtractor.java:1041) - TMS Ociosidade Veiculo.01.txt | Query a ser executada: SELECT DISTINCT 'P |01|01' AS BK_EMPRESA,                 CASE                     WHEN DTW_FILIAL IS NULL THEN 'P |01||'                     ELSE 'P |01|01'+ CAST(DTW_FILIAL AS CHAR (6))                 END AS BK_FILIAL,                 DTW.DTW_FILORI AS FILIAL_ORIGEM,                 DTW.DTW_VIAGEM AS NUMERO_VIAGEM,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3CAVALO.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODVEI, ' ')), ' '), '|') AS CODIGO_CAVALO,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3REBOQUE1.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODRB1, ' ')), ' '), '|') AS CODIGO_REBOQUE1,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3REBOQUE2.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODRB2, ' ')), ' '), '|') AS CODIGO_REBOQUE2,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3REBOQUE3.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODRB3, ' ')), ' '), '|') AS CODIGO_REBOQUE3,    (SELECT TOP(1) CASE                      WHEN DTW_DATREA = ' ' THEN ' '                      ELSE CONCAT(CONVERT(DATE,DTW_DATREA), ' ', DTW_HORREA)                  END    FROM DTW010 DTWH    WHERE DTW_FILORI = DTW.DTW_FILORI      AND DTW_VIAGEM = DTW.DTW_VIAGEM      AND DTW_ATIVID = '049'      AND DTW_CODCLI = ' '      AND DTW_LOJCLI = ' '      AND DTWH.D_E_L_E_T_ = ' ' ) AS 'DATAHORASAIDA',    (SELECT TOP(1) CASE                      WHEN DTW_DATREA = ' ' THEN ' '                      ELSE CONCAT(CONVERT(DATE,DTW_DATREA), ' ', DTW_HORREA)                  END    FROM DTW010 DTWH    WHERE DTW_FILORI = DTW.DTW_FILORI      AND DTW_VIAGEM = DTW.DTW_VIAGEM      AND DTW_ATIVID = '050'      AND DTW_CODCLI = ' '      AND DTW_LOJCLI = ' '      AND DTWH.D_E_L_E_T_ = ' ' ) AS 'DATAHORACHEGADA','01' AS INSTANCIA FROM DTW010 DTW INNER JOIN DTR010 DTR ON DTR.DTR_FILIAL = DTW_FILIAL AND DTR.DTR_FILORI = DTW.DTW_FILORI AND DTR.DTR_VIAGEM = DTW.DTW_VIAGEM AND DTR.D_E_L_E_T_ = ' ' INNER JOIN DA3010 DA3CAVALO ON DA3CAVALO.DA3_FILIAL = '      ' AND DA3CAVALO.DA3_COD = DTR.DTR_CODVEI AND DA3CAVALO.D_E_L_E_T_ = ' ' LEFT JOIN DA3010 DA3REBOQUE1 ON DA3REBOQUE1.DA3_FILIAL = '      ' AND DA3REBOQUE1.DA3_COD = DTR.DTR_CODRB1 AND DA3REBOQUE1.D_E_L_E_T_ = ' ' LEFT JOIN DA3010 DA3REBOQUE2 ON DA3REBOQUE2.DA3_FILIAL = '      ' AND DA3REBOQUE2.DA3_COD = DTR.DTR_CODRB2 AND DA3REBOQUE2.D_E_L_E_T_ = ' ' LEFT JOIN DA3010 DA3REBOQUE3 ON DA3REBOQUE3.DA3_FILIAL = '      ' AND DA3REBOQUE3.DA3_COD = DTR.DTR_CODRB3 AND DA3REBOQUE3.D_E_L_E_T_ = ' ' WHERE DTW_DATREA BETWEEN '20200821' AND '20220921'   AND DTW.DTW_CODCLI = ' '   AND DTW.DTW_LOJCLI = ' '   AND DTW.DTW_ATIVID IN ('050',                          '049')   AND DTW.D_E_L_E_T_ = ' ' 
+
+21/09/22 14:00:14:157  INFO [main] (JdbcExtractor.java:1069) - TMS Ociosidade Veiculo.01.txt | Tempo de execução: 00h 00min 01s 418ms 
+
+21/09/22 14:00:18:944 DEBUG [main] (JdbcExtractor.java:1041) - TMS Receita Transporte.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DT8_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT8_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DT6_DATEMI AS DATA_EMISSAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,        'P |01|DT3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT8_CODPAS, ' ')), ' '), '|') AS BK_COMPONENTE,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_NEGOCIACAO,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        CASE            WHEN DT6_FILDOC IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))        END AS BK_FILIAL_DOCTO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        DT8_FILDOC AS FILDOC,        DT8_DOC AS DOCUMENTO,        DT8_SERIE AS SERIE,        DT8_CODPRO AS PRODUTO,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CAST(COALESCE(DT8_VALPAS, 0) AS DECIMAL(14, 2)) AS VALOR_COMPONENTE,        CAST(COALESCE(DT8_VALIMP, 0) AS DECIMAL(14, 2)) AS VALOR_IMPOSTO,        CAST(COALESCE(DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL FROM DT8010 DT8 INNER JOIN DT6010 DT6 ON DT6.DT6_FILIAL = DT8_FILIAL AND DT6.DT6_FILDOC = DT8.DT8_FILDOC AND DT6.DT6_DOC = DT8.DT8_DOC AND DT6.DT6_SERIE = DT8.DT8_SERIE AND DT6.DT6_SERIE <> 'COL' AND DT6.DT6_SERIE <> 'PED' AND DT6.D_E_L_E_T_ = ' ' INNER JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDEV ON DUYDEV.DUY_FILIAL = DT6_FILIAL AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL AND DUYDEV.D_E_L_E_T_ = ' ' INNER JOIN DT3010 DT3 ON DT3.DT3_FILIAL = DT8_FILIAL AND DT3.DT3_CODPAS = DT8.DT8_CODPAS AND DT3.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DT6.DT6_DATEMI BETWEEN '20200821' AND '20220921'   AND DT8.D_E_L_E_T_ = ' ' 
+
+21/09/22 14:00:21:156  INFO [main] (JdbcExtractor.java:1069) - TMS Receita Transporte.01.txt | Tempo de execução: 00h 00min 02s 211ms 
+
+21/09/22 14:00:29:643 DEBUG [main] (JdbcExtractor.java:1041) - TMS Indenizacao Transporte.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DUB_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DUB_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DUB.DUB_DATRID AS DATA_REGISTRO,        DUB.DUB_HORRID AS HORA_REGISTRO,        DUB.DUB_ITEM AS ITEM,        DUB.DUB_FILRID AS FILIAL_REGISTRO,        DUB.DUB_NUMRID AS NUMERO_REGISTRO,        'P |01|DU3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DU3.DU3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DUB.DUB_COMSEG, ' ')), ' '), '|') AS RAMO_SEGURO,        'P |01|DT2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT2.DT2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DUB.DUB_CODOCO, ' ')), ' '), '|') AS BK_CODIGO_OCORRENCIA,        DUB.DUB_NUMPRO AS NUMERO_PROCESSO,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DUB_STATUS, ' ')), ' '), '|') AS BK_STATUS_INDENIZACAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DUB_CODCLI, ' '))+RTRIM(COALESCE(DUB_LOJCLI, ' ')), ' '), '|') AS BK_CLIENTE,        DUB.DUB_QTDOCO AS QUANTIDADE_OCORRENCIA,        DUB.DUB_VALPRE AS VALOR_PREJUIZO,        DUB.DUB_VALIND AS VALOR_INDENIZADO,        DUB.DUB_DATVEN AS DATA_VENCIMENTO,        DUB.DUB_DATENC AS DATA_ENCERRAMENTO,        DUB_FILDOC AS BK_FILIAL_DOCTO,        DUB_DOC AS BK_NUMERO_DOCUMENTO,        DUB_SERIE AS BK_SERIE,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DUB_STATUS, ' ')), ' '), '|') AS BK_STATUS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT2_RESOCO, ' ')), ' '), '|') AS RESPONSAVEL_OCORRENCIA,        CASE            WHEN SA1.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' '))+RTRIM(COALESCE(SA1.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_CLI,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYCAL.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' '))+RTRIM(COALESCE(DUYCAL.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI FROM DUB010 DUB INNER JOIN DT6010 DT6 ON DT6.DT6_FILIAL = '      ' AND DT6.DT6_FILDOC = DUB.DUB_FILDOC AND DT6.DT6_DOC = DUB.DUB_DOC AND DT6.DT6_SERIE = DUB.DUB_SERIE LEFT JOIN DU3010 DU3 ON DU3.DU3_FILIAL = '      ' AND DU3.DU3_COMSEG = DUB.DUB_COMSEG AND DU3.D_E_L_E_T_ = ' ' LEFT JOIN DT2010 DT2 ON DT2.DT2_FILIAL = '      ' AND DT2.DT2_CODOCO = DUB.DUB_CODOCO AND DT2.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 SA1 ON SA1.A1_FILIAL = '      ' AND SA1.A1_COD = DUB.DUB_CODCLI AND SA1.A1_LOJA = DUB.DUB_LOJCLI AND SA1.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYCAL ON DUYCAL.DUY_FILIAL = DT6_FILIAL AND DUYCAL.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYCAL.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DUB.DUB_DATRID BETWEEN '20200821' AND '20220921'   AND DUB.D_E_L_E_T_ = ' ' 
+
+21/09/22 14:00:29:728  INFO [main] (JdbcExtractor.java:1069) - TMS Indenizacao Transporte.01.txt | Tempo de execução: 00h 00min 00s 85ms 
+
+21/09/22 14:00:30:107 DEBUG [main] (JdbcExtractor.java:1041) - TMS Ocorrencias Transporte.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DUA_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DUA_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DUA_DATOCO AS DATA_OCORRENCIA,        DUA_HOROCO AS HORA_OCORRENCIA,        CASE            WHEN DUA_FILOCO IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DUA_FILOCO AS CHAR (8))        END AS FILIAL_OCORRENCIA,        DUA_NUMOCO AS NUMERO_OCORRENCIA,        DUA_VIAGEM AS NUMERO_VIAGEM,        DUA_SEQOCO AS SEQUENCIA_OCORRENCIA,        DUA_CODOCO AS CODIGO_OCORRENCA,        'P |01|DT2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT2.DT2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT2_TIPOCO, ' ')), ' '), '|') AS TIPO_OCORRENCA,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_SERTMS, ' ')), ' '), '|') AS BK_SERTMS,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYCAL.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' '))+RTRIM(COALESCE(DUYCAL.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI,        DUA_FILDOC AS FILIAL_DOCUMENTO,        DUA_DOC AS DOCUMENTO,        DUA_SERIE AS SERIE FROM DUA010 DUA INNER JOIN DT2010 DT2 ON DT2.DT2_FILIAL = DUA_FILIAL AND DT2.DT2_CODOCO = DUA.DUA_CODOCO AND DT2.D_E_L_E_T_ = ' ' LEFT JOIN DT6010 DT6 ON DUA.DUA_FILIAL = DUA_FILIAL AND DUA.DUA_FILDOC = DT6.DT6_FILDOC AND DUA.DUA_DOC = DT6.DT6_DOC AND DUA.DUA_SERIE = DT6.DT6_SERIE AND DUA.DUA_SERIE <> 'COL' AND DUA.DUA_SERIE <> 'PED' AND DUA.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYCAL ON DUYCAL.DUY_FILIAL = DT6_FILIAL AND DUYCAL.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYCAL.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' LEFT JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DUA.DUA_DATOCO BETWEEN '20200821' AND '20220921'   AND DUA.D_E_L_E_T_ = ' ' 
+
+21/09/22 14:00:30:885  INFO [main] (JdbcExtractor.java:1069) - TMS Ocorrencias Transporte.01.txt | Tempo de execução: 00h 00min 00s 779ms 
+
+21/09/22 14:00:31:834 DEBUG [main] (JdbcExtractor.java:1041) - TMS Movimentacao Carga.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DT6_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DT6_DATEMI AS DATA_EMISSAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        CASE            WHEN DT6_FILDOC IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))        END AS BK_FILIAL_DOCTO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYCAL.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' '))+RTRIM(COALESCE(DUYCAL.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI,        DT6_FILDOC AS FILIAL_DOCUMENTO,        DT6_DOC AS DOCUMENTO,        DT6_SERIE AS SERIE,        CAST(COALESCE(DT6_PESO, 0) AS DECIMAL(11, 4)) AS PESO,        CAST(COALESCE(DT6_PESOM3, 0) AS DECIMAL(11, 4)) AS PESO_CUBADO,        CAST(COALESCE(DT6_METRO3, 0) AS DECIMAL(11, 4)) AS PESO_M3,        CAST(COALESCE(DT6_VOLORI, 0) AS DECIMAL(5, 0)) AS VOLUME,        CAST(COALESCE(DT6_VALMER, 0) AS DECIMAL(14, 2)) AS VALOR_MERCADORIA,        CAST(COALESCE(DT6_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL FROM DT6010 DT6 INNER JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYCAL ON DUYCAL.DUY_FILIAL = DT6_FILIAL AND DUYCAL.DUY_GRPVEN = DT6.DT6_CDRCAL AND DUYCAL.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DT6.DT6_DATEMI BETWEEN '20200821' AND '20220921'   AND DT6.DT6_DOCTMS <> '1'   AND DT6.D_E_L_E_T_ = ' ' 
+
+21/09/22 14:00:32:500  INFO [main] (JdbcExtractor.java:1069) - TMS Movimentacao Carga.01.txt | Tempo de execução: 00h 00min 00s 666ms 
+
+21/09/22 14:00:36:154 DEBUG [main] (JdbcExtractor.java:1041) - TMS Performance Entrega.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DT6_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DT6_DATEMI AS DATA_EMISSAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        CASE            WHEN DT6_FILDOC IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))        END AS BK_FILIAL_DOCTO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        DT6.DT6_DOC AS DOCUMENTO,        DT6.DT6_SERIE AS SERIE,        DT6.DT6_PRZENT AS PRAZO_ENTREGA,        DT6.DT6_DATENT AS DATA_ENTREGA,        CASE            WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'            ELSE 'DENTRO DO PRAZO'        END AS BK_STATUS,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI FROM DT6010 DT6 LEFT JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDEV ON DUYDEV.DUY_FILIAL = DT6_FILIAL AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL AND DUYDEV.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DT6.DT6_DATEMI BETWEEN '20200821' AND '20220921'   AND DT6.D_E_L_E_T_ = ' '   AND DT6.DT6_DATENT <> ' '   AND DT6.DT6_SERIE <> 'COL'   AND DT6.DT6_SERIE <> 'PED' 
+
+21/09/22 14:00:36:960  INFO [main] (JdbcExtractor.java:1069) - TMS Performance Entrega.01.txt | Tempo de execução: 00h 00min 00s 806ms 
+
+21/09/22 14:00:44:838 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tipo Ocorrencia Transporte.01.txt | Query a ser executada: SELECT 'P |01' AS BK_TIPOCO, '01' AS CODIGO_TIPOCO, 		'Encerra Processo' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |02' AS BK_TIPOCO, '02' AS CODIGO_TIPOCO, 		'Bloqueia Documento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |03' AS BK_TIPOCO, '03' AS CODIGO_TIPOCO, 		'Libera Documento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |04' AS BK_TIPOCO, '04' AS CODIGO_TIPOCO, 		'Retorna Documento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |05' AS BK_TIPOCO, '05' AS CODIGO_TIPOCO, 		'Informativa' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |06' AS BK_TIPOCO, '06' AS CODIGO_TIPOCO, 		'Gera Pendencia' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |07' AS BK_TIPOCO, '07' AS CODIGO_TIPOCO, 		'Estorna Pendencia' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |08' AS BK_TIPOCO, '08' AS CODIGO_TIPOCO, 		'Transferencia de Viagem' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |09' AS BK_TIPOCO, '09' AS CODIGO_TIPOCO, 		'Gera Indenizacao' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |10' AS BK_TIPOCO, '10' AS CODIGO_TIPOCO, 		'Estorna Indenizacao' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |11' AS BK_TIPOCO, '11' AS CODIGO_TIPOCO, 		'Transferencia de Mercadoria' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |12' AS BK_TIPOCO, '12' AS CODIGO_TIPOCO, 		'Cancelamento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |13' AS BK_TIPOCO, '13' AS CODIGO_TIPOCO, 		'Chegada Eventual' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |14' AS BK_TIPOCO, '14' AS CODIGO_TIPOCO, 		'Ajuste da Previsao de Chegada' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |16' AS BK_TIPOCO, '16' AS CODIGO_TIPOCO, 		'Receita' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |17' AS BK_TIPOCO, '17' AS CODIGO_TIPOCO, 		'Despesa' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |18' AS BK_TIPOCO, '18' AS CODIGO_TIPOCO, 		'Receita/Despesa' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |19' AS BK_TIPOCO, '19' AS CODIGO_TIPOCO, 		'Cobranca Tentativa Entrega' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |20' AS BK_TIPOCO, '20' AS CODIGO_TIPOCO, 		'Cobranca de Retorno' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |21' AS BK_TIPOCO, '21' AS CODIGO_TIPOCO, 		'Entrega Trecho GFE' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:44:850  INFO [main] (JdbcExtractor.java:1069) - TMS Tipo Ocorrencia Transporte.01.txt | Tempo de execução: 00h 00min 00s 11ms 
+
+21/09/22 14:00:46:613 DEBUG [main] (JdbcExtractor.java:1041) - Empresa.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA, '01' AS CODIGO_EMPRESA, 'Unilink' AS DESCRICAO_EMPRESA 
+
+21/09/22 14:00:46:617  INFO [main] (JdbcExtractor.java:1069) - Empresa.01.txt | Tempo de execução: 00h 00min 00s 03ms 
+
+21/09/22 14:00:47:633 DEBUG [main] (JdbcExtractor.java:1041) - Filial.01.txt | Query a ser executada: SELECT 'P |01|01010101' AS BK_FILIAL,'010101' AS COD_FILIAL,'Matriz' AS DESC_FILIAL,'01' AS COD_UNINEG,'Unilink' AS DESC_UNINEG UNION SELECT 'P |01|01010102' AS BK_FILIAL,'010102' AS COD_FILIAL,'Pecem' AS DESC_FILIAL,'01' AS COD_UNINEG,'Unilink' AS DESC_UNINEG UNION SELECT 'P |01|01      ' AS BK_FILIAL,'01      ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG UNION SELECT 'P |01|0101    ' AS BK_FILIAL,'0101    ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG UNION SELECT 'P |01|010101  ' AS BK_FILIAL,'010101  ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG UNION SELECT 'P |01||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:47:637  INFO [main] (JdbcExtractor.java:1069) - Filial.01.txt | Tempo de execução: 00h 00min 00s 04ms 
+
+21/09/22 14:00:50:512 DEBUG [main] (JdbcExtractor.java:1041) - TMS Regiao Transporte.01.txt | Query a ser executada: SELECT 'P |01|DUY010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DUY_FILIAL,' ') )+'|'+RTRIM( COALESCE(DUY_GRPVEN,' ') ),' '),'|') AS BK_REGIAO,DUY.DUY_GRPVEN AS COD_REGIAO,DUY.DUY_DESCRI AS DES_REGIAO,'01' AS INSTANCIA FROM DUY010 DUY WHERE  DUY.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DUY010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:50:541  INFO [main] (JdbcExtractor.java:1069) - TMS Regiao Transporte.01.txt | Tempo de execução: 00h 00min 00s 28ms 
+
+21/09/22 14:00:51:324 DEBUG [main] (JdbcExtractor.java:1041) - Regiao.01.txt | Query a ser executada: SELECT 'P |01|CC2010|'+  COALESCE(NULLIF(RTRIM( COALESCE(X5_CHAVE,' ') ),' '),'|') AS BK_REGIAO,SX5.X5_CHAVE AS COD_ESTADO,SX5.X5_DESCRI AS DESC_ESTADO,' ' AS COD_MUNICIPIO,' ' AS DESC_MUNICIPIO FROM SX5010 SX5 WHERE  SX5.X5_TABELA = '12' AND SX5.D_E_L_E_T_ = ' ' UNION ALL  SELECT 'P |01|CC2010|'+  COALESCE(NULLIF(RTRIM( COALESCE(CC2_EST,' ') )+RTRIM( COALESCE(CC2_CODMUN,' ') ),' '),'|') AS BK_REGIAO,CC2.CC2_EST AS COD_ESTADO,(SELECT DISTINCT SX5.X5_DESCRI FROM SX5010 SX5 WHERE  SX5.X5_TABELA = '12' AND SX5.X5_CHAVE = CC2.CC2_EST AND SX5.D_E_L_E_T_ = ' ' )  AS DESC_ESTADO,CC2.CC2_CODMUN AS COD_MUNICIPIO,CC2.CC2_MUN AS DESC_MUNICIPIO FROM CC2010 CC2 WHERE  CC2.D_E_L_E_T_ = ' '  UNION SELECT 'P |01|CC2010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:51:399  INFO [main] (JdbcExtractor.java:1069) - Regiao.01.txt | Tempo de execução: 00h 00min 00s 76ms 
+
+21/09/22 14:00:53:212 DEBUG [main] (JdbcExtractor.java:1041) - TMS Componente Frete.01.txt | Query a ser executada: SELECT 'P |01|DT3010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DT3_FILIAL,' ') )+'|'+RTRIM( COALESCE(DT3_CODPAS,' ') ),' '),'|') AS BK_COMPONENTE,DT3.DT3_CODPAS AS COD_COMPONENTE,DT3.DT3_DESCRI AS DES_COMPONENTE,'01' AS INSTANCIA FROM DT3010 DT3 WHERE  DT3.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DT3010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:53:221  INFO [main] (JdbcExtractor.java:1069) - TMS Componente Frete.01.txt | Tempo de execução: 00h 00min 00s 08ms 
+
+21/09/22 14:00:55:145 DEBUG [main] (JdbcExtractor.java:1041) - TMS Ramo Seguro.01.txt | Query a ser executada: SELECT 'P |01|DU3010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DU3_FILIAL,' ') )+'|'+RTRIM( COALESCE(DU3_COMSEG,' ') ),' '),'|') AS BK_RAMO_SEGURO,DU3.DU3_COMSEG AS COD_RAMO_SEGURO,DU3.DU3_DESCRI AS DESC_OCORRENCIA,'01' AS INSTANCIA FROM DU3010 DU3 WHERE  DU3.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DU3010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:55:154  INFO [main] (JdbcExtractor.java:1069) - TMS Ramo Seguro.01.txt | Tempo de execução: 00h 00min 00s 08ms 
+
+21/09/22 14:00:55:430 DEBUG [main] (JdbcExtractor.java:1041) - TMS Servicos - SERMTS.01.txt | Query a ser executada: SELECT 'P |1' AS BK_SERTMS, '1' AS CODIGO_SERTMS, 		'Coleta' AS DESCRICAO_SERTMS,  '01'	AS INSTANCIA UNION SELECT 'P |2' AS BK_SERTMS, '2' AS CODIGO_SERTMS, 		'Transporte' AS DESCRICAO_SERTMS,  '01'	AS INSTANCIA UNION SELECT 'P |3' AS BK_SERTMS, '3' AS CODIGO_SERTMS, 		'Entrega' AS DESCRICAO_SERTMS,  '01'	AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:55:435  INFO [main] (JdbcExtractor.java:1069) - TMS Servicos - SERMTS.01.txt | Tempo de execução: 00h 00min 00s 05ms 
+
+21/09/22 14:00:56:919 DEBUG [main] (JdbcExtractor.java:1041) - TMS Responsável Ocorrencia.01.txt | Query a ser executada: SELECT 'P |0' AS BK_Respon, '0' AS CODIGO_Respon, 		'Nao Tem      ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P |1' AS BK_Respon, '1' AS CODIGO_Respon, 		'Transportador' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P |2' AS BK_Respon, '2' AS CODIGO_Respon, 		'Cliente      ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P |3' AS BK_Respon, '3' AS CODIGO_Respon, 		'Motorista    ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P | ' AS BK_Respon, ' ' AS CODIGO_Respon, 		'             ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:56:925  INFO [main] (JdbcExtractor.java:1069) - TMS Responsável Ocorrencia.01.txt | Tempo de execução: 00h 00min 00s 05ms 
+
+21/09/22 14:00:58:018 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tipo Doc.Transporte.01.txt | Query a ser executada: SELECT 'P |1' AS BK_DOCTMS, '1' AS CODIGO_DOCTMS, 		'Ordem de Coleta' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |2' AS BK_DOCTMS, '2' AS CODIGO_DOCTMS, 		'CTRC' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |3' AS BK_DOCTMS, '3' AS CODIGO_DOCTMS, 		'AWB' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |4' AS BK_DOCTMS, '4' AS CODIGO_DOCTMS, 		'Docto.Bx.Estoque' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |5' AS BK_DOCTMS, '5' AS CODIGO_DOCTMS, 		'Nota Fiscal' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |6' AS BK_DOCTMS, '6' AS CODIGO_DOCTMS, 		'CTRC Devolucao' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |7' AS BK_DOCTMS, '7' AS CODIGO_DOCTMS, 		'CTRC Reentrega' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |8' AS BK_DOCTMS, '8' AS CODIGO_DOCTMS, 		'CTRC Complemento' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |9' AS BK_DOCTMS, '9' AS CODIGO_DOCTMS, 		'CTRC Retorno' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |A' AS BK_DOCTMS, 'A' AS CODIGO_DOCTMS, 		'CTRC Cortesia' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |B' AS BK_DOCTMS, 'B' AS CODIGO_DOCTMS, 		'ACT' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |C' AS BK_DOCTMS, 'C' AS CODIGO_DOCTMS, 		'Documento de Apoio 2' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |D' AS BK_DOCTMS, 'D' AS CODIGO_DOCTMS, 		'Nota Fiscal Reentrega' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |E' AS BK_DOCTMS, 'E' AS CODIGO_DOCTMS, 		'CTRC Armazenagem' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |F' AS BK_DOCTMS, 'F' AS CODIGO_DOCTMS, 		'Nota Fiscal Armazenagem' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |G' AS BK_DOCTMS, 'G' AS CODIGO_DOCTMS, 		'Nota Fiscal Complemento' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |H' AS BK_DOCTMS, 'H' AS CODIGO_DOCTMS, 		'Documento de Apoio 3' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |I' AS BK_DOCTMS, 'I' AS CODIGO_DOCTMS, 		'Documento de Apoio 4' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |J' AS BK_DOCTMS, 'J' AS CODIGO_DOCTMS, 		'CRT' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |K' AS BK_DOCTMS, 'K' AS CODIGO_DOCTMS, 		'Carregamento em Partes' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |L' AS BK_DOCTMS, 'L' AS CODIGO_DOCTMS, 		'CRT Complemento' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |M' AS BK_DOCTMS, 'M' AS CODIGO_DOCTMS, 		'CTRC Anulacao' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |N' AS BK_DOCTMS, 'N' AS CODIGO_DOCTMS, 		'Documento de Apoio 5' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |O' AS BK_DOCTMS, 'O' AS CODIGO_DOCTMS, 		'Documento de Apoio 6' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |P' AS BK_DOCTMS, 'P' AS CODIGO_DOCTMS, 		'CTRC Substituicao' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:58:032  INFO [main] (JdbcExtractor.java:1069) - TMS Tipo Doc.Transporte.01.txt | Tempo de execução: 00h 00min 00s 14ms 
+
+21/09/22 14:00:58:278 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tipo Transporte.01.txt | Query a ser executada: SELECT 'P |1' AS BK_TIPTRA, '1' AS CODIGO_TIPTRA, 		'Rodoviario' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |2' AS BK_TIPTRA, '2' AS CODIGO_TIPTRA, 		'Aereo' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |3' AS BK_TIPTRA, '3' AS CODIGO_TIPTRA, 		'Fluvial' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |4' AS BK_TIPTRA, '4' AS CODIGO_TIPTRA, 		'Rodoviario Internacional' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |6' AS BK_TIPTRA, '6' AS CODIGO_TIPTRA, 		'Multimodal' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:58:283  INFO [main] (JdbcExtractor.java:1069) - TMS Tipo Transporte.01.txt | Tempo de execução: 00h 00min 00s 04ms 
+
+21/09/22 14:00:58:632 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tabela Ocorrencia.01.txt | Query a ser executada: SELECT 'P |01|DT2010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DT2_FILIAL,' ') )+'|'+RTRIM( COALESCE(DT2_CODOCO,' ') ),' '),'|') AS BK_CODOCO,DT2.DT2_CODOCO AS COD_OCORRENCIA,DT2.DT2_DESCRI AS DESC_OCORRENCIA,'01' AS INSTANCIA FROM DT2010 DT2 WHERE  DT2.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DT2010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:58:640  INFO [main] (JdbcExtractor.java:1069) - TMS Tabela Ocorrencia.01.txt | Tempo de execução: 00h 00min 00s 08ms 
+
+21/09/22 14:00:58:892 DEBUG [main] (JdbcExtractor.java:1041) - Item.01.txt | Query a ser executada: SELECT 'P |01|SB1010|'+  COALESCE(NULLIF(RTRIM( COALESCE(B1_FILIAL,' ') )+'|'+RTRIM( COALESCE(B1_COD,' ') ),' '),'|') AS BK_ITEM,SB1.B1_COD AS COD_ITEM,SB1.B1_DESC AS DESC_ITEM,SB1.B1_POSIPI AS CLASSIFICACAO_FISCAL FROM SB1010 SB1 WHERE  SB1.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|SB1010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:58:975  INFO [main] (JdbcExtractor.java:1069) - Item.01.txt | Tempo de execução: 00h 00min 00s 82ms 
+
+21/09/22 14:00:59:615 DEBUG [main] (JdbcExtractor.java:1041) - Cliente.01.txt | Query a ser executada: SELECT 'P |01|SA1010|'+  COALESCE(NULLIF(RTRIM( COALESCE(A1_FILIAL,' ') )+'|'+RTRIM( COALESCE(A1_COD,' ') )+RTRIM( COALESCE(A1_LOJA,' ') ),' '),'|') AS BK_CLIENTE,SA1.A1_COD AS COD_CLIENTE,SA1.A1_LOJA AS LOJA_CLIENTE,SA1.A1_NOME AS NOME_CLIENTE,SA1.A1_SATIV1 AS SEGMENTACAO_ATIVIDADE_1 FROM SA1010 SA1 WHERE  SA1.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|SA1010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:00:59:653  INFO [main] (JdbcExtractor.java:1069) - Cliente.01.txt | Tempo de execução: 00h 00min 00s 37ms 
+
+21/09/22 14:01:00:156 DEBUG [main] (JdbcExtractor.java:1041) - TMS Status Indenizacao.01.txt | Query a ser executada: SELECT 'P |1' AS BK_STATUS_INDENIZACAO, '1' AS CODIGO_Status, 		'Em Aberto       ' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P |2' AS BK_STATUS_INDENIZACAO, '2' AS CODIGO_Status, 		'Autorizado Pagto' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P |3' AS BK_STATUS_INDENIZACAO, '3' AS CODIGO_Status, 		'Encerrado       ' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P | ' AS BK_STATUS_INDENIZACAO, ' ' AS CODIGO_Status, 		'                ' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:01:00:165  INFO [main] (JdbcExtractor.java:1069) - TMS Status Indenizacao.01.txt | Tempo de execução: 00h 00min 00s 08ms 
+
+21/09/22 14:01:00:546 DEBUG [main] (JdbcExtractor.java:1041) - TMS Negociacao Transporte.01.txt | Query a ser executada: SELECT 'P |01|DDB010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DDB_FILIAL,' ') )+'|'+RTRIM( COALESCE(DDB_CODNEG,' ') ),' '),'|') AS BK_NEGOCIACAO,DDB.DDB_CODNEG AS CODNEG,DDB.DDB_DESCRI AS DES_NEGOCI,'01' AS INSTANCIA FROM DDB010 DDB WHERE  DDB.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DDB010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:01:00:553  INFO [main] (JdbcExtractor.java:1069) - TMS Negociacao Transporte.01.txt | Tempo de execução: 00h 00min 00s 07ms 
+
+21/09/22 14:01:00:826 DEBUG [main] (JdbcExtractor.java:1041) - TMS Servico Negociacao Transp..01.txt | Query a ser executada: SELECT 'P |01|SX5010|'+  COALESCE(NULLIF(RTRIM( COALESCE(X5_FILIAL,' ') )+'|'+RTRIM( COALESCE(X5_CHAVE,' ') ),' '),'|') AS BK_SERVICO,SX5.X5_CHAVE AS COD_SERVICO,SX5.X5_DESCRI AS DES_SERVICO,'01' AS INSTANCIA FROM SX5010 SX5 WHERE  SX5.X5_TABELA = 'L4' AND SX5.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|SX5010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:01:00:855  INFO [main] (JdbcExtractor.java:1069) - TMS Servico Negociacao Transp..01.txt | Tempo de execução: 00h 00min 00s 29ms 
+
+21/09/22 14:01:11:837 DEBUG [main] (JdbcExtractor.java:1041) - TMS Viagens.01.txt | Query a ser executada: SELECT 'P |01|DTQ010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DTQ_FILIAL,' ') )+'|'+RTRIM( COALESCE(DTQ_VIAGEM,' ') ),' '),'|') AS BK_VIAGEM,DTQ.DTQ_FILORI AS FILIAL_VIAGEM,DTQ.DTQ_VIAGEM AS NUMERO_VIAGEM,'01' AS INSTANCIA FROM DTQ010 DTQ WHERE  DTQ.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DTQ010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:01:11:873  INFO [main] (JdbcExtractor.java:1069) - TMS Viagens.01.txt | Tempo de execução: 00h 00min 00s 35ms 
+
+21/09/22 14:01:16:939 DEBUG [main] (JdbcExtractor.java:1041) - TMS Veiculos.01.txt | Query a ser executada: SELECT 'P |01|DA3010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DA3_FILIAL,' ') )+'|'+RTRIM( COALESCE(DA3_COD,' ') ),' '),'|') AS BK_VEICULO,DA3.DA3_COD AS COD_VEICULO,DA3.DA3_DESC AS DES_VEICULO,DA3.DA3_PLACA AS PLACA,'01' AS INSTANCIA FROM DA3010 DA3 WHERE  DA3.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DA3010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 14:01:16:950  INFO [main] (JdbcExtractor.java:1069) - TMS Veiculos.01.txt | Tempo de execução: 00h 00min 00s 10ms 
+
+21/09/22 14:01:18:417 DEBUG [main] (JdbcExtractor.java:1041) - veiculosTMS.sql | Query a ser executada: SELECT     trim(DA3.DA3_COD) as DA3_COD,     trim(DA3.DA3_DESC) as DA3_DESC,     trim(DA3.DA3_PLACA) as DA3_PLACA,     '01' AS INSTANCIA FROM DA3010 DA3 WHERE DA3.D_E_L_E_T_ = '' 
+
+21/09/22 14:01:18:423  INFO [main] (JdbcExtractor.java:1069) - veiculosTMS.sql | Tempo de execução: 00h 00min 00s 06ms 
+
+21/09/22 14:01:30:739 DEBUG [main] (JdbcExtractor.java:1041) - motoristasTMS.sql | Query a ser executada: select     trim(DA4.DA4_COD) as DA4_COD,     trim(DA4.DA4_NOME) as DA4_NOME,     '01' AS INSTANCIA from DA4010 DA4 where DA4.D_E_L_E_T_ = '' 
+
+21/09/22 14:01:30:746  INFO [main] (JdbcExtractor.java:1069) - motoristasTMS.sql | Tempo de execução: 00h 00min 00s 07ms 
+
+21/09/22 14:01:30:995  INFO [main] (JdbcExtractor.java:481) - Desconectado do banco de dados 
+
+21/09/22 14:01:30:996  INFO [main] (JdbcExtractor.java:221) - Fim da geração dos arquivos de dados (Via pasta query) 
+
+21/09/22 14:01:31:257  INFO [main] (Main.java:294) - Início da geração do arquivo .zip
+
+21/09/22 14:01:31:793  INFO [main] (Main.java:296) - Fim da geração do arquivo .zip
+
+21/09/22 14:01:31:794  INFO [main] (Main.java:311) - Início do upload do arquivo .zip
+
+21/09/22 14:01:33:172 DEBUG [main] (Uploader.java:160) - Movendo os arquivos de dados: 
+ De: https://secure-di.gooddata.com/project-uploads/nfyvpc410prmqerg18en6eccjt694xww/today/Protheus_TMS.zip.1663779691797 
+ Para: https://secure-di.gooddata.com/project-uploads/nfyvpc410prmqerg18en6eccjt694xww/today/Protheus_TMS.zip 
+
+21/09/22 14:01:34:340  INFO [main] (Main.java:314) - Arquivos de dados enviados para o GoodData: Para: https://secure-di.gooddata.com/project-uploads/nfyvpc410prmqerg18en6eccjt694xww/today/ 
+
+21/09/22 14:01:34:341  INFO [main] (Main.java:315) - Fim do upload do arquivo .zip
+
+21/09/22 14:01:34:355 DEBUG [main] (FileUtil.java:200) - Removendo arquivos de dados antigos... 
+ De: ./tmp 
+
+21/09/22 14:01:34:357  INFO [main] (Main.java:365) - Início do processo de ETL
+
+21/09/22 14:01:34:359  INFO [main] (GdcRESTApiWrapper.java:194) - Efetuando login no GoodData...
+21/09/22 14:01:35:132  INFO [main] (GdcRESTApiWrapper.java:211) - Login no GoodData efetuado com sucesso
+21/09/22 14:01:35:351  INFO [main] (GdcRESTApiWrapper.java:305) - Executando o graph TOTVS-FastAnalytics-Protheus-TMS/graph/_Main.grf
+
+21/09/22 14:03:04:528  INFO [main] (Main.java:411) - Log de execução: URL: https://analytics.totvs.com.br/gdc/projects/nfyvpc410prmqerg18en6eccjt694xww/dataload/processes/5d2c5c94-6ff5-44f6-882e-3742316cb84d/executions/632b437031515e053d0c615e/log 
+
+21/09/22 14:03:04:530  INFO [main] (Main.java:414) - Status de execução: OK 
+
+21/09/22 14:03:05:553  INFO [main] (Main.java:421) - Fim do processo de ETL
+
+21/09/22 14:03:05:554  INFO [main] (Main.java:585) - Fim do processo do agent
+
+21/09/22 14:03:05:555  INFO [main] (Main.java:600) - Tempo de execução total: 03min 00s 
+
+21/09/22 15:16:50:091  INFO [main] (Main.java:133) - Início do processo do agent...
+
+21/09/22 15:16:50:093  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+21/09/22 15:16:52:319  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+21/09/22 15:16:52:320  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20220921'
+
+21/09/22 15:16:52:321  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20200821'
+
+21/09/22 15:16:52:321  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20220921'
+
+21/09/22 15:16:52:321  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+21/09/22 15:16:52:321  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+21/09/22 15:16:52:323  INFO [main] (JdbcExtractor.java:187) - Início da conexão com GoodData 
+
+21/09/22 15:16:52:333  INFO [main] (GdcRESTApiWrapper.java:194) - Efetuando login no GoodData...
+21/09/22 15:16:53:308  INFO [main] (GdcRESTApiWrapper.java:211) - Login no GoodData efetuado com sucesso
+21/09/22 15:16:53:568 DEBUG [main] (GdcRESTApiWrapper.java:272) - Efetuando logout no GoodData.
+21/09/22 15:16:53:687 DEBUG [main] (GdcRESTApiWrapper.java:278) - Logout no GoodData efetuado com sucesso.
+21/09/22 15:16:53:687  INFO [main] (JdbcExtractor.java:190) - Fim da conexão com GoodData 
+
+21/09/22 15:16:53:689  INFO [main] (JdbcExtractor.java:219) - Início da geração dos arquivos de dados (Via pasta query) 
+
+21/09/22 15:16:53:689  INFO [main] (JdbcExtractor.java:454) - Conectado ao banco de dados 
+
+21/09/22 15:16:53:690 DEBUG [main] (JdbcExtractor.java:1041) - TMS Ociosidade Veiculo.01.txt | Query a ser executada: SELECT DISTINCT 'P |01|01' AS BK_EMPRESA,                 CASE                     WHEN DTW_FILIAL IS NULL THEN 'P |01||'                     ELSE 'P |01|01'+ CAST(DTW_FILIAL AS CHAR (6))                 END AS BK_FILIAL,                 DTW.DTW_FILORI AS FILIAL_ORIGEM,                 DTW.DTW_VIAGEM AS NUMERO_VIAGEM,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3CAVALO.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODVEI, ' ')), ' '), '|') AS CODIGO_CAVALO,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3REBOQUE1.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODRB1, ' ')), ' '), '|') AS CODIGO_REBOQUE1,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3REBOQUE2.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODRB2, ' ')), ' '), '|') AS CODIGO_REBOQUE2,                 'P |01|DA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DA3REBOQUE3.DA3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DTR.DTR_CODRB3, ' ')), ' '), '|') AS CODIGO_REBOQUE3,    (SELECT TOP(1) CASE                      WHEN DTW_DATREA = ' ' THEN ' '                      ELSE CONCAT(CONVERT(DATE,DTW_DATREA), ' ', DTW_HORREA)                  END    FROM DTW010 DTWH    WHERE DTW_FILORI = DTW.DTW_FILORI      AND DTW_VIAGEM = DTW.DTW_VIAGEM      AND DTW_ATIVID = '049'      AND DTW_CODCLI = ' '      AND DTW_LOJCLI = ' '      AND DTWH.D_E_L_E_T_ = ' ' ) AS 'DATAHORASAIDA',    (SELECT TOP(1) CASE                      WHEN DTW_DATREA = ' ' THEN ' '                      ELSE CONCAT(CONVERT(DATE,DTW_DATREA), ' ', DTW_HORREA)                  END    FROM DTW010 DTWH    WHERE DTW_FILORI = DTW.DTW_FILORI      AND DTW_VIAGEM = DTW.DTW_VIAGEM      AND DTW_ATIVID = '050'      AND DTW_CODCLI = ' '      AND DTW_LOJCLI = ' '      AND DTWH.D_E_L_E_T_ = ' ' ) AS 'DATAHORACHEGADA','01' AS INSTANCIA FROM DTW010 DTW INNER JOIN DTR010 DTR ON DTR.DTR_FILIAL = DTW_FILIAL AND DTR.DTR_FILORI = DTW.DTW_FILORI AND DTR.DTR_VIAGEM = DTW.DTW_VIAGEM AND DTR.D_E_L_E_T_ = ' ' INNER JOIN DA3010 DA3CAVALO ON DA3CAVALO.DA3_FILIAL = '      ' AND DA3CAVALO.DA3_COD = DTR.DTR_CODVEI AND DA3CAVALO.D_E_L_E_T_ = ' ' LEFT JOIN DA3010 DA3REBOQUE1 ON DA3REBOQUE1.DA3_FILIAL = '      ' AND DA3REBOQUE1.DA3_COD = DTR.DTR_CODRB1 AND DA3REBOQUE1.D_E_L_E_T_ = ' ' LEFT JOIN DA3010 DA3REBOQUE2 ON DA3REBOQUE2.DA3_FILIAL = '      ' AND DA3REBOQUE2.DA3_COD = DTR.DTR_CODRB2 AND DA3REBOQUE2.D_E_L_E_T_ = ' ' LEFT JOIN DA3010 DA3REBOQUE3 ON DA3REBOQUE3.DA3_FILIAL = '      ' AND DA3REBOQUE3.DA3_COD = DTR.DTR_CODRB3 AND DA3REBOQUE3.D_E_L_E_T_ = ' ' WHERE DTW_DATREA BETWEEN '20200821' AND '20220921'   AND DTW.DTW_CODCLI = ' '   AND DTW.DTW_LOJCLI = ' '   AND DTW.DTW_ATIVID IN ('050',                          '049')   AND DTW.D_E_L_E_T_ = ' ' 
+
+21/09/22 15:16:54:942  INFO [main] (JdbcExtractor.java:1069) - TMS Ociosidade Veiculo.01.txt | Tempo de execução: 00h 00min 01s 252ms 
+
+21/09/22 15:16:56:215 DEBUG [main] (JdbcExtractor.java:1041) - TMS Receita Transporte.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DT8_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT8_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DT6_DATEMI AS DATA_EMISSAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,        'P |01|DT3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT8_CODPAS, ' ')), ' '), '|') AS BK_COMPONENTE,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_NEGOCIACAO,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        CASE            WHEN DT6_FILDOC IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))        END AS BK_FILIAL_DOCTO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        DT8_FILDOC AS FILDOC,        DT8_DOC AS DOCUMENTO,        DT8_SERIE AS SERIE,        DT8_CODPRO AS PRODUTO,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CAST(COALESCE(DT8_VALPAS, 0) AS DECIMAL(14, 2)) AS VALOR_COMPONENTE,        CAST(COALESCE(DT8_VALIMP, 0) AS DECIMAL(14, 2)) AS VALOR_IMPOSTO,        CAST(COALESCE(DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL FROM DT8010 DT8 INNER JOIN DT6010 DT6 ON DT6.DT6_FILIAL = DT8_FILIAL AND DT6.DT6_FILDOC = DT8.DT8_FILDOC AND DT6.DT6_DOC = DT8.DT8_DOC AND DT6.DT6_SERIE = DT8.DT8_SERIE AND DT6.DT6_SERIE <> 'COL' AND DT6.DT6_SERIE <> 'PED' AND DT6.D_E_L_E_T_ = ' ' INNER JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDEV ON DUYDEV.DUY_FILIAL = DT6_FILIAL AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL AND DUYDEV.D_E_L_E_T_ = ' ' INNER JOIN DT3010 DT3 ON DT3.DT3_FILIAL = DT8_FILIAL AND DT3.DT3_CODPAS = DT8.DT8_CODPAS AND DT3.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DT6.DT6_DATEMI BETWEEN '20200821' AND '20220921'   AND DT8.D_E_L_E_T_ = ' ' 
+
+21/09/22 15:16:57:781  INFO [main] (JdbcExtractor.java:1069) - TMS Receita Transporte.01.txt | Tempo de execução: 00h 00min 01s 567ms 
+
+21/09/22 15:16:58:620 DEBUG [main] (JdbcExtractor.java:1041) - TMS Indenizacao Transporte.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DUB_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DUB_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DUB.DUB_DATRID AS DATA_REGISTRO,        DUB.DUB_HORRID AS HORA_REGISTRO,        DUB.DUB_ITEM AS ITEM,        DUB.DUB_FILRID AS FILIAL_REGISTRO,        DUB.DUB_NUMRID AS NUMERO_REGISTRO,        'P |01|DU3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DU3.DU3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DUB.DUB_COMSEG, ' ')), ' '), '|') AS RAMO_SEGURO,        'P |01|DT2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT2.DT2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DUB.DUB_CODOCO, ' ')), ' '), '|') AS BK_CODIGO_OCORRENCIA,        DUB.DUB_NUMPRO AS NUMERO_PROCESSO,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DUB_STATUS, ' ')), ' '), '|') AS BK_STATUS_INDENIZACAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DUB_CODCLI, ' '))+RTRIM(COALESCE(DUB_LOJCLI, ' ')), ' '), '|') AS BK_CLIENTE,        DUB.DUB_QTDOCO AS QUANTIDADE_OCORRENCIA,        DUB.DUB_VALPRE AS VALOR_PREJUIZO,        DUB.DUB_VALIND AS VALOR_INDENIZADO,        DUB.DUB_DATVEN AS DATA_VENCIMENTO,        DUB.DUB_DATENC AS DATA_ENCERRAMENTO,        DUB_FILDOC AS BK_FILIAL_DOCTO,        DUB_DOC AS BK_NUMERO_DOCUMENTO,        DUB_SERIE AS BK_SERIE,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DUB_STATUS, ' ')), ' '), '|') AS BK_STATUS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT2_RESOCO, ' ')), ' '), '|') AS RESPONSAVEL_OCORRENCIA,        CASE            WHEN SA1.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' '))+RTRIM(COALESCE(SA1.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_CLI,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYCAL.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' '))+RTRIM(COALESCE(DUYCAL.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI FROM DUB010 DUB INNER JOIN DT6010 DT6 ON DT6.DT6_FILIAL = '      ' AND DT6.DT6_FILDOC = DUB.DUB_FILDOC AND DT6.DT6_DOC = DUB.DUB_DOC AND DT6.DT6_SERIE = DUB.DUB_SERIE LEFT JOIN DU3010 DU3 ON DU3.DU3_FILIAL = '      ' AND DU3.DU3_COMSEG = DUB.DUB_COMSEG AND DU3.D_E_L_E_T_ = ' ' LEFT JOIN DT2010 DT2 ON DT2.DT2_FILIAL = '      ' AND DT2.DT2_CODOCO = DUB.DUB_CODOCO AND DT2.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 SA1 ON SA1.A1_FILIAL = '      ' AND SA1.A1_COD = DUB.DUB_CODCLI AND SA1.A1_LOJA = DUB.DUB_LOJCLI AND SA1.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYCAL ON DUYCAL.DUY_FILIAL = DT6_FILIAL AND DUYCAL.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYCAL.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DUB.DUB_DATRID BETWEEN '20200821' AND '20220921'   AND DUB.D_E_L_E_T_ = ' ' 
+
+21/09/22 15:16:58:731  INFO [main] (JdbcExtractor.java:1069) - TMS Indenizacao Transporte.01.txt | Tempo de execução: 00h 00min 00s 111ms 
+
+21/09/22 15:16:59:525 DEBUG [main] (JdbcExtractor.java:1041) - TMS Ocorrencias Transporte.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DUA_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DUA_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DUA_DATOCO AS DATA_OCORRENCIA,        DUA_HOROCO AS HORA_OCORRENCIA,        CASE            WHEN DUA_FILOCO IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DUA_FILOCO AS CHAR (8))        END AS FILIAL_OCORRENCIA,        DUA_NUMOCO AS NUMERO_OCORRENCIA,        DUA_VIAGEM AS NUMERO_VIAGEM,        DUA_SEQOCO AS SEQUENCIA_OCORRENCIA,        DUA_CODOCO AS CODIGO_OCORRENCA,        'P |01|DT2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT2.DT2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT2_TIPOCO, ' ')), ' '), '|') AS TIPO_OCORRENCA,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_SERTMS, ' ')), ' '), '|') AS BK_SERTMS,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYCAL.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' '))+RTRIM(COALESCE(DUYCAL.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI,        DUA_FILDOC AS FILIAL_DOCUMENTO,        DUA_DOC AS DOCUMENTO,        DUA_SERIE AS SERIE FROM DUA010 DUA INNER JOIN DT2010 DT2 ON DT2.DT2_FILIAL = DUA_FILIAL AND DT2.DT2_CODOCO = DUA.DUA_CODOCO AND DT2.D_E_L_E_T_ = ' ' LEFT JOIN DT6010 DT6 ON DUA.DUA_FILIAL = DUA_FILIAL AND DUA.DUA_FILDOC = DT6.DT6_FILDOC AND DUA.DUA_DOC = DT6.DT6_DOC AND DUA.DUA_SERIE = DT6.DT6_SERIE AND DUA.DUA_SERIE <> 'COL' AND DUA.DUA_SERIE <> 'PED' AND DUA.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYCAL ON DUYCAL.DUY_FILIAL = DT6_FILIAL AND DUYCAL.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYCAL.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' LEFT JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DUA.DUA_DATOCO BETWEEN '20200821' AND '20220921'   AND DUA.D_E_L_E_T_ = ' ' 
+
+21/09/22 15:17:00:419  INFO [main] (JdbcExtractor.java:1069) - TMS Ocorrencias Transporte.01.txt | Tempo de execução: 00h 00min 00s 894ms 
+
+21/09/22 15:17:00:706 DEBUG [main] (JdbcExtractor.java:1041) - TMS Movimentacao Carga.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DT6_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DT6_DATEMI AS DATA_EMISSAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        CASE            WHEN DT6_FILDOC IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))        END AS BK_FILIAL_DOCTO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYCAL.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYCAL.DUY_EST, ' '))+RTRIM(COALESCE(DUYCAL.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI,        DT6_FILDOC AS FILIAL_DOCUMENTO,        DT6_DOC AS DOCUMENTO,        DT6_SERIE AS SERIE,        CAST(COALESCE(DT6_PESO, 0) AS DECIMAL(11, 4)) AS PESO,        CAST(COALESCE(DT6_PESOM3, 0) AS DECIMAL(11, 4)) AS PESO_CUBADO,        CAST(COALESCE(DT6_METRO3, 0) AS DECIMAL(11, 4)) AS PESO_M3,        CAST(COALESCE(DT6_VOLORI, 0) AS DECIMAL(5, 0)) AS VOLUME,        CAST(COALESCE(DT6_VALMER, 0) AS DECIMAL(14, 2)) AS VALOR_MERCADORIA,        CAST(COALESCE(DT6_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL FROM DT6010 DT6 INNER JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' INNER JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYCAL ON DUYCAL.DUY_FILIAL = DT6_FILIAL AND DUYCAL.DUY_GRPVEN = DT6.DT6_CDRCAL AND DUYCAL.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DT6.DT6_DATEMI BETWEEN '20200821' AND '20220921'   AND DT6.DT6_DOCTMS <> '1'   AND DT6.D_E_L_E_T_ = ' ' 
+
+21/09/22 15:17:01:365  INFO [main] (JdbcExtractor.java:1069) - TMS Movimentacao Carga.01.txt | Tempo de execução: 00h 00min 00s 659ms 
+
+21/09/22 15:17:02:149 DEBUG [main] (JdbcExtractor.java:1041) - TMS Performance Entrega.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA,        CASE            WHEN DT6_FILIAL IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8))        END AS BK_FILIAL,        DT6_DATEMI AS DATA_EMISSAO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,        'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,        'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,        'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,        CASE            WHEN DT6_FILORI IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))        END AS BK_FILIAL_ORIGEM,        CASE            WHEN DT6_FILDES IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))        END AS BK_FILIAL_DESTINO,        CASE            WHEN DT6_FILDOC IS NULL THEN 'P |01||'            ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))        END AS BK_FILIAL_DOCTO,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,        'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,        DT6.DT6_DOC AS DOCUMENTO,        DT6.DT6_SERIE AS SERIE,        DT6.DT6_PRZENT AS PRAZO_ENTREGA,        DT6.DT6_DATENT AS DATA_ENTREGA,        CASE            WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'            ELSE 'DENTRO DO PRAZO'        END AS BK_STATUS,        CASE            WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_REM,        CASE            WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DES,        CASE            WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')        END AS BK_REGIAO_DEV,        CASE            WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRCAL,        CASE            WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')            ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')        END AS BK_REGIAO_CDRORI FROM DT6010 DT6 LEFT JOIN SA1010 REM ON REM.A1_FILIAL = '      ' AND REM.A1_COD = DT6.DT6_CLIREM AND REM.A1_LOJA = DT6.DT6_LOJREM AND REM.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DES ON DES.A1_FILIAL = '      ' AND DES.A1_COD = DT6.DT6_CLIDES AND DES.A1_LOJA = DT6.DT6_LOJDES AND DES.D_E_L_E_T_ = ' ' LEFT JOIN SA1010 DEV ON DEV.A1_FILIAL = '      ' AND DEV.A1_COD = DT6.DT6_CLIDEV AND DEV.A1_LOJA = DT6.DT6_LOJDEV AND DEV.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYORI ON DUYORI.DUY_FILIAL = DT6_FILIAL AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI AND DUYORI.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDES ON DUYDES.DUY_FILIAL = DT6_FILIAL AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES AND DUYDES.D_E_L_E_T_ = ' ' LEFT JOIN DUY010 DUYDEV ON DUYDEV.DUY_FILIAL = DT6_FILIAL AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL AND DUYDEV.D_E_L_E_T_ = ' ' LEFT JOIN DDB010 DDB ON DDB.DDB_FILIAL = DT6_FILIAL AND DDB.DDB_CODNEG = DT6.DT6_CODNEG AND DDB.D_E_L_E_T_ = ' ' INNER JOIN SX5010 SX5 ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/ AND SX5.X5_TABELA = 'L4' AND SX5.X5_CHAVE = DT6.DT6_SERVIC AND SX5.D_E_L_E_T_ = ' ' WHERE DT6.DT6_DATEMI BETWEEN '20200821' AND '20220921'   AND DT6.D_E_L_E_T_ = ' '   AND DT6.DT6_DATENT <> ' '   AND DT6.DT6_SERIE <> 'COL'   AND DT6.DT6_SERIE <> 'PED' 
+
+21/09/22 15:17:02:767  INFO [main] (JdbcExtractor.java:1069) - TMS Performance Entrega.01.txt | Tempo de execução: 00h 00min 00s 617ms 
+
+21/09/22 15:17:03:547 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tipo Ocorrencia Transporte.01.txt | Query a ser executada: SELECT 'P |01' AS BK_TIPOCO, '01' AS CODIGO_TIPOCO, 		'Encerra Processo' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |02' AS BK_TIPOCO, '02' AS CODIGO_TIPOCO, 		'Bloqueia Documento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |03' AS BK_TIPOCO, '03' AS CODIGO_TIPOCO, 		'Libera Documento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |04' AS BK_TIPOCO, '04' AS CODIGO_TIPOCO, 		'Retorna Documento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |05' AS BK_TIPOCO, '05' AS CODIGO_TIPOCO, 		'Informativa' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |06' AS BK_TIPOCO, '06' AS CODIGO_TIPOCO, 		'Gera Pendencia' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |07' AS BK_TIPOCO, '07' AS CODIGO_TIPOCO, 		'Estorna Pendencia' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |08' AS BK_TIPOCO, '08' AS CODIGO_TIPOCO, 		'Transferencia de Viagem' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |09' AS BK_TIPOCO, '09' AS CODIGO_TIPOCO, 		'Gera Indenizacao' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |10' AS BK_TIPOCO, '10' AS CODIGO_TIPOCO, 		'Estorna Indenizacao' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |11' AS BK_TIPOCO, '11' AS CODIGO_TIPOCO, 		'Transferencia de Mercadoria' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |12' AS BK_TIPOCO, '12' AS CODIGO_TIPOCO, 		'Cancelamento' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |13' AS BK_TIPOCO, '13' AS CODIGO_TIPOCO, 		'Chegada Eventual' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |14' AS BK_TIPOCO, '14' AS CODIGO_TIPOCO, 		'Ajuste da Previsao de Chegada' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |16' AS BK_TIPOCO, '16' AS CODIGO_TIPOCO, 		'Receita' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |17' AS BK_TIPOCO, '17' AS CODIGO_TIPOCO, 		'Despesa' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |18' AS BK_TIPOCO, '18' AS CODIGO_TIPOCO, 		'Receita/Despesa' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |19' AS BK_TIPOCO, '19' AS CODIGO_TIPOCO, 		'Cobranca Tentativa Entrega' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |20' AS BK_TIPOCO, '20' AS CODIGO_TIPOCO, 		'Cobranca de Retorno' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P |21' AS BK_TIPOCO, '21' AS CODIGO_TIPOCO, 		'Entrega Trecho GFE' AS DESCRICAO_TIPOCO,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:03:556  INFO [main] (JdbcExtractor.java:1069) - TMS Tipo Ocorrencia Transporte.01.txt | Tempo de execução: 00h 00min 00s 08ms 
+
+21/09/22 15:17:03:821 DEBUG [main] (JdbcExtractor.java:1041) - Empresa.01.txt | Query a ser executada: SELECT 'P |01|01' AS BK_EMPRESA, '01' AS CODIGO_EMPRESA, 'Unilink' AS DESCRICAO_EMPRESA 
+
+21/09/22 15:17:03:824  INFO [main] (JdbcExtractor.java:1069) - Empresa.01.txt | Tempo de execução: 00h 00min 00s 02ms 
+
+21/09/22 15:17:04:587 DEBUG [main] (JdbcExtractor.java:1041) - Filial.01.txt | Query a ser executada: SELECT 'P |01|01010101' AS BK_FILIAL,'010101' AS COD_FILIAL,'Matriz' AS DESC_FILIAL,'01' AS COD_UNINEG,'Unilink' AS DESC_UNINEG UNION SELECT 'P |01|01010102' AS BK_FILIAL,'010102' AS COD_FILIAL,'Pecem' AS DESC_FILIAL,'01' AS COD_UNINEG,'Unilink' AS DESC_UNINEG UNION SELECT 'P |01|01      ' AS BK_FILIAL,'01      ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG UNION SELECT 'P |01|0101    ' AS BK_FILIAL,'0101    ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG UNION SELECT 'P |01|010101  ' AS BK_FILIAL,'010101  ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG UNION SELECT 'P |01||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:04:590  INFO [main] (JdbcExtractor.java:1069) - Filial.01.txt | Tempo de execução: 00h 00min 00s 03ms 
+
+21/09/22 15:17:04:848 DEBUG [main] (JdbcExtractor.java:1041) - TMS Regiao Transporte.01.txt | Query a ser executada: SELECT 'P |01|DUY010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DUY_FILIAL,' ') )+'|'+RTRIM( COALESCE(DUY_GRPVEN,' ') ),' '),'|') AS BK_REGIAO,DUY.DUY_GRPVEN AS COD_REGIAO,DUY.DUY_DESCRI AS DES_REGIAO,'01' AS INSTANCIA FROM DUY010 DUY WHERE  DUY.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DUY010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:04:874  INFO [main] (JdbcExtractor.java:1069) - TMS Regiao Transporte.01.txt | Tempo de execução: 00h 00min 00s 26ms 
+
+21/09/22 15:17:05:143 DEBUG [main] (JdbcExtractor.java:1041) - Regiao.01.txt | Query a ser executada: SELECT 'P |01|CC2010|'+  COALESCE(NULLIF(RTRIM( COALESCE(X5_CHAVE,' ') ),' '),'|') AS BK_REGIAO,SX5.X5_CHAVE AS COD_ESTADO,SX5.X5_DESCRI AS DESC_ESTADO,' ' AS COD_MUNICIPIO,' ' AS DESC_MUNICIPIO FROM SX5010 SX5 WHERE  SX5.X5_TABELA = '12' AND SX5.D_E_L_E_T_ = ' ' UNION ALL  SELECT 'P |01|CC2010|'+  COALESCE(NULLIF(RTRIM( COALESCE(CC2_EST,' ') )+RTRIM( COALESCE(CC2_CODMUN,' ') ),' '),'|') AS BK_REGIAO,CC2.CC2_EST AS COD_ESTADO,(SELECT DISTINCT SX5.X5_DESCRI FROM SX5010 SX5 WHERE  SX5.X5_TABELA = '12' AND SX5.X5_CHAVE = CC2.CC2_EST AND SX5.D_E_L_E_T_ = ' ' )  AS DESC_ESTADO,CC2.CC2_CODMUN AS COD_MUNICIPIO,CC2.CC2_MUN AS DESC_MUNICIPIO FROM CC2010 CC2 WHERE  CC2.D_E_L_E_T_ = ' '  UNION SELECT 'P |01|CC2010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:05:214  INFO [main] (JdbcExtractor.java:1069) - Regiao.01.txt | Tempo de execução: 00h 00min 00s 71ms 
+
+21/09/22 15:17:05:462 DEBUG [main] (JdbcExtractor.java:1041) - TMS Componente Frete.01.txt | Query a ser executada: SELECT 'P |01|DT3010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DT3_FILIAL,' ') )+'|'+RTRIM( COALESCE(DT3_CODPAS,' ') ),' '),'|') AS BK_COMPONENTE,DT3.DT3_CODPAS AS COD_COMPONENTE,DT3.DT3_DESCRI AS DES_COMPONENTE,'01' AS INSTANCIA FROM DT3010 DT3 WHERE  DT3.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DT3010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:05:469  INFO [main] (JdbcExtractor.java:1069) - TMS Componente Frete.01.txt | Tempo de execução: 00h 00min 00s 07ms 
+
+21/09/22 15:17:06:631 DEBUG [main] (JdbcExtractor.java:1041) - TMS Ramo Seguro.01.txt | Query a ser executada: SELECT 'P |01|DU3010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DU3_FILIAL,' ') )+'|'+RTRIM( COALESCE(DU3_COMSEG,' ') ),' '),'|') AS BK_RAMO_SEGURO,DU3.DU3_COMSEG AS COD_RAMO_SEGURO,DU3.DU3_DESCRI AS DESC_OCORRENCIA,'01' AS INSTANCIA FROM DU3010 DU3 WHERE  DU3.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DU3010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:06:639  INFO [main] (JdbcExtractor.java:1069) - TMS Ramo Seguro.01.txt | Tempo de execução: 00h 00min 00s 08ms 
+
+21/09/22 15:17:06:884 DEBUG [main] (JdbcExtractor.java:1041) - TMS Servicos - SERMTS.01.txt | Query a ser executada: SELECT 'P |1' AS BK_SERTMS, '1' AS CODIGO_SERTMS, 		'Coleta' AS DESCRICAO_SERTMS,  '01'	AS INSTANCIA UNION SELECT 'P |2' AS BK_SERTMS, '2' AS CODIGO_SERTMS, 		'Transporte' AS DESCRICAO_SERTMS,  '01'	AS INSTANCIA UNION SELECT 'P |3' AS BK_SERTMS, '3' AS CODIGO_SERTMS, 		'Entrega' AS DESCRICAO_SERTMS,  '01'	AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:06:890  INFO [main] (JdbcExtractor.java:1069) - TMS Servicos - SERMTS.01.txt | Tempo de execução: 00h 00min 00s 06ms 
+
+21/09/22 15:17:07:150 DEBUG [main] (JdbcExtractor.java:1041) - TMS Responsável Ocorrencia.01.txt | Query a ser executada: SELECT 'P |0' AS BK_Respon, '0' AS CODIGO_Respon, 		'Nao Tem      ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P |1' AS BK_Respon, '1' AS CODIGO_Respon, 		'Transportador' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P |2' AS BK_Respon, '2' AS CODIGO_Respon, 		'Cliente      ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P |3' AS BK_Respon, '3' AS CODIGO_Respon, 		'Motorista    ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P | ' AS BK_Respon, ' ' AS CODIGO_Respon, 		'             ' AS DESCRICAO_Respon,  '01'						AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:07:154  INFO [main] (JdbcExtractor.java:1069) - TMS Responsável Ocorrencia.01.txt | Tempo de execução: 00h 00min 00s 04ms 
+
+21/09/22 15:17:07:397 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tipo Doc.Transporte.01.txt | Query a ser executada: SELECT 'P |1' AS BK_DOCTMS, '1' AS CODIGO_DOCTMS, 		'Ordem de Coleta' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |2' AS BK_DOCTMS, '2' AS CODIGO_DOCTMS, 		'CTRC' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |3' AS BK_DOCTMS, '3' AS CODIGO_DOCTMS, 		'AWB' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |4' AS BK_DOCTMS, '4' AS CODIGO_DOCTMS, 		'Docto.Bx.Estoque' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |5' AS BK_DOCTMS, '5' AS CODIGO_DOCTMS, 		'Nota Fiscal' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |6' AS BK_DOCTMS, '6' AS CODIGO_DOCTMS, 		'CTRC Devolucao' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |7' AS BK_DOCTMS, '7' AS CODIGO_DOCTMS, 		'CTRC Reentrega' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |8' AS BK_DOCTMS, '8' AS CODIGO_DOCTMS, 		'CTRC Complemento' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |9' AS BK_DOCTMS, '9' AS CODIGO_DOCTMS, 		'CTRC Retorno' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |A' AS BK_DOCTMS, 'A' AS CODIGO_DOCTMS, 		'CTRC Cortesia' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |B' AS BK_DOCTMS, 'B' AS CODIGO_DOCTMS, 		'ACT' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |C' AS BK_DOCTMS, 'C' AS CODIGO_DOCTMS, 		'Documento de Apoio 2' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |D' AS BK_DOCTMS, 'D' AS CODIGO_DOCTMS, 		'Nota Fiscal Reentrega' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |E' AS BK_DOCTMS, 'E' AS CODIGO_DOCTMS, 		'CTRC Armazenagem' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |F' AS BK_DOCTMS, 'F' AS CODIGO_DOCTMS, 		'Nota Fiscal Armazenagem' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |G' AS BK_DOCTMS, 'G' AS CODIGO_DOCTMS, 		'Nota Fiscal Complemento' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |H' AS BK_DOCTMS, 'H' AS CODIGO_DOCTMS, 		'Documento de Apoio 3' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |I' AS BK_DOCTMS, 'I' AS CODIGO_DOCTMS, 		'Documento de Apoio 4' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |J' AS BK_DOCTMS, 'J' AS CODIGO_DOCTMS, 		'CRT' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |K' AS BK_DOCTMS, 'K' AS CODIGO_DOCTMS, 		'Carregamento em Partes' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |L' AS BK_DOCTMS, 'L' AS CODIGO_DOCTMS, 		'CRT Complemento' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |M' AS BK_DOCTMS, 'M' AS CODIGO_DOCTMS, 		'CTRC Anulacao' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |N' AS BK_DOCTMS, 'N' AS CODIGO_DOCTMS, 		'Documento de Apoio 5' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |O' AS BK_DOCTMS, 'O' AS CODIGO_DOCTMS, 		'Documento de Apoio 6' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P |P' AS BK_DOCTMS, 'P' AS CODIGO_DOCTMS, 		'CTRC Substituicao' AS DESCRICAO_DOCTMS,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:07:407  INFO [main] (JdbcExtractor.java:1069) - TMS Tipo Doc.Transporte.01.txt | Tempo de execução: 00h 00min 00s 10ms 
+
+21/09/22 15:17:07:665 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tipo Transporte.01.txt | Query a ser executada: SELECT 'P |1' AS BK_TIPTRA, '1' AS CODIGO_TIPTRA, 		'Rodoviario' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |2' AS BK_TIPTRA, '2' AS CODIGO_TIPTRA, 		'Aereo' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |3' AS BK_TIPTRA, '3' AS CODIGO_TIPTRA, 		'Fluvial' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |4' AS BK_TIPTRA, '4' AS CODIGO_TIPTRA, 		'Rodoviario Internacional' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P |6' AS BK_TIPTRA, '6' AS CODIGO_TIPTRA, 		'Multimodal' AS DESCRICAO_TIPTRA,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:07:669  INFO [main] (JdbcExtractor.java:1069) - TMS Tipo Transporte.01.txt | Tempo de execução: 00h 00min 00s 04ms 
+
+21/09/22 15:17:07:930 DEBUG [main] (JdbcExtractor.java:1041) - TMS Tabela Ocorrencia.01.txt | Query a ser executada: SELECT 'P |01|DT2010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DT2_FILIAL,' ') )+'|'+RTRIM( COALESCE(DT2_CODOCO,' ') ),' '),'|') AS BK_CODOCO,DT2.DT2_CODOCO AS COD_OCORRENCIA,DT2.DT2_DESCRI AS DESC_OCORRENCIA,'01' AS INSTANCIA FROM DT2010 DT2 WHERE  DT2.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DT2010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:07:937  INFO [main] (JdbcExtractor.java:1069) - TMS Tabela Ocorrencia.01.txt | Tempo de execução: 00h 00min 00s 07ms 
+
+21/09/22 15:17:08:839 DEBUG [main] (JdbcExtractor.java:1041) - Item.01.txt | Query a ser executada: SELECT 'P |01|SB1010|'+  COALESCE(NULLIF(RTRIM( COALESCE(B1_FILIAL,' ') )+'|'+RTRIM( COALESCE(B1_COD,' ') ),' '),'|') AS BK_ITEM,SB1.B1_COD AS COD_ITEM,SB1.B1_DESC AS DESC_ITEM,SB1.B1_POSIPI AS CLASSIFICACAO_FISCAL FROM SB1010 SB1 WHERE  SB1.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|SB1010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:08:928  INFO [main] (JdbcExtractor.java:1069) - Item.01.txt | Tempo de execução: 00h 00min 00s 89ms 
+
+21/09/22 15:17:09:228 DEBUG [main] (JdbcExtractor.java:1041) - Cliente.01.txt | Query a ser executada: SELECT 'P |01|SA1010|'+  COALESCE(NULLIF(RTRIM( COALESCE(A1_FILIAL,' ') )+'|'+RTRIM( COALESCE(A1_COD,' ') )+RTRIM( COALESCE(A1_LOJA,' ') ),' '),'|') AS BK_CLIENTE,SA1.A1_COD AS COD_CLIENTE,SA1.A1_LOJA AS LOJA_CLIENTE,SA1.A1_NOME AS NOME_CLIENTE,SA1.A1_SATIV1 AS SEGMENTACAO_ATIVIDADE_1 FROM SA1010 SA1 WHERE  SA1.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|SA1010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:09:261  INFO [main] (JdbcExtractor.java:1069) - Cliente.01.txt | Tempo de execução: 00h 00min 00s 33ms 
+
+21/09/22 15:17:10:018 DEBUG [main] (JdbcExtractor.java:1041) - TMS Status Indenizacao.01.txt | Query a ser executada: SELECT 'P |1' AS BK_STATUS_INDENIZACAO, '1' AS CODIGO_Status, 		'Em Aberto       ' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P |2' AS BK_STATUS_INDENIZACAO, '2' AS CODIGO_Status, 		'Autorizado Pagto' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P |3' AS BK_STATUS_INDENIZACAO, '3' AS CODIGO_Status, 		'Encerrado       ' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P | ' AS BK_STATUS_INDENIZACAO, ' ' AS CODIGO_Status, 		'                ' AS DESCRICAO_Status,  '01'					AS INSTANCIA UNION SELECT 'P ||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:10:023  INFO [main] (JdbcExtractor.java:1069) - TMS Status Indenizacao.01.txt | Tempo de execução: 00h 00min 00s 04ms 
+
+21/09/22 15:17:10:261 DEBUG [main] (JdbcExtractor.java:1041) - TMS Negociacao Transporte.01.txt | Query a ser executada: SELECT 'P |01|DDB010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DDB_FILIAL,' ') )+'|'+RTRIM( COALESCE(DDB_CODNEG,' ') ),' '),'|') AS BK_NEGOCIACAO,DDB.DDB_CODNEG AS CODNEG,DDB.DDB_DESCRI AS DES_NEGOCI,'01' AS INSTANCIA FROM DDB010 DDB WHERE  DDB.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DDB010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:10:267  INFO [main] (JdbcExtractor.java:1069) - TMS Negociacao Transporte.01.txt | Tempo de execução: 00h 00min 00s 06ms 
+
+21/09/22 15:17:10:645 DEBUG [main] (JdbcExtractor.java:1041) - TMS Servico Negociacao Transp..01.txt | Query a ser executada: SELECT 'P |01|SX5010|'+  COALESCE(NULLIF(RTRIM( COALESCE(X5_FILIAL,' ') )+'|'+RTRIM( COALESCE(X5_CHAVE,' ') ),' '),'|') AS BK_SERVICO,SX5.X5_CHAVE AS COD_SERVICO,SX5.X5_DESCRI AS DES_SERVICO,'01' AS INSTANCIA FROM SX5010 SX5 WHERE  SX5.X5_TABELA = 'L4' AND SX5.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|SX5010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:10:665  INFO [main] (JdbcExtractor.java:1069) - TMS Servico Negociacao Transp..01.txt | Tempo de execução: 00h 00min 00s 20ms 
+
+21/09/22 15:17:10:935 DEBUG [main] (JdbcExtractor.java:1041) - TMS Viagens.01.txt | Query a ser executada: SELECT 'P |01|DTQ010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DTQ_FILIAL,' ') )+'|'+RTRIM( COALESCE(DTQ_VIAGEM,' ') ),' '),'|') AS BK_VIAGEM,DTQ.DTQ_FILORI AS FILIAL_VIAGEM,DTQ.DTQ_VIAGEM AS NUMERO_VIAGEM,'01' AS INSTANCIA FROM DTQ010 DTQ WHERE  DTQ.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DTQ010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:10:972  INFO [main] (JdbcExtractor.java:1069) - TMS Viagens.01.txt | Tempo de execução: 00h 00min 00s 36ms 
+
+21/09/22 15:17:11:211 DEBUG [main] (JdbcExtractor.java:1041) - TMS Veiculos.01.txt | Query a ser executada: SELECT 'P |01|DA3010|'+  COALESCE(NULLIF(RTRIM( COALESCE(DA3_FILIAL,' ') )+'|'+RTRIM( COALESCE(DA3_COD,' ') ),' '),'|') AS BK_VEICULO,DA3.DA3_COD AS COD_VEICULO,DA3.DA3_DESC AS DES_VEICULO,DA3.DA3_PLACA AS PLACA,'01' AS INSTANCIA FROM DA3010 DA3 WHERE  DA3.D_E_L_E_T_ = ' ' UNION SELECT 'P |01|DA3010||','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO','01 - INDEFINIDO' 
+
+21/09/22 15:17:11:223  INFO [main] (JdbcExtractor.java:1069) - TMS Veiculos.01.txt | Tempo de execução: 00h 00min 00s 11ms 
+
+21/09/22 15:17:11:458 DEBUG [main] (JdbcExtractor.java:1041) - veiculosTMS.sql | Query a ser executada: SELECT     trim(DA3.DA3_COD) as DA3_COD,     trim(DA3.DA3_DESC) as DA3_DESC,     trim(DA3.DA3_PLACA) as DA3_PLACA,     '01' AS INSTANCIA FROM DA3010 DA3 WHERE DA3.D_E_L_E_T_ = '' 
+
+21/09/22 15:17:11:463  INFO [main] (JdbcExtractor.java:1069) - veiculosTMS.sql | Tempo de execução: 00h 00min 00s 06ms 
+
+21/09/22 15:17:12:223 DEBUG [main] (JdbcExtractor.java:1041) - motoristasTMS.sql | Query a ser executada: select     trim(DA4.DA4_COD) as DA4_COD,     trim(DA4.DA4_NOME) as DA4_NOME,     '01' AS INSTANCIA from DA4010 DA4 where DA4.D_E_L_E_T_ = '' 
+
+21/09/22 15:17:12:229  INFO [main] (JdbcExtractor.java:1069) - motoristasTMS.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+21/09/22 15:17:13:853  INFO [main] (JdbcExtractor.java:481) - Desconectado do banco de dados 
+
+21/09/22 15:17:13:853  INFO [main] (JdbcExtractor.java:221) - Fim da geração dos arquivos de dados (Via pasta query) 
+
+21/09/22 15:17:14:094  INFO [main] (Main.java:294) - Início da geração do arquivo .zip
+
+21/09/22 15:17:14:669  INFO [main] (Main.java:296) - Fim da geração do arquivo .zip
+
+21/09/22 15:17:14:669  INFO [main] (Main.java:311) - Início do upload do arquivo .zip
+
+21/09/22 15:17:16:129 DEBUG [main] (Uploader.java:160) - Movendo os arquivos de dados: 
+ De: https://secure-di.gooddata.com/project-uploads/nfyvpc410prmqerg18en6eccjt694xww/today/Protheus_TMS.zip.1663784234672 
+ Para: https://secure-di.gooddata.com/project-uploads/nfyvpc410prmqerg18en6eccjt694xww/today/Protheus_TMS.zip 
+
+21/09/22 15:17:17:753  INFO [main] (Main.java:314) - Arquivos de dados enviados para o GoodData: Para: https://secure-di.gooddata.com/project-uploads/nfyvpc410prmqerg18en6eccjt694xww/today/ 
+
+21/09/22 15:17:17:754  INFO [main] (Main.java:315) - Fim do upload do arquivo .zip
+
+21/09/22 15:17:17:766 DEBUG [main] (FileUtil.java:200) - Removendo arquivos de dados antigos... 
+ De: ./tmp 
+
+21/09/22 15:17:17:767  INFO [main] (Main.java:365) - Início do processo de ETL
+
+21/09/22 15:17:17:768  INFO [main] (GdcRESTApiWrapper.java:194) - Efetuando login no GoodData...
+21/09/22 15:17:18:248  INFO [main] (GdcRESTApiWrapper.java:211) - Login no GoodData efetuado com sucesso
+21/09/22 15:17:18:366  INFO [main] (GdcRESTApiWrapper.java:305) - Executando o graph TOTVS-FastAnalytics-Protheus-TMS/graph/_Main.grf
+
+21/09/22 15:18:22:201  INFO [main] (Main.java:411) - Log de execução: URL: https://analytics.totvs.com.br/gdc/projects/nfyvpc410prmqerg18en6eccjt694xww/dataload/processes/5d2c5c94-6ff5-44f6-882e-3742316cb84d/executions/632b552f0f24972f2295631f/log 
+
+21/09/22 15:18:22:202  INFO [main] (Main.java:414) - Status de execução: OK 
+
+21/09/22 15:18:23:748  INFO [main] (Main.java:421) - Fim do processo de ETL
+
+21/09/22 15:18:23:748  INFO [main] (Main.java:585) - Fim do processo do agent
+
+21/09/22 15:18:23:749  INFO [main] (Main.java:600) - Tempo de execução total: 01min 34s 
 
