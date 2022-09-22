@@ -24,8 +24,8 @@ select
                     datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         where 
                 DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_FILORI = DTR.DTR_FILORI
+            and DTW010.DTW_VIAGEM = DTR.DTR_VIAGEM
             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
             and DTW010.DTW_ATIVID in ('050')
     ) as km_fim,
@@ -41,8 +41,8 @@ select
                     datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         where
                 DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_FILORI = DTR.DTR_FILORI
+            and DTW010.DTW_VIAGEM = DTR.DTR_VIAGEM
             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
             and DTW010.DTW_ATIVID in ('049')
     ) as km_ini,

@@ -1,5 +1,5 @@
 select
-    case when ZD3.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
+    ZD3.TIPO_ABA,
     ZD3.ZD3_LITROS,
     ZD3.ZD3_VLUNI,
     ZD3.ZD3_HODOM,
@@ -20,6 +20,8 @@ from
                 else trim(isnull(ZD3010.ZD3_FILIAL, '-'))
             end as ZD3_FILIAL,
             ZD3010.ZD3_KM as ZD3_HODOM,
+
+            case when substring(ZD3010.ZD3_DATA, 15, 1) = '*' then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
 
             ZD3010.ZD3_VEICUL,
             ZD3010.ZD3_LITROS,
