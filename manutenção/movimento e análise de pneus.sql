@@ -17,7 +17,7 @@ select
 	ST8_MV.T8_NOME,
 
     (
-        select top 1 TR4010.TR4_DTANAL +'- '+ trim(SX5010.X5_DESCRI) +' -'+ '(' + trim(ST8010.T8_NOME) + ')'
+        select top 1 TR4010.TR4_DTANAL +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')'
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -28,15 +28,14 @@ select
                 and cast(SX5010.X5_CHAVE as int) = cast(TR4010.TR4_DESTIN as int)
         where
                 TR4010.D_E_L_E_T_ = ''
-            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
-
-            
-            and TR4010.TR4_DTANAL > STZ.TZ_DATASAI
+            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM            
+            and TR4010.TR4_DTANAL >= STZ.TZ_DATASAI
         order by TR4010.TR4_DTANAL asc
     ) as ANALISE_SAI,
 
     (
-        select top 1 TR4010.TR4_DTANAL +'- '+ trim(SX5010.X5_DESCRI) +' -'+ '(' + trim(ST8010.T8_NOME) + ')'
+        select top 1 TR4010.TR4_DTANAL +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')'
+        datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -47,10 +46,8 @@ select
                 and cast(SX5010.X5_CHAVE as int) = cast(TR4010.TR4_DESTIN as int)
         where
                 TR4010.D_E_L_E_T_ = ''
-            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
-
-            
-            and TR4010.TR4_DTANAL < STZ.TZ_DATAMOV
+            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM            
+            and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL <= STZ.TZ_DATAMOV
         order by TR4010.TR4_DTANAL desc
     ) as ANALISE_ENT
 
