@@ -7,10 +7,9 @@ select
     DA8.DA8_DESC,
     DTQ.DTQ_KMVGE,
 
-    REG_COL.EST_COL as UF_COLETA,
-	REG_COL.MUN_COL as MUN_COLETA,
-	REG_ENT.EST_ENT as UF_ENTREGA,
-	REG_ENT.MUN_ENT as MUN_ENTREGA,
+    trim(DUYORI.DUY_DESCRI) as ORIGEM,
+    trim(DUYDES.DUY_DESCRI) as DESTINO,
+    trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
 
     (
         select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
@@ -61,6 +60,12 @@ select
     DTR.DTR_CODRB2,
     DTR.DTR_CODRB3,
 
+    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
+    DT6.DT6_VALFRE as CTE_TOTAL,
+    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
+    DT6.DT6_VALIMP as IMPOSTO_TOTAL,
+    DT6.DT6_VALTOT,
+
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
@@ -81,6 +86,14 @@ select
 
     DF1.DF1_NUMAGE,
     DF1.DF1_ITEAGE,
+
+    SC5.C5_NUM as RPS_PEDIDO,
+    RPS.D2_DOC as RPS_DOC,
+    RPS.D2_SERIE as RPS_SERIE,
+    RPS.D2_TOTAL as RPS_TOTAL,
+    RPS.D2_VALIPI as RPS_VALIPI,
+    RPS.D2_VALICM as RPS_VALICM,
+    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
 
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -172,23 +185,12 @@ from DTQ010 DTQ (nolock)
 			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
-        
-            INNER JOIN SA1010 REM
-                ON REM.A1_FILIAL = '      '
-                AND REM.A1_COD = DT6.DT6_CLIREM
-                AND REM.A1_LOJA = DT6.DT6_LOJREM
-                AND REM.D_E_L_E_T_ = ' '
-            INNER JOIN SA1010 DES
-                ON DES.A1_FILIAL = '      '
-                AND DES.A1_COD = DT6.DT6_CLIDES
-                AND DES.A1_LOJA = DT6.DT6_LOJDES
-                AND DES.D_E_L_E_T_ = ' '
+
             INNER JOIN SA1010 DEV
                 ON DEV.A1_FILIAL = '      '
                 AND DEV.A1_COD = DT6.DT6_CLIDEV
                 AND DEV.A1_LOJA = DT6.DT6_LOJDEV
                 AND DEV.D_E_L_E_T_ = ' '
-
 
         LEFT JOIN DUY010 DUYORI
             ON DUYORI.DUY_FILIAL = DT6_FILIAL
@@ -202,15 +204,6 @@ from DTQ010 DTQ (nolock)
             ON DUYDEV.DUY_FILIAL = DT6_FILIAL
             AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
             AND DUYDEV.D_E_L_E_T_ = ' '
-        LEFT JOIN DDB010 DDB
-            ON DDB.DDB_FILIAL = DT6_FILIAL
-            AND DDB.DDB_CODNEG = DT6.DT6_CODNEG
-            AND DDB.D_E_L_E_T_ = ' '
-        INNER JOIN SX5010 SX5
-            ON SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
-            AND SX5.X5_TABELA = 'L4'
-            AND SX5.X5_CHAVE = DT6.DT6_SERVIC
-            AND SX5.D_E_L_E_T_ = ' '
 
             left join DTC010 DTC (nolock)
                 on DTC.D_E_L_E_T_ = ''
@@ -222,5 +215,17 @@ from DTQ010 DTQ (nolock)
                     on DF1.D_E_L_E_T_ = ''
                     and DF1.DF1_FILDOC = DTC.DTC_FILORI
                     and DF1.DF1_DOC = DTC.DTC_NUMSOL
-where 
+    
+    left join SC5010 SC5 (nolock)
+        on SC5.D_E_L_E_T_ = ''
+        and trim(SC5.C5_YVIAGEM) = DTQ.DTQ_VIAGEM
+
+        left join SD2010 RPS (nolock)
+            on RPS.D_E_L_E_T_ = ''
+            and RPS.D2_FILIAL = SC5.C5_FILIAL
+            and RPS.D2_DOC = SC5.C5_NOTA
+            and RPS.D2_SERIE = SC5.C5_SERIE
+            and RPS.D2_CLIENTE = SC5.C5_CLIENTE
+            and RPS.D2_LOJA = SC5.C5_LOJACLI
+where substring(dtq_datger, 1 ,6) < '202209' and
         DTQ.D_E_L_E_T_ = ''
