@@ -37,6 +37,8 @@ select
 	SC7.C7_QUJE as QTD_ENTREGUE,
 	SC7.C7_PRECO,
 	SC7.C7_TOTAL,
+	trim(isnull(SC7.C7_OBS, '-')) as OBS,
+	trim(isnull(SC7.C7_OBSM, '-')) as MEMO,
 
 	case when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
 	else
