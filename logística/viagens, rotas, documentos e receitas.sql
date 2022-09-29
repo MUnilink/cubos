@@ -10,6 +10,9 @@ select
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
+    trim(DEV.A1_COD) as A1_COD,
+    trim(DEV.A1_LOJA) as A1_LOJA,
+    trim(DEV.A1_NOME) as CLIENTE,
 
     (
         select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
