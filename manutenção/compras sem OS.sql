@@ -16,11 +16,11 @@ select
 
 	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE,
 	trim(isnull(CTT.CTT_DESC01, '-')) as CC,
-	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE,
 
 	convert(date, SC1.C1_EMISSAO, 103) as DATA_SOLICITA,
 	year(SC1.C1_EMISSAO) as ANO_SOLICITA,
 	month(SC1.C1_EMISSAO) as MES_SOLICITA,
+	trim(isnull(upper(SC1.C1_SOLICIT), '-')) as SOLIC_SC,
 	
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -32,6 +32,7 @@ select
 	convert(date, SC7.C7_EMISSAO, 103) as DATA_PEDIDO,
 	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
 	month(SC7.C7_EMISSAO) as MES_PEDIDO,
+	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLIC_PC,
 
 	SC7.C7_QUANT as QTD_PEDIDA,
 	SC7.C7_QUJE as QTD_ENTREGUE,
