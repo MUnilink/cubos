@@ -9,6 +9,8 @@ select
 	trim(CTT.CTT_DESC01) as CCUSTO,
 	trim(CTD.CTD_ITEM) as AT,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
+    trim(SQB.QB_DEPTO) as DEPTO,
+    trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
@@ -37,16 +39,19 @@ from SRH010 SRH (nolock)
         and SRA.RA_FILIAL = SRH.RH_FILIAL
         and SRA.RA_MAT = SRH.RH_MAT
 
+        inner join SQB010 SQB (nolock)
+            on SQB.D_E_L_E_T_ = ''
+            and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
         inner join SRJ010 SRJ (nolock)
             on SRJ.D_E_L_E_T_ = ''
-            and substring(SRA.RA_FILIAL, 1, 4) = SRJ.RJ_FILIAL
-            and SRA.RA_CODFUNC = SRJ.RJ_FUNCAO
+            and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
         inner join CTT010 CTT (nolock)
             on CTT.D_E_L_E_T_ = ''
-            and SRA.RA_CC = CTT.CTT_CUSTO
+            and CTT.CTT_CUSTO = SRA.RA_CC
         inner join CTD010 CTD (nolock)
             on CTD.D_E_L_E_T_ = ''
-    	    and SRA.RA_ITEM = CTD.CTD_ITEM
+    	    and CTD.CTD_ITEM = SRA.RA_ITEM
     
     inner join SRR010 SRR (nolock)
         on SRR.D_E_L_E_T_ = ''
