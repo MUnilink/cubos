@@ -230,5 +230,5 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_SERIE = SC5.C5_SERIE
             and RPS.D2_CLIENTE = SC5.C5_CLIENTE
             and RPS.D2_LOJA = SC5.C5_LOJACLI
-where substring(dtq_datger, 1 ,6) < '202209' and
-        DTQ.D_E_L_E_T_ = ''
+where DTQ_VIAGEM in (8296, 8308, 8309, 8336, 8336, 8336, 8336, 8336, 8336, 8336, 8356, 8366, 8367, 8368, 8369, 8370, 8444, 8444, 8453, 8454, 8483, 8558, 8559, 8562, 8563, 8564, 8565, 8573, 8575, 8576, 8578, 8584, 8585, 8586, 8587, 8588, 8589, 8590)
+        and DTQ.D_E_L_E_T_ = ''
