@@ -4,6 +4,7 @@ select
 	trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
 	trim(CTT.CTT_CUSTO) as CC,
 	trim(CTT.CTT_DESC01) as CCUSTO,
@@ -16,7 +17,19 @@ select
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
 
-    SRF.RF_STATUS,
+    SRF.RF_STATUS as STATUS,
+    cast(SRF.RF_DATABAS as date) as INI_PERIODO,
+    cast(SRF.RF_DATAFIM as date) as FIM_PERIODO,
+    trim(SRF.RF_TEMABPE) as ABONOPEC,
+    trim(SRF.RF_ABOPEC) as PERABONO,
+    SRF.RF_DABPRO1 as DIAS_ABONO1,
+    SRF.RF_DFEPRO1 as DIAS_FERIAS1,
+    SRF.RF_DFERAAT as DIAS_PROPORC,
+    SRF.RF_DFERVAT as DIAS_VENCIDAS,
+    SRF.RF_DVENPEN as DIAS_VENCPEND,
+    SRF.RF_DFERANT as DIAS_PAGOS,
+    dateadd(month, 20, SRF.RF_DATABAS) as PERIODOIDEAL,
+    trim(SRF.RF_OBSERVA) as OBS
 
 from SRF010 SRF (nolock)
     inner join SRA010 SRA (nolock)
@@ -27,6 +40,7 @@ from SRF010 SRF (nolock)
         inner join SQB010 SQB (nolock)
             on SQB.D_E_L_E_T_ = ''
             and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SQB.QB_DEPTO = SRA.RA_DEPTO
         inner join SRJ010 SRJ (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
@@ -37,4 +51,4 @@ from SRF010 SRF (nolock)
         inner join CTD010 CTD (nolock)
             on CTD.D_E_L_E_T_ = ''
     	    and CTD.CTD_ITEM = SRA.RA_ITEM
-where SRH.D_E_L_E_T_ = ''
+where SRF.D_E_L_E_T_ = ''
