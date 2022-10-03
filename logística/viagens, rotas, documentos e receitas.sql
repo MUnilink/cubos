@@ -6,6 +6,10 @@ select
     convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI,
     DA8.DA8_DESC,
     DTQ.DTQ_KMVGE,
+    
+    DTQ.DTQ_DATGER,
+    DTQ.DTQ_DATFEC,
+    DTQ.DTQ_DATENC,
 
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(DUYDES.DUY_DESCRI) as DESTINO,
@@ -75,6 +79,8 @@ select
     DTC.DTC_FILORI,
     DTC.DTC_DOC,
     DTC.DTC_SERIE,
+    DTC.DTC_NUMNFC,
+    DTC.DTC_SERNFC,
     DTC.DTC_VALOR,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
@@ -230,5 +236,5 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_SERIE = SC5.C5_SERIE
             and RPS.D2_CLIENTE = SC5.C5_CLIENTE
             and RPS.D2_LOJA = SC5.C5_LOJACLI
-where DTQ_VIAGEM in ('008813', '008815', '008821', '008823', '008832', '008833', '008834', '008835')
+where DTQ_VIAGEM in ('008814', '008816', '008818', '008819', '008820', '008822', '008824', '008825', '008826', '008827', '008829', '008831')
     and DTQ.D_E_L_E_T_ = ''
