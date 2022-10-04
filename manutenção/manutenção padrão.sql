@@ -1,16 +1,4 @@
 select
-    trim(STI.TI_FILIAL) as FILIAL,
-    trim(STI.TI_DATAPLA) as PERIODO,
-    trim(STI.TI_DESCRIC) as NOME_PLANO,
-
-    trim(STJ.TJ_CCUSTO) as CC,
-    trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
-    trim(STJ.TJ_ORDEM) as OS,
-    trim(STJ.TJ_PLANO) as PLANO,
-    trim(STJ.TJ_SERVICO) as SERVICO,
-    STJ.TJ_SEQRELA as TJ_SEQRELA,
-    case STJ.TJ_SITUACA when 'L' then 'LIBERADA' when 'P' then 'PENDENTE' else 'CANCELADA' end as STATUS_OS,
-
     trim(STF.TF_NOMEMAN) as PREVENTIVA,
     trim(STF.TF_PADRAO) as MAN_PADRAO,
     STF.TF_DTULTMA as ULTIMA_MAN,
@@ -23,36 +11,11 @@ select
     trim(STG.TG_TAREFA) as TAREFA,
     trim(STG.TG_TIPOREG) as TIPO_INSUMO,
     STG.TG_CODIGO as INSUMO,
-
-    (
-        select count(*)
-        from STF010 (nolock)
-            inner join STG010 (nolock)
-                on STG010.D_E_L_E_T_ = ''
-                and STG010.TG_CODBEM = STF010.TF_CODBEM
-                and STG010.TG_SERVICO = STF010.TF_SERVICO
-                and STG010.TG_SEQRELA = STF010.TF_SEQRELA
-        where
-                STF010.D_E_L_E_T_ = ''
-            and STG010.TG_CODIGO = STG.TG_CODIGO
-            and STF010.TF_CONMANU = STF.TF_CONMANU
-            and STF010.TF_CODBEM = STJ.TJ_CODBEM
-    ) as contador,
-
     trim(SB1.B1_DESC) as PRODUTO,
     case SB1.B1_MSBLQL when 1 then 'SIM' else 'NAO' end as BLOQUEADO,
     STG.TG_QUANTID as QTD,
-    STG.TG_UNIDADE as UN,
-    STG.TG_LOCAL as ARMAZEM,
-
-    SB2.B2_FILIAL,
-    SB2.B2_LOCAL,
-    SB2.B2_COD,
-    SB2.B2_QFIM,
-    SB2.B2_QATU,
-    SB2.B2_VFIM1,
-    SB2.B2_VATU1,
-    SB2.B2_CM1
+    STG.TG_UNIDADE as UNIDADE,
+    STG.TG_LOCAL as ARMAZEM
 
 from STF010 STF (nolock)
     inner join STG010 STG (nolock)
@@ -65,4 +28,4 @@ from STF010 STF (nolock)
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = STG.TG_CODIGO
 
-where STJ.D_E_L_E_T_ = '' and substring(STI.TI_DATAPLA, 1, 6) > '202112'
+where STF.D_E_L_E_T_ = ''
