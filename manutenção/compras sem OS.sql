@@ -21,6 +21,9 @@ select
 
 	(select top 1 SCR010.CR_DATALIB from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
 
+	SC8.C8_NUM,
+    SC8.C8_ITEM,
+
 	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
 	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
 	trim(isnull(SC7.C7_FORNECE, '-')) as FORNECEDOR,
@@ -81,7 +84,7 @@ from SC1010 SC1 (nolock)
 		and SB1.B1_COD = SC1.C1_PRODUTO
 		and SB1.B1_GRUPO like '1%'
 
-		inner join SC8010 SC8 (nolock)
+		left join SC8010 SC8 (nolock)
             on SC8.D_E_L_E_T_ = ''
             and SC8.C8_NUMSC = SC1.C1_NUM
             and SC8.C8_ITEMSC = SC1.C1_ITEM
