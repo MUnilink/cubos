@@ -19,10 +19,15 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
+	case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,
+
 	(select top 1 SCR010.CR_DATALIB from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
 
-	SC8.C8_NUM,
-    SC8.C8_ITEM,
+	SC8.C8_NUM COTACAO,
+    SC8.C8_ITEM ITEM_COTA,
+	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
+
+	case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,
 
 	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
 	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
@@ -45,12 +50,16 @@ select
 		else 'OUTROS'
 	end as APROVACAO_PC,
 
+	case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,
+
 	(select top 1 SCR010.CR_DATALIB from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC,
 
 	SC7.C7_QUANT as QTD_PC_PEDIDA,
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
 	SC7.C7_PRECO,
 	SC7.C7_TOTAL,
+
+	case when year(SD1.D1_DTDIGIT) = 1900 then datediff(day, APRSC7.CR_DATALIB, getdate()) else datediff(day, APRSC7.CR_DATALIB, SD1.D1_DTDIGIT) end as DIAS_APRPC_NF,
 
 	trim(isnull(SD1.D1_DOC, '-')) as D1_DOC,
 	trim(isnull(SD1.D1_SERIE, '-')) as D1_SERIE,
