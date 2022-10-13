@@ -192,6 +192,23 @@ from DTQ010 DTQ (nolock)
 
             inner join DA4010 DA4 (nolock)
                 on DA4.DA4_COD = DUP.DUP_CODMOT
+            left join DYV010 DYV (nolock)
+                on DYV.D_E_L_E_T_ = ''
+                and DYV.DYV_FILORI = DUP.DUP_FILORI
+                and DYV.DYV_VIAGEM = DUP.DUP_VIAGEM
+                and DYV.DYV_CODMOT = DUP.DUP_CODMOT
+                
+                left join DYX010 DYX (nolock)
+                    on DYX.D_E_L_E_T_ = ''
+                    and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
+                    and year(DYX.DYX_DATDIA) = 2022
+                    
+                    left join SE2010 SE2
+                        on SE2.D_E_L_E_T_ = ''
+                        and SE2.E2_PREFIXO = DYX.DYX_PRETIT
+                        and SE2.E2_NUM = DYX.DYX_NUMTIT
+                        and SE2.E2_FORNECE = DYX.DYX_FORNEC
+                        and SE2.E2_LOJA = DYX.DYX_LOJA
 
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
@@ -258,20 +275,6 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_SERIE = SC5.C5_SERIE
             and RPS.D2_CLIENTE = SC5.C5_CLIENTE
             and RPS.D2_LOJA = SC5.C5_LOJACLI
-    
-    left join DYV010 DYV (nolock)
-        on DYV.D_E_L_E_T_ = ''
-        and DYV.DYV_FILORI = DTQ.DTQ_FILORI
-        and DYV.DYV_VIAGEM = DTQ.DTQ_VIAGEM
-        
-        left join DYX010 DYX (nolock)
-            on DYX.D_E_L_E_T_ = ''
-            and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-            and year(DYX.DYX_DATDIA) = 2022
-            
-            left join SE2010 SE2
-                on SE2.D_E_L_E_T_ = ''
-                and SE2.E2_PREFIXO = DYX.DYX_PRETIT
-                and SE2.E2_NUM = DYX.DYX_NUMTIT
-where /*DTQ_VIAGEM in ('008814', '008816', '008818', '008819', '008820', '008822', '008824', '008825', '008826', '008827', '008829', '008831') AND*/
+
+where DTQ_VIAGEM not in ('008814', '008816', '008818', '008819', '008820', '008822', '008824', '008825', '008826', '008827', '008829', '008831') AND
         DTQ.D_E_L_E_T_ = ''
