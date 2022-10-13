@@ -9,16 +9,19 @@ select
     TQY.TQY_DESTAT,
     
     STZ.TZ_ORDEM,
-    convert(date, STZ.TZ_DATAMOV, 103) as TZ_DATAMOV,
-	convert(date, STZ.TZ_DATASAI, 103) as TZ_DATASAI,
+    convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103) as TZ_DATAMOV,
+    STZ.TZ_POSCONT,
+	convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 103) as TZ_DATASAI,
+    STZ.TZ_CONTSAI,
+    
 	STZ.TZ_BEMPAI,
 	STZ.TZ_TIPOMOV,
 	STZ.TZ_CAUSA,
 	ST8_MV.T8_NOME,
 
     (
-        select top 1 cast(convert(datetime, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 103) as varchar)
-               +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')'
+        select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
+               +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -29,14 +32,14 @@ select
                 and cast(SX5010.X5_CHAVE as int) = cast(TR4010.TR4_DESTIN as int)
         where
                 TR4010.D_E_L_E_T_ = ''
-            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM            
+            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
             and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL >= STZ.TZ_DATASAI + STZ.TZ_HORASAI
         order by TR4010.TR4_DTANAL asc
     ) as ANALISE_SAI,
 
     (
-        select top 1 convert(datetime, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113)
-               +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')'
+        select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
+               +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -47,7 +50,7 @@ select
                 and cast(SX5010.X5_CHAVE as int) = cast(TR4010.TR4_DESTIN as int)
         where
                 TR4010.D_E_L_E_T_ = ''
-            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM            
+            and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
             and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL <= STZ.TZ_DATAMOV + STZ.TZ_HORAENT
         order by TR4010.TR4_DTANAL desc
     ) as ANALISE_ENT
