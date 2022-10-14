@@ -117,8 +117,8 @@ from SC1010 SC1 (nolock)
 					and SD1.D1_LOJA = SC7.C7_LOJA
 					and SD1.D1_PEDIDO = SC7.C7_NUM
 				left join SY1010 SY1 (nolock)
-					on SY1.D_E_L_E_T_ = ''
-					and SY1.Y1_USER = SC7.C7_USER
+					/*on SY1.D_E_L_E_T_ = '' and*/
+					on SY1.Y1_USER = SC7.C7_USER
 
 	left join CTT010 CTT (nolock)
 		on CTT.D_E_L_E_T_ = ''
