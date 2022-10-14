@@ -13,7 +13,9 @@ select
     STZ.TZ_POSCONT,
 	convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 103) as TZ_DATASAI,
     STZ.TZ_CONTSAI,
-    
+
+    abs(STZ.TZ_CONTSAI - STZ.TZ_POSCONT) as km,
+
 	STZ.TZ_BEMPAI,
 	STZ.TZ_TIPOMOV,
 	STZ.TZ_CAUSA,
@@ -53,7 +55,16 @@ select
             and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
             and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL <= STZ.TZ_DATAMOV + STZ.TZ_HORAENT
         order by TR4010.TR4_DTANAL desc
-    ) as ANALISE_ENT
+    ) as ANALISE_ENT,
+
+    (
+        select STJ010.TJ_CUSTTER
+        from STJ010 (nolock)
+        where
+                STJ010.D_E_L_E_T_ = ''
+            and STJ010.TJ_CODBEM = TQS.TQS_CODBEM
+            and STJ010.TJ_DTMRFIM <= STZ.TZ_DATAMOV
+    ) as CUSTO
 
     /*, TR4.TR4_PAREC,
     TR4.TR4_NUMANA,
