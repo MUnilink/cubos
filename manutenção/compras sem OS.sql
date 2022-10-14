@@ -128,3 +128,4 @@ from SC1010 SC1 (nolock)
 		and CTD.CTD_ITEM = SC1.C1_ITEMCTA
 where
 		SC1.D_E_L_E_T_ = ''
+	and SC1.C1_EMISSAO > 20211231
