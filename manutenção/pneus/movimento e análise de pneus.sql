@@ -1,12 +1,12 @@
 select
 	ST9.T9_CODBEM as CONTADOR,
-	ST9.T9_CODBEM,
+	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	ST9.T9_CCUSTO,
 	ST9.T9_ITEMCTA,
 	ST9.T9_SITBEM,
     
     ST9.T9_STATUS,
-    TQY.TQY_DESTAT,
+    trim(TQY.TQY_DESTAT) as TQY_DESTAT,
     
     STZ.TZ_ORDEM,
     convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103) as TZ_DATAMOV,
@@ -23,7 +23,7 @@ select
 
     (
         select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-               +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+               +' - AN. N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -35,13 +35,14 @@ select
         where
                 TR4010.D_E_L_E_T_ = ''
             and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
+            and STZ.TZ_CAUSA not in ('000007', '')
             and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL >= STZ.TZ_DATASAI + STZ.TZ_HORASAI
         order by TR4010.TR4_DTANAL asc
     ) as ANALISE_SAI,
 
     (
         select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-               +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+               +' - AN. N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -55,7 +56,7 @@ select
             and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
             and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL <= STZ.TZ_DATAMOV + STZ.TZ_HORAENT
         order by TR4010.TR4_DTANAL desc
-    ) as ANALISE_ENT,
+    ) as ANALISE_ENT/*,
 
     (
         select STJ010.TJ_CUSTTER
@@ -64,7 +65,7 @@ select
                 STJ010.D_E_L_E_T_ = ''
             and STJ010.TJ_CODBEM = TQS.TQS_CODBEM
             and STJ010.TJ_DTMRFIM <= STZ.TZ_DATAMOV
-    ) as CUSTO
+    ) as CUSTO*/
 
     /*, TR4.TR4_PAREC,
     TR4.TR4_NUMANA,
