@@ -226,5 +226,4 @@ from DTQ010 DTQ (nolock)
                     and DF1.DF1_FILDOC = DTC.DTC_FILORI
                     and DF1.DF1_DOC = DTC.DTC_NUMSOL
 
-where DTQ.D_E_L_E_T_ = '' and DTQ_VIAGEM in ('008816', '008818', '008819', '008820', '008822', '008824', '008829', '008831')
-
+where DTQ.D_E_L_E_T_ = '' and DTQ_VIAGEM = '008829'
