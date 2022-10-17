@@ -19,7 +19,7 @@ select
     trim(DEV.A1_NOME) as CLIENTE,
 
     (
-        select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -36,7 +36,7 @@ select
             and DTW010.DTW_ATIVID in ('050')
     ) as km_fim,
     (
-        select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -276,5 +276,5 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_CLIENTE = SC5.C5_CLIENTE
             and RPS.D2_LOJA = SC5.C5_LOJACLI
 
-where DTQ_VIAGEM not in ('008814', '008816', '008818', '008819', '008820', '008822', '008824', '008825', '008826', '008827', '008829', '008831') AND
+where
         DTQ.D_E_L_E_T_ = ''
