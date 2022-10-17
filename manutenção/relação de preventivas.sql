@@ -8,19 +8,26 @@ select
     trim(STJ.TJ_ORDEM) as OS,
     trim(STJ.TJ_PLANO) as PLANO,
     trim(STJ.TJ_SERVICO) as SERVICO,
-    STJ.TJ_SEQRELA as TJ_SEQRELA,
+    STJ.TJ_SEQRELA as SEQ_OS,
     case STJ.TJ_SITUACA when 'L' then 'LIBERADA' when 'P' then 'PENDENTE' else 'CANCELADA' end as STATUS_OS,
 
-    trim(STF.TF_NOMEMAN) as PREVENTIVA,
-    trim(STF.TF_PADRAO) as MAN_PADRAO,
-    convert(date, STF.TF_DTULTMA, 103) as ULTIMA_DATA,
-    STF.TF_CONMANU as ULTIMA_CONT,
-    STF.TF_INENMAN as INCREMENTO_CONT,
+    trim(STF.TF_NOMEMAN) as DESC_MAN,
+    trim(STF.TF_PADRAO) as PADRAO,
+    convert(date, STF.TF_DTULTMA, 103) as DATA_ULTIMAN,
+    cast(datediff(month, STF.TF_DTULTMA, getdate()) /30 as numeric(15,1)) as MESES_ULTIMAN,
+    
+    STF.TF_CONMANU as CONT_ULTIMAN,
+    STF.TF_INENMAN as INCREMENTO,
     (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA) as CONT_ATUAL,
+    abs(STF.TF_CONMANU - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA)) as DIFF_CONT,
+    case when (abs(STF.TF_CONMANU - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA))) > STF.TF_INENMAN then 'ATRASADA' else 'EM DIA' end as STATUS_PREVENTIVA,
+    
     STF.TF_TEENMAN as TEMPO_ENTRE,
     STF.TF_TOLECON as TOLERANCIA,
     
-    trim(STF.TF_TIPACOM) as TIPO_ACOMP,
+    case STF.TF_TIPACOM when 'T' then 'TEMPO' when 'C' then 'CONTADOR' else '-' end as TIPO_ACOMP,
+    case STF.TF_UNENMAN when 'H' then 'HORAS' when 'M' then 'MES' when 'S' then 'SEMANA' else 'CONTADOR' end as UNIDADE_MAN,
+    
     trim(STF.TF_PARADA) as PARADA,
     STF.TF_ATIVO as ATIVO,
     STG.TG_SEQRELA as TG_SEQRELA,
