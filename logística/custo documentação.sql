@@ -32,4 +32,3 @@ from TS1010 TS1
 where
         TS1.D_E_L_E_T_ = ''
     and SE2.E2_VENCREA > 20211231
-    and ST9.T9_CCUSTO = 304
