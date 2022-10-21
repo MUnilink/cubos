@@ -37,6 +37,7 @@ Local cStringCh   := ""
 Local cStringTmp  := ""  
 Local cStringExp  := ""
 Local cStringOut  := ""
+Local cAliasCol   := ""
 Local cNFe        := ""
 Local cCFOP       := ""
 
@@ -78,13 +79,13 @@ Local cCodUFRec   := '' //--Codigo IBGE da UF do Recebedor
 Local cCodUFExp   := '' //--Codigo IBGE da UF do Expedidor
 Local cCodUFCon   := ''
 Local cCodUFDpc   := ''
-Local cCodUFDUL   := ''
 Local lTMSCTe     := SuperGetMv( "MV_TMSCTE" , .F., .F. )
 Local cTmsAntt    := SuperGetMv( "MV_TMSANTT", .F., .F. )
 Local cpRedBC     := ''
 Local cInsRemOpc  := ''
 Local cInsDesOpc  := ''
 Local lSelOcor    := .F.
+Local cSeekDUL    := ''
 Local cSeqEntr    := ''
 Local cObs        := ''
 Local cDTCObs     := ''
@@ -168,12 +169,13 @@ Local aCFOP 		:= {}
 Local aAreaSA1		:= {}
 Local cCGCRdp		:= ''
 Local lAnuSubs      := .T.
-Local nEmiDocAnt	:= 0
-Local nIdDocAnt		:= 0
-Local nFDocAnt		:= 0
-Local nFEmDcAnt		:= 0
-Local cUFDESGLOB	:= ''
+// Alterado por Paulo Amorim
+// Data: 24/12/2020
+// Objetivo: averbação do valor do Container
+// Inicio da Alteração
+Local nValCont := 0
 
+// Fim Alteração
 Private aUF       	:= {}
 
 Default cTipo     := PARAMIXB[1,1]
@@ -264,7 +266,6 @@ If cTipo == "1" //-- Saida
 			cQuery += "        CTRC.DT6_SERDCO, " + CRLF
 			cQuery += "        CTRC.DT6_CODMSG, " + CRLF
 			cQuery += "        CTRC.DT6_CDRORI, " + CRLF
-			cQuery += "        CTRC.DT6_CDRDES, " + CRLF
 			cQuery += "        CTRC.DT6_PREFIX, " + CRLF
 			cQuery += "        CTRC.DT6_NUM,    " + CRLF
 			cQuery += "        CTRC.DT6_TIPO,   " + CRLF
@@ -503,7 +504,7 @@ If cTipo == "1" //-- Saida
 				If ((cAliasDT6)->DT6_CLIDEV == (cAliasDT6)->DT6_CLIREM) .And. ((cAliasDT6)->DT6_LOJDEV == (cAliasDT6)->DT6_LOJREM)								
                 	cUniDes := "DIVERSOS"
 				EndIf
-				
+				                        
 				If ((cAliasDT6)->DT6_CLIDEV == (cAliasDT6)->DT6_CLIDES) .And. ((cAliasDT6)->DT6_LOJDEV == (cAliasDT6)->DT6_LOJDES)								
                 	cUniRem := "DIVERSOS"
 				EndIf
@@ -1133,25 +1134,9 @@ If cTipo == "1" //-- Saida
 						EndIf
 					ElseIf cSelOri == StrZero(2,Len(DTC->DTC_SELORI))   //Remetente
 						
-						If cCTeUnico == '4' .AND. !Empty(cUniRem)
-							DTC->(DbSetOrder(3))	
-							SA1->(DbSetOrder(1))	
-							If DTC->(DbSeek(xFilial("DTC")+(cAliasDT6)->(DT6_FILDOC+DT6_DOC+DT6_SERIE)))
-								If SA1->(dbSeek(xFilial('SA1') + DTC->DTC_CLIREM + DTC->DTC_LOJREM))
-									If (aScan(aUF,{|x| x[1] == SA1->A1_EST }) != 0)
-										cUFDESGLOB := aUF[ aScan(aUF,{|x| x[1] == SA1->A1_EST }), 2]
-												
-										cString += '<cMunIni>'	+ NoAcentoCte( AllTrim(cUFDESGLOB ) + AllTrim(SA1->A1_COD_MUN ) ) + '</cMunIni>'
-										cString += '<xMunIni>'	+ NoAcentoCte( Alltrim(SA1->A1_MUN)) + '</xMunIni>'
-										cString += '<UFIni>'	+ NoAcentoCte( AllTrim(SA1->A1_EST)) + '</UFIni>'
-									EndIF
-								EndIf
-							EndIf
-						Else
-							cString += '<cMunIni>' + NoAcentoCte( AllTrim(cCodUFRem ) +  Alltrim((cAliasDT6)->(REM_COD_MUN)) )  + '</cMunIni>'
-							cString += '<xMunIni>' + NoAcentoCte( (cAliasDT6)->(REM_MUNICI) ) + '</xMunIni>'
-							cString += '<UFIni>'   + NoAcentoCte( (cAliasDT6)->(REM_UF) ) + '</UFIni>'
-						EndIf
+						cString += '<cMunIni>' + NoAcentoCte( AllTrim(cCodUFRem ) +  Alltrim((cAliasDT6)->(REM_COD_MUN)) )  + '</cMunIni>'
+						cString += '<xMunIni>' + NoAcentoCte( (cAliasDT6)->(REM_MUNICI) ) + '</xMunIni>'
+						cString += '<UFIni>'   + NoAcentoCte( (cAliasDT6)->(REM_UF) ) + '</UFIni>'
 
 					ElseIf cSelOri == StrZero(3,Len(DTC->DTC_SELORI))   //Coleta ou expedidor.
 
@@ -1210,53 +1195,31 @@ If cTipo == "1" //-- Saida
 						cSeqEntr := (cAliasDT6)->DT6_SQEDES
 					EndIf
 					
-					If !Empty(cSeqEntr)//-- Seq.Entrega preenchida
+					If !Empty(cSeqEntr)
+						cSeekDUL := xFilial('DUL')+(cAliasDT6)->DT6_CLIDES + (cAliasDT6)->DT6_LOJDES + cSeqEntr
+						DUL->(DbSetOrder(2))
+						If	DUL->(MsSeek(cSeekDUL))
 
-						If !Empty((cAliasDT6)->DT6_CLIREC)//-- Recebedor preenchido
-							cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cCodUFRec) + AllTrim((cAliasDT6)->REC_COD_MUN)) + '</cMunFim>'
-							cString += '<xMunFim>'	+ NoAcentoCte( (cAliasDT6)->REC_MUNICI  )  + '</xMunFim>'
-							cString += '<UFFim>'	+ NoAcentoCte( (cAliasDT6)->REC_UF   )  + '</UFFim>'
-						Else
-							DUL->(DbSetOrder(1))
-								If DUL->(MsSeek(xFilial("DUL") + (cAliasDT6)->DT6_SQEDES)) .AND. (cAliasDT6)->DT6_CDRDES != DUL->DUL_CDRDES
-									If aScan(aUF,{|x| x[1] == DUL->DUL_EST }) != 0   //Confere se Uf da DUL esta OK
-										cCodUFDUL  := aUF[ aScan(aUF,{|x| x[1] == DUL->DUL_EST }), 2]
-										cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cCodUFDUL) + AllTrim(DUL->DUL_CODMUN ) ) + '</cMunFim>' 
-										cString += '<xMunFim>'	+ NoAcentoCte( DUL->DUL_MUN ) + '</xMunFim>'
-										cString += '<UFFim>'	+ NoAcentoCte( DUL->DUL_EST ) + '</UFFim>'
-									EndIf
-							
-								Else
-									cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cCodUFDes ) + AllTrim((cAliasDT6)->DES_COD_MUN ) ) + '</cMunFim>'
-									cString += '<xMunFim>'	+ NoAcentoCte( (cAliasDT6)->DES_MUNICI ) + '</xMunFim>'
-									cString += '<UFFim>'	+ NoAcentoCte( (cAliasDT6)->DES_UF ) + '</UFFim>'
-								EndIf
+							If aScan(aUF,{|x| x[1] == Iif(!Empty((cAliasDT6)->DT6_CLIREC),(cAliasDT6)->REC_UF, DUL->DUL_EST) }) != 0
+								cUfEnt := aUF[ aScan(aUF,{|x| x[1] == Iif(!Empty((cAliasDT6)->DT6_CLIREC),(cAliasDT6)->REC_UF, DUL->DUL_EST) }), 2]
+							Else
+								cUfEnt := ''
+							EndIf
+							cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cUfEnt) + Iif(!Empty((cAliasDT6)->DT6_CLIREC),AllTrim((cAliasDT6)->REC_COD_MUN), AllTrim(DUL->DUL_CODMUN))) + '</cMunFim>'
+							cString += '<xMunFim>'	+ NoAcentoCte( Iif(!Empty((cAliasDT6)->DT6_CLIREC), (cAliasDT6)->REC_MUNICI, DUL->DUL_MUN ) )  + '</xMunFim>'
+							cString += '<UFFim>'	+ NoAcentoCte( Iif(!Empty((cAliasDT6)->DT6_CLIREC), (cAliasDT6)->REC_UF , DUL->DUL_EST ) )  + '</UFFim>'
 						EndIf
 
 					ElseIf Empty(cSeqEntr) .And. !Empty((cAliasDT6)->DT6_CLIREC)
 							cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cCodUFRec) + AllTrim((cAliasDT6)->REC_COD_MUN)) + '</cMunFim>'
 							cString += '<xMunFim>'	+ NoAcentoCte( (cAliasDT6)->REC_MUNICI  )  + '</xMunFim>'
 							cString += '<UFFim>'	+ NoAcentoCte( (cAliasDT6)->REC_UF   )  + '</UFFim>'
+
 					Else
-						If cCTeUnico == '4' .AND. !Empty(cUniDes)
-							DTC->(DbSetOrder(3))	
-							SA1->(DbSetOrder(1))	
-							If DTC->(DbSeek(xFilial("DTC")+(cAliasDT6)->(DT6_FILDOC+DT6_DOC+DT6_SERIE)))
-								If SA1->(dbSeek(xFilial('SA1') + DTC->DTC_CLIDES + DTC->DTC_LOJDES))
-									If (aScan(aUF,{|x| x[1] == SA1->A1_EST }) != 0)
-										cUFDESGLOB := aUF[ aScan(aUF,{|x| x[1] == SA1->A1_EST }), 2]
-												
-										cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cUFDESGLOB ) + AllTrim(SA1->A1_COD_MUN ) ) + '</cMunFim>'
-										cString += '<xMunFim>'	+ NoAcentoCte( Alltrim(SA1->A1_MUN)) + '</xMunFim>'
-										cString += '<UFFim>'	+ NoAcentoCte( AllTrim(SA1->A1_EST)) + '</UFFim>'
-									EndIF
-								EndIf
-							EndIf
-						Else
-							cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cCodUFDes ) + AllTrim((cAliasDT6)->DES_COD_MUN ) ) + '</cMunFim>'
-							cString += '<xMunFim>'	+ NoAcentoCte( (cAliasDT6)->DES_MUNICI ) + '</xMunFim>'
-							cString += '<UFFim>'	+ NoAcentoCte( (cAliasDT6)->DES_UF ) + '</UFFim>'
-						EndIf
+						cString += '<cMunFim>'	+ NoAcentoCte( AllTrim(cCodUFDes ) + AllTrim((cAliasDT6)->DES_COD_MUN ) ) + '</cMunFim>'
+						cString += '<xMunFim>'	+ NoAcentoCte( (cAliasDT6)->DES_MUNICI ) + '</xMunFim>'
+						cString += '<UFFim>'	+ NoAcentoCte( (cAliasDT6)->DES_UF ) + '</UFFim>'
+
 					EndIf
 
 					//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -1329,12 +1292,12 @@ If cTipo == "1" //-- Saida
 					EndIf	
 					cQuery += "    AND D2.D2_CLIENTE   = '" + cClieFor + "'" + CRLF
 					cQuery += "    AND D2.D2_LOJA      = '" + cLoja    + "'" + CRLF
-					cQuery += "    AND D2.D_E_L_E_T_ = ' '" + CRLF
+					cQuery += "    AND D2.D_E_L_E_T_<>'*'" + CRLF
 					
 					//-- Cadastro de TES
 					cQuery += "    AND F4.F4_FILIAL	= '"  + xFilial('SF4') + "'" + CRLF
 					cQuery += "    AND F4.F4_CODIGO	= D2.D2_TES" + CRLF
-					cQuery += "    AND F4.D_E_L_E_T_ = ' '"
+					cQuery += "    AND F4.D_E_L_E_T_<>'*'"
 										
 					cQuery := ChangeQuery(cQuery)
 					DbUseArea(.T., "TOPCONN", TCGenQry(,,cQuery), cAliasRBC, .F., .T.)
@@ -1387,7 +1350,7 @@ If cTipo == "1" //-- Saida
 							cQuery += "    AND CD2.CD2_SERIE  = D2.D2_SERIE " + CRLF
 							cQuery += "    AND CD2.CD2_ITEM   = D2.D2_ITEM " + CRLF
 							cQuery += "    AND CD2.CD2_IMP    = '" + PadR("CMP",TamSX3("CD2_IMP")[1]) + "'" + CRLF
-							cQuery += "    AND CD2.D_E_L_E_T_=' '" + CRLF	
+							cQuery += "    AND CD2.D_E_L_E_T_<>'*'" + CRLF	
 							
 							cQuery += " GROUP BY CD2.CD2_PFCP,CD2.CD2_ALIQ,CD2.CD2_ADIF,CD2.CD2_PDDES "	+ CRLF						  
 												
@@ -1424,13 +1387,45 @@ If cTipo == "1" //-- Saida
 						//-- Observacoes Gerais
 						If !Empty(cDTCObs)
 							cString += '<xObs>' + NoAcentoCte(SubStr(cDTCObs,1,1000)) + '</xObs>'
-						EndIf						
+						EndIf								
 						//-- Observacoes Contribuintes - Uso exclusivo do emissor CT-E
+						
+						// Alterado por Paulo Amorim
+						// Data: 24/12/2020
+						// Objetivo: averbação do valor do Container
+						// Inicio da Alteração
+						nValCont := 0
+
+						dbSelectArea("DTC")
+						dbSetOrder(3)
+						If dbSeek(XFilial("DTC")+(cAliasDT6)->DT6_FILDOC+(cAliasDT6)->DT6_DOC+(cAliasDT6)->DT6_SERIE)
+							If  ALLTRIM(DTC->DTC_YTPEQP) <> ""
+								dbSelectArea("SX5")
+								SX5->(dbSetOrder(1))
+								If SX5->(dbSeek(xFilial("SX5")+"_3" + DTC->DTC_YTPEQP))
+									nValCont := VAL(SX5->X5_DESCRI)
+								EndIf
+							EndIf    
+						EndIf
+						
+						//Fim da Alteração		
+						
 						If SF2->F2_TOTIMP > 0
 							cTxtObs := 'O valor aproximado de tributos incidentes sobre o preco deste servico e de R$ ' + PADL(Transform(SF2->F2_TOTIMP,'@E 999,999.99'),20)
 							cString +=  '<ObsCont xCampo="LeidaTransparencia">'
 							cString +=    '<xTexto>'+cTxtObs+'</xTexto>'
 							cString +=  '</ObsCont>'
+							
+							// Alterado por Paulo Amorim
+							// Data: 24/12/2020
+							// Objetivo: averbação do valor do Container
+							// Inicio da Alteração
+							If nValCont > 0
+								cString += '<ObsCont xCampo="ValorContainer">'						
+								cString += '<xTexto>' + ConvType(nValCont, 15, 2) + '</xTexto>'
+								cString +=  '</ObsCont>'
+							EndIf
+							//Fim da Alteração		
 							cString += '</compl>'						
 						//-- Observacoes Contribuintes - Uso exclusivo do emissor CT-E
 						ElseIf (cAliasDT6)->DT6_VALIMP > 0
@@ -1438,8 +1433,28 @@ If cTipo == "1" //-- Saida
 							cString +=  '<ObsCont xCampo="LeidaTransparencia">'
 							cString +=    '<xTexto>'+cTxtObs+'</xTexto>'
 							cString +=  '</ObsCont>'
+							// Alterado por Paulo Amorim
+							// Data: 24/12/2020
+							// Objetivo: averbação do valor do Container
+							// Inicio da Alteração
+							If nValCont > 0
+								cString += '<ObsCont xCampo="ValorContainer">'						
+								cString += '<xTexto>' + ConvType(nValCont, 15, 2) + '</xTexto>'
+								cString +=  '</ObsCont>'
+							EndIf
+							//Fim da Alteração	
 							cString += '</compl>'
 						Else
+							// Alterado por Paulo Amorim
+							// Data: 24/12/2020
+							// Objetivo: averbação do valor do Container
+							// Inicio da Alteração
+							If nValCont > 0
+								cString += '<ObsCont xCampo="ValorContainer">'						
+								cString += '<xTexto>' + ConvType(nValCont, 15, 2) + '</xTexto>'
+								cString +=  '</ObsCont>'
+							EndIf
+							//Fim da Alteração	
 							cString += '</compl>'	
 						EndIf
 						aAdd(aXMLCTe,AllTrim(cString))
@@ -2098,7 +2113,7 @@ If cTipo == "1" //-- Saida
 					
 						(cAliasTagI)->(DbCloseArea())
 					Else
-						//-- Somente para CTE complemento ICMS / destaque de ICMS -> sem valor prestado.
+						//-- Para TES configurada gerar duplicata = N somente para CTE complemento ICMS / destaque de ICMS -> sem valor prestado.
 						cString := '<vPrest>'
 						cString += '<vTPrest>' + ConvType(0, 15, 2) + '</vTPrest>'
 						cString += '<vRec>'    + ConvType(0, 15, 2) + '</vRec>'
@@ -2458,25 +2473,20 @@ If cTipo == "1" //-- Saida
 							cString += '<docAnt>'
 							cAliasDTC   := GetNextAlias()
 							cQuery := ""	                        
-							cQuery += " SELECT DISTINCT DTC.DTC_CTEANT, SA1.A1_CGC, SA1.A1_INSCR, SA1.A1_EST, SA1.A1_CONTRIB, SA1.A1_NOME, SA1.A1_PESSOA "
-							cQuery += " FROM " + RetSqlName ("DTC")      + " DTC, " + RetSqlName ("SA1")      + " SA1 "
+							cQuery += " SELECT DISTINCT DTC.DTC_CTEANT, SA1.A1_CGC, SA1.A1_INSCR, SA1.A1_EST, SA1.A1_CONTRIB, SA1.A1_NOME, SA1.A1_PESSOA " + CRLF
+							cQuery += " FROM " + RetSqlName ("DTC")      + " DTC, " + RetSqlName ("SA1")      + " SA1 " + CRLF
 
-							cQuery += " WHERE DTC.DTC_FILIAL = '" + xFilial ("DTC")+ "' "
-							cQuery += " AND DTC.DTC_FILDOC   = '" + If( Empty( (cAliasDT6)->DT6_FILDCO), (cAliasDT6)->DT6_FILDOC,	(cAliasDT6)->DT6_FILDCO ) + "' "
-							cQuery += " AND DTC.DTC_DOC      = '" + If( Empty( (cAliasDT6)->DT6_DOCDCO), (cAliasDT6)->DT6_DOC,		(cAliasDT6)->DT6_DOCDCO ) + "' "
-							cQuery += " AND DTC.DTC_SERIE    = '" + If( Empty( (cAliasDT6)->DT6_SERDCO), (cAliasDT6)->DT6_SERIE,	(cAliasDT6)->DT6_SERDCO ) + "' "
-							cQuery += " AND DTC.D_E_L_E_T_   = ' ' "
+							cQuery += " WHERE DTC.DTC_FILIAL = '" + xFilial ("DTC")+ "' " + CRLF
+							cQuery += " AND DTC.DTC_FILDOC   = '" + IIf(empty((cAliasDT6)->DT6_FILDCO),(cAliasDT6)->DT6_FILDOC,(cAliasDT6)->DT6_FILDCO) + "' " + CRLF 
+							cQuery += " AND DTC.DTC_DOC      = '" + IIf(empty((cAliasDT6)->DT6_DOCDCO),(cAliasDT6)->DT6_DOC   ,(cAliasDT6)->DT6_DOCDCO) + "' " + CRLF 
+							cQuery += " AND DTC.DTC_SERIE    = '" + IIf(empty((cAliasDT6)->DT6_SERDCO),(cAliasDT6)->DT6_SERIE ,(cAliasDT6)->DT6_SERDCO) + "' " + CRLF 
+							cQuery += " AND DTC.D_E_L_E_T_   = ' ' " + CRLF 
 
-							cQuery += " AND SA1.A1_FILIAL    = '" + xFilial ("SA1") + "' "
-							cQuery += " AND SA1.D_E_L_E_T_   = ' '  "
-							If Empty(cCTEDocAnt)
-								cQuery += " AND SA1.A1_COD   = '" + (cAliasDT6)->DT6_CLIDEV + "' "
-								cQuery += " AND SA1.A1_LOJA  = '" + (cAliasDT6)->DT6_LOJDEV + "' "
-							Else
-								cQuery += " AND SA1.A1_CGC       = SUBSTRING(DTC_CTEANT, 7, 14) "
-							EndIf
-							cQuery += " AND SA1.A1_MSBLQL    <> '1' "
-							cQuery += " ORDER BY SA1.A1_CGC "
+							cQuery += " AND SA1.A1_FILIAL    = '" + xFilial ("SA1")+ "' " + CRLF
+							cQuery += " AND SA1.D_E_L_E_T_   = ' '  " + CRLF
+							cQuery += " AND SA1.A1_CGC       = SUBSTRING(DTC_CTEANT, 7, 14) " + CRLF
+							cQuery += " AND SA1.A1_MSBLQL    <> '1' " + CRLF
+							cQuery += " ORDER BY SA1.A1_CGC " + CRLF
 							
 							cQuery := ChangeQuery(cQuery)
 							dbUseArea( .T., "TOPCONN", TCGENQRY(, ,cQuery), cAliasDTC, .F., .T.)
@@ -2486,8 +2496,7 @@ If cTipo == "1" //-- Saida
 
 							While (cAliasDTC)->(!Eof())  
 								If (cAliasDTC)->A1_CGC <> cCGCRdp
-									cString += '<emiDocAnt>'
-									nEmiDocAnt ++
+									cString += '<emiDocAnt>'										
 									If (AllTrim((cAliasDTC)->A1_PESSOA) == "J")
 										cString += '<CNPJ>'	+ IIf((cAliasDTC)->A1_EST <> 'EX',NoAcentoCte( (cAliasDTC)->A1_CGC ),StrZero(0,14)) + '</CNPJ>'
 									Else
@@ -2502,35 +2511,39 @@ If cTipo == "1" //-- Saida
 									cString += '<xNome>' + NoAcentoCte(SubStr((cAliasDTC)->A1_NOME,1,60)) + '</xNome>'
 									
 									cString += '<idDocAnt>'
-									nIdDocAnt ++
 									cCGCRdp := (cAliasDTC)->A1_CGC
 								EndIf
 
-								/*Tipo do Documento de Transporte Anterior
-								07 - ATRE;
-								08 - DTA (Despacho de Transito Aduaneiro);
-								09 - Conhecimento Aéreo Internacional;
-								10 – Conhecimento - Carta de Porte Internacional;
-								11 – Conhecimento Avulso;
-								12 - TIF (Transporte Internacional Ferroviário); 
-								13 - BL (Bill of Lading)*/
+								//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+								//³ Tipo do Documento originário:                     ³
+								//³ 00 - CTRC                                         ³
+								//³ 01 - CTAC                                         ³
+								//³ 02 - ACT                                          ³
+								//³ 03 - NF Modelo 7                                  ³
+								//³ 04 - NF Modelo 27                                 ³
+								//³ 05 - Conhecimento Aereo Nacional                  ³
+								//³ 06 - CTMC                                         ³
+								//³ 07 - ATRE                                         ³
+								//³ 08 - DTA (Despacho de Transito Aduaneiro)         ³
+								//³ 09 - Conhecimento Aéreo Internacional             ³
+								//³ 10 - Conhecimento - Carta de Porte Internacional  ³
+								//³ 11 - Conhecimento Avulso                          ³
+								//³ 12 - TIF (Transporte Internacional Ferroviario)   ³
+								//³ 99 - Outro                                        ³
+								//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 								
 								If Empty(cCTEDocAnt)
 									cString += '<idDocAntPap>'
-									If cTpDocAnt == '1'
-										cString += '<tpDoc>07</tpDoc>'
+									If cTpDocAnt == '0'
+										cString += '<tpDoc>00</tpDoc>'
 									ElseIf cTpDocAnt == '2'
-										cString += '<tpDoc>08</tpDoc>'
+										cString += '<tpDoc>02</tpDoc>'
 									ElseIf cTpDocAnt == '3'
-										cString += '<tpDoc>09</tpDoc>'
+										cString += '<tpDoc>03</tpDoc>'
 									ElseIf cTpDocAnt == '4'
-										cString += '<tpDoc>10</tpDoc>'
+										cString += '<tpDoc>04</tpDoc>'
 									ElseIf cTpDocAnt == '5'
-										cString += '<tpDoc>11</tpDoc>'
-									ElseIf cTpDocAnt == '6'
-										cString += '<tpDoc>12</tpDoc>'
-									ElseIf cTpDocAnt == '7'
-										cString += '<tpDoc>13</tpDoc>'
+										cString += '<tpDoc>05</tpDoc>'
 									EndIf
 									
 									cString += '<serie>' + cSerDpc   + '</serie>'
@@ -2546,30 +2559,15 @@ If cTipo == "1" //-- Saida
 								(cAliasDTC)->(DbSkip())									
 								
 								If  (cAliasDTC)->A1_CGC <> cCGCRdp
-									cString += '</idDocAnt>'
-									cString += '</emiDocAnt>'
-									nFDocAnt ++
-									nFEmDcAnt ++
+									cString += '</idDocAnt>'									
+									cString += '</emiDocAnt>'	
 								EndIf
 							
 							EndDo
-
-							If nIdDocAnt > nFDocAnt
-								cString += '</idDocAnt>'
-								nIdDocAnt := 0
-								nFDocAnt := 0
-							EndIf
-
-							If nEmiDocAnt > nFEmDcAnt
-								cString += '</emiDocAnt>'
-								nEmiDocAnt := 0
-								nFEmDcAnt := 0
-							EndIf
-
 							cString += '</docAnt>'
 							(cAliasDTC)->( DbCloseArea() )	
 						
-						EndIf
+						EndIf					
 						
 						//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 						//³ TAG: M - Dados Especificos do Modal Rodoviario                  ³
@@ -2639,6 +2637,8 @@ If cTipo == "1" //-- Saida
 							cQuery += "		AND SD1.D_E_L_E_T_ = ' '" +CRLF
 							cQuery += "    	AND SF1.F1_DOC = SD1.D1_DOC  " +CRLF
 							cQuery += "		AND SF1.F1_SERIE = SD1.D1_SERIE  " +CRLF
+							cQuery += "		AND SF1.F1_NFORIG = '" + (cAliasDT6)->DT6_DOCDCO + "'" +CRLF 
+							cQuery += "		AND SF1.F1_SERORIG = '" + (cAliasDT6)->DT6_SERDCO + "'" +CRLF
 							cQuery += "		AND SF1.F1_FILIAL = '" + xFilial('SF1') + "'" +CRLF
 							cQuery += "  GROUP BY SF1.F1_CHVNFE, SF1.F1_EMISSAO, SF1.F1_SERIE, SF1.F1_DOC, SF1.F1_VALBRUT, SF1.F1_FORMUL " +CRLF
 
@@ -3279,9 +3279,8 @@ Else //-- Entrada
 					cString += '<dhEmi>'+ SubStr(DToS(SF1->F1_EMISSAO), 1, 4) + "-";
 										+ SubStr(DToS(SF1->F1_EMISSAO), 5, 2) + "-";
 										+ SubStr(DToS(SF1->F1_EMISSAO), 7, 2) + "T";
-                                        + SubStr(AllTrim(SF1->F1_HORA), 1, 2) + ":";
-					                    + SubStr(AllTrim(SF1->F1_HORA), 4, 2) + ":";
-                                        + SubStr(AllTrim(SF1->F1_HORA), 7, 2);
+										+ SubStr(AllTrim(Time()), 1, 2) + ":";
+										+ SubStr(AllTrim(Time()), 4, 2) + ':00'; 
 										+ cTimeZone + '</dhEmi>'
 
 					//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -3687,7 +3686,7 @@ Else //-- Entrada
 							cQuery += "    AND CD2.CD2_SERIE  = D2.D2_SERIE " + CRLF
 							cQuery += "    AND CD2.CD2_ITEM   = D2.D2_ITEM " + CRLF
 							cQuery += "    AND CD2.CD2_IMP    = '" + PadR("CMP",TamSX3("CD2_IMP")[1]) + "'" + CRLF
-							cQuery += "    AND CD2.D_E_L_E_T_ = ' '" + CRLF	
+							cQuery += "    AND CD2.D_E_L_E_T_<>'*'" + CRLF	
 							
 							cQuery += " GROUP BY CD2.CD2_PFCP,CD2.CD2_ALIQ,CD2.CD2_ADIF,CD2.CD2_PDDES "	+ CRLF						  
 												
@@ -3848,19 +3847,136 @@ Else //-- Entrada
 					cString += '</enderReme>'
 
 					
-				    //+----------------------------------------------------------------
-					//-- Informacoes do Expedidor da Carga
-					//+----------------------------------------------------------------
-					If lExped
-						cCliExp := (cAliasDT6)->( DT6_CLIEXP )
-						cLojExp := (cAliasDT6)->( DT6_LOJEXP )
-					EndIf
-					If lRecebedor
-						cCLiRec := (cAliasDT6)->( DT6_CLIREC )
-						cLojRec := (cAliasDT6)->( DT6_LOJREC )
-					EndIf
+					//ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+					//³ TAG: locColeta - Local de Coleta                                 ³
+					//ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+					
+					If !AllTrim(cNumSol) == ''
+		   				cAliasDT5:= GetNextAlias()
+						cQuery := " SELECT A1_COD, A1_LOJA, A1_CGC, A1_PESSOA, "
+			   			cQuery += "   DUE_CODCLI, DUE_LOJCLI, DUE_NREDUZ, DUE_END, DUE_BAIRRO, DUE_CODMUN,DUE_MUN, DUE_EST, "
+			   			cQuery += "   DUL_CODRED, DUL_LOJRED, DUL_CODCLI, DUL_LOJCLI, DUL_END, DUL_BAIRRO, DUL_CODMUN, DUL_MUN, DUL_EST "
+			   			cQuery += "	FROM " + RetSQLName("DT5") + " DT5 "
+			   			cQuery += "  JOIN " + RetSQLName("DUE") + " DUE "
+				 		cQuery += "   ON DUE_FILIAL = '" + xFilial('DUE') + "'" 
+					    cQuery += "    AND DUE_CODSOL = DT5_CODSOL "
+				 		cQuery += "    AND DUE.D_E_L_E_T_ = ' ' "
+				 		cQuery += "  JOIN " + RetSQLName("SA1") + " SA1 "
+				 		cQuery += "    ON A1_COD = DUE_CODCLI "
+				 		cQuery += "    AND  A1_LOJA = DUE_LOJCLI "
+				 		cQuery += "    AND SA1.D_E_L_E_T_ = ' ' "
+			     		cQuery += "  LEFT JOIN " + RetSqlName("DUL") + " DUL "
+				 		cQuery += "   ON DUL_FILIAL = '" + xFilial('DUL') + "'"
+						cQuery += "	   AND DUL_CODSOL = DT5_CODSOL "
+						cQuery += "	   AND DUL_SEQEND = DT5_SEQEND "
+						cQuery += "	   AND DUL.D_E_L_E_T_ = ' ' "
+						cQuery += "  WHERE DT5_FILIAL	= '" + xFilial("DT5") + "' "
+						cQuery += "    AND DT5_FILORI  = '" + cFilOri + "' "
+						cQuery += "    AND DT5_NUMSOL  = '" + cNumSol + "' "
+						cQuery += "    AND DT5.D_E_L_E_T_ = ' ' "
+						cQuery := ChangeQuery(cQuery)
+						DbUseArea(.T.,'TOPCONN',TCGENQRY(,,cQuery),cAliasDT5,.T.,.T.)
+				
+						If !(cAliasDT5)->(Eof())
+							If (!Empty(Alltrim((cAliasDT5)->DUE_CODCLI)) .And. (!Empty(AllTrim((cAliasDT5)->DUE_LOJCLI))))
+								If ((cAliasDT6)->DT6_CLIREM == (cAliasDT5)->DUE_CODCLI .And. (cAliasDT6)->DT6_LOJREM == (cAliasDT5)->DUE_LOJCLI)
+									If !(Empty(Alltrim((cAliasDT5)->DUL_CODRED)) .And. !Empty(Alltrim((cAliasDT5)->DUL_LOJRED)))
+									    
+										//Faz um select na SA1 para pegar o Redespachante / Origem da Coleta	   
+							   			cAliasCol:= GetNextAlias()									                  
+										cQuery := " SELECT DUL_CODRED, DUL_LOJRED, "
+										cQuery += "	A1_COD, A1_LOJA, A1_CGC, A1_PESSOA,A1_NOME, A1_END, A1_BAIRRO, A1_MUN, A1_EST, A1_COMPLEM," 
+										cQuery += "   A1_COD_MUN, A1_INSCR, A1_PAIS, A1_DDD, A1_TEL, A1_CEP , A1_CONTRIB "
+										cQuery += "  FROM " + RetSqlName("DUL") + " DUL, " 
+										cQuery += RetSqlName("SA1") + " SA1 "
+										cQuery += "  WHERE SA1.A1_FILIAL = '" + xFilial('SA1') + "'"
+										cQuery += "	 AND DUL.DUL_FILIAL = '" + xFilial('DUL') + "'"
+										cQuery += "	 AND A1_COD = '" + (cAliasDT5)->DUL_CODRED + "'"
+										cQuery += "     AND A1_LOJA = '" + (cAliasDT5)->DUL_LOJRED + "'"
+										cQuery += "     AND SA1.D_E_L_E_T_ = ' ' "
+										cQuery += "     AND DUL.D_E_L_E_T_ = ' ' "
+										cQuery := ChangeQuery(cQuery)
+										DbUseArea(.T.,'TOPCONN',TCGENQRY(,,cQuery),cAliasCol,.T.,.T.)
+										If !(cAliasCol)->(Eof())
+											cStringExp := ""
+											cStringExp += '<exped>'
+											// Enderenco Solicitante DUL
+											If aScan(aUF,{|x| x[1] == (cAliasCol)->(A1_EST) }) != 0   //Confere se Uf do End.Solicitante esta OK
+												cCodUFOri  := aUF[ aScan(aUF,{|x| x[1] == (cAliasCol)->(A1_EST) }), 2]
+											Else
+												cCodUFOri  := ''
+											EndIf
+											If (AllTrim((cAliasCol)->(A1_PESSOA)) == "J")
+												cStringExp += '<CNPJ>' + NoPontos((cAliasCol)->A1_CGC) + '</CNPJ>'
+											Else
+												cStringExp += '<CPF>' + AllTrim((cAliasCol)->A1_CGC) + '</CPF>'
+											EndIf
+											
+											If (cAliasCol)->A1_CONTRIB == '1'
+												If 'ISENT' $ Upper(AllTrim((cAliasCol)->A1_INSCR))
+													cStringExp += '<IE>ISENTO</IE>'
+												Else
+													cStringExp += '<IE>' + NoPontos((cAliasCol)->A1_INSCR) + '</IE>'
+												EndIf
+											Else
+												cStringExp += '<IE>' + NoPontos((cAliasCol)->A1_INSCR) + '</IE>'
+											EndIf
+			
+											If cAmbiente == '2'  //--Homologacao / Nota Técnica 2012/005 
+												cStringExp += '<xNome>' + (SubStr('CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL',1,60)) + '</xNome>'
+											Else
+												cStringExp += '<xNome>' + NoAcentoCte(SubStr((cAliasCol)->A1_NOME,1,60)) + '</xNome>'
+											EndIf
+											
+											If !Empty((cAliasCol)->A1_TEL)
+												cStringExp += '<fone>' + cValtoChar(NoPontos((cAliasCol)->A1_DDD)) +;
+												cValtoChar(NoPontos((cAliasCol)->A1_TEL)) + '</fone>'
+											EndIf
+											
+											cStringExp += '<enderExped>'
+											cStringExp += '<xLgr>' + NoAcentoCte(FisGetEnd((cAliasCol)->A1_END)[1]) + '</xLgr>'
+											cStringExp += '<nro>' + Iif(FisGetEnd((cAliasCol)->A1_END)[2] <> 0, AllTrim(cValtoChar( FisGetEnd((cAliasCol)->A1_END)[2])),"S/N") + '</nro>'
+											If !Empty(NoAcentoCte(FisGetEnd((cAliasCol)->A1_COMPLEM)[4]))
+												cStringExp += '<xCpl>' + NoAcentoCte(FisGetEnd((cAliasCol)->A1_COMPLEM)[4]) + '</xCpl>'
+											EndIf
+											If Empty(AllTrim((cAliasCol)->A1_BAIRRO))
+												cStringExp += '<xBairro>BAIRRO NAO CADASTRADO</xBairro>'
+											Else
+												cStringExp += '<xBairro>' + NoAcentoCte( (cAliasCol)->A1_BAIRRO ) + '</xBairro>'
+											EndIf
+											cStringExp += '<cMun>' + NoAcentoCte( AllTrim(cCodUFOri) + AllTrim((cAliasCol)->A1_COD_MUN) ) + '</cMun>'
+											cStringExp += '<xMun>' + NoAcentoCte( (cAliasCol)->A1_MUN ) + '</xMun>'
+											cStringExp += '<CEP>'  + NoAcentoCte( (cAliasCol)->A1_CEP ) + '</CEP>'
+											cStringExp += '<UF>'   + NoAcentoCte( (cAliasCol)->A1_EST ) + '</UF>'
+											If !Empty(AllTrim((cAliasCol)->A1_PAIS))
+												cStringExp += '<cPais>'+ NoAcentoCte( (cAliasCol)->A1_PAIS ) + '</cPais>'
+												cStringExp += '<xPais>'+ NoAcentoCte( Posicione("SYA",1,xFilial("SYA")+(cAliasCol)->A1_PAIS,"YA_DESCR") ) + '</xPais>'
+											EndIf
+											cStringExp += '</enderExped>'
+											cStringExp += '</exped>'
+											
+											(cAliasCol)->(DbCloseArea())
+										EndIF
+									EndIf
+								EndIf
+							EndIf
+						EndIf
+						(cAliasDT5)->(DbCloseArea())			
+					Else
+						//+----------------------------------------------------------------
+						//-- Informacoes do Expedidor da Carga
+						//+----------------------------------------------------------------
+						If lExped
+							cCliExp := (cAliasDT6)->( DT6_CLIEXP )
+							cLojExp := (cAliasDT6)->( DT6_LOJEXP )
+						EndIf
+						If lRecebedor
+							cCLiRec := (cAliasDT6)->( DT6_CLIREC )
+							cLojRec := (cAliasDT6)->( DT6_LOJREC )
+						EndIf
 
-					cStringExp	:= grpExpedid((cAliasDT6)->DT6_CLIREM,(cAliasDT6)->DT6_LOJREM,cCliExp,cLojExp,cFilOri,cNumSol,aUF,cAmbiente)
+						cStringExp	:= grpExpedid((cAliasDT6)->DT6_CLIREM,(cAliasDT6)->DT6_LOJREM,cCliExp,cLojExp,cFilOri,cNumSol,aUF,cAmbiente)
+					EndIf
 					
 					aAdd(aXMLCTe,AllTrim(cString))
 					cString	  := ""		
@@ -5052,7 +5168,7 @@ Return lRet
 	(examples)
 	@see (links_or_references)
 	/*/
-Static Function tagRecebe( cCodigo, cLoja, cSeqEntr, cAmbiente, lRedesp )
+Static Function tagRecebe(cCodigo,cLoja,cSeqEntr,cAmbiente,lRedesp)
 
 Local cResult   := ""
 Local cSeekSa1  := ""
@@ -5073,16 +5189,15 @@ Local cUF       := ""
 Local cCodPais  := ""
 Local cDscPais  := ""
 Local lImpRec	:= .T.
-Local lDULAchou	:= .F.
 Local lDULAtu	:= DUL->( FieldPos("DUL_RECINS") ) > 0 .AND. DUL->( FieldPos("DUL_RECPES") ) > 0 .AND. DUL->( FieldPos("DUL_RECCGC") ) > 0 .AND. DUL->( FieldPos("DUL_IMPREC") )
  
 	//+--------------------------------------------------
 	//| monta a referencia de pesquisa para o recebedor
 	//+--------------------------------------------------
-	DUL->(DbSetOrder(2)) // DUL_FILIAL, DUL_CODCLI, DUL_LOJCLI, DUL_SEQEND
+	DUL->(DbSetOrder(2))
 	SA1->(DbSetOrder(1))
 	If !Empty(cSeqEntr) .And. DUL->(MsSeek(xFilial('DUL') + cCodigo + cLoja + cSeqEntr))
-		lDULAchou := .T.
+		
 		If lDULAtu
 			lImpRec := DUL->DUL_IMPREC == '1' .OR. DUL->DUL_IMPREC == ' ' // 1 = Sim 2 = Não
 		EndIf
@@ -5124,20 +5239,13 @@ Local lDULAtu	:= DUL->( FieldPos("DUL_RECINS") ) > 0 .AND. DUL->( FieldPos("DUL_
 		SA1->(dbSeek(cSeekSA1))
 		
 		If lDULAtu .AND. !Empty(DUL->DUL_RECPES) .AND. !Empty(DUL->DUL_RECCGC) .AND. !Empty(DUL->DUL_RECINS)
-			cCnpjCpf	:= If( AllTrim(DUL->DUL_RECPES) == "2", NoPontos(DUL->DUL_RECCGC), AllTrim(DUL->DUL_RECCGC) )
-			lJuridico	:= (DUL->DUL_RECPES == "2")
-			cIE		:= If( 'ISENT' $ Upper(AllTrim(DUL->DUL_RECINS)), "ISENTO", DUL->DUL_RECINS )
+			cCnpjCpf  := If( AllTrim(DUL->DUL_RECPES) == "2", NoPontos(DUL->DUL_RECCGC), AllTrim(DUL->DUL_RECCGC) )
+			lJuridico := (DUL->DUL_RECPES == "2")
+			cIE       := If( 'ISENT' $ Upper(AllTrim(DUL->DUL_RECINS)), "ISENTO", DUL->DUL_RECINS )
 		Else
-			cCnpjCpf	:= If( AllTrim(SA1->A1_PESSOA) == "J",NoPontos(SA1->A1_CGC),AllTrim(SA1->A1_CGC))
-			lJuridico	:= (SA1->A1_PESSOA == "J")
-			
-			If DUL->(DbSeek(xFilial('DUL') + cCodigo + cLoja + cSeqEntr))
-				lDULAchou := .T.
-			Else
-				lDULAchou := .F.
-			EndIf
-
-			cIE		:= If( lDULAchou .And. 'ISENT' $ Upper(AllTrim(DUL->DUL_INSCR)), "ISENTO", SA1->A1_INSCR )
+			cCnpjCpf  := IIf( AllTrim(SA1->A1_PESSOA) == "J",NoPontos(SA1->A1_CGC),AllTrim(SA1->A1_CGC))
+			lJuridico := (SA1->A1_PESSOA == "J")
+			cIE       := IIf(DUL->(Found()) .And. 'ISENT' $ Upper(AllTrim(DUL->DUL_INSCR)),"ISENTO",SA1->A1_INSCR)
 		EndIf
 
 		cCONTRIB  := SA1->A1_CONTRIB
