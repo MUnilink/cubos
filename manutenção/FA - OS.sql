@@ -54,7 +54,10 @@ select distinct
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO * STL.TL_QUANTID
 		else
-			STL.TL_CUSTO
+			case when STJ.TJ_SERVICO = 'PNEMOV' then PNEU_CUSTO.B9_CM * STL.TL_QUANTID
+			else
+				STL.TL_CUSTO
+			end
 		end
 	end as TL_CUSTO,
 
@@ -190,16 +193,29 @@ from STJ010 STJ
 			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
 		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
-			and SB1.B1_COD = STL.TL_CODIGO/*
+			and SB1.B1_COD = STL.TL_CODIGO
 
-			left join SB2010 SB2 (nolock)
-				on SB2.D_E_L_E_T_ = ''
-				and SB2.B2_COD = SB1.B1_COD
-				and SB2.B2_LOCAL = STL.TL_LOCAL
-			left join SB9010 SB9 (nolock)
-				on SB9.D_E_L_E_T_ = ''
-				and SB9.B9_COD = SB1.B1_COD
-				and SB9.B9_LOCAL = STL.TL_LOCAL*/
+		left join
+		(
+			select
+				SB9010.B9_FILIAL,
+				SB9010.B9_DATA,
+				SB9010.B9_COD,
+				min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM
+			from SB9010
+			where
+					SB9010.D_E_L_E_T_ = ''
+				and SB9010.B9_LOCAL = '20'
+				and SB9010.B9_COD like '1130%'
+				and SB9010.B9_QINI != 0
+			group by
+				SB9010.B9_FILIAL,
+				SB9010.B9_DATA,
+				SB9010.B9_COD
+		) PNEU_CUSTO
+			on PNEU_CUSTO.B9_FILIAL = STL.TL_FILIAL
+			and substring(PNEU_CUSTO.B9_DATA, 1, 6) = substring(STL.TL_DTINICI, 1, 6)
+			and PNEU_CUSTO.B9_COD = STL.TL_CODIGO
 
 		left join
 		(
