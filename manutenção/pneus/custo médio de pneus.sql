@@ -1,0 +1,11 @@
+select
+    SB9010.B9_FILIAL,
+    SB9010.B9_LOCAL,
+    SB9010.B9_DATA,
+    SB9010.B9_COD,
+    SB9010.B9_VINI1/SB9010.B9_QINI as B9_CM
+from SB9010
+where
+        SB9010.D_E_L_E_T_ = ''
+    and SB9010.B9_COD like '1130%'
+    and SB9010.B9_QINI != 0
