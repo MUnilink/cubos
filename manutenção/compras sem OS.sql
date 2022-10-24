@@ -4,6 +4,7 @@ select
 	trim(isnull(SB1.B1_COD, '-')) as PRODUTO,
 	trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
 	trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
+	trim(isnull(SB1.B1_UM, '-')) as UN,
 
 	trim(isnull(SC1.C1_NUM, '-')) as SC,
 	trim(isnull(SC1.C1_ITEM, '-')) as ITEM_SC,
@@ -22,15 +23,15 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
-	case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,
+	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
 
-	(select top 1 SCR010.CR_DATALIB from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
+	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
 
 	SC8.C8_NUM COTACAO,
     SC8.C8_ITEM ITEM_COTA,
 	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
 
-	case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,
+	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
 
 	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
 	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
@@ -53,16 +54,16 @@ select
 		else 'OUTROS'
 	end as APROVACAO_PC,
 
-	case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,
+	/*case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,*/
 
-	(select top 1 SCR010.CR_DATALIB from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC,
+	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC,
 
 	SC7.C7_QUANT as QTD_PC_PEDIDA,
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
 	SC7.C7_PRECO,
 	SC7.C7_TOTAL,
 
-	case when year(SD1.D1_DTDIGIT) = 1900 then datediff(day, APRSC7.CR_DATALIB, getdate()) else datediff(day, APRSC7.CR_DATALIB, SD1.D1_DTDIGIT) end as DIAS_APRPC_NF,
+	/*case when year(SD1.D1_DTDIGIT) = 1900 then datediff(day, APRSC7.CR_DATALIB, getdate()) else datediff(day, APRSC7.CR_DATALIB, SD1.D1_DTDIGIT) end as DIAS_APRPC_NF,*/
 
 	trim(isnull(SD1.D1_DOC, '-')) as D1_DOC,
 	trim(isnull(SD1.D1_SERIE, '-')) as D1_SERIE,
@@ -98,13 +99,13 @@ from SC1010 SC1 (nolock)
 
 		left join SC8010 SC8 (nolock)
             on SC8.D_E_L_E_T_ = ''
+			and SC8.C8_FILIAL = SC1.C1_FILIAL
             and SC8.C8_NUMSC = SC1.C1_NUM
             and SC8.C8_ITEMSC = SC1.C1_ITEM
 				
 			left join SC7010 SC7 (nolock)
 				on SC7.D_E_L_E_T_ = ''
 				and SC7.C7_FILIAL = SC1.C1_FILIAL
-				and SC7.C7_PRODUTO = SC1.C1_PRODUTO
 				and SC7.C7_NUMSC = SC1.C1_NUM
 				and SC7.C7_ITEMSC = SC1.C1_ITEM
 				
@@ -118,10 +119,8 @@ from SC1010 SC1 (nolock)
 				left join SD1010 SD1 (nolock)
 					on SD1.D_E_L_E_T_ = ''
 					and SD1.D1_FILIAL = SC7.C7_FILIAL
-					and SD1.D1_COD = SC7.C7_PRODUTO
-					and SD1.D1_FORNECE = SC7.C7_FORNECE
-					and SD1.D1_LOJA = SC7.C7_LOJA
 					and SD1.D1_PEDIDO = SC7.C7_NUM
+					and SD1.D1_ITEMPC = SC7.C7_ITEM
 
 	left join CTT010 CTT (nolock)
 		on CTT.D_E_L_E_T_ = ''
