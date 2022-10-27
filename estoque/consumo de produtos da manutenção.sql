@@ -11,28 +11,9 @@ select
 	trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
 	trim(isnull(SB1.B1_UM, '-')) as UN,
     isnull(SB1.B1_UPRC, 0.0) as ULT_PRECO,
-    case when SB9.B9_QINI = 0 then 0.0 else SB9.B9_VINI1/SB9.B9_QINI end as B9_CM,
+    case when SB9.B9_QINI = 0 then SB9.B9_CM1 else SB9.B9_VINI1/SB9.B9_QINI end as B9_CM,
     trim(isnull(SCP.CP_NUM, '-')) as CP_NUM,
-    isnull(SCP.CP_ITEM, '-') as CP_ITEM,
-    
-    (
-        select avg(datediff(day, SC1010.C1_EMISSAO, SD1010.D1_DTDIGIT))
-        from SC1010 (nolock)                        
-            left join SC7010 (nolock)
-                on SC7010.D_E_L_E_T_ = ''
-                and SC7010.C7_FILIAL = SC1010.C1_FILIAL
-                and SC7010.C7_NUMSC = SC1010.C1_NUM
-                and SC7010.C7_ITEMSC = SC1010.C1_ITEM
-                
-                left join SD1010 (nolock)
-                    on SD1010.D_E_L_E_T_ = ''
-                    and SD1010.D1_FILIAL = SC7010.C7_FILIAL
-                    and SD1010.D1_PEDIDO = SC7010.C7_NUM
-                    and SD1010.D1_ITEMPC = SC7010.C7_ITEM
-        where
-                SC1010.D_E_L_E_T_ = ''
-            and SC1010.C1_PRODUTO = SD3.D3_COD
-    ) ATENDIMENTO
+    isnull(SCP.CP_ITEM, '-') as CP_ITEM
 
 from SD3010 SD3 (nolock)
     inner join SB1010 SB1 (nolock)
