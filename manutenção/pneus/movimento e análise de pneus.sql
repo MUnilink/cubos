@@ -22,8 +22,13 @@ select
 	ST8_MV.T8_NOME,
 
     (
-        select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-               +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+        select top 1
+            case STZ.TZ_CAUSA
+                when 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' SEM ANALISE (RODIZIO)')
+                when 8 then concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' SEM ANALISE (ESTOQUE)')
+                else    concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
+                        +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+            end
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -35,14 +40,17 @@ select
         where
                 TR4010.D_E_L_E_T_ = ''
             and TR4010.TR4_CODBEM = TQS.TQS_CODBEM
-            and STZ.TZ_CAUSA not in ('000007', '')
             and TR4010.TR4_DTANAL + TR4010.TR4_HRANAL >= STZ.TZ_DATASAI + STZ.TZ_HORASAI
         order by TR4010.TR4_DTANAL asc
     ) as ANALISE_SAI,
-
     (
-        select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-               +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+        select top 1
+            case STZ.TZ_CAUSA
+                when 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)')
+                when 8 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (ESTOQUE)')
+                else    concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
+                        +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+            end
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
