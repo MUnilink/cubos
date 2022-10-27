@@ -23,7 +23,7 @@ select
 
     (
         select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-               +' - AN. N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+               +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -42,7 +42,7 @@ select
 
     (
         select top 1 concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-               +' - AN. N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+               +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
         from TR4010 (nolock)
             inner join ST8010 (nolock)
                 on ST8010.D_E_L_E_T_ = ''
@@ -67,16 +67,6 @@ select
             and STJ010.TJ_DTMRFIM <= STZ.TZ_DATAMOV
     ) as CUSTO*/
 
-    /*, TR4.TR4_PAREC,
-    TR4.TR4_NUMANA,
-    convert(date, TR4.TR4_DTANAL, 103) as TR4_DTANAL,
-    ST8_AN.T8_NOME,
-    TR4.TR4_PRDORI,
-    TR4.TR4_LOCORI,
-    TR4.TR4_TM,
-    TR4.TR4_PRDDES,
-    TR4.TR4_LOCDES*/
-
 from TQS010 TQS (nolock)
     inner join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
@@ -92,13 +82,5 @@ from TQS010 TQS (nolock)
     inner join TQY010 TQY (nolock)
         on TQY.D_E_L_E_T_ = ''
         and TQY.TQY_STATUS = ST9.T9_STATUS
-    /*    
-    inner join TR4010 TR4 (nolock)
-        on TR4.D_E_L_E_T_ = ''
-        and TR4.TR4_CODBEM = TQS.TQS_CODBEM
-
-        inner join ST8010 ST8_AN (nolock)
-			on ST8_AN.D_E_L_E_T_ = ''
-			and ST8_AN.T8_CODOCOR = TR4.TR4_MOTIVO*/
 
 where TQS.D_E_L_E_T_ = ''
