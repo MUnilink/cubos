@@ -23,11 +23,18 @@ select
 
     (
         select top 1
-            case STZ.TZ_CAUSA
-                when 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' SEM ANALISE (RODIZIO)')
-                when 8 then concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' SEM ANALISE (ESTOQUE)')
-                else    concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-                        +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+            case when STZ.TZ_CAUSA = 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)')
+            else
+                case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO = 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                else
+                    case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO != 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AJUSTE STATUS N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                    else
+                        case when STZ.TZ_CAUSA = '' then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                        else
+                            concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' - ')
+                        end
+                    end
+                end
             end
         from TR4010 (nolock)
             inner join ST8010 (nolock)
@@ -45,11 +52,18 @@ select
     ) as ANALISE_SAI,
     (
         select top 1
-            case STZ.TZ_CAUSA
-                when 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)')
-                when 8 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (ESTOQUE)')
-                else    concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113),
-                        +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + trim(ST8010.T8_NOME) + ')')
+            case when STZ.TZ_CAUSA = 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)')
+            else
+                case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO = 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                else
+                    case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO != 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' AJUSTE STATUS N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                    else
+                        case when STZ.TZ_CAUSA = '' then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                        else
+                            concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' - ')
+                        end
+                    end
+                end
             end
         from TR4010 (nolock)
             inner join ST8010 (nolock)
