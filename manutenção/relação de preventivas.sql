@@ -8,6 +8,9 @@ select
     trim(STJ.TJ_ORDEM) as OS,
     trim(STJ.TJ_PLANO) as PLANO,
     trim(STJ.TJ_SERVICO) as SERVICO,
+    trim(STJ.TJ_TERMINO) as ENCERRADA,
+    trim(isnull(ST4.T4_NOME, '-')) as DESC_SERVICO,
+
     STJ.TJ_SEQRELA as SEQ_OS,
     case STJ.TJ_SITUACA when 'L' then 'LIBERADA' when 'P' then 'PENDENTE' else 'CANCELADA' end as STATUS_OS,
     case STJ.TJ_SITUACA when 'L' then (select top 1 STL010.TL_NUMSA from STL010 where STL010.D_E_L_E_T_ = '' and STL010.TL_ORDEM = STJ.TJ_ORDEM and STL010.TL_FILIAL = STJ.TJ_FILIAL and STL010.TL_PLANO = STJ.TJ_PLANO) when 'C' then 999999 else 0 end as SA,
@@ -34,6 +37,7 @@ select
     STF.TF_ATIVO as ATIVO,
     STG.TG_SEQRELA as TG_SEQRELA,
     trim(STG.TG_TAREFA) as TAREFA,
+    trim(isnull(TT9.TT9_DESCRI, '-')) as DESC_TAREFA,
     trim(STG.TG_TIPOREG) as TIPO_INSUMO,
     STG.TG_CODIGO as INSUMO,
 
@@ -84,13 +88,18 @@ from STJ010 STJ (nolock)
             and STG.TG_SERVICO = STF.TF_SERVICO
             and STG.TG_SEQRELA = STF.TF_SEQRELA
 
+            left join TT9010 TT9 (nolock)
+                on TT9.D_E_L_E_T_ = ''
+                and TT9.TT9_TAREFA = STG.TG_TAREFA
             left join SB1010 SB1 (nolock)
                 on SB1.D_E_L_E_T_ = ''
                 and SB1.B1_COD = STG.TG_CODIGO
-    
             left join SB2010 SB2 (nolock)
                 on SB2.D_E_L_E_T_ = ''
                 and SB2.B2_COD = STG.TG_CODIGO
                 and SB2.B2_LOCAL = STG.TG_LOCAL
-
+    
+    inner join ST4010 ST4 (nolock)
+		on ST4.D_E_L_E_T_ = ''
+		and ST4.T4_SERVICO = STJ.TJ_SERVICO
 where STJ.D_E_L_E_T_ = '' and substring(STI.TI_DATAPLA, 1, 6) > '202112'
