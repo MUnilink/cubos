@@ -16,10 +16,26 @@ select
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
+    substring(concat('01', RHK.RHK_PERINI), 1, 6) as TIT_PERIODO,
 
-    trim(SRB.RB_NOME) DEPENDENTE,
-	convert(date, SRB.RB_DTNASC, 103) as NASC_DEP,
-	trim(SRB.RB_SEXO) as SEXO_DEP
+    trim(DEP.RB_NOME) DEPENDENTE,
+	convert(date, DEP.RB_DTNASC, 103) as NASC_DEP,
+	trim(DEP.RB_SEXO) as SEXO_DEP,
+    substring(concat('01', RHL.RHL_PERINI), 1, 6) as DEP_PERIODO,
+
+    trim(AGG.RB_NOME) AGREGADO,
+	convert(date, AGG.RB_DTNASC, 103) as NASC_AGG,
+	trim(AGG.RB_SEXO) as SEXO_AGG,
+    substring(concat('01', RHM.RHM_PERINI), 1, 6) as AGG_PERIODO,
+    
+    RHR.RHR_VLRFUN as VALOR_FUNC,
+    RHR.RHR_VLREMP as VALOR_EMPR,
+    RHR.RHR_PD,
+    RHR.RHR_TPLAN as TIPO_LANCAMENTO,
+    RHR.RHR_TPPLAN as TIPO_PLANO,
+    RHR.RHR_PLANO as PLANO,
+    RHR.RHR_ORIGEM as ORIGEM,
+    RHR.RHR_CODIGO as COD_DEPAGG
 
 from RHR010 RHR (nolock)
     left join RHK010 RHK (nolock)
@@ -39,6 +55,7 @@ from RHR010 RHR (nolock)
             inner join SQB010 SQB (nolock)
                 on SQB.D_E_L_E_T_ = ''
                 and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+                and SQB.QB_DEPTO = SRA.RA_DEPTO
             inner join SRJ010 SRJ (nolock)
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
@@ -60,9 +77,25 @@ from RHR010 RHR (nolock)
         and RHL.RHL_TPFORN = RHR.RHR_TPFORN
         and RHL.RHL_CODFOR = RHR.RHR_CODFOR
 
-        left join SRB010 SRB (nolock)
-            on SRB.D_E_L_E_T_ = ''
-            and SRB.RB_FILIAL = RHL.RHL_FILIAL
-            and SRB.RB_MAT = RHL.RHL_MAT
-            and SRB.RB_COD = RHL.RHL_CODIGO
-where SRA.D_E_L_E_T_ = ''
+        left join SRB010 DEP (nolock)
+            on DEP.D_E_L_E_T_ = ''
+            and DEP.RB_FILIAL = RHL.RHL_FILIAL
+            and DEP.RB_MAT = RHL.RHL_MAT
+            and DEP.RB_COD = RHL.RHL_CODIGO
+    
+    left join RHM010 RHM (nolock)
+        on RHM.D_E_L_E_T_ = ''
+        and RHM.RHM_FILIAL = RHR.RHR_FILIAL
+        and RHM.RHM_MAT = RHR.RHR_MAT
+        and RHM.RHM_CODIGO = RHR.RHR_CODIGO
+        and RHM.RHM_TPPLAN = RHR.RHR_TPPLAN
+        and RHM.RHM_PLANO = RHR.RHR_PLANO
+        and RHM.RHM_TPFORN = RHR.RHR_TPFORN
+        and RHM.RHM_CODFOR = RHR.RHR_CODFOR
+
+        left join SRB010 AGG (nolock)
+            on AGG.D_E_L_E_T_ = ''
+            and AGG.RB_FILIAL = RHL.RHL_FILIAL
+            and AGG.RB_MAT = RHL.RHL_MAT
+            and AGG.RB_COD = RHL.RHL_CODIGO
+where RHR.D_E_L_E_T_ = ''
