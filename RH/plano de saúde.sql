@@ -22,11 +22,17 @@ select
 	convert(date, DEP.RB_DTNASC, 103) as NASC_DEP,
 	trim(DEP.RB_SEXO) as SEXO_DEP,
     substring(concat('01', RHL.RHL_PERINI), 1, 6) as DEP_PERIODO,
+    DEP.RB_TPDEP as DEP_ES,
+    DEP.RB_TIPIR as DEP_IR,
+    DEP.RB_TIPSF as DEP_SF,
 
     trim(AGG.RB_NOME) AGREGADO,
 	convert(date, AGG.RB_DTNASC, 103) as NASC_AGG,
 	trim(AGG.RB_SEXO) as SEXO_AGG,
     substring(concat('01', RHM.RHM_PERINI), 1, 6) as AGG_PERIODO,
+    AGG.RB_TPDEP as DEP_ES,
+    AGG.RB_TIPIR as DEP_IR,
+    AGG.RB_TIPSF as DEP_SF,
     
     RHR.RHR_VLRFUN as VALOR_FUNC,
     RHR.RHR_VLREMP as VALOR_EMPR,
@@ -42,8 +48,6 @@ from RHR010 RHR (nolock)
         on RHK.D_E_L_E_T_ = ''
         and RHK.RHK_FILIAL = RHR.RHR_FILIAL
         and RHK.RHK_MAT = RHR.RHR_MAT
-        and RHK.RHK_TPPLAN = RHR.RHR_TPPLAN
-        and RHK.RHK_PLANO = RHR.RHR_PLANO
         and RHK.RHK_TPFORN = RHR.RHR_TPFORN
         and RHK.RHK_CODFOR = RHR.RHR_CODFOR
 
@@ -72,8 +76,6 @@ from RHR010 RHR (nolock)
         and RHL.RHL_FILIAL = RHR.RHR_FILIAL
         and RHL.RHL_MAT = RHR.RHR_MAT
         and RHL.RHL_CODIGO = RHR.RHR_CODIGO
-        and RHL.RHL_TPPLAN = RHR.RHR_TPPLAN
-        and RHL.RHL_PLANO = RHR.RHR_PLANO
         and RHL.RHL_TPFORN = RHR.RHR_TPFORN
         and RHL.RHL_CODFOR = RHR.RHR_CODFOR
 
@@ -88,8 +90,6 @@ from RHR010 RHR (nolock)
         and RHM.RHM_FILIAL = RHR.RHR_FILIAL
         and RHM.RHM_MAT = RHR.RHR_MAT
         and RHM.RHM_CODIGO = RHR.RHR_CODIGO
-        and RHM.RHM_TPPLAN = RHR.RHR_TPPLAN
-        and RHM.RHM_PLANO = RHR.RHR_PLANO
         and RHM.RHM_TPFORN = RHR.RHR_TPFORN
         and RHM.RHM_CODFOR = RHR.RHR_CODFOR
 
