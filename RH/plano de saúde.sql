@@ -17,22 +17,46 @@ select
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
     substring(concat('01', RHK.RHK_PERINI), 1, 6) as TIT_PERIODO,
+    convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
+    datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
+
+    case when RHR.RHR_PD in (88, 565, 571) then 'HAPVIDA/UNIMED'
+    else
+        case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+        else
+            case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
+            else 'OUTROS'
+            end
+        end
+    end as TIPO_VERBA,
+
+    case RHR.RHR_ORIGEM
+        when 1 then SRA.RA_NOME
+        when 2 then DEP.RB_NOME
+        when 3 then AGG.RB_NOME
+        else 'OUTROS'
+    end as USUARIO,
+
+    case when RHR.RHR_CODIGO is null then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
+    case when RHR.RHR_CODIGO is not null then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
     trim(DEP.RB_NOME) DEPENDENTE,
-	convert(date, DEP.RB_DTNASC, 103) as NASC_DEP,
-	trim(DEP.RB_SEXO) as SEXO_DEP,
+	convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
+	trim(DEP.RB_SEXO) as DEP_SEXO,
     substring(concat('01', RHL.RHL_PERINI), 1, 6) as DEP_PERIODO,
+    datediff(year, DEP.RB_DTNASC, RHR.RHR_DATA) as DEP_IDADE,
     DEP.RB_TPDEP as DEP_ES,
     DEP.RB_TIPIR as DEP_IR,
     DEP.RB_TIPSF as DEP_SF,
 
     trim(AGG.RB_NOME) AGREGADO,
-	convert(date, AGG.RB_DTNASC, 103) as NASC_AGG,
-	trim(AGG.RB_SEXO) as SEXO_AGG,
+	convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
+	trim(AGG.RB_SEXO) as AGG_SEXO,
     substring(concat('01', RHM.RHM_PERINI), 1, 6) as AGG_PERIODO,
-    AGG.RB_TPDEP as DEP_ES,
-    AGG.RB_TIPIR as DEP_IR,
-    AGG.RB_TIPSF as DEP_SF,
+    datediff(year, AGG.RB_DTNASC, RHR.RHR_DATA) as AGG_IDADE,
+    AGG.RB_TPDEP as AGG_ES,
+    AGG.RB_TIPIR as AGG_IR,
+    AGG.RB_TIPSF as AGG_SF,
     
     RHR.RHR_VLRFUN as VALOR_FUNC,
     RHR.RHR_VLREMP as VALOR_EMPR,
@@ -95,7 +119,7 @@ from RHR010 RHR (nolock)
 
         left join SRB010 AGG (nolock)
             on AGG.D_E_L_E_T_ = ''
-            and AGG.RB_FILIAL = RHL.RHL_FILIAL
-            and AGG.RB_MAT = RHL.RHL_MAT
-            and AGG.RB_COD = RHL.RHL_CODIGO
+            and AGG.RB_FILIAL = RHM.RHM_FILIAL
+            and AGG.RB_MAT = RHM.RHM_MAT
+            and AGG.RB_COD = RHM.RHM_CODIGO
 where RHR.D_E_L_E_T_ = ''
