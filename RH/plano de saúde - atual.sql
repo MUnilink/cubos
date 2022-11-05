@@ -44,6 +44,20 @@ select
         else 'OUTROS'
     end as TIPO_USUARIO,
 
+    case RHR.RHR_ORIGEM
+        when 1 then trim(SRA.RA_SEXO)
+        when 2 then trim(DEP.RB_SEXO)
+        when 3 then trim(AGG.RB_SEXO)
+        else 'OUTROS'
+    end as SEXO_USUARIO,
+
+    case RHR.RHR_ORIGEM
+        when 1 then datediff(year, SRA.RA_NASC, RHR.RHR_DATA)
+        when 2 then datediff(year, DEP.RB_DTNASC, RHR.RHR_DATA)
+        when 3 then datediff(year, AGG.RB_DTNASC, RHR.RHR_DATA)
+        else null
+    end as IDADE_USUARIO,
+
     case when RHR.RHR_ORIGEM = 1 and RHR.RHR_CODIGO is null then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
     case when RHR.RHR_ORIGEM != 1 and RHR.RHR_CODIGO is not null then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
 

@@ -16,42 +16,56 @@ select
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
-    substring(concat('01', RHK.RHK_PERINI), 1, 6) as TIT_PERIODO,
     convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
-    datediff(year, SRA.RA_NASC, RHS.RHR_DATA) as IDADE,
+    datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
-    case when RHS.RHR_PD in (88, 565, 571) then 'HAPVIDA/UNIMED'
+    substring(RHS.RHS_DATA, 1, 6) as PERIODO,
+
+    case when RHS.RHS_PD in (88, 565, 571) then 'HAPVIDA/UNIMED'
     else
-        case when RHS.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+        case when RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
         else
-            case when RHS.RHR_PD in (624, 625) then 'COPARTICIPACAO'
+            case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
             else 'OUTROS'
             end
         end
     end as TIPO_VERBA,
 
-    case RHS.RHR_ORIGEM
+    case RHS.RHS_ORIGEM
         when 1 then SRA.RA_NOME
         when 2 then DEP.RB_NOME
         when 3 then AGG.RB_NOME
         else 'OUTROS'
     end as USUARIO,
 
-    case RHS.RHR_ORIGEM
+    case RHS.RHS_ORIGEM
         when 1 then 'TITULAR'
         when 2 then 'DEPENDENTE'
         when 3 then 'AGREGADO'
         else 'OUTROS'
     end as TIPO_USUARIO,
 
-    case when RHS.RHR_ORIGEM = 1 and RHS.RHR_CODIGO is null then RHS.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
-    case when RHS.RHR_ORIGEM != 1 and RHS.RHR_CODIGO is not null then RHS.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
+    case RHS.RHS_ORIGEM
+        when 1 then trim(SRA.RA_SEXO)
+        when 2 then trim(DEP.RB_SEXO)
+        when 3 then trim(AGG.RB_SEXO)
+        else 'OUTROS'
+    end as SEXO_USUARIO,
+
+    case RHS.RHS_ORIGEM
+        when 1 then datediff(year, SRA.RA_NASC, RHS.RHS_DATA)
+        when 2 then datediff(year, DEP.RB_DTNASC, RHS.RHS_DATA)
+        when 3 then datediff(year, AGG.RB_DTNASC, RHS.RHS_DATA)
+        else null
+    end as IDADE_USUARIO,
+
+    case when RHS.RHS_ORIGEM = 1 and RHS.RHS_CODIGO is null then RHS.RHS_VLRFUN else 0.0 end as VALOR_FUNC,
+    case when RHS.RHS_ORIGEM != 1 and RHS.RHS_CODIGO is not null then RHS.RHS_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
     trim(DEP.RB_NOME) DEPENDENTE,
 	convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
 	trim(DEP.RB_SEXO) as DEP_SEXO,
-    substring(concat('01', RHL.RHL_PERINI), 1, 6) as DEP_PERIODO,
-    datediff(year, DEP.RB_DTNASC, RHS.RHR_DATA) as DEP_IDADE,
+    datediff(year, DEP.RB_DTNASC, RHS.RHS_DATA) as DEP_IDADE,
     DEP.RB_TPDEP as DEP_ES,
     DEP.RB_TIPIR as DEP_IR,
     DEP.RB_TIPSF as DEP_SF,
@@ -59,33 +73,32 @@ select
     trim(AGG.RB_NOME) AGREGADO,
 	convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
 	trim(AGG.RB_SEXO) as AGG_SEXO,
-    substring(concat('01', RHM.RHM_PERINI), 1, 6) as AGG_PERIODO,
-    datediff(year, AGG.RB_DTNASC, RHS.RHR_DATA) as AGG_IDADE,
+    datediff(year, AGG.RB_DTNASC, RHS.RHS_DATA) as AGG_IDADE,
     AGG.RB_TPDEP as AGG_ES,
     AGG.RB_TIPIR as AGG_IR,
     AGG.RB_TIPSF as AGG_SF,
     
-    RHS.RHR_VLRFUN,
-    RHS.RHR_VLREMP,
-    RHS.RHR_PD,
-    RHS.RHR_TPLAN as TIPO_LANCAMENTO,
-    RHS.RHR_TPPLAN as TIPO_PLANO,
-    RHS.RHR_PLANO as PLANO,
-    RHS.RHR_ORIGEM as ORIGEM,
-    RHS.RHR_CODIGO as COD_DEPAGG
+    RHS.RHS_VLRFUN,
+    RHS.RHS_VLREMP,
+    RHS.RHS_PD,
+    RHS.RHS_TPLAN as TIPO_LANCAMENTO,
+    RHS.RHS_TPPLAN as TIPO_PLANO,
+    RHS.RHS_PLANO as PLANO,
+    RHS.RHS_ORIGEM as ORIGEM,
+    RHS.RHS_CODIGO as COD_DEPAGG
 
-from RHR010 RHS (nolock)
+from RHS010 RHS (nolock)
     left join RHK010 RHK (nolock)
         on RHK.D_E_L_E_T_ = ''
-        and RHK.RHK_FILIAL = RHS.RHR_FILIAL
-        and RHK.RHK_MAT = RHS.RHR_MAT
-        and RHK.RHK_TPFORN = RHS.RHR_TPFORN
-        and RHK.RHK_CODFOR = RHS.RHR_CODFOR
+        and RHK.RHK_FILIAL = RHS.RHS_FILIAL
+        and RHK.RHK_MAT = RHS.RHS_MAT
+        and RHK.RHK_TPFORN = RHS.RHS_TPFORN
+        and RHK.RHK_CODFOR = RHS.RHS_CODFOR
 
         left join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
-            and SRA.RA_FILIAL = RHS.RHR_FILIAL
-            and SRA.RA_MAT = RHS.RHR_MAT
+            and SRA.RA_FILIAL = RHS.RHS_FILIAL
+            and SRA.RA_MAT = RHS.RHS_MAT
 
             inner join SQB010 SQB (nolock)
                 on SQB.D_E_L_E_T_ = ''
@@ -104,11 +117,11 @@ from RHR010 RHS (nolock)
 
     left join RHL010 RHL (nolock)
         on RHL.D_E_L_E_T_ = ''
-        and RHL.RHL_FILIAL = RHS.RHR_FILIAL
-        and RHL.RHL_MAT = RHS.RHR_MAT
-        and RHL.RHL_CODIGO = RHS.RHR_CODIGO
-        and RHL.RHL_TPFORN = RHS.RHR_TPFORN
-        and RHL.RHL_CODFOR = RHS.RHR_CODFOR
+        and RHL.RHL_FILIAL = RHS.RHS_FILIAL
+        and RHL.RHL_MAT = RHS.RHS_MAT
+        and RHL.RHL_CODIGO = RHS.RHS_CODIGO
+        and RHL.RHL_TPFORN = RHS.RHS_TPFORN
+        and RHL.RHL_CODFOR = RHS.RHS_CODFOR
 
         left join SRB010 DEP (nolock)
             on DEP.D_E_L_E_T_ = ''
@@ -118,15 +131,17 @@ from RHR010 RHS (nolock)
     
     left join RHM010 RHM (nolock)
         on RHM.D_E_L_E_T_ = ''
-        and RHM.RHM_FILIAL = RHS.RHR_FILIAL
-        and RHM.RHM_MAT = RHS.RHR_MAT
-        and RHM.RHM_CODIGO = RHS.RHR_CODIGO
-        and RHM.RHM_TPFORN = RHS.RHR_TPFORN
-        and RHM.RHM_CODFOR = RHS.RHR_CODFOR
+        and RHM.RHM_FILIAL = RHS.RHS_FILIAL
+        and RHM.RHM_MAT = RHS.RHS_MAT
+        and RHM.RHM_CODIGO = RHS.RHS_CODIGO
+        and RHM.RHM_TPFORN = RHS.RHS_TPFORN
+        and RHM.RHM_CODFOR = RHS.RHS_CODFOR
 
         left join SRB010 AGG (nolock)
             on AGG.D_E_L_E_T_ = ''
             and AGG.RB_FILIAL = RHM.RHM_FILIAL
             and AGG.RB_MAT = RHM.RHM_MAT
             and AGG.RB_COD = RHM.RHM_CODIGO
-where RHS.D_E_L_E_T_ = ''
+where
+        RHS.D_E_L_E_T_ = ''
+    and year(RHS.RHS_DATA) > 2021
