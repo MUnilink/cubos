@@ -37,8 +37,15 @@ select
         else 'OUTROS'
     end as USUARIO,
 
-    case when RHR.RHR_CODIGO is null then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
-    case when RHR.RHR_CODIGO is not null then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
+    case RHR.RHR_ORIGEM
+        when 1 then 'TITULAR'
+        when 2 then 'DEPENDENTE'
+        when 3 then 'AGREGADO'
+        else 'OUTROS'
+    end as TIPO_USUARIO,
+
+    case when RHR.RHR_ORIGEM = 1 and RHR.RHR_CODIGO is null then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
+    case when RHR.RHR_ORIGEM != 1 and RHR.RHR_CODIGO is not null then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
     trim(DEP.RB_NOME) DEPENDENTE,
 	convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
@@ -58,8 +65,8 @@ select
     AGG.RB_TIPIR as AGG_IR,
     AGG.RB_TIPSF as AGG_SF,
     
-    RHR.RHR_VLRFUN as VALOR_FUNC,
-    RHR.RHR_VLREMP as VALOR_EMPR,
+    RHR.RHR_VLRFUN,
+    RHR.RHR_VLREMP,
     RHR.RHR_PD,
     RHR.RHR_TPLAN as TIPO_LANCAMENTO,
     RHR.RHR_TPPLAN as TIPO_PLANO,
