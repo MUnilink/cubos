@@ -60,16 +60,7 @@ select
     case SB1.B1_MSBLQL when 1 then 'SIM' else 'NAO' end as BLOQUEADO,
     STG.TG_QUANTID as QTD,
     STG.TG_UNIDADE as UN,
-    STG.TG_LOCAL as ARMAZEM,
-
-    SB2.B2_FILIAL,
-    SB2.B2_LOCAL,
-    SB2.B2_COD,
-    SB2.B2_QFIM,
-    SB2.B2_QATU,
-    SB2.B2_VFIM1,
-    SB2.B2_VATU1,
-    SB2.B2_CM1
+    STG.TG_LOCAL as ARMAZEM
 
 from STJ010 STJ (nolock)
     inner join STI010 STI (nolock)
@@ -94,10 +85,6 @@ from STJ010 STJ (nolock)
             left join SB1010 SB1 (nolock)
                 on SB1.D_E_L_E_T_ = ''
                 and SB1.B1_COD = STG.TG_CODIGO
-            left join SB2010 SB2 (nolock)
-                on SB2.D_E_L_E_T_ = ''
-                and SB2.B2_COD = STG.TG_CODIGO
-                and SB2.B2_LOCAL = STG.TG_LOCAL
     
     inner join ST4010 ST4 (nolock)
 		on ST4.D_E_L_E_T_ = ''
