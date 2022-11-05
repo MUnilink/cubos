@@ -59,8 +59,8 @@ select
         else null
     end as IDADE_USUARIO,
 
-    case when RHS.RHS_ORIGEM = 1 and RHS.RHS_CODIGO is null then RHS.RHS_VLRFUN else 0.0 end as VALOR_FUNC,
-    case when RHS.RHS_ORIGEM != 1 and RHS.RHS_CODIGO is not null then RHS.RHS_VLRFUN else 0.0 end as VALOR_DEPAGG,
+    case when RHS.RHS_ORIGEM = 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_FUNC,
+    case when RHS.RHS_ORIGEM != 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
     trim(DEP.RB_NOME) DEPENDENTE,
 	convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,

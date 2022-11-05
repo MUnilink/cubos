@@ -16,9 +16,9 @@ select
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
-    substring(concat('01', RHK.RHK_PERINI), 1, 6) as TIT_PERIODO,
     convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
     datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
+    substring(RHR.RHR_DATA, 1, 6) as PERIODO,
 
     case when RHR.RHR_PD in (88, 565, 571) then 'HAPVIDA/UNIMED'
     else
@@ -58,13 +58,12 @@ select
         else null
     end as IDADE_USUARIO,
 
-    case when RHR.RHR_ORIGEM = 1 and RHR.RHR_CODIGO is null then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
-    case when RHR.RHR_ORIGEM != 1 and RHR.RHR_CODIGO is not null then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
+    case when RHR.RHR_ORIGEM = 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
+    case when RHR.RHR_ORIGEM != 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
     trim(DEP.RB_NOME) DEPENDENTE,
 	convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
 	trim(DEP.RB_SEXO) as DEP_SEXO,
-    substring(concat('01', RHL.RHL_PERINI), 1, 6) as DEP_PERIODO,
     datediff(year, DEP.RB_DTNASC, RHR.RHR_DATA) as DEP_IDADE,
     DEP.RB_TPDEP as DEP_ES,
     DEP.RB_TIPIR as DEP_IR,
@@ -73,7 +72,6 @@ select
     trim(AGG.RB_NOME) AGREGADO,
 	convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
 	trim(AGG.RB_SEXO) as AGG_SEXO,
-    substring(concat('01', RHM.RHM_PERINI), 1, 6) as AGG_PERIODO,
     datediff(year, AGG.RB_DTNASC, RHR.RHR_DATA) as AGG_IDADE,
     AGG.RB_TPDEP as AGG_ES,
     AGG.RB_TIPIR as AGG_IR,
