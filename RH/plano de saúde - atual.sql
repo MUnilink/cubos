@@ -18,6 +18,7 @@ select
 	trim(SRA.RA_CIC) as CPF,
     convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
     datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
+    
     substring(RHR.RHR_DATA, 1, 6) as PERIODO,
 
     case when RHR.RHR_PD in (88, 565, 571) then 'HAPVIDA/UNIMED'
@@ -141,4 +142,5 @@ from RHR010 RHR (nolock)
             and AGG.RB_FILIAL = RHM.RHM_FILIAL
             and AGG.RB_MAT = RHM.RHM_MAT
             and AGG.RB_COD = RHM.RHM_CODIGO
-where RHR.D_E_L_E_T_ = ''
+where
+    and RHR.D_E_L_E_T_ = ''
