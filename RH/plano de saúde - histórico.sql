@@ -35,7 +35,7 @@ select
         when 1 then SRA.RA_NOME
         when 2 then DEP.RB_NOME
         when 3 then AGG.RB_NOME
-        else 'OUTROS'
+        else null
     end as USUARIO,
 
     case RHS.RHS_ORIGEM
