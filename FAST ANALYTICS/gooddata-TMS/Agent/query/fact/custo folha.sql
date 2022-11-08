@@ -12,7 +12,8 @@ select
 	trim(SRJ.RJ_DESC) as FUNCAO,
     sum(VERBAS.VALOR) as VALOR,
 
-    VIAGEM.DTQ_VIAGEM
+    VIAGEM.DTQ_VIAGEM,
+    VIAGEM.
 
 from SRA010 SRA (nolock)
     inner join SRJ010 SRJ (nolock)
@@ -78,6 +79,28 @@ from SRA010 SRA (nolock)
             select
                 DTQ.DTQ_FILORI,
                 DTQ.DTQ_VIAGEM,
+                'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
+                'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
+                'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,
+                'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,
+                'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,
+                'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,
+                'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB.DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB.DDB_CODNEG, ' ')), ' '), '|') AS BK_NEGOCIACAO,
+                'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,
+                'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6.DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,
+                
+                CASE WHEN DT6.DT6_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILIAL AS CHAR (8)) END AS BK_FILIAL,
+                CASE WHEN DT6.DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
+                CASE WHEN DT6.DT6_FILDES IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDES AS CHAR (8)) END AS BK_FILIAL_DESTINO,
+                CASE WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_REM,
+                CASE WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DES,
+                CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
+                
+                CASE WHEN DT6.DT6_FILDO IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
+                DT6.DT6_FILDOC,
+                DT6.DT6_DOC,
+                DT6.DT6_SERIE,
+                
                 (
                     select substring(DTW010.DTW_DATREA, 1, 6)
                     from DTW010 (nolock)
@@ -88,7 +111,55 @@ from SRA010 SRA (nolock)
                         and DTW010.DTW_ATIVID = '050'
                         and DTW010.DTW_DATREA > '20211231'
                 ) as PERIODO
+
             from DTQ010 DTQ (nolock)
+                inner join DUD010 DUD (nolock)
+                    and DUD.DUD_FILIAL = DTQ.DTQ_FILIAL
+                    and DUD.DUD_FILORI = DTQ.DTQ_FILORI
+                    and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+
+                    left join DT6010 DT6 (nolock)
+                        on DT6.D_E_L_E_T_ = ''
+                        and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+                        and DT6.DT6_DOC = DUD.DUD_DOC
+                        and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+                        left join SA1010 REM
+                            on REM.A1_FILIAL = '      '
+                            and REM.A1_COD = DT6.DT6_CLIREM
+                            and REM.A1_LOJA = DT6.DT6_LOJREM
+                            and REM.D_E_L_E_T_ = ' '
+                        left join SA1010 DES
+                            on DES.A1_FILIAL = '      '
+                            and DES.A1_COD = DT6.DT6_CLIDES
+                            and DES.A1_LOJA = DT6.DT6_LOJDES
+                            and DES.D_E_L_E_T_ = ' '
+                        left join SA1010 DEV
+                            on DEV.A1_FILIAL = '      '
+                            and DEV.A1_COD = DT6.DT6_CLIDEV
+                            and DEV.A1_LOJA = DT6.DT6_LOJDEV
+                            and DEV.D_E_L_E_T_ = ' '
+                        left join DUY010 DUYORI
+                            on DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
+                            and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+                            and DUYORI.D_E_L_E_T_ = ' '
+                        left join DUY010 DUYDES
+                            on DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
+                            and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+                            and DUYDES.D_E_L_E_T_ = ' '
+                        left join DUY010 DUYDEV
+                            on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
+                            and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+                            and DUYDEV.D_E_L_E_T_ = ' '
+                        left join DDB010 DDB
+                            on DDB.DDB_FILIAL = DT6.DT6_FILIAL
+                            and DDB.DDB_CODNEG = DT6.DT6_CODNEG
+                            and DDB.D_E_L_E_T_ = ' '
+                        inner join SX5010 SX5
+                            on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
+                            and SX5.X5_TABELA = 'L4'
+                            and SX5.X5_CHAVE = DT6.DT6_SERVIC
+                            and SX5.D_E_L_E_T_ = ' '
             where
                     DTQ.D_E_L_E_T_ = ''
                 and cast(DTQ.DTQ_STATUS as int) = 3

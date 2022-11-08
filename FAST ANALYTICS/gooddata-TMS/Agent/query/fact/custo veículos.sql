@@ -13,7 +13,7 @@ select
     DT6.DT6_CDRCAL,
 
     (
-        select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -30,7 +30,7 @@ select
             and DTW010.DTW_ATIVID in ('050')
     ) as km_fim,
     (
-        select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -73,10 +73,6 @@ select
     VIAGEM.HORAFIM,
     VIAGEM.COMPETENCIA,
     VIAGEM.DTQ_STATUS,
-
-    DIARIAS.DYV_IDCDIA,
-    DIARIAS.DYX_DATDIA,
-    DIARIAS.DYX_VLRUNI,
 
     MANUTENCAO.TJ_CODBEM,
     MANUTENCAO.TJ_ORDEM,
