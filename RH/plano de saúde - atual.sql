@@ -21,12 +21,15 @@ select
     
     substring(RHR.RHR_DATA, 1, 6) as PERIODO,
 
-    case when RHR.RHR_PD in (88, 565, 571) then 'HAPVIDA/UNIMED'
+    case when RHR.RHR_PD in (87, 565, 571) then 'HAPVIDA'
     else
-        case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+        case when RHR.RHR_PD in (88) then 'UNIMED'
         else
-            case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
-            else 'OUTROS'
+            case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+            else
+                case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
+                else 'OUTROS'
+                end
             end
         end
     end as TIPO_VERBA,
@@ -142,5 +145,4 @@ from RHR010 RHR (nolock)
             and AGG.RB_FILIAL = RHM.RHM_FILIAL
             and AGG.RB_MAT = RHM.RHM_MAT
             and AGG.RB_COD = RHM.RHM_CODIGO
-where
-    and RHR.D_E_L_E_T_ = ''
+where RHR.D_E_L_E_T_ = ''
