@@ -17,7 +17,7 @@
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
         convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
-        datediff(year, SRA.RA_NASC, RHP.RHP_DATA) as IDADE,
+        datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR) as IDADE,
 
         substring(RHP.RHP_DTOCOR, 1, 6) as PERIODO,
 
@@ -56,9 +56,9 @@
         end as SEXO_USUARIO,
 
         case RHP.RHP_ORIGEM
-            when 1 then datediff(year, SRA.RA_NASC, RHP.RHP_DATA)
-            when 2 then datediff(year, DEP.RB_DTNASC, RHP.RHP_DATA)
-            when 3 then datediff(year, AGG.RB_DTNASC, RHP.RHP_DATA)
+            when 1 then datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR)
+            when 2 then datediff(year, DEP.RB_DTNASC, RHP.RHP_DTOCOR)
+            when 3 then datediff(year, AGG.RB_DTNASC, RHP.RHP_DTOCOR)
             else null
         end as IDADE_USUARIO,
 
@@ -68,7 +68,7 @@
         trim(DEP.RB_NOME) DEPENDENTE,
         convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
         trim(DEP.RB_SEXO) as DEP_SEXO,
-        datediff(year, DEP.RB_DTNASC, RHP.RHP_DATA) as DEP_IDADE,
+        datediff(year, DEP.RB_DTNASC, RHP.RHP_DTOCOR) as DEP_IDADE,
         DEP.RB_TPDEP as DEP_ES,
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
@@ -76,7 +76,7 @@
         trim(AGG.RB_NOME) AGREGADO,
         convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
         trim(AGG.RB_SEXO) as AGG_SEXO,
-        datediff(year, AGG.RB_DTNASC, RHP.RHP_DATA) as AGG_IDADE,
+        datediff(year, AGG.RB_DTNASC, RHP.RHP_DTOCOR) as AGG_IDADE,
         AGG.RB_TPDEP as AGG_ES,
         AGG.RB_TIPIR as AGG_IR,
         AGG.RB_TIPSF as AGG_SF,
@@ -85,8 +85,6 @@
         RHP.RHP_VLREMP,
         RHP.RHP_PD,
         RHP.RHP_TPLAN as TIPO_LANCAMENTO,
-        RHP.RHP_TPPLAN as TIPO_PLANO,
-        RHP.RHP_PLANO as PLANO,
         RHP.RHP_ORIGEM as ORIGEM,
         RHP.RHP_CODIGO as COD_DEPAGG
 
@@ -147,7 +145,7 @@
                 and AGG.RB_COD = RHM.RHM_CODIGO
     where
             RHP.D_E_L_E_T_ = ''
-        and year(RHP.RHP_DATA) > 2021
+        and year(RHP.RHP_DTOCOR) > 2021
 union
     select
         trim(SRA.RA_FILIAL) as FILIAL,
@@ -170,7 +168,7 @@ union
         convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
         datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR) as IDADE,
 
-        substring(RHO.RHO_COMPPG, 1, 6) as PERIODO,
+        substring(RHO.RHO_DTOCOR, 1, 6) as PERIODO,
 
         case when RHO.RHO_PD in (87, 565, 571) then 'HAPVIDA'
         else
@@ -236,8 +234,6 @@ union
         RHO.RHO_VLREMP,
         RHO.RHO_PD,
         RHO.RHO_TPLAN as TIPO_LANCAMENTO,
-        RHO.RHO_TPPLAN as TIPO_PLANO,
-        RHO.RHO_PLANO as PLANO,
         RHO.RHO_ORIGEM as ORIGEM,
         RHO.RHO_CODIGO as COD_DEPAGG
 
