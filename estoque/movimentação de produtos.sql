@@ -1,6 +1,4 @@
 select
-    SB1.B1_COD,
-    SB1.B1_DESC,
     trim(isnull(SB1.B1_COD, '-')) as PRODUTO,
 	trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
 	trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
@@ -12,8 +10,13 @@ select
     SD3.D3_TM,
     SD3.D3_CF,
     SD3.D3_DOC
-from SD3010 SD3 (nolock)
-    right join SB1010 SB1 (nolock)
-        on SB1.D_E_L_E_T_ = ''
-        and SB1.B1_COD = SD3.D3_COD
-where SD3.D_E_L_E_T_ = ''
+
+from SB1010 SB1 (nolock)
+    left join SD3010 SD3 (nolock)
+        on SD3.D_E_L_E_T_ = ''
+        and SD3.D3_COD = SB1.B1_COD
+        and SD3.D3_TM in (501, 544)
+where
+        SB1.D_E_L_E_T_ = ''
+    and SB1.B1_GRUPO like '1%'
+    and SB1.B1_MSBLQL = 2
