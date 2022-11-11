@@ -4,6 +4,7 @@
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
         trim(CTT.CTT_CUSTO) as CC,
@@ -33,6 +34,8 @@
                 end
             end
         end as TIPO_VERBA,
+
+        trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHP.RHP_ORIGEM
             when 1 then SRA.RA_NOME
@@ -91,6 +94,9 @@
         RHP.RHP_CODIGO as COD_DEPAGG
 
     from RHP010 RHP (nolock)
+        inner join SRV010 SRV (nolock)
+            on SRV.D_E_L_E_T_ = ''
+            and SRV.RV_COD = RHP.RHP_PD
         left join RHK010 RHK (nolock)
             on RHK.D_E_L_E_T_ = ''
             and RHK.RHK_FILIAL = RHP.RHP_FILIAL
@@ -155,6 +161,7 @@ union
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
         trim(CTT.CTT_CUSTO) as CC,
@@ -184,6 +191,8 @@ union
                 end
             end
         end as TIPO_VERBA,
+
+        trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHO.RHO_ORIGEM
             when 1 then SRA.RA_NOME
@@ -242,6 +251,9 @@ union
         RHO.RHO_CODIGO as COD_DEPAGG
 
     from RHO010 RHO (nolock)
+        inner join SRV010 SRV (nolock)
+            on SRV.D_E_L_E_T_ = ''
+            and SRV.RV_COD = RHO.RHO_PD
         left join RHK010 RHK (nolock)
             on RHK.D_E_L_E_T_ = ''
             and RHK.RHK_FILIAL = RHO.RHO_FILIAL
@@ -305,6 +317,7 @@ union
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
         trim(CTT.CTT_CUSTO) as CC,
@@ -334,6 +347,8 @@ union
                 end
             end
         end as TIPO_VERBA,
+
+        trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHR.RHR_ORIGEM
             when 1 then SRA.RA_NOME
@@ -392,6 +407,9 @@ union
         RHR.RHR_CODIGO as COD_DEPAGG
 
     from RHR010 RHR (nolock)
+        inner join SRV010 SRV (nolock)
+            on SRV.D_E_L_E_T_ = ''
+            and SRV.RV_COD = RHR.RHR_PD
         left join RHK010 RHK (nolock)
             on RHK.D_E_L_E_T_ = ''
             and RHK.RHK_FILIAL = RHR.RHR_FILIAL
@@ -454,6 +472,7 @@ union
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
         trim(CTT.CTT_CUSTO) as CC,
@@ -483,6 +502,8 @@ union
                 end
             end
         end as TIPO_VERBA,
+
+        trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHS.RHS_ORIGEM
             when 1 then SRA.RA_NOME
@@ -541,6 +562,9 @@ union
         RHS.RHS_CODIGO as COD_DEPAGG
 
     from RHS010 RHS (nolock)
+        inner join SRV010 SRV (nolock)
+            on SRV.D_E_L_E_T_ = ''
+            and SRV.RV_COD = RHS.RHS_PD
         left join RHK010 RHK (nolock)
             on RHK.D_E_L_E_T_ = ''
             and RHK.RHK_FILIAL = RHS.RHS_FILIAL
