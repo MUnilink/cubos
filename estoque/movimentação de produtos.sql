@@ -9,7 +9,9 @@ select
     SD3.D3_FILIAL,
     SD3.D3_TM,
     SD3.D3_CF,
-    SD3.D3_DOC
+    SD3.D3_DOC,
+
+    (select max(convert(date, SD1010.D1_DTDIGIT, 103)) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = SB1.B1_COD) as ULT_COMPRA
 
 from SB1010 SB1 (nolock)
     left join SD3010 SD3 (nolock)
