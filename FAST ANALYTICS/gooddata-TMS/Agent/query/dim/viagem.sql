@@ -1,5 +1,5 @@
 select
-    DTQ.DTQ_FILORI + DTQ.DTQ_VIAGEM as ID_VIAGEM,
+    trim(DTQ.DTQ_FILORI) + trim(DTQ.DTQ_VIAGEM) as ID_VIAGEM,
     (
         select substring(DTW010.DTW_DATREA, 1, 6)
         from DTW010 (nolock)
@@ -19,7 +19,9 @@ select
         when '5' then 'FECHADA'
         when '9' then 'CANCELADA'
         else 'OUTROS'
-    end as DTQ_STATUS
+    end as DTQ_STATUS,
+
+    <<CODE_INSTANCE>> AS INSTANCIA
 
 from DTQ010 DTQ (nolock)
 where DTQ.D_E_L_E_T_ = ''
