@@ -5,8 +5,8 @@ select
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = '050'
     ) as PERIODO,
     DTQ.DTQ_VIAGEM,
