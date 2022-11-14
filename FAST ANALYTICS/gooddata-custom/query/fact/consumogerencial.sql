@@ -23,7 +23,15 @@ from
 
 			ZD3010.ZD3_VEICUL,
 			ZD3010.ZD3_LITROS,
-			ZD3010.ZD3_VLUNI,
+			(
+				select avg(SD1010.D1_VUNIT)
+				from SD1010
+				where
+						SD1010.D_E_L_E_T_ = ''
+					and SD1010.D1_COD = '11100008'
+					and SD1010.D1_TES = 42
+					and datediff(day, SD1010.D1_DTDIGIT, getdate()) < 16
+			) as ZD3_VLUNI,
 			ZD3010.ZD3_TOTAL,
 			
 			ZD3010.ZD3_TANQUE,
