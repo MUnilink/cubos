@@ -89,10 +89,8 @@ select
     DIARIAS.DYX_DATDIA,
     DIARIAS.DYX_VLRUNI,
 
-    null as OUTROS_CUSTOS,
     null as SEGURO_CARGA, /* PLANILHA DE SEGURO */
-    null as SEGURO_VEICULOS,
-    null as COMISSOES
+    null as OUTROS_CUSTOS
 
 from DUD010 DUD (nolock)
     left join /* ver modelo para adição de dimensão motorista */
