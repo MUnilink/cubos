@@ -1,0 +1,9 @@
+AK1010 CABEÇALHO ORÇAMENTO
+AK3010 CONTAS DO ORÇAMENTO
+AK2010 ITENS DO ORÇAMENTO - CC e ITEM; por mês, por CC e ITEM
+vínculo orçamento, versão e conta
+
+AKD010 MOVIMENTOS DO ORÇAMENTO - status do lançamento orçametário - ativo e inativo (quando falta alguma informação)
+tipo de saldo, tipo de movimento, histórico
+
+ - processo que gerou o movimento orçametário
