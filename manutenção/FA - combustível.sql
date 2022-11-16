@@ -9,7 +9,7 @@ select
 				SD1010.D_E_L_E_T_ = ''
 			and SD1010.D1_COD = '11100008'
 			and SD1010.D1_TES = 42
-			and datediff(day, SD1010.D1_DTDIGIT, getdate()) < 16
+			and substring(SD1010.D1_DTDIGIT, 1, 6) = substring(ZD3.ZD3_DATA, 1, 6)
 	) as VALOR_COMPRA,
 	
 	ZD3.ZD3_HODOM,
