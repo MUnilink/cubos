@@ -1,6 +1,14 @@
 select
 	ZD3.ZD3_LITROS,
-	ZD3.ZD3_VLUNI,
+	(
+		select avg(SD1010.D1_VUNIT)
+		from SD1010
+		where
+				SD1010.D_E_L_E_T_ = ''
+			and SD1010.D1_COD = '11100008'
+			and SD1010.D1_TES = 42
+			and substring(SD1010.D1_DTDIGIT, 1, 6) = substring(ZD3.ZD3_DATA, 1, 6)
+	) as ZD3_VLUNI,
 	ZD3.ZD3_HODOM,
 	ZD3.ZD3_KMRD,
 	ZD3.ZD3_KML,
@@ -23,15 +31,7 @@ from
 
 			ZD3010.ZD3_VEICUL,
 			ZD3010.ZD3_LITROS,
-			(
-				select avg(SD1010.D1_VUNIT)
-				from SD1010
-				where
-						SD1010.D_E_L_E_T_ = ''
-					and SD1010.D1_COD = '11100008'
-					and SD1010.D1_TES = 42
-					and datediff(day, SD1010.D1_DTDIGIT, getdate()) < 16
-			) as ZD3_VLUNI,
+
 			ZD3010.ZD3_TOTAL,
 			
 			ZD3010.ZD3_TANQUE,
