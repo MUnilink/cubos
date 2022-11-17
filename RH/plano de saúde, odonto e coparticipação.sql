@@ -9,7 +9,7 @@
 
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
@@ -166,7 +166,7 @@ union
 
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
@@ -322,7 +322,7 @@ union
 
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
@@ -477,7 +477,7 @@ union
 
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
@@ -553,7 +553,11 @@ union
         AGG.RB_TIPSF as AGG_SF,
         
         RHS.RHS_VLRFUN as VALOR_FUNC_TOTAL,
-        RHS.RHS_VLREMP as VALOR_EMPRESA,
+        case when exists
+        (
+            select * from SRD010 where SRD010.D_E_L_E_T_ = '' and 
+        )
+        else RHS.RHS_VLREMP as VALOR_EMPRESA,
         RHS.RHS_PD as VERBA,
         RHS.RHS_TPLAN as TIPO_LANCAMENTO,
         RHS.RHS_TPPLAN as TIPO_PLANO,
