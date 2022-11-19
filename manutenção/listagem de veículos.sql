@@ -17,10 +17,15 @@ select
 	trim(isnull(SN1.N1_CBASE, '-')) as N1_CBASE,
 	trim(isnull(SN1.N1_DESCRIC, '-')) as N1_DESCRIC,
 
+	trim(isnull(SN3.N3_CCUSTO, '-')) as N3_CCUSTO,
+	trim(isnull(SN3.N3_SUBCTA, '-')) as N3_SUBCTA,
+	trim(isnull(CC_PAT.CTT_DESC01, '-')) as CC_ATIVO,
+	trim(isnull(ATIVIDADE_PAT.CTD_DESC01, '-')) as ATIVIDADE_ATIVO,
+
 	trim(isnull(ST9.T9_ITEMCTA, '-')) as T9_ITEMCTA,
 	trim(isnull(ST9.T9_CCUSTO, '-')) as T9_CCUSTO,
-	trim(isnull(CTT.CTT_DESC01, '-')) as CC,
-	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE
+	trim(isnull(CC_MNT.CTT_DESC01, '-')) as CC_MNT,
+	trim(isnull(ATIVIDADE_MNT.CTD_DESC01, '-')) as ATIVIDADE_MNT
 
 from ST9010 ST9 (nolock)
 	inner join TQR010 TQR (nolock)
@@ -34,12 +39,25 @@ from ST9010 ST9 (nolock)
 	left join SN1010 SN1 (nolock)
         on SN1.D_E_L_E_T_ = ''
         and SN1.N1_CODBEM = ST9.T9_CODBEM
-	inner join CTT010 CTT (nolock)
-		on CTT.D_E_L_E_T_ = ''
-		and CTT.CTT_CUSTO = ST9.T9_CCUSTO
-	inner join CTD010 CTD (nolock)
-		on CTD.D_E_L_E_T_ = ''
-		and CTD.CTD_ITEM = ST9.T9_ITEMCTA
+
+		left join SN3010 SN3 (nolock)
+			on SN3.D_E_L_E_T_ = ''
+			and SN3.N3_CBASE = SN1.N1_CBASE
+			and SN3.N3_ITEM = SN1.N1_ITEM
+
+			left join CTT010 CC_PAT (nolock)
+				on CC_PAT.D_E_L_E_T_ = ''
+				and CC_PAT.CTT_CUSTO = SN3.N3_CCUSTO
+			left join CTD010 ATIVIDADE_PAT (nolock)
+				on ATIVIDADE_PAT.D_E_L_E_T_ = ''
+				and ATIVIDADE_PAT.CTD_ITEM = SN3.N3_SUBCTA
+
+	left join CTT010 CC_MNT (nolock)
+		on CC_MNT.D_E_L_E_T_ = ''
+		and CC_MNT.CTT_CUSTO = ST9.T9_CCUSTO
+	left join CTD010 ATIVIDADE_MNT (nolock)
+		on ATIVIDADE_MNT.D_E_L_E_T_ = ''
+		and ATIVIDADE_MNT.CTD_ITEM = ST9.T9_ITEMCTA
 	left join TPN010 TPN (nolock)
 		on TPN.D_E_L_E_T_ = ''
 		and TPN.TPN_CODBEM = ST9.T9_CODBEM
