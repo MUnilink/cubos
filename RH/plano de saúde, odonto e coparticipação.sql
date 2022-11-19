@@ -494,7 +494,7 @@ union
         else
             case when RHS.RHS_PD in (88) then 'UNIMED'
             else
-                case when RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+                case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 078) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
                 else
                     case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
                     else 'OUTROS'
@@ -553,11 +553,7 @@ union
         AGG.RB_TIPSF as AGG_SF,
         
         RHS.RHS_VLRFUN as VALOR_FUNC_TOTAL,
-        case when exists
-        (
-            select * from SRD010 where SRD010.D_E_L_E_T_ = '' and 
-        )
-        else RHS.RHS_VLREMP as VALOR_EMPRESA,
+        isnull(BASE_ODONTO.RD_VALOR, RHS.RHS_VLREMP) as VALOR_EMPRESA,
         RHS.RHS_PD as VERBA,
         RHS.RHS_TPLAN as TIPO_LANCAMENTO,
         RHS.RHS_TPPLAN as TIPO_PLANO,
@@ -566,6 +562,12 @@ union
         RHS.RHS_CODIGO as COD_DEPAGG
 
     from RHS010 RHS (nolock)
+        left join SRD010 BASE_ODONTO (nolock)
+            on BASE_ODONTO.D_E_L_E_T_ = ''
+            and BASE_ODONTO.RD_FILIAL = RHS.RHS_FILIAL
+            and BASE_ODONTO.RD_MAT = RHS.RHS_MAT
+            and BASE_ODONTO.RD_PERIODO = substring(RHS.RHS_DATA, 1, 6)
+            and case when RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 711 else null end = BASE_ODONTO.RD_PD
         inner join SRV010 SRV (nolock)
             on SRV.D_E_L_E_T_ = ''
             and SRV.RV_COD = RHS.RHS_PD
