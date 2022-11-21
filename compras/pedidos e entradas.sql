@@ -8,7 +8,18 @@ select
 	trim(isnull(SC7.C7_CC, '-')) as C7_CC,
 	trim(isnull(SC7.C7_ITEMCTA, '-')) as C7_ITEMCTA,
 	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE,
+	
+	trim(isnull(SB1.B1_CONTA, '-')) as B1_CTCONTA,
+	trim(isnull(SB1.B1_YCTCUST, '-')) as B1_CTCUSTO,
+	trim(isnull(SB1.B1_YCTDEAD, '-')) as B1_CTDESPE,
+	trim(isnull(SB1.B1_YCTATIV, '-')) as B1_CTATIVO,
+
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
+
+	trim(isnull(SBM.BM_YCONTA, '-')) as BM_CTCONTA,
+	trim(isnull(SBM.BM_YCTCUST, '-')) as BM_CTCUSTO,
+	trim(isnull(SBM.BM_YCTDEAD, '-')) as BM_CTDESPE,
+	trim(isnull(SBM.BM_YCTATIV, '-')) as BM_CTATIVO,
 	
 	trim(isnull(SC7.C7_OBS, '-')) as OBS,
 	trim(isnull(SC7.C7_OBSM, '-')) as MEMO,
@@ -69,6 +80,11 @@ from SC7010 SC7 (nolock)
 	left join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
+
+		inner join SBM010 SBM (nolock)
+			on SBM.D_E_L_E_T_ = ''
+			and SBM.BM_GRUPO = SB1.B1_GRUPO
+
 	inner join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SC7.C7_FORNECE
