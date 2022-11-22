@@ -20,6 +20,12 @@ select
 	trim(isnull(SBM.BM_YCTCUST, '-')) as BM_CTCUSTO,
 	trim(isnull(SBM.BM_YCTDEAD, '-')) as BM_CTDESPE,
 	trim(isnull(SBM.BM_YCTATIV, '-')) as BM_CTATIVO,
+
+	trim(isnull(SC1.C1_NUM, '-')) as SOLICITACAO,
+	trim(isnull(SC1.C1_ITEM, '-')) as ITEM_SC,
+	convert(date, SC1.C1_EMISSAO, 103) as DATA_SOLICITA,
+	year(SC1.C1_EMISSAO) as ANO_SOLICITA,
+	month(SC1.C1_EMISSAO) as MES_SOLICITA,
 	
 	trim(isnull(SC7.C7_OBS, '-')) as OBS,
 	trim(isnull(SC7.C7_OBSM, '-')) as MEMO,
@@ -77,6 +83,11 @@ select
 	substring(SD1.D1_DTDIGIT, 1, 6) as PERIODO_ENTRADA
 
 from SC7010 SC7 (nolock)
+	left join SC1010 SC1 (nolock)
+		on SC1.D_E_L_E_T_ = ''
+		and SC1.C1_FILIAL = SC7.C7_FILIAL
+		and SC1.C1_NUM = SC7.C7_NUMSC
+		and SC1.C1_ITEM = SC7.C7_ITEMSC
 	left join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
