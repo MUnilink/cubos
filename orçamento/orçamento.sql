@@ -37,8 +37,9 @@ select
     AK8.AK8_DESCRI as DESC_ROTINA
 
 from AKD010 AKD (nolock)
-    inner join AK2010 AK2 (nolock)
+    right join AK2010 AK2 (nolock)
         on AK2.D_E_L_E_T_ = ''
+        and AK2.AK2_ID = AKD.AKD_ID
         and AK2.AK2_CO = AKD.AKD_CO
 
         inner join AK3010 AK3 (nolock)
@@ -46,6 +47,7 @@ from AKD010 AKD (nolock)
             and AK3.AK3_FILIAL = AK2.AK2_FILIAL
             and AK3.AK3_ORCAME = AK2.AK2_ORCAME
             and AK3.AK3_VERSAO = AK2.AK2_VERSAO
+            and AK3.AK3_CO = AK2.AK2_CO
 
             inner join AK5010 AK5 (nolock)
                 on AK5.D_E_L_E_T_ = ''
