@@ -1,5 +1,5 @@
 select
-    trim(DTQ.DTQ_FILORI) + trim(DTQ.DTQ_VIAGEM) as ID_VIAGEM,
+    concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
     (
         select substring(DTW010.DTW_DATREA, 1, 6)
         from DTW010 (nolock)
