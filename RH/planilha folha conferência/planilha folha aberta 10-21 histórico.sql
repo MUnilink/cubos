@@ -712,7 +712,7 @@ from
                     on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('530', '535')
+                    SRD010.RD_PD in ('530', '535', '414')
                 and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
