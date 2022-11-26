@@ -40,7 +40,7 @@
         case RHP.RHP_ORIGEM
             when 1 then SRA.RA_NOME
             when 2 then DEP.RB_NOME
-            when 3 then AGG.RB_NOME
+            when 3 then RHM.RHM_NOME
             else null
         end as USUARIO,
 
@@ -54,14 +54,14 @@
         case RHP.RHP_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            when 3 then trim(AGG.RB_SEXO)
+            /*when 3 then trim(AGG.RB_SEXO)*/
             else 'OUTROS'
         end as SEXO_USUARIO,
 
         case RHP.RHP_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR)
             when 2 then datediff(year, DEP.RB_DTNASC, RHP.RHP_DTOCOR)
-            when 3 then datediff(year, AGG.RB_DTNASC, RHP.RHP_DTOCOR)
+            when 3 then datediff(year, RHM.RHM_DTNASC, RHP.RHP_DTOCOR)
             else null
         end as IDADE_USUARIO,
 
@@ -76,13 +76,11 @@
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
 
-        trim(AGG.RB_NOME) AGREGADO,
-        convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
-        trim(AGG.RB_SEXO) as AGG_SEXO,
-        datediff(year, AGG.RB_DTNASC, RHP.RHP_DTOCOR) as AGG_IDADE,
-        AGG.RB_TPDEP as AGG_ES,
-        AGG.RB_TIPIR as AGG_IR,
-        AGG.RB_TIPSF as AGG_SF,
+        trim(RHM.RHM_NOME) as AGG_NOME,
+        convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
+        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        datediff(year, RHM.RHM_DTNASC, RHP.RHP_DTOCOR) as AGG_IDADE,
+        RHM.RHM_TPCALC as AGG_ES,
         
         RHP.RHP_VLRFUN as VALOR_FUNC_TOTAL,
         RHP.RHP_VLREMP as VALOR_EMPRESA,
@@ -145,12 +143,6 @@
             and RHM.RHM_CODIGO = RHP.RHP_CODIGO
             and RHM.RHM_TPFORN = RHP.RHP_TPFORN
             and RHM.RHM_CODFOR = RHP.RHP_CODFOR
-
-            left join SRB010 AGG (nolock)
-                on AGG.D_E_L_E_T_ = ''
-                and AGG.RB_FILIAL = RHM.RHM_FILIAL
-                and AGG.RB_MAT = RHM.RHM_MAT
-                and AGG.RB_COD = RHM.RHM_CODIGO
     where
             RHP.D_E_L_E_T_ = ''
         and year(RHP.RHP_DTOCOR) > 2021
@@ -197,7 +189,7 @@ union
         case RHO.RHO_ORIGEM
             when 1 then SRA.RA_NOME
             when 2 then DEP.RB_NOME
-            when 3 then AGG.RB_NOME
+            when 3 then RHM.RHM_NOME
             else null
         end as USUARIO,
 
@@ -211,14 +203,14 @@ union
         case RHO.RHO_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            when 3 then trim(AGG.RB_SEXO)
+            /*when 3 then trim(AGG.RB_SEXO)*/
             else 'OUTROS'
         end as SEXO_USUARIO,
 
         case RHO.RHO_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR)
             when 2 then datediff(year, DEP.RB_DTNASC, RHO.RHO_DTOCOR)
-            when 3 then datediff(year, AGG.RB_DTNASC, RHO.RHO_DTOCOR)
+            when 3 then datediff(year, RHM.RHM_DTNASC, RHO.RHO_DTOCOR)
             else null
         end as IDADE_USUARIO,
 
@@ -233,13 +225,11 @@ union
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
 
-        trim(AGG.RB_NOME) AGREGADO,
-        convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
-        trim(AGG.RB_SEXO) as AGG_SEXO,
-        datediff(year, AGG.RB_DTNASC, RHO.RHO_DTOCOR) as AGG_IDADE,
-        AGG.RB_TPDEP as AGG_ES,
-        AGG.RB_TIPIR as AGG_IR,
-        AGG.RB_TIPSF as AGG_SF,
+        trim(RHM.RHM_NOME) as AGG_NOME,
+        convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
+        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        datediff(year, RHM.RHM_DTNASC, RHO.RHO_DTOCOR) as AGG_IDADE,
+        RHM.RHM_TPCALC as AGG_ES,
         
         RHO.RHO_VLRFUN as VALOR_FUNC_TOTAL,
         RHO.RHO_VLREMP as VALOR_EMPRESA,
@@ -302,12 +292,6 @@ union
             and RHM.RHM_CODIGO = RHO.RHO_CODIGO
             and RHM.RHM_TPFORN = RHO.RHO_TPFORN
             and RHM.RHM_CODFOR = RHO.RHO_CODFOR
-
-            left join SRB010 AGG (nolock)
-                on AGG.D_E_L_E_T_ = ''
-                and AGG.RB_FILIAL = RHM.RHM_FILIAL
-                and AGG.RB_MAT = RHM.RHM_MAT
-                and AGG.RB_COD = RHM.RHM_CODIGO
     where
             RHO.D_E_L_E_T_ = ''
 union
@@ -353,7 +337,7 @@ union
         case RHR.RHR_ORIGEM
             when 1 then SRA.RA_NOME
             when 2 then DEP.RB_NOME
-            when 3 then AGG.RB_NOME
+            when 3 then RHM.RHM_NOME
             else 'OUTROS'
         end as USUARIO,
 
@@ -367,14 +351,14 @@ union
         case RHR.RHR_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            when 3 then trim(AGG.RB_SEXO)
+            /*when 3 then trim(AGG.RB_SEXO)*/
             else 'OUTROS'
         end as SEXO_USUARIO,
 
         case RHR.RHR_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHR.RHR_DATA)
             when 2 then datediff(year, DEP.RB_DTNASC, RHR.RHR_DATA)
-            when 3 then datediff(year, AGG.RB_DTNASC, RHR.RHR_DATA)
+            when 3 then datediff(year, RHM.RHM_DTNASC, RHR.RHR_DATA)
             else null
         end as IDADE_USUARIO,
 
@@ -389,13 +373,11 @@ union
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
 
-        trim(AGG.RB_NOME) AGREGADO,
-        convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
-        trim(AGG.RB_SEXO) as AGG_SEXO,
-        datediff(year, AGG.RB_DTNASC, RHR.RHR_DATA) as AGG_IDADE,
-        AGG.RB_TPDEP as AGG_ES,
-        AGG.RB_TIPIR as AGG_IR,
-        AGG.RB_TIPSF as AGG_SF,
+        trim(RHM.RHM_NOME) as AGG_NOME,
+        convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
+        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        datediff(year, RHM.RHM_DTNASC, RHR.RHR_DATA) as AGG_IDADE,
+        RHM.RHM_TPCALC as AGG_ES,
         
         RHR.RHR_VLRFUN as VALOR_FUNC_TOTAL,
         RHR.RHR_VLREMP as VALOR_EMPRESA,
@@ -458,12 +440,6 @@ union
             and RHM.RHM_CODIGO = RHR.RHR_CODIGO
             and RHM.RHM_TPFORN = RHR.RHR_TPFORN
             and RHM.RHM_CODFOR = RHR.RHR_CODFOR
-
-            left join SRB010 AGG (nolock)
-                on AGG.D_E_L_E_T_ = ''
-                and AGG.RB_FILIAL = RHM.RHM_FILIAL
-                and AGG.RB_MAT = RHM.RHM_MAT
-                and AGG.RB_COD = RHM.RHM_CODIGO
     where RHR.D_E_L_E_T_ = ''
 union
     select /* HISTÓRICO PLANO DE SAÚDE E ODONTO */
@@ -508,7 +484,7 @@ union
         case RHS.RHS_ORIGEM
             when 1 then SRA.RA_NOME
             when 2 then DEP.RB_NOME
-            when 3 then AGG.RB_NOME
+            when 3 then RHM.RHM_NOME
             else null
         end as USUARIO,
 
@@ -522,14 +498,14 @@ union
         case RHS.RHS_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            when 3 then trim(AGG.RB_SEXO)
+            /*when 3 then trim(AGG.RB_SEXO)*/
             else 'OUTROS'
         end as SEXO_USUARIO,
 
         case RHS.RHS_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHS.RHS_DATA)
             when 2 then datediff(year, DEP.RB_DTNASC, RHS.RHS_DATA)
-            when 3 then datediff(year, AGG.RB_DTNASC, RHS.RHS_DATA)
+            when 3 then datediff(year, RHM.RHM_DTNASC, RHS.RHS_DATA)
             else null
         end as IDADE_USUARIO,
 
@@ -544,13 +520,11 @@ union
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
 
-        trim(AGG.RB_NOME) AGREGADO,
-        convert(date, AGG.RB_DTNASC, 103) as AGG_NASC,
-        trim(AGG.RB_SEXO) as AGG_SEXO,
-        datediff(year, AGG.RB_DTNASC, RHS.RHS_DATA) as AGG_IDADE,
-        AGG.RB_TPDEP as AGG_ES,
-        AGG.RB_TIPIR as AGG_IR,
-        AGG.RB_TIPSF as AGG_SF,
+        trim(RHM.RHM_NOME) as AGG_NOME,
+        convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
+        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        datediff(year, RHM.RHM_DTNASC, RHS.RHS_DATA) as AGG_IDADE,
+        RHM.RHM_TPCALC as AGG_ES,
         
         RHS.RHS_VLRFUN as VALOR_FUNC_TOTAL,
         isnull(BASE_ODONTO.RD_VALOR, RHS.RHS_VLREMP) as VALOR_EMPRESA,
@@ -619,12 +593,6 @@ union
             and RHM.RHM_CODIGO = RHS.RHS_CODIGO
             and RHM.RHM_TPFORN = RHS.RHS_TPFORN
             and RHM.RHM_CODFOR = RHS.RHS_CODFOR
-
-            left join SRB010 AGG (nolock)
-                on AGG.D_E_L_E_T_ = ''
-                and AGG.RB_FILIAL = RHM.RHM_FILIAL
-                and AGG.RB_MAT = RHM.RHM_MAT
-                and AGG.RB_COD = RHM.RHM_CODIGO
     where
             RHS.D_E_L_E_T_ = ''
         and year(RHS.RHS_DATA) > 2021
