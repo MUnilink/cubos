@@ -59,7 +59,14 @@ SELECT 'P |01|01' AS BK_EMPRESA,
        CAST(COALESCE(DT8_VALIMP, 0) AS DECIMAL(14, 2)) AS VALOR_IMPOSTO,
        CAST(COALESCE(DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL,
        null as INSTANCIA,
-       concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM
+        
+        concat(trim(VIAGEM.DTQ_FILORI), trim(VIAGEM.DTQ_VIAGEM)) as ID_VIAGEM,
+        VIAGEM.ID_VEICULO_CM,
+        VIAGEM.ID_VEICULO_RB1,
+        VIAGEM.ID_VEICULO_RB2,
+        VIAGEM.ID_VEICULO_RB3,
+        VIAGEM.ID_MOTORISTA
+
 FROM DT8010 DT8
     INNER JOIN DT6010 DT6
         ON DT6.DT6_FILIAL = DT8_FILIAL
@@ -113,11 +120,51 @@ FROM DT8010 DT8
             and DUD.DUD_DOC = DT6.DT6_DOC
             and DUD.DUD_SERIE = DT6.DT6_SERIE
 
-            inner join DTQ010 DTQ
-                on DTQ.D_E_L_E_T_ = ''
-                and DTQ.DTQ_FILIAL = DUD.DUD_FILIAL
-                and DTQ.DTQ_FILORI = DUD.DUD_FILORI
-                and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
+            left join /* ver modelo para adição de dimensão motorista */
+            (
+                select
+                    DTQ.DTQ_FILIAL,
+                    DTQ.DTQ_FILORI,
+                    DTQ.DTQ_VIAGEM,
+                    DTQ.DTQ_DATGER,
+                    DTQ.DTQ_DATFEC,
+                    DTQ.DTQ_DATENC,
+                    
+                    concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOT,
+                    (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_CM,
+                    (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_RB1,
+                    (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_RB2,
+                    (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_RB3,
+                    (
+                        select substring(DTW010.DTW_DATREA, 1, 6)
+                        from DTW010 (nolock)
+                        where 
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                            and DTW010.DTW_ATIVID = '050'
+                    ) as COMPETENCIA
+                from DTQ010 DTQ (nolock)
+                    inner join DTR010 DTR (nolock)
+                        on DTR.D_E_L_E_T_ = ''
+                        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                        
+                        inner join DUP010 (nolock)
+                            on DUP010.D_E_L_E_T_ = ''
+                            and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                            and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                            and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                            and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+
+                            inner join DA4010 (nolock)
+                                on DA4010.D_E_L_E_T_ = ''
+                                and DA4010.DA4_COD = DUP010.DUP_CODMOT
+                where DTQ.D_E_L_E_T_ = ''
+            ) VIAGEM
+                on substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
+                and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
+                and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
 
     INNER JOIN DT3010 DT3
         ON DT3.DT3_FILIAL = DT8_FILIAL
