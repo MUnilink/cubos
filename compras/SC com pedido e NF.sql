@@ -26,15 +26,25 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
+	case when concat(SC1.C1_FILIAL, SC1.C1_NUM, SC1.C1_ITEM) = '' then 0 else 1 end as ID_SC,
+
 	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
 
 	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
 	datediff(day, SC1.C1_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM)) as DIASAPROV_SC,
-	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_PC,
 
 	SC8.C8_NUM as COTACAO,
     SC8.C8_ITEM as ITEM_COTA,
+	SC8.C8_QUANT as QTD_COTADA,
+	SC8.C8_PRECO as PRECO_COTADO,
+	SC8.C8_TOTAL as VALOR_COTADO,
 	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
+	trim(isnull(FCO.A2_NOME, '-')) as NOME_FOR_COTACAO,
+	trim(isnull(FCO.A2_NREDUZ, '-')) as NOMERED_FOR_COTACAO,
+	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
+
+	concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) as BK_CO,
+	case when concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) = '' then 0 else 1 end as ID_CO,
 
 	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
 
@@ -42,9 +52,9 @@ select
 	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
 	trim(isnull(SC7.C7_FORNECE, '-')) as FORNECEDOR,
 	trim(isnull(SC7.C7_LOJA, '-')) as LOJA,
-	trim(isnull(SA2.A2_NOME, '-')) as NOME_FORNECEDOR,
-	trim(isnull(SA2.A2_NREDUZ, '-')) as NOMERED_FORNECEDOR,
-	trim(isnull(SA2.A2_CGC, '-')) as CNPJ,
+	trim(isnull(FPE.A2_NOME, '-')) as NOME_FORNECEDOR,
+	trim(isnull(FPE.A2_NREDUZ, '-')) as NOMERED_FORNECEDOR,
+	trim(isnull(FPE.A2_CGC, '-')) as CNPJ,
 	trim(isnull(SC7.C7_OBS, '-')) as OBS_PC,
 	trim(isnull(SC7.C7_OBSM, '-')) as MEMO_PC,
 
@@ -58,6 +68,8 @@ select
 		when 'R' then 'REJEITADO'
 		else 'OUTROS'
 	end as APROVACAO_PC,
+
+	case when concat(SC7.C7_FILIAL, SC7.C7_NUM, SC7.C7_ITEM) = '' then 0 else 1 end as ID_PC,
 
 	/*case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,*/
 
@@ -100,7 +112,9 @@ select
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
 	convert(datetime, SD1.D1_EMISSAO, 103) as NF_EMI,
-	convert(datetime, SD1.D1_DTDIGIT, 103) as NF_DATA
+	convert(datetime, SD1.D1_DTDIGIT, 103) as NF_DATA,
+	
+	case when concat(SD1.D1_FILIAL, SD1.D1_DOC, SD1.D1_ITEM) = '' then 0 else 1 end as ID_NF
 
 from SC1010 SC1 (nolock)
 	inner join SB1010 SB1 (nolock)
@@ -111,16 +125,22 @@ from SC1010 SC1 (nolock)
 		and SC8.C8_FILIAL = SC1.C1_FILIAL
 		and SC8.C8_NUMSC = SC1.C1_NUM
 		and SC8.C8_ITEMSC = SC1.C1_ITEM
+
+		left join SA2010 FCO (nolock)
+			on FCO.D_E_L_E_T_ = ''
+			and FCO.A2_COD = SC8.C8_FORNECE
+			and FCO.A2_LOJA = SC8.C8_LOJA
+
 	left join SC7010 SC7 (nolock)
 		on SC7.D_E_L_E_T_ = ''
 		and SC7.C7_FILIAL = SC1.C1_FILIAL
 		and SC7.C7_NUMSC = SC1.C1_NUM
 		and SC7.C7_ITEMSC = SC1.C1_ITEM
 
-		left join SA2010 SA2 (nolock)
-			on SA2.D_E_L_E_T_ = ''
-			and SA2.A2_COD = SC7.C7_FORNECE
-			and SA2.A2_LOJA = SC7.C7_LOJA
+		left join SA2010 FPE (nolock)
+			on FPE.D_E_L_E_T_ = ''
+			and FPE.A2_COD = SC7.C7_FORNECE
+			and FPE.A2_LOJA = SC7.C7_LOJA
 		left join SD1010 SD1 (nolock)
 			on SD1.D_E_L_E_T_ = ''
 			and SD1.D1_FILIAL = SC7.C7_FILIAL
@@ -139,5 +159,5 @@ from SC1010 SC1 (nolock)
 	left join CTD010 CTD (nolock)
 		on CTD.D_E_L_E_T_ = ''
 		and CTD.CTD_ITEM = SC1.C1_ITEMCTA
-where
+where 
 		SC1.D_E_L_E_T_ = ''
