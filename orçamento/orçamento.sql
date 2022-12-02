@@ -38,16 +38,13 @@ select
 
     AKD.AKD_TPSALD as TIPO_LANCAMENTO,
 
-    case when (last_value(AKD.AKD_SEQ) over (partition by AKD.AKD_CHAVE order by AKD.AKD_CHAVE)) = 2 and (AKD.AKD_TPSALD = 'EM') then 0.0
-    else
-        case when (last_value(AKD.AKD_SEQ) over (partition by AKD.AKD_CHAVE order by AKD.AKD_CHAVE)) = 2 and (AKD.AKD_TPSALD = 'RE') then AKD.AKD_VALOR1
-            else 0.0
-        end
-    end as VALOR_MOVIMENTO,
+    case when (select count(*) from AKD010 where AKD010.D_E_L_E_T_ = '' and substring(AKD010.AKD_CHAVE, 1, 19) = substring(AKD.AKD_CHAVE, 1, 19) and AKD010.AKD_TPSALD = 'EM') = 1 then AKD.AKD_VALOR1 else 0.0 end as VALOR_EMPENHADO,
+    case when (select count(*) from AKD010 where AKD010.D_E_L_E_T_ = '' and substring(AKD010.AKD_CHAVE, 1, 19) = substring(AKD.AKD_CHAVE, 1, 19) and AKD010.AKD_TPSALD = 'EM') = 2 then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
     
     AKD.AKD_USER as USUARIO,
     trim(AKD.AKD_HIST) as HISTORICO,
     trim(AKD.AKD_CHAVE) as CHAVE,
+    len(AKD.AKD_CHAVE),
     AK8.AK8_FUNCAO as ROTINA,
     trim(AK8.AK8_DESCRI) as DESC_ROTINA
 
