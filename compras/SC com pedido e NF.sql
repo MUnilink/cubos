@@ -26,7 +26,7 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
-	case when concat(SC1.C1_FILIAL, SC1.C1_NUM, SC1.C1_ITEM) = '' then 0 else 1 end as ID_SC,
+	concat(SC1.C1_FILIAL, SC1.C1_NUM, SC1.C1_ITEM) as ID_SC,
 
 	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
 
@@ -43,8 +43,7 @@ select
 	trim(isnull(FCO.A2_NREDUZ, '-')) as NOMERED_FOR_COTACAO,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
 
-	concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) as BK_CO,
-	case when concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) = '' then 0 else 1 end as ID_CO,
+	concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) as ID_CO,
 
 	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
 
