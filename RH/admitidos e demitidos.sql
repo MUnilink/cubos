@@ -3,26 +3,39 @@ select
 	trim(SRA.RA_MAT) as MATRICULA,
 	trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
-	cast(convert(date, SRA.RA_ADMISSA, 103) as varchar) as ADMISSAO,
+	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
-	case SRA.RA_DEMISSA
-		when null then '-'
-		when '' then '-'
-		when '        ' then '-'
-		else cast(convert(date, SRA.RA_DEMISSA, 103) as varchar)
-	end as DEMISSAO,
+	trim(CTT.CTT_CUSTO) as CC,
+	trim(CTT.CTT_DESC01) as CCUSTO,
+	trim(CTD.CTD_ITEM) as ITCT,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(SQB.QB_DEPTO) as DEPTO,
+	trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 
-	trim(SRA.RA_SITFOLH) as SITUACAO,
+	trim(SRJ.RJ_CODCBO) as CBO,
+	trim(SRA.RA_SEXO) as SEXO,
+	trim(SRA.RA_CIC) as CPF,
+	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
+	convert(date, SRA.RA_DEMISSA, 103) as DEMISSAO,
 	
-	case year(SRA.RA_DEMISSA) when 1900 then 0 else year(SRA.RA_DEMISSA) end as ANO_DEMISSAO,
-	month(SRA.RA_DEMISSA) as MES_DEMISSAO,
-	year(SRA.RA_ADMISSA) as ANO_ADMISSAO,
-	month(SRA.RA_ADMISSA) as MES_ADMISSAO,
-	
-	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as 'NÃO-DEMITIDOS'
-from SRA010 as SRA (nolock)
-	inner join SRJ010 as SRJ (nolock)
+	substring(SRA.RA_DEMISSA, 1, 6) as PERIODO_DEMISSAO,
+	substring(SRA.RA_ADMISSA, 1, 6) as PERIODO_ADMISSAO
+
+from SRA010 SRA (nolock)
+	inner join SQB010 SQB (nolock)
+		on SQB.D_E_L_E_T_ = ''
+		and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+		and SQB.QB_DEPTO = SRA.RA_DEPTO
+	inner join SRJ010 SRJ (nolock)
 		on SRJ.D_E_L_E_T_ = ''
-		and substring(SRA.RA_FILIAL, 1, 4) = SRJ.RJ_FILIAL
-        and SRA.RA_CODFUNC = SRJ.RJ_FUNCAO
+		and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+		and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+	inner join CTT010 CTT (nolock)
+		on CTT.D_E_L_E_T_ = ''
+		and CTT.CTT_CUSTO = SRA.RA_CC
+	inner join CTD010 CTD (nolock)
+		on CTD.D_E_L_E_T_ = ''
+		and CTD.CTD_ITEM = SRA.RA_ITEM
 where SRA.D_E_L_E_T_ = ''
