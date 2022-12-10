@@ -37,42 +37,40 @@ select
     year(TM5.TM5_DTPROG) as ano_prog,
     month(TM5.TM5_DTPROG) as mes_prog
 from TM5010 TM5 (nolock)
-    inner join TMY010 TMY (nolock)
+    left join TMY010 TMY (nolock)
         on TMY.D_E_L_E_T_ = ''
         and TMY.TMY_FILIAL = TM5.TM5_FILIAL
         and TMY.TMY_NUMASO = TM5.TM5_NUMASO
         and TMY.TMY_NUMFIC = TM5.TM5_NUMFIC
+    inner join TM0010 TM0 (nolock)
+        on TM0.D_E_L_E_T_ = ''
+        and TM0.TM0_FILIAL = TM5.TM5_FILIAL
+        and TM0.TM0_NUMFIC = TM5.TM5_NUMFIC
+    inner join SRA010 SRA (nolock)
+        on SRA.D_E_L_E_T_ = ''
+        and SRA.RA_FILIAL = TM5.TM5_FILFUN
+        and SRA.RA_MAT = TM5.TM5_MAT
 
-        inner join TM0010 TM0 (nolock)
-            on TM0.D_E_L_E_T_ = ''
-            and TM0.TM0_FILIAL = TMY.TMY_FILIAL
-            and TM0.TM0_NUMFIC = TMY.TMY_NUMFIC
+        inner join SQB010 SQB (nolock)
+            on SQB.D_E_L_E_T_ = ''
+            and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SQB.QB_DEPTO = SRA.RA_DEPTO
+        inner join SRJ010 SRJ (nolock)
+            on SRJ.D_E_L_E_T_ = ''
+            and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+        inner join CTT010 CTT (nolock)
+            on CTT.D_E_L_E_T_ = ''
+            and CTT.CTT_CUSTO = SRA.RA_CC
+        inner join CTD010 CTD (nolock)
+            on CTD.D_E_L_E_T_ = ''
+            and CTD.CTD_ITEM = SRA.RA_ITEM
 
-        inner join SRA010 SRA (nolock)
-            on SRA.D_E_L_E_T_ = ''
-            and SRA.RA_FILIAL = TM5.TM5_FILFUN
-            and SRA.RA_MAT = TM5.TM5_MAT
+    left join TM4010 TM4 (nolock)
+        on TM4.D_E_L_E_T_ = ''
+        and TM4.TM4_EXAME = TM5.TM5_EXAME
 
-            inner join SQB010 SQB (nolock)
-                on SQB.D_E_L_E_T_ = ''
-                and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                and SQB.QB_DEPTO = SRA.RA_DEPTO
-            inner join SRJ010 SRJ (nolock)
-                on SRJ.D_E_L_E_T_ = ''
-                and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-            inner join CTT010 CTT (nolock)
-                on CTT.D_E_L_E_T_ = ''
-                and CTT.CTT_CUSTO = SRA.RA_CC
-            inner join CTD010 CTD (nolock)
-                on CTD.D_E_L_E_T_ = ''
-                and CTD.CTD_ITEM = SRA.RA_ITEM
-
-        left join TM4010 TM4 (nolock)
-            on TM4.D_E_L_E_T_ = ''
-            and TM4.TM4_EXAME = TM5.TM5_EXAME
-
-            left join TMD010 TMD (nolock)
-                on TMD.D_E_L_E_T_ = ''
-                and TMD.TMD_EXAME = TM4.TM4_EXAME
+        left join TMD010 TMD (nolock)
+            on TMD.D_E_L_E_T_ = ''
+            and TMD.TMD_EXAME = TM4.TM4_EXAME
 where TM5.D_E_L_E_T_ = ''
