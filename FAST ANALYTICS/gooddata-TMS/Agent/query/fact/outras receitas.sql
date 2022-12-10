@@ -1,5 +1,4 @@
 select
-    DTQ.DTQ_VIAGEM,
     SE1.E1_NUM as ND_NUM,
     SE1.E1_VALOR as ND_VALOR,
 
@@ -29,15 +28,60 @@ select
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     DT6.DT6_FILDOC,
     DT6.DT6_DOC,
-    DT6.DT6_SERIE
+    DT6.DT6_SERIE,
+    VIAGEM.ID_VIAGEM,
+    VIAGEM.ID_VEICULO_CM,
+    VIAGEM.ID_VEICULO_RB1,
+    VIAGEM.ID_VEICULO_RB2,
+    VIAGEM.ID_VEICULO_RB3,
+    VIAGEM.ID_MOTORISTA,
+    null as INSTANCIA
 
-from DTQ010 DTQ (nolock)
+from
+    (
+        select
+            DTQ.DTQ_FILIAL,
+            DTQ.DTQ_FILORI,
+            DTQ.DTQ_VIAGEM,
+            DTQ.DTQ_DATGER,
+            DTQ.DTQ_DATFEC,
+            DTQ.DTQ_DATENC,
+            concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
+            concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
+        from DTQ010 DTQ (nolock)
+            inner join DTR010 DTR (nolock)
+                on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                
+                inner join DUP010 (nolock)
+                    on DUP010.D_E_L_E_T_ = ''
+                    and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                    and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                    and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                    and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+
+                    inner join DA4010 (nolock)
+                        on DA4010.D_E_L_E_T_ = ''
+                        and DA4010.DA4_COD = DUP010.DUP_CODMOT
+        where DTQ.D_E_L_E_T_ = ''
+    ) VIAGEM
     left join SE1010 SE1 (nolock)
         on SE1.D_E_L_E_T_ = ''
-        and (trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM or trim(SE1.E1_YVIAGEM) = DTQ.DTQ_VIAGEM)
+        and SE1.E1_FILIAL = VIAGEM.DTQ_FILORI
+        and
+        (
+            trim(SE1.E1_YVIATMS) = VIAGEM.DTQ_VIAGEM or
+            trim(SE1.E1_YVIAGEM) = VIAGEM.DTQ_VIAGEM
+        )
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
-        and trim(SC5.C5_YVIAGEM) = DTQ.DTQ_VIAGEM
+        and SC5.C5_FILIAL = VIAGEM.DTQ_FILORI
+        and trim(SC5.C5_YVIAGEM) = VIAGEM.DTQ_VIAGEM
 
         left join SD2010 RPS (nolock)
             on RPS.D_E_L_E_T_ = ''
@@ -49,13 +93,13 @@ from DTQ010 DTQ (nolock)
 
     left join DTC010 DTC (nolock)
         on DTC.D_E_L_E_T_ = ''
-        and trim(DTC.DTC_YVIAGE) = DTQ.DTQ_VIAGEM
-
+        and DTC.DTC_FILIAL = VIAGEM.DTQ_FILORI
+        and trim(DTC.DTC_YVIAGE) = VIAGEM.DTQ_VIAGEM
     inner join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILIAL = DTQ.DTQ_FILIAL
-        and DUD.DUD_FILORI = DTQ.DTQ_FILORI
-        and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+        and DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
+        and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
+        and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
         left join DT6010 DT6 (nolock)
             on DT6.D_E_L_E_T_ = ''
@@ -99,5 +143,3 @@ from DTQ010 DTQ (nolock)
                 and SX5.X5_TABELA = 'L4'
                 and SX5.X5_CHAVE = DT6.DT6_SERVIC
                 and SX5.D_E_L_E_T_ = ' '
-where
-        DTQ.D_E_L_E_T_ = ''
