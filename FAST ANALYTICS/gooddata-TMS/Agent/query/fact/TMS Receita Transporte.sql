@@ -3,7 +3,7 @@ SELECT 'P |01|01' AS BK_EMPRESA,
            WHEN DT8_FILIAL IS NULL THEN 'P |01||'
            ELSE 'P |01|01'+ CAST(DT8_FILIAL AS CHAR (8))
        END AS BK_FILIAL,
-       DT6_DATEMI AS DATA_EMISSAO,
+       VIAGEM.DATAFIM AS DATA_EMISSAO,
        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
        'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,
@@ -59,6 +59,7 @@ SELECT 'P |01|01' AS BK_EMPRESA,
        CAST(COALESCE(DT8_VALIMP, 0) AS DECIMAL(14, 2)) AS VALOR_IMPOSTO,
        CAST(COALESCE(DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL,
        null as INSTANCIA,
+       DT6_DATEMI as DATA_DOC,
         
         VIAGEM.ID_VIAGEM,
         VIAGEM.ID_VEICULO_CM,
@@ -129,6 +130,16 @@ FROM DT8010 DT8
                     DTQ.DTQ_DATGER,
                     DTQ.DTQ_DATFEC,
                     DTQ.DTQ_DATENC,
+                    (
+                        select DTW010.DTW_DATREA
+                        from DTW010 (nolock)
+                        where 
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                            and DTW010.DTW_ATIVID = '050'
+                    ) as DATAFIM,
+
                     concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
                     concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
                     (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
