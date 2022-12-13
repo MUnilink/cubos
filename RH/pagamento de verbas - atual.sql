@@ -44,10 +44,10 @@ from SRC010 SRC (nolock)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
         left join CTT010 CTT (nolock)
 	    	on CTT.D_E_L_E_T_ = ''
-	    	and SRA.RA_CC = CTT.CTT_CUSTO
+	    	and SRC.RC_CC = CTT.CTT_CUSTO
 		left join CTD010 CTD (nolock)
 	    	on CTD.D_E_L_E_T_ = ''
-	    	and SRA.RA_ITEM = CTD.CTD_ITEM
+	    	and SRC.RC_ITEM = CTD.CTD_ITEM
 where SRC.D_E_L_E_T_ = ''
 group by
 	SRC.RC_FILIAL,
