@@ -1,4 +1,6 @@
 select
+    VIAGEM.DATAFIM as DATA_EMISSAO,
+    DT6.DT6_DATEMI as DATA_DOC,
     SE1.E1_NUM as ND_NUM,
     SE1.E1_VALOR as ND_VALOR,
     SE1.E1_EMISSAO as ND_EMISSAO,
@@ -37,7 +39,6 @@ select
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
     null as INSTANCIA
-
 from
     (
         select
@@ -47,6 +48,17 @@ from
             DTQ.DTQ_DATGER,
             DTQ.DTQ_DATFEC,
             DTQ.DTQ_DATENC,
+
+            (
+                select DTW010.DTW_DATREA
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = '050'
+            ) as DATAFIM,
+            
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
             concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
