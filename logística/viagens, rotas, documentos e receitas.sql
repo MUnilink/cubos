@@ -155,7 +155,7 @@ select
             and DTW010.DTW_ATIVID = '050'
     ) as HORAFIM,
     (
-        select first_value(cast(DTW010.DTW_DATREA as date)) over(order by DTW010.DTW_SEQUEN)
+        select distinct first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -164,7 +164,16 @@ select
             and DTW010.DTW_ATIVID = 57
     ) as DATA_CHECLI,
     (
-        select first_value(cast(DTW010.DTW_DATREA as date)) over(order by DTW010.DTW_SEQUEN)
+        select distinct first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = 57
+    ) as HORA_CHECLI,
+    (
+        select distinct first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -172,6 +181,15 @@ select
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = 56
     ) as DATA_SAICLI,
+    (
+        select distinct first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+            and DTW010.DTW_ATIVID = 56
+    ) as HORA_SAICLI,
     (
         select substring(DTW010.DTW_DATREA, 1, 6)
         from DTW010 (nolock)
