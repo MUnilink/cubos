@@ -1,14 +1,14 @@
 select
-    SN1.N1_GRUPO,
-	trim(isnull(SN1.N1_CBASE, '-')) as N1_CBASE,
-	trim(isnull(SN1.N1_DESCRIC, '-')) as N1_DESCRIC,
+    SN1.N1_GRUPO as GRUPO,
+	trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
+	trim(isnull(SN1.N1_DESCRIC, '-')) as DESC_ATIVO,
     trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-	convert(date, SN3.N3_DINDEPR, 103) as N3_DINDEPR,
-	SN3.N3_TXDEPR1 /12 as TXDEPRECMENSAL,
-	SNG.NG_TXDEPR1 /12 as TXDEPRECMENSALGRUPO,
+	convert(date, SN3.N3_DINDEPR, 103) as INI_DEPREC,
+	SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
+	SNG.NG_TXDEPR1 /12 as DEPREC_MENSAL_GRUPO,
 
 	SN1.N1_QUANTD,
-	SN3.N3_VORIG1,
+	SN3.N3_VORIG1 as VALOR_ORIGINAL,
 	SN3.N3_VORIG2,
 	SN3.N3_VORIG3,
 	SN3.N3_VORIG4,
@@ -16,19 +16,23 @@ select
 
     SN1.N1_NFISCAL,
 
-	SN3.N3_TXDEPR1,
+	SN3.N3_TXDEPR1 as DEPREC_ANUAL,
 	SN3.N3_TXDEPR2,
 	SN3.N3_TXDEPR3,
 	SN3.N3_TXDEPR4,
 	SN3.N3_TXDEPR5,
 	
-	SN4.N4_CONTA,
+	SN4.N4_CONTA as CONTA,
+	case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO,
 	SN4.N4_DATA,
+	substring(SN4.N4_DATA, 1, 6) as PERIODO,
 	SN4.N4_LA,
-	SN4.N4_VLROC1,
+	SN4.N4_VLROC1 as VALOR_DEPREC,
 	SN4.N4_VLROC2,
 	SN4.N4_VLROC3,
-	SN4.N4_ORIGEM
+	SN4.N4_ORIGEM,
+	SN4.N4_CCUSTO as CC,
+	SN3.N3_SUBCCON as ATIVIDADE
 
 from SN1010 SN1 (nolock)
     left join ST9010 ST9 (nolock)
@@ -45,6 +49,10 @@ from SN1010 SN1 (nolock)
 	left join SN4010 SN4 (nolock)
 		on SN4.D_E_L_E_T_ = ''
 		and SN4.N4_CBASE = SN1.N1_CBASE
+
+		left join CTT010 CTT (nolock)
+			on CTT.D_E_L_E_T_ = ''
+			and CTT.CTT_CUSTO = SN4.N4_CCUSTO
 where
         SN1.D_E_L_E_T_ = ''
     and cast(SN3.N3_TXDEPR1 as decimal) > 0
