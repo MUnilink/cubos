@@ -20,24 +20,47 @@
 
 		trim(isnull(SRC.RC_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRC.RC_PD, '-')) as VERBA,
-		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
+		case when SRC.RC_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
+		else
+			case when SRC.RC_PD in ('029', '111', '113') then '03 Hora Extra'
+			else
+				case when SRC.RC_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
+				else
+					case when SRC.RC_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
+					else
+						case when SRC.RC_PD in ('845', '846') then '06 13º Salário'
+						else
+							case when SRC.RC_PD in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
+							else
+								case when SRC.RC_PD in ('830', '831', '832') then '08 Férias'
+								else '01 N/A Custo'
+								end
+							end
+						end
+					end
+				end
+			end
+		end as CONTA,
 		
-		case SRC.RC_PD
+		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
+		case SRV.RV_COD
 			when '183' then 'VALOR A RECEBER'
 			when '999' then 'VALOR A RECEBER'
-		else '' end as DESC_VERBA2,
+		else SRV.RV_DESCDET end as DESC_VERBA2,
 
 		case trim(SRV.RV_TIPOCOD)
 			when '1' then 'PROVENTO'
 			when '2' then 'DESCONTO'
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
-			else '-'
+			else 'OUTROS'
 		end as RV_TIPOCOD,
 
 		SRC.RC_VALOR as VALOR,
 		SRC.RC_HORAS as HORAS,
-		SRA.RA_SALARIO as SALARIO
+		SRA.RA_SALARIO as SALARIO,
+		SRC.RC_MAT as contador
+
 
 	from SRC010 SRC (nolock)
 		inner join SRV010 SRV (nolock)
@@ -88,12 +111,34 @@ union
 
 		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRD.RD_PD, '-')) as VERBA,
-		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		
-		case SRD.RD_PD
+		case when SRD.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
+		else
+			case when SRD.RD_PD in ('029', '111', '113') then '03 Hora Extra'
+			else
+				case when SRD.RD_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
+				else
+					case when SRD.RD_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
+					else
+						case when SRD.RD_PD in ('845', '846') then '06 13º Salário'
+						else
+							case when SRD.RD_PD in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
+							else
+								case when SRD.RD_PD in ('830', '831', '832') then '08 Férias'
+								else '01 N/A Custo'
+								end
+							end
+						end
+					end
+				end
+			end
+		end as CONTA,
+		
+		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
+		case SRV.RV_COD
 			when '183' then 'VALOR A RECEBER'
 			when '999' then 'VALOR A RECEBER'
-		else '' end as DESC_VERBA2,
+		else SRV.RV_DESCDET end as DESC_VERBA2,
 
 		case trim(SRV.RV_TIPOCOD)
 			when '1' then 'PROVENTO'
@@ -105,7 +150,9 @@ union
 
 		SRD.RD_VALOR as VALOR,
 		SRD.RD_HORAS as HORAS,
-		SRA.RA_SALARIO as SALARIO
+		SRA.RA_SALARIO as SALARIO,
+		SRD.RD_MAT as contador
+
 	from SRD010 SRD (nolock)
 		inner join SRV010 SRV (nolock)
 			on SRV.D_E_L_E_T_ = ''
