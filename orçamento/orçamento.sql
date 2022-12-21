@@ -17,10 +17,9 @@ select
     convert(date, AK2.AK2_DATAI, 103) as DTINI_ITEM,
     convert(date, AK2.AK2_DATAF, 103) as DTFIM_ITEM,
     
-    AK2.AK2_VALOR as VALOR_ORCADO,
+    AK2.AK2_VALOR as VALORES_ORCAMENTO,
     AKD.AKD_VALOR1 as VALOR_LANCAMENTO,
     AKD.AKD_STATUS as STATUS_LANCAMENTO,
-    AKD.AKD_LOTE as LOTE_LANCAMENTO,
     AKD.AKD_ID as ID_LANCAMENTO,
     AKD.AKD_CO as CO_LANCAMENTO,
     AKD.AKD_ITEM as ITEM_LANCAMENTO,
@@ -37,14 +36,18 @@ select
     end as TIPO_SALDO,
 
     AKD.AKD_TPSALD as TIPO_LANCAMENTO,
+    AKD.AKD_LOTE as LOTE_LANCAMENTO,
+    substring(AKD.AKD_CHAVE, 1, 19) as REF_LANCAMENTO,
 
-    case when (select count(*) from AKD010 where AKD010.D_E_L_E_T_ = '' and substring(AKD010.AKD_CHAVE, 1, 19) = substring(AKD.AKD_CHAVE, 1, 19) and AKD010.AKD_TPSALD = 'EM') = 1 then AKD.AKD_VALOR1 else 0.0 end as VALOR_EMPENHADO,
-    case when (select count(*) from AKD010 where AKD010.D_E_L_E_T_ = '' and substring(AKD010.AKD_CHAVE, 1, 19) = substring(AKD.AKD_CHAVE, 1, 19) and AKD010.AKD_TPSALD = 'EM') = 2 then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
+    case when AKD.AKD_TPSALD = 'RE' then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
+    count(substring(AKD.AKD_CHAVE, 1, 19)) over(partition by substring(AKD.AKD_CHAVE, 1, 19) order by AKD.AKD_LOTE) as qtd_lanc_em,
+    case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 1 and count(substring(AKD.AKD_CHAVE, 1, 19)) over(partition by substring(AKD.AKD_CHAVE, 1, 19) order by AKD.AKD_LOTE) = 2 then AKD.AKD_VALOR1 else 0.0 end as VALOR_EMPENHADO,
+    case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0R' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
     
     AKD.AKD_USER as USUARIO,
     trim(AKD.AKD_HIST) as HISTORICO,
     trim(AKD.AKD_CHAVE) as CHAVE,
-    len(AKD.AKD_CHAVE),
+    len(AKD.AKD_CHAVE) tamanho_chave,
     AK8.AK8_FUNCAO as ROTINA,
     trim(AK8.AK8_DESCRI) as DESC_ROTINA
 
