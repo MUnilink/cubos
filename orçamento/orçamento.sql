@@ -13,7 +13,7 @@ select
     AK5.AK5_CTACTB as CCONTABIL,
     AK2.AK2_PERIOD as PERIODO,
     AK2.AK2_CLASSE as CC_ORC,
-    AK2.AK2_OPER as ITCT_ORC,
+    AK2.AK2_OPER as ATIV_ORC,
     convert(date, AK2.AK2_DATAI, 103) as DTINI_ITEM,
     convert(date, AK2.AK2_DATAF, 103) as DTFIM_ITEM,
     
@@ -26,7 +26,7 @@ select
     AKD.AKD_SEQ as SEQ,
     convert(date, AKD.AKD_DATA, 103) as DATA_LANCAMENTO,
     AKD.AKD_CLASSE as CC,
-    AKD.AKD_OPER as ITCT,
+    AKD.AKD_OPER as ATIV,
     
     case AKD.AKD_TIPO
         when 1 then 'CREDITO'
