@@ -1,11 +1,30 @@
 select
     SN1.N1_GRUPO as GRUPO,
 	trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
+	SN1.N1_CBASE as qtd,
 	trim(isnull(SN1.N1_DESCRIC, '-')) as DESC_ATIVO,
     trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	convert(date, SN3.N3_DINDEPR, 103) as INI_DEPREC,
 	SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
 	SNG.NG_TXDEPR1 /12 as DEPREC_MENSAL_GRUPO,
+
+	SN3.N3_CUSTBEM as CC,
+	SN3.N3_SUBCCON as ATIVIDADE,
+	trim(SN3.N3_CCONTAB) as CONTA,
+
+	SN4.N4_CCUSTO as CC_DEPREC,
+	SN4.N4_ITEM as ATIVIDADE_DEPREC,
+	
+	SN3.N3_CCUSTO as CC_DESPESA,
+	SN3.N3_SUBCTA as ATIV_DESPESA,
+
+	SN3.N3_CCCDEP as CC_DEPR_ACUM,
+	SN3.N3_SUBCCDE as ATIV_DEPR_ACUM,
+	trim(SN3.N3_CCDEPR) as CONTA_DEPR_ACUM,
+
+	SN3.N3_CCDESP as CC_DESP_DEPR,
+	SN3.N3_SUBCDEP as ATIV_DESP_DEPR,
+	trim(SN3.N3_CDEPREC) as CONTA_DESP_DEPR,
 
 	SN1.N1_QUANTD,
 	SN3.N3_VORIG1 as VALOR_ORIGINAL,
@@ -22,7 +41,7 @@ select
 	SN3.N3_TXDEPR4,
 	SN3.N3_TXDEPR5,
 	
-	SN4.N4_CONTA as CONTA,
+	trim(SN4.N4_CONTA) as CONTA_DEPREC,
 	case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO,
 	SN4.N4_DATA,
 	substring(SN4.N4_DATA, 1, 6) as PERIODO,
@@ -30,29 +49,23 @@ select
 	SN4.N4_VLROC1 as VALOR_DEPREC,
 	SN4.N4_VLROC2,
 	SN4.N4_VLROC3,
-	SN4.N4_ORIGEM,
-	SN4.N4_CCUSTO as CC,
-	SN3.N3_SUBCCON as ATIVIDADE
+	SN4.N4_ORIGEM
 
 from SN1010 SN1 (nolock)
     left join ST9010 ST9 (nolock)
         on ST9.D_E_L_E_T_ = ''
         and ST9.T9_CODBEM = SN1.N1_CODBEM
-	inner join SNG010 SNG (nolock)
+	left join SNG010 SNG (nolock)
 		on SNG.D_E_L_E_T_ = ''
 		and SNG.NG_GRUPO = SN1.N1_GRUPO
-	left join SN3010 SN3 (nolock)
+	inner join SN3010 SN3 (nolock)
 		on SN3.D_E_L_E_T_ = ''
 		and cast(SN3.N3_TIPO as int) = 1
-		and SN3.N3_FILIAL = SN1.N1_FILIAL
+		and cast(SN3.N3_TXDEPR1 as decimal) > 0
 		and SN3.N3_CBASE = SN1.N1_CBASE
-	left join SN4010 SN4 (nolock)
-		on SN4.D_E_L_E_T_ = ''
-		and SN4.N4_CBASE = SN1.N1_CBASE
 
-		left join CTT010 CTT (nolock)
-			on CTT.D_E_L_E_T_ = ''
-			and CTT.CTT_CUSTO = SN4.N4_CCUSTO
+		left join SN4010 SN4 (nolock)
+			on SN4.D_E_L_E_T_ = ''
+			and SN4.N4_CBASE = SN3.N3_CBASE
 where
         SN1.D_E_L_E_T_ = ''
-    and cast(SN3.N3_TXDEPR1 as decimal) > 0
