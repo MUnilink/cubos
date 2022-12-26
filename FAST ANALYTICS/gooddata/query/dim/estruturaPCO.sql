@@ -1,4 +1,5 @@
 select
+    concat(trim(AK2.AK2_ORCAME), trim(AK2.AK2_VERSAO), trim(AK2.AK2_CO)) as ID_ESTRUTURAPCO,
     AK3.AK3_ORCAME,
     AK3.AK3_VERSAO,
     AK3.AK3_CO,
