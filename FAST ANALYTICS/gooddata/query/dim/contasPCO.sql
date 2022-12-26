@@ -1,0 +1,10 @@
+select
+    AK5.AK5_CODIGO,
+    AK5.AK5_DESCRI,
+    AK5.AK5_COSUP,
+    AK5.AK5_TIPO,
+    AK5.AK5_DEBCRE,
+    AK5.AK5_MSBLQL,
+    AK5.AK5_CTACTB
+from AK5010 AK5 (nolock)
+where AK5.D_E_L_E_T_ = ''
