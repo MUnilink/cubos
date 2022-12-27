@@ -24,6 +24,7 @@ select
     case SRV.RV_COD
         when '183' then 'VALOR A RECEBER'
         when '999' then 'VALOR A RECEBER'
+        when '490' then 'VALOR A RECEBER'
     else trim(SRV.RV_DESCDET) end as DESC_VERBA2,
 
     case trim(SRV.RV_TIPOCOD)
@@ -60,6 +61,7 @@ from SRG010 SRG (nolock)
         inner join SQB010 SQB (nolock)
             on SQB.D_E_L_E_T_ = ''
             and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SQB.QB_DEPTO = SRA.RA_DEPTO
         inner join SRJ010 SRJ (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)

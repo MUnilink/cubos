@@ -43,6 +43,7 @@ from SRH010 SRH (nolock)
         inner join SQB010 SQB (nolock)
             on SQB.D_E_L_E_T_ = ''
             and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SQB.QB_DEPTO = SRA.RA_DEPTO
         inner join SRJ010 SRJ (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
