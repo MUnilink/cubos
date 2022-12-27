@@ -7,7 +7,9 @@ select
 	trim(isnull(SB1.B1_UM, '-')) as UN,
 
 	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE,
-	trim(isnull(CTT.CTT_DESC01, '-')) as CC,
+	trim(isnull(CTT.CTT_DESC01, '-')) as CCUSTO,
+	trim(isnull(SC7.C7_ITEMCTA, '-')) as AT,
+	trim(isnull(SC7.C7_CC, '-')) as CC,
 
 	trim(isnull(SC1.C1_NUM, '-')) as SC,
 	trim(isnull(SC1.C1_ITEM, '-')) as ITEM_SC,
