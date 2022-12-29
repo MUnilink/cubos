@@ -37,8 +37,7 @@ select
     substring(AKD.AKD_CHAVE, 1, 19) as REF_LANCAMENTO,
 
     case when AKD.AKD_TPSALD = 'RE' then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
-    count(substring(AKD.AKD_CHAVE, 1, 19)) over(partition by substring(AKD.AKD_CHAVE, 1, 19) order by AKD.AKD_LOTE) as qtd_lanc_em,
-
+    
     case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 2 then AKD.AKD_VALOR1*-1
     else
         case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 1 then AKD.AKD_VALOR1

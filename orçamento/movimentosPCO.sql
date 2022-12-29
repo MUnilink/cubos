@@ -4,13 +4,7 @@ select
     AK1.AK1_DESCRI as DESC_ORC,
     AK2.AK2_ID as ID,
     AK2.AK2_CO as CONTA_ORC,
-    AK2.AK2_PERIOD as PERIODO,
-    AK2.AK2_CLASSE as CC_ORC,
-    AK2.AK2_OPER as ATIV_ORC,
-    
-    convert(date, AK2.AK2_DATAI, 103) as DTINI_ITEM,
-    convert(date, AK2.AK2_DATAF, 103) as DTFIM_ITEM,
-    
+        
     AK2.AK2_VALOR as VALORES_ORCAMENTO,
     AKD.AKD_VALOR1 as VALOR_LANCAMENTO,
     AKD.AKD_STATUS as STATUS_LANCAMENTO,
@@ -20,7 +14,6 @@ select
     AKD.AKD_SEQ as SEQ,
     
     convert(date, AKD.AKD_DATA, 103) as DATA_LANCAMENTO,
-    AKD.AKD_DATA as PERIODO_ORCAMENTO,
     
     AKD.AKD_CLASSE as CC,
     AKD.AKD_OPER as ATIV,
@@ -37,8 +30,17 @@ select
     substring(AKD.AKD_CHAVE, 1, 19) as REF_LANCAMENTO,
 
     case when AKD.AKD_TPSALD = 'RE' then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
-    count(substring(AKD.AKD_CHAVE, 1, 19)) over(partition by substring(AKD.AKD_CHAVE, 1, 19) order by AKD.AKD_LOTE) as qtd_lanc_em,
-    case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 1 and count(substring(AKD.AKD_CHAVE, 1, 19)) over(partition by substring(AKD.AKD_CHAVE, 1, 19) order by AKD.AKD_LOTE) = 2 then AKD.AKD_VALOR1 else 0.0 end as VALOR_EMPENHADO,
+    
+    case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 2 then AKD.AKD_VALOR1*-1
+    else
+        case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 1 then AKD.AKD_VALOR1
+        else
+            case when AKD.AKD_TPSALD = 'RE' then 0.0
+            else 0.0
+            end
+        end
+    end as VALOR_EMPENHADO,
+    
     case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0R' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
     
     AKD.AKD_USER as USUARIO,
@@ -65,9 +67,6 @@ from AK2010 AK2 (nolock)
         and AK3.AK3_ORCAME = AK2.AK2_ORCAME
         and AK3.AK3_CO = AK2.AK2_CO
 
-        inner join AK5010 AK5 (nolock)
-            on AK5.D_E_L_E_T_ = ''
-            and AK5.AK5_CODIGO = AK3.AK3_CO
         inner join AK1010 AK1 (nolock)
             on AK1.D_E_L_E_T_ = ''
             and AK1.AK1_CODIGO = AK3.AK3_ORCAME
