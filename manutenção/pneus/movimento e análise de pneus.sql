@@ -6,30 +6,30 @@ select
 	ST9.T9_SITBEM,
     
     ST9.T9_STATUS,
-    trim(TQY.TQY_DESTAT) as TQY_DESTAT,
+    trim(TQY.TQY_DESTAT) as STATUS_PNEU,
     
     STZ.TZ_ORDEM,
-    convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103) as TZ_DATAMOV,
+    convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103) as DATA_ENT,
     STZ.TZ_POSCONT,
-	convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 103) as TZ_DATASAI,
+	convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 103) as DATA_SAI,
     STZ.TZ_CONTSAI,
 
     abs(STZ.TZ_CONTSAI - STZ.TZ_POSCONT) as km,
 
-	STZ.TZ_BEMPAI,
+	STZ.TZ_BEMPAI as ESTRUTURA,
 	STZ.TZ_TIPOMOV,
 	STZ.TZ_CAUSA,
-	ST8_MV.T8_NOME,
+	trim(concat(cast(STZ.TZ_CAUSA as int), ' - ' , ST8.T8_NOME)) as DESTINO_PNEU, /* quando com análise sem movimento, retorna o destino do movimento */
 
     (
         select top 1
-            case when STZ.TZ_CAUSA = 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)')
+            case when STZ.TZ_CAUSA = 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)') /* QUANDO MOVIMENTO DE RODIZIO*/
             else
-                case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO = 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO = 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')') /* QUANDO MOVIMENTO DE RETORNO AO ESTOQUE E ANALISE DE AJUSTE */
                 else
-                    case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO != 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AJUSTE STATUS N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                    case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO != 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AJUSTE STATUS N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')') /* QUANDO MOVIMENTO DE RETORNO AO ESTOQUE E ANALISE DIFERENTE DE AJUSTE */
                     else
-                        case when STZ.TZ_CAUSA = '' then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                        case when STZ.TZ_CAUSA = '' then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')') /* QUANDO SEM CAUSA DE MOVIMENTO */
                         else
                             concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' - ')
                         end
@@ -52,13 +52,13 @@ select
     ) as ANALISE_SAI,
     (
         select top 1
-            case when STZ.TZ_CAUSA = 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)')
+            case when STZ.TZ_CAUSA = 7 then concat(convert(datetimeoffset, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 113), ' SEM ANALISE (RODIZIO)') /* QUANDO MOVIMENTO DE RODIZIO*/
             else
-                case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO = 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO = 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')') /* QUANDO MOVIMENTO DE RETORNO AO ESTOQUE E ANALISE DE AJUSTE */
                 else
-                    case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO != 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' AJUSTE STATUS N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                    case when STZ.TZ_CAUSA = 8 and TR4010.TR4_MOTIVO != 30 then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' AJUSTE STATUS N° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')') /* QUANDO MOVIMENTO DE RETORNO AO ESTOQUE E ANALISE DIFERENTE DE AJUSTE */
                     else
-                        case when STZ.TZ_CAUSA = '' then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')')
+                        case when STZ.TZ_CAUSA = '' then concat(convert(datetimeoffset, concat(TR4010.TR4_DTANAL, ' ', TR4010.TR4_HRANAL), 113), +' - AN° '+ TR4010.TR4_NUMANA +' - '+ trim(TR4010.TR4_PAREC) +' - '+ trim(SX5010.X5_DESCRI) +' - '+ '(' + TR4010.TR4_MOTIVO + ' ' + trim(ST8010.T8_NOME) + ')') /* QUANDO SEM CAUSA DE MOVIMENTO */
                         else
                             concat(convert(datetimeoffset, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113), ' - ')
                         end
@@ -97,9 +97,9 @@ from TQS010 TQS (nolock)
         on STZ.D_E_L_E_T_ = ''
         and STZ.TZ_CODBEM = TQS.TQS_CODBEM
 
-        left join ST8010 ST8_MV (nolock)
-			on ST8_MV.D_E_L_E_T_ = ''
-			and ST8_MV.T8_CODOCOR = STZ.TZ_CAUSA
+        left join ST8010 ST8 (nolock)
+			on ST8.D_E_L_E_T_ = ''
+			and ST8.T8_CODOCOR = STZ.TZ_CAUSA
     
     inner join TQY010 TQY (nolock)
         on TQY.D_E_L_E_T_ = ''
