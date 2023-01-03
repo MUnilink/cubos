@@ -19,15 +19,24 @@ select
     
     SER.D1_DOC as NF_SERVICO,
     SER.D1_SERIE as SER_SERVICO,
-    convert(date, SER.D1_DTDIGIT, 103) as DT_SERVICO,
+    convert(date, SER.D1_DTDIGIT, 103) as DT_NFS,
 
-    REM.D2_DOC as NF_REMESSA,
-    REM.D2_SERIE as SERIE_REMESSA,
-    convert(date, REM.D2_EMISSAO, 103) as DT_REMESSA,
-
-    RET.D1_DOC as NF_RETORNO,
-    RET.D1_SERIE as SER_RETORNO,
-    convert(date, RET.D1_EMISSAO, 103) as DT_RETORNO,
+    (
+        select concat(REM.D2_DOC, ' - ', RET.D1_DOC)
+        from SD2010 REM (nolock)
+            left join SD1010 RET (nolock)
+                on RET.D_E_L_E_T_ = ''
+                and RET.D1_FILIAL = REM.D2_FILIAL
+                and RET.D1_DOC = REM.D2_NFORI
+                and RET.D1_SERIE = REM.D2_SERIORI
+                and RET.D1_ITEM = REM.D2_ITEMORI
+        where
+                REM.D_E_L_E_T_ = ''
+            and REM.D2_TES = 548
+            and RET.D1_LOCAL in (21, 22, 23, 24, 26)
+            and REM.D2_COD = SB1.B1_COD
+            and RET.D1_EMISSAO = SER.D1_DTDIGIT
+    ) as REMRET,
 
     TR7.TR7_NFE,
     TR7.TR7_SERIE
@@ -67,18 +76,6 @@ from TQS010 TQS (nolock)
 		left join SB1010 SB1 (nolock)
 			on SB1.D_E_L_E_T_ = ''
 			and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
-
-            left join SD2010 REM (nolock)
-                on REM.D_E_L_E_T_ = ''
-                and REM.D2_COD = SB1.B1_COD
-                and REM.D2_TES = 548
-
-                left join SD1010 RET (nolock)
-                    on RET.D_E_L_E_T_ = ''
-                    and RET.D1_FILIAL = REM.D2_FILIAL
-                    and RET.D1_DOC = REM.D2_NFORI
-                    and RET.D1_SERIE = REM.D2_SERIORI
-                    and RET.D1_ITEM = REM.D2_ITEMORI
 
 where
         TQS.D_E_L_E_T_ = ''
