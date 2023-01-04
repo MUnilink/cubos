@@ -16,6 +16,7 @@ select
     AKD.AKD_STATUS as STATUS_LANCAMENTO,
     AKD.AKD_ID as ID_LANCAMENTO,
     AKD.AKD_CO as CO_LANCAMENTO,
+    AK5.AK5_CTACTB as CONTACONTABIL,
     AKD.AKD_ITEM as ITEM_LANCAMENTO,
     AKD.AKD_SEQ as SEQ,
     
@@ -34,7 +35,13 @@ select
 
     AKD.AKD_TPSALD as TIPO_LANCAMENTO,
     AKD.AKD_LOTE as LOTE_LANCAMENTO,
-    substring(AKD.AKD_CHAVE, 1, 19) as REF_LANCAMENTO,
+    
+    case when AKD.AKD_CHAVE like 'SD2%' then concat(substring(AKD.AKD_CHAVE, 1, 9), substring(AKD.AKD_HIST, 10, 9))
+    else
+        case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 1, 19)
+        else AKD.AKD_CHAVE
+        end
+    end as REF_LANCAMENTO,
 
     case when AKD.AKD_TPSALD = 'RE' then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
     
