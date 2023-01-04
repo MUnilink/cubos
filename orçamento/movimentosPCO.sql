@@ -27,7 +27,13 @@ select
 
     AKD.AKD_TPSALD as TIPO_LANCAMENTO,
     AKD.AKD_LOTE as LOTE_LANCAMENTO,
-    substring(AKD.AKD_CHAVE, 1, 19) as REF_LANCAMENTO,
+    
+    case when AKD.AKD_CHAVE like 'SD2%' then concat(substring(AKD.AKD_CHAVE, 1, 9), substring(AKD.AKD_HIST, 10, 19))
+    else
+        case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 4, 19)
+        else AKD.AKD_CHAVE
+        end
+    end as REF_LANCAMENTO,
 
     case when AKD.AKD_TPSALD = 'RE' then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
     
@@ -60,6 +66,10 @@ from AK2010 AK2 (nolock)
         inner join AK8010 AK8 (nolock)
             on AK8.D_E_L_E_T_ = ''
             and AK8.AK8_CODIGO = AKD.AKD_PROCES
+
+        inner join SC7010 SC7 (nolock)
+            on SC7.D_E_L_E_T_ = ''
+            and SC7.C7_FILIAL + SC7.C7_NUM + SC7.C7_ITEM = case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 4, 19)
 
     inner join AK3010 AK3 (nolock)
         on AK3.D_E_L_E_T_ = ''
