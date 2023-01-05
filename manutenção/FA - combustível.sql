@@ -19,14 +19,17 @@ select
 	
     trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,
 	ZD3.ZD3_DTPROC,
-    year(ZD3.ZD3_DATA) as ano_ABA,
-    month(ZD3.ZD3_DATA) as mes_ABA,
 
 	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
 	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
-	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT
+	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT,
+
+	year(ZD3.ZD3_DATA) as ano_ABA,
+    month(ZD3.ZD3_DATA) as mes_ABA,
+	trim(TQM.TQM_NOMCOM) as TQM_NOMCOM
+
 from
 	(
 		select
