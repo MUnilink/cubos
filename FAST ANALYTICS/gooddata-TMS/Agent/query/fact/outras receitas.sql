@@ -1,4 +1,5 @@
 select
+    'P |01|01' AS BK_EMPRESA,
     VIAGEM.DATAFIM as DATA_EMISSAO,
     DT6.DT6_DATEMI as DATA_DOC,
     
