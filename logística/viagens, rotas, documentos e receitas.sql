@@ -100,8 +100,27 @@ select
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
 
-    DF1.DF1_NUMAGE,
-    DF1.DF1_ITEAGE,
+    
+    DF1.DF1_NUMAGE as AGENDAMENTO,
+    DF1.DF1_ITEAGE as ITEM_AGENDA,
+    DF1.DF1_YDSPOR as PORTO,
+    DF1.DF1_YDIBOO as BOOKING,
+    DF1.DF1_YOSCLI as OS_CLIENTE,
+    DF1.DF1_YNAVIO as NAVIO,
+    DF1.DF1_YDSNAV as NOME_NAVIO,
+    DF1.DF1_YVIAGE as VIAGEM_PORT,
+    DF1.DF1_YCONT as CONTEINER,
+    DF1.DF1_YLACRE as LACRE,
+    DF1.DF1_YTPEQP as ,
+    DF1.DF1_YDTPEQ as ,
+    DF1.DF1_YTERMI as ,
+    DF1.DF1_YLJTER as ,
+    DF1.DF1_YDSTER as ,
+    DF1.DF1_YDTCON, DF1.DF1_YHRCON,
+    DF1.DF1_YARMAD as ARMADORA,
+    DF1.DF1_YLJARM as LOJA_ARMADORA,
+    DF1.DF1_CODOBC as ,
+    DF1.DF1_YDSARM as NOME_ARMADORA,
 
     COMP.D2_DOC as COMP_DOC,
     COMP.D2_SERIE as COMP_SERIE,
@@ -256,6 +275,12 @@ from DTQ010 DTQ (nolock)
             and DT5.DT5_NUMSOL = DUD.DUD_DOC
             and DUD.DUD_SERIE = 'COL'
 
+                left join DF1010 DF1 (nolock)
+                    on DF1.D_E_L_E_T_ = ''
+                    and DF1.DF1_FILDOC = DT5.DT5_FILORI
+                    and DF1.DF1_DOC = DT5.DT5_DOC
+                    and DF1.DF1_SERIE = DT5.DT5_SERIE
+
 		left join DT6010 DT6 (nolock)
 			on DT6.D_E_L_E_T_ = ''
 			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
@@ -294,11 +319,6 @@ from DTQ010 DTQ (nolock)
                 and DTC.DTC_FILORI = DT6.DT6_FILDOC
                 and DTC.DTC_DOC = DT6.DT6_DOC
                 and DTC.DTC_SERIE = DT6.DT6_SERIE
-
-                left join DF1010 DF1 (nolock)
-                    on DF1.D_E_L_E_T_ = ''
-                    and DF1.DF1_FILDOC = DTC.DTC_FILORI
-                    and DF1.DF1_DOC = DTC.DTC_NUMSOL
     
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
