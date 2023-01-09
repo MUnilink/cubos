@@ -26,7 +26,7 @@
         else
             case when RHP.RHP_PD in (88) then 'UNIMED'
             else
-                case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+                case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
                 else
                     case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
                     else 'OUTROS'
@@ -54,7 +54,7 @@
         case RHP.RHP_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            /*when 3 then trim(AGG.RB_SEXO)*/
+            when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
 
@@ -78,7 +78,7 @@
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
-        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHP.RHP_DTOCOR) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
         
@@ -177,7 +177,7 @@ union
         else
             case when RHO.RHO_PD in (88) then 'UNIMED'
             else
-                case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+                case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
                 else
                     case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
                     else 'OUTROS'
@@ -205,7 +205,7 @@ union
         case RHO.RHO_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            /*when 3 then trim(AGG.RB_SEXO)*/
+            when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
 
@@ -229,7 +229,7 @@ union
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
-        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHO.RHO_DTOCOR) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
         
@@ -327,7 +327,7 @@ union
         else
             case when RHR.RHR_PD in (88) then 'UNIMED'
             else
-                case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 'ODONTO'
+                case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
                 else
                     case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
                     else 'OUTROS'
@@ -355,7 +355,7 @@ union
         case RHR.RHR_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            /*when 3 then trim(AGG.RB_SEXO)*/
+            when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
 
@@ -379,7 +379,7 @@ union
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
-        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHR.RHR_DATA) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
         
@@ -476,7 +476,7 @@ union
         else
             case when RHS.RHS_PD in (88) then 'UNIMED'
             else
-                case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 078) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
+                case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
                 else
                     case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
                     else 'OUTROS'
@@ -504,7 +504,7 @@ union
         case RHS.RHS_ORIGEM
             when 1 then trim(SRA.RA_SEXO)
             when 2 then trim(DEP.RB_SEXO)
-            /*when 3 then trim(AGG.RB_SEXO)*/
+            when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
 
@@ -528,13 +528,13 @@ union
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
-        /*trim(AGG.RB_SEXO) as AGG_SEXO,*/
+        trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHS.RHS_DATA) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
         
         RHS.RHS_VLRFUN as VALOR_FUNC_TOTAL,
         isnull(BASE_ODONTO.RD_VALOR, RHS.RHS_VLREMP) as VALOR_EMPRESA,
-        isnull(BASE_ODONTO + RHS.RHS_VLRFUN as VALOR_FATURAMENTO,
+        isnull(BASE_ODONTO.RD_VALOR, RHS.RHS_VLRFUN) as VALOR_FATURAMENTO,
 
         RHS.RHS_PD as VERBA,
         RHS.RHS_TPLAN as TIPO_LANCAMENTO,
@@ -549,7 +549,7 @@ union
             and BASE_ODONTO.RD_FILIAL = RHS.RHS_FILIAL
             and BASE_ODONTO.RD_MAT = RHS.RHS_MAT
             and BASE_ODONTO.RD_PERIODO = substring(RHS.RHS_DATA, 1, 6)
-            and case when RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 078) then 711 else null end = BASE_ODONTO.RD_PD
+            and BASE_ODONTO.RD_PD = case when RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 711 else null end
         inner join SRV010 SRV (nolock)
             on SRV.D_E_L_E_T_ = ''
             and SRV.RV_COD = RHS.RHS_PD
