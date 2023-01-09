@@ -1,0 +1,26 @@
+REUNIÃO DIA 6/1/23
+
+Felipe abre a reunião citando a necessidade de realizar a reuniões às sextas de manhã, apesar das obrigrições diárias;
+Pauta: GLPI, projeto de proteção de dados, projetos do Protheus.
+
+- GLPI
+Sávio diz que GLPI está funcionando, verificando com o Stefson para criação de chamado via email. Diz que após o dia 15/1 seria importante iniciar a implantação.
+Felipe pergunta se não seria possível na semana do dia 9 selecionar alguns usuários. Sávio diz que hoje não é viável ter essa informação precisa, visto que apenas na descrição do chamado é possível obter a origem do chamado.
+Ficou a sugestão de reunir os aprendizes para criarem as solicitações. Discussão sobre usar o nome do usuário ou um nome genérico para os usuários do sistema GLPI.
+
+- Projeto de segurança de dados
+Rhayan relata que está parado, devido à atenção necessária ao incidente do Mucuripe.
+
+- Projetos do sistema
+implantação do PCO e do portal de compras. Entrada em produção do PCO para o dia 9, mas está pendente a gestão do orçamento, de forma que os gestores possam acompanhar e definir como o setor lidará com o orçamento.
+Felipe lembra que as compras passarão a ser para cada centro de custo/atividade, em vez de para o almoxarifado. Rhayan fica em dúvida dos custos da TI, mas todos os custos estarão previstos pelo orçamento, incluindo contratos de serviços, aquisição de componentes, salários etc.
+integração do portal de compras com o Protheus para maior agilidade nas cotações e negociações do setor de compras, além do aprendizado técnico no processo de integração.
+Rhayan fica em dúvida de quem usará o portal de compras, e o Felipe explica seu funcionamento, que, em geral, é para expandir muito a quantidade de fornecedores para o compras.
+Felipe lembra que o CRM já está em uso pelo setor comercial. Rhayan sugere que o suporte ao CRM pode ficar com o centro, a fim de descentralizar o suporte ao sistema.
+Felipe faz um histórico do app de operação portuária, que está em teste há mais de um ano, passando por várias alterações pelo Porto, pela Cristianne e pelo Eduardo, para uso dos conferentes e coordenadores da operação de campo.
+No fim de 2022 estava previsto o uso intensivo do app para a consulta dos custos da operação portuária, o que não pôde ser feito devido à falta de informações para analisar o custo da operação portuária.
+Alternativamente, colocar em produção já em janeiro seria eficiente devido aos testes não encontrarem erros críticos. Cita a conversa com Porto
+Felipe sugere a virada de versão do sistema para a 12.1.2210 pela própria equipe.
+
+Fica o dever de realizar as reuniões às sextas, a princípio, e na segunda uma revisão do início da semana.
+
