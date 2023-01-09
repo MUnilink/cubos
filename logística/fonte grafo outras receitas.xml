@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="isabela.lourencini" created="Thu Dec 20 09:45:28 BRST 2018" guiVersion="3.4.4.P" id="1545312668311" licenseType="Commercial" modified="Mon Jan 09 11:03:34 BRST 2023" modifiedBy="Manoel" name="tms_fct_ReceitaTransportadora" revision="1.49" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/_2Dates.fmt" id="Metadata2"/>
+<Metadata fileURL="${META_DIR}/obj_dto.fmt" id="Metadata1"/>
+<Metadata fileURL="${META_DIR}/sintax.fmt" id="Metadata4"/>
+<Metadata id="Metadata6" previewAttachment="${DATA_SOURCE_DIR}/outras receitas.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="outras receitas.csv" name="outras_receitas_18b9662" previewAttachment="${DATA_SOURCE_DIR}/outras receitas.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="BK_EMPRESA" type="string"/>
+<Field name="DATA_EMISSAO" type="string"/>
+<Field name="DATA_DOC" type="string"/>
+<Field name="ND_NUM" type="string"/>
+<Field name="ND_VALOR" type="string"/>
+<Field name="ND_EMISSAO" type="string"/>
+<Field name="RPS_PEDIDO" type="string"/>
+<Field name="RPS_TOTAL" type="string"/>
+<Field name="RPS_EMISSAO" type="string"/>
+<Field name="DOCAV_DOC" type="string"/>
+<Field name="DOCAV_SERIE" type="string"/>
+<Field name="DOCAV_DATEMI" type="string"/>
+<Field name="BK_REMETENTE" type="string"/>
+<Field name="BK_DESTINATARIO" type="string"/>
+<Field name="BK_DEVEDOR" type="string"/>
+<Field name="BK_CDRORI" type="string"/>
+<Field name="BK_CDRDES" type="string"/>
+<Field name="BK_CDRCAL" type="string"/>
+<Field name="BK_NEGOCIACAO" type="string"/>
+<Field name="BK_SERVICO" type="string"/>
+<Field name="BK_TIPTRA" type="string"/>
+<Field name="BK_FILIAL" type="string"/>
+<Field name="BK_FILIAL_ORIGEM" type="string"/>
+<Field name="BK_FILIAL_DESTINO" type="string"/>
+<Field name="BK_REGIAO_REM" type="string"/>
+<Field name="BK_REGIAO_DES" type="string"/>
+<Field name="BK_REGIAO_DEV" type="string"/>
+<Field name="BK_FILIAL_DOCTO" type="string"/>
+<Field name="DT6_FILDOC" type="string"/>
+<Field name="DT6_DOC" type="string"/>
+<Field name="DT6_SERIE" type="string"/>
+<Field name="ID_VIAGEM" type="string"/>
+<Field name="ID_VEICULO_CM" type="string"/>
+<Field name="ID_VEICULO_RB1" type="string"/>
+<Field name="ID_VEICULO_RB2" type="string"/>
+<Field name="ID_VEICULO_RB3" type="string"/>
+<Field name="ID_MOTORISTA" type="string"/>
+<Field eofAsDelimiter="false" name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachment="${DATA_SOURCE_DIR}/outras receitas.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="outras receitas.csv" name="outras_receitas_41ef7ca" previewAttachment="${DATA_SOURCE_DIR}/outras receitas.csv" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="BK_EMPRESA" type="string"/>
+<Field name="DATA_EMISSAO" type="string"/>
+<Field name="DATA_DOC" type="string"/>
+<Field name="ND_NUM" type="string"/>
+<Field name="ND_VALOR" type="string"/>
+<Field name="ND_EMISSAO" type="string"/>
+<Field name="RPS_PEDIDO" type="string"/>
+<Field name="RPS_TOTAL" type="string"/>
+<Field name="RPS_EMISSAO" type="string"/>
+<Field name="DOCAV_DOC" type="string"/>
+<Field name="DOCAV_SERIE" type="string"/>
+<Field name="DOCAV_DATEMI" type="string"/>
+<Field name="BK_REMETENTE" type="string"/>
+<Field name="BK_DESTINATARIO" type="string"/>
+<Field name="BK_DEVEDOR" type="string"/>
+<Field name="BK_CDRORI" type="string"/>
+<Field name="BK_CDRDES" type="string"/>
+<Field name="BK_CDRCAL" type="string"/>
+<Field name="BK_NEGOCIACAO" type="string"/>
+<Field name="BK_SERVICO" type="string"/>
+<Field name="BK_TIPTRA" type="string"/>
+<Field name="BK_FILIAL" type="string"/>
+<Field name="BK_FILIAL_ORIGEM" type="string"/>
+<Field name="BK_FILIAL_DESTINO" type="string"/>
+<Field name="BK_REGIAO_REM" type="string"/>
+<Field name="BK_REGIAO_DES" type="string"/>
+<Field name="BK_REGIAO_DEV" type="string"/>
+<Field name="BK_FILIAL_DOCTO" type="string"/>
+<Field name="DT6_FILDOC" type="string"/>
+<Field name="DT6_DOC" type="string"/>
+<Field name="DT6_SERIE" type="string"/>
+<Field name="ID_VIAGEM" type="string"/>
+<Field name="ID_VEICULO_CM" type="string"/>
+<Field name="ID_VEICULO_RB1" type="string"/>
+<Field name="ID_VEICULO_RB2" type="string"/>
+<Field name="ID_VEICULO_RB3" type="string"/>
+<Field name="ID_MOTORISTA" type="string"/>
+<Field eofAsDelimiter="false" name="PK_MODULO" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata3" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Receita Transporte.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Receita Transporte.csv" name="Receita_Transportadora_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field label="BK_EMPRESA" name="BK_EMPRESA" type="string"/>
+<Field label="BK_FILIAL" name="BK_FILIAL" type="string"/>
+<Field label="DATA_EMISSAO" name="DATA_EMISSAO" type="string"/>
+<Field label="BK_REMETENTE" name="BK_REMETENTE" type="string"/>
+<Field label="BK_DESTINATARIO" name="BK_DESTINATARIO" type="string"/>
+<Field label="BK_DEVEDOR" name="BK_DEVEDOR" type="string"/>
+<Field label="BK_CDRORI" name="BK_CDRORI" type="string"/>
+<Field label="BK_CDRDES" name="BK_CDRDES" type="string"/>
+<Field label="BK_CDRCAL" name="BK_CDRCAL" type="string"/>
+<Field label="BK_COMPONENTE" name="BK_COMPONENTE" type="string"/>
+<Field label="BK_NEGOCIACAO" name="BK_NEGOCIACAO" type="string"/>
+<Field label="BK_SERVICO" name="BK_SERVICO" type="string"/>
+<Field label="BK_FILIAL_ORIGEM" name="BK_FILIAL_ORIGEM" type="string"/>
+<Field label="BK_FILIAL_DESTINO" name="BK_FILIAL_DESTINO" type="string"/>
+<Field label="BK_FILIAL_DOCTO" name="BK_FILIAL_DOCTO" type="string"/>
+<Field label="BK_DOCTMS" name="BK_DOCTMS" type="string"/>
+<Field label="BK_TIPTRA" name="BK_TIPTRA" type="string"/>
+<Field label="FILDOC" name="FILDOC" type="string"/>
+<Field label="DOCUMENTO" name="DOCUMENTO" type="string"/>
+<Field label="SERIE" name="SERIE" type="string"/>
+<Field label="PRODUTO" name="PRODUTO" type="string"/>
+<Field label="BK_REGIAO_REM" name="BK_REGIAO_REM" type="string"/>
+<Field label="BK_REGIAO_DES" name="BK_REGIAO_DES" type="string"/>
+<Field label="BK_REGIAO_DEV" name="BK_REGIAO_DEV" type="string"/>
+<Field label="BK_REGIAO_CDRCAL" name="BK_REGIAO_CDRCAL" type="string"/>
+<Field label="BK_REGIAO_CDRORI" name="BK_REGIAO_CDRORI" type="string"/>
+<Field label="BK_FILIAL_ORIGEM" name="BK_FILIAL_ORIGEM_1" type="string"/>
+<Field label="VALOR_COMPONENTE" name="VALOR_COMPONENTE" type="string"/>
+<Field label="VALOR_IMPOSTO" name="VALOR_IMPOSTO" type="string"/>
+<Field eofAsDelimiter="false" label="VALOR_TOTAL" name="VALOR_TOTAL" type="string"/>
+<Field name="BK_MOEDA" type="string"/>
+<Field name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata5" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Receita Transporte.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Receita Transporte.csv" name="Receita_Transportadora_Output" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field label="BK_EMPRESA" name="BK_EMPRESA" type="string"/>
+<Field label="BK_FILIAL" name="BK_FILIAL" type="string"/>
+<Field format="yyyyMMdd HH:mm:ss" label="DATA_EMISSAO" name="DATA_EMISSAO" type="date"/>
+<Field label="BK_REMETENTE" name="BK_REMETENTE" type="string"/>
+<Field label="BK_DESTINATARIO" name="BK_DESTINATARIO" type="string"/>
+<Field label="BK_DEVEDOR" name="BK_DEVEDOR" type="string"/>
+<Field label="BK_CDRORI" name="BK_CDRORI" type="string"/>
+<Field label="BK_CDRDES" name="BK_CDRDES" type="string"/>
+<Field label="BK_CDRCAL" name="BK_CDRCAL" type="string"/>
+<Field label="BK_COMPONENTE" name="BK_COMPONENTE" type="string"/>
+<Field label="BK_NEGOCIACAO" name="BK_NEGOCIACAO" type="string"/>
+<Field label="BK_SERVICO" name="BK_SERVICO" type="string"/>
+<Field label="BK_FILIAL_ORIGEM" name="BK_FILIAL_ORIGEM" type="string"/>
+<Field label="BK_FILIAL_DESTINO" name="BK_FILIAL_DESTINO" type="string"/>
+<Field label="BK_FILIAL_DOCTO" name="BK_FILIAL_DOCTO" type="string"/>
+<Field label="BK_DOCTMS" name="BK_DOCTMS" type="string"/>
+<Field label="BK_TIPTRA" name="BK_TIPTRA" type="string"/>
+<Field label="FILDOC" name="FILDOC" type="string"/>
+<Field label="DOCUMENTO" name="DOCUMENTO" type="string"/>
+<Field label="SERIE" name="SERIE" type="string"/>
+<Field label="PRODUTO" name="PRODUTO" type="string"/>
+<Field label="BK_REGIAO_REM" name="BK_REGIAO_REM" type="string"/>
+<Field label="BK_REGIAO_DES" name="BK_REGIAO_DES" type="string"/>
+<Field label="BK_REGIAO_DEV" name="BK_REGIAO_DEV" type="string"/>
+<Field label="BK_REGIAO_CDRCAL" name="BK_REGIAO_CDRCAL" type="string"/>
+<Field label="BK_REGIAO_CDRORI" name="BK_REGIAO_CDRORI" type="string"/>
+<Field label="BK_FILIAL_ORIGEM" name="BK_FILIAL_ORIGEM_1" type="string"/>
+<Field label="VALOR_COMPONENTE" name="VALOR_COMPONENTE" type="decimal"/>
+<Field label="VALOR_IMPOSTO" name="VALOR_IMPOSTO" type="decimal"/>
+<Field eofAsDelimiter="false" label="VALOR_TOTAL" name="VALOR_TOTAL" type="decimal"/>
+<Field name="PK_MODULO" type="string"/>
+</Record>
+</Metadata>
+<Property fileURL="workspace.prm" id="GraphParameter0"/>
+<Sequence cached="8" id="Sequence0" name="SequenciaHom" start="1" step="1" type="PRIMITIVE_SEQUENCE"/>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="167" id="Note1" textColorB="0" textColorG="0" textColorR="0" textFontSize="8" title="2. REMOVER DADOS" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="10" width="504" x="670" y="1">
+<attr name="text"><![CDATA[Realiza a remoção dos dados duplicados do ambiente, de acordo com o método de carga (Full Load / Incremental).]]></attr>
+</Note>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="148" id="Note0" textColorB="0" textColorG="0" textColorR="0" textFontSize="8" title="1. LEITURA / TRATAMENTO DOS DADOS" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="10" width="903" x="-258" y="20"/>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="160" id="Note6" textColorB="0" textColorG="0" textColorR="0" textFontSize="8" title="3. REMOVER DADOS (MONTHS_TO_LOAD)" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="10" width="504" x="670" y="187">
+<attr name="text"><![CDATA[Apaga os dados históricos do workspace do GoodData, caso estes sejam muito antigos, garantindo assim a eficiência na geração de relatórios da plataforma.]]></attr>
+</Note>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="132" id="Note2" textColorB="0" textColorG="0" textColorR="0" textFontSize="8" title="4. CARGA RECEITA TRANSPORTADORA E DOCUMENTO" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="10" width="504" x="670" y="364"/>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node enabled="disabled" guiName="Trash" guiX="839" guiY="404" id="TRASH" type="TRASH"/>
+</Phase>
+<Phase number="10">
+<Node enabled="enabled" guiName="ExtFilter" guiX="172" guiY="67" id="EXT_FILTER1" type="EXT_FILTER">
+<attr name="filterExpression"><![CDATA[//#CTL2
+$in.0.BK_EMPRESA <> null]]></attr>
+</Node>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(${DATA_SOURCE_DIR}/${gdc_agent_zip})#outras receitas.csv*" guiName="Lê (E) as outras receitas" guiX="-243" guiY="67" id="LE_E_AS_OUTRAS_RECEITAS" type="DATA_READER"/>
+<Node enabled="enabled" guiName="MONTHS_TO_LOAD Filter" guiX="-43" guiY="67" id="MONTHS_TO_LOAD_FILTER" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	date GOODDATA_MINDATE = str2date('${GOODDATA_MINDATE}', 'yyyy-MM-dd');
+	date GOODDATA_MAXDATE = str2date('${GOODDATA_MAXDATE}', 'yyyy-MM-dd');
+	date data;
+	
+	long MONTHS_TO_LOAD = str2long('${MONTHS_TO_LOAD}');
+	string THIS_MONTH = right(left(date2str(today(), 'dd/MM/yyyy'), 5), 2);
+	string THIS_YEAR = right(date2str(today(), 'dd/MM/yyyy'), 4);
+	date ETL_MAXDATE = dateAdd(str2date('01/' + THIS_MONTH + '/' + THIS_YEAR, 'dd/MM/yyyy'), -1*MONTHS_TO_LOAD, month);
+	
+	if(($in.0.DATA_EMISSAO == null) or (trim($in.0.DATA_EMISSAO) == '')) {
+		$out.0.* = null;
+	} else {
+		data = str2date($in.0.DATA_EMISSAO, '${DATE_PATTERN}', '${DATE_LOCALE}');
+		if ((data < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE) || (data < ETL_MAXDATE)) {
+			$out.0.* = null;
+		} else {
+			$out.0.* = $in.0.*;
+		}
+	}
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="SimpleCopy" guiX="503" guiY="68" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
+<Node enabled="enabled" guiName="Tratament" guiX="338" guiY="67" id="TRATAMENT" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import "trans/lib.ctl";
+// Transforms input record into output record.
+function integer transform() {
+    $out.0.BK_EMPRESA = formatKey($in.0.BK_EMPRESA, true);
+    $out.0.DATA_EMISSAO = formatDate($in.0.DATA_EMISSAO);
+    $out.0.DATA_DOC = formatDate($in.0.DATA_DOC);
+    $out.0.ND_NUM = formatString($in.0.ND_NUM, null);
+    $out.0.ND_VALOR = formatDecimal($in.0.ND_VALOR, true);
+    $out.0.ND_EMISSAO = formatDate($in.0.ND_EMISSAO);
+    $out.0.RPS_PEDIDO = formatString($in.0.RPS_PEDIDO, null);
+    $out.0.RPS_TOTAL = formatDecimal($in.0.RPS_TOTAL, true);
+    $out.0.RPS_EMISSAO = formatDate($in.0.RPS_EMISSAO);
+    $out.0.DOCAV_DOC = formatString($in.0.DOCAV_DOC, null);
+    $out.0.DOCAV_SERIE = formatString($in.0.DOCAV_SERIE, null);
+    $out.0.DOCAV_DATEMI = formatDate($in.0.DOCAV_DATEMI);
+    $out.0.BK_REMETENTE = formatKey($in.0.BK_REMETENTE, true);
+    $out.0.BK_DESTINATARIO = formatKey($in.0.BK_DESTINATARIO, true);
+    $out.0.BK_DEVEDOR = formatKey($in.0.BK_DEVEDOR, true);
+    $out.0.BK_CDRORI = formatKey($in.0.BK_CDRORI, true);
+    $out.0.BK_CDRDES = formatKey($in.0.BK_CDRDES, true);
+    $out.0.BK_CDRCAL = formatKey($in.0.BK_CDRCAL, true);
+    $out.0.BK_NEGOCIACAO = formatKey($in.0.BK_NEGOCIACAO, true);
+    $out.0.BK_SERVICO = formatKey($in.0.BK_SERVICO, true);
+    $out.0.BK_TIPTRA = formatKey($in.0.BK_TIPTRA, true);
+    $out.0.BK_FILIAL = formatKey($in.0.BK_FILIAL, true);
+    $out.0.BK_FILIAL_ORIGEM = formatKey($in.0.BK_FILIAL_ORIGEM, true);
+    $out.0.BK_FILIAL_DESTINO = formatKey($in.0.BK_FILIAL_DESTINO, true);
+    $out.0.BK_REGIAO_REM = formatKey($in.0.BK_REGIAO_REM, true);
+    $out.0.BK_REGIAO_DES = formatKey($in.0.BK_REGIAO_DES, true);
+    $out.0.BK_REGIAO_DEV = formatKey($in.0.BK_REGIAO_DEV, true);
+    $out.0.BK_FILIAL_DOCTO = formatKey($in.0.BK_FILIAL_DOCTO, true);
+    $out.0.DT6_FILDOC = formatString($in.0.DT6_FILDOC, null);
+    $out.0.DT6_DOC = formatString($in.0.DT6_DOC, null);
+    $out.0.DT6_SERIE = formatString($in.0.DT6_SERIE, null);
+    $out.0.ID_VIAGEM = formatKey($in.0.ID_VIAGEM, true);
+    $out.0.ID_VEICULO_CM = formatKey($in.0.ID_VEICULO_CM, true);
+    $out.0.ID_VEICULO_RB1 = formatKey($in.0.ID_VEICULO_RB1, true);
+    $out.0.ID_VEICULO_RB2 = formatKey($in.0.ID_VEICULO_RB2, true);
+    $out.0.ID_VEICULO_RB3 = formatKey($in.0.ID_VEICULO_RB3, true);
+    $out.0.ID_MOTORISTA = formatKey($in.0.ID_MOTORISTA, true);
+
+	$out.0.PK_MODULO = formatString('TMS|RECEITA TRANSPORTADORA', null);
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="EXT_FILTER1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge12" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 0 (accepted)" toNode="TRATAMENT:0"/>
+<Edge debugMode="true" fromNode="LE_E_AS_OUTRAS_RECEITAS:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 0 (output)" toNode="MONTHS_TO_LOAD_FILTER:0"/>
+<Edge debugMode="true" fromNode="MONTHS_TO_LOAD_FILTER:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 0 (out)" toNode="EXT_FILTER1:0"/>
+<Edge debugMode="true" fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge3" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (out)" toNode="AGGREGATE_MENOR_DATA1:0"/>
+<Edge debugMode="true" fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge14" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 1 (out)" toNode="AGGREGATE_MENOR_DATA2:0"/>
+<Edge debugMode="true" fromNode="SIMPLE_COPY:2" guiBendpoints="" guiRouter="Manhattan" id="Edge15" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 2 (out)" toNode="SIMPLE_COPY1:0"/>
+<Edge fromNode="TRATAMENT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+</Phase>
+<Phase number="20">
+<Node enabled="enabled" guiName="Aggregate" guiX="684" guiY="62" id="AGGREGATE_MENOR_DATA1" mapping="$Min_Date:=min($DATA_EMISSAO);$Max_Date:=max($DATA_EMISSAO);" type="AGGREGATE">
+<attr name="guiDescription"><![CDATA[OBTÉM MAIOR E MENOR DATA]]></attr>
+</Node>
+<Node enabled="enabled" guiName="MAQL DML Execute" guiX="1020" guiY="62" id="MAQL_DML_EXECUTE_DELETE_DATA_FATO_HKL1" maqlInputField="syntax_content" type="MAQL_DML_EXECUTE">
+<attr name="guiDescription"><![CDATA[APAGA DADOS FATO HKL]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="851" guiY="62" id="REFORMAT_MENOR_DATA1" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	
+	string loadMode = '${LOAD_MODE_FCT}';
+	if (upperCase(loadMode) == 'INCREMENTAL') {
+		$out.0.syntax_content = 'DELETE FROM {attr.receitatransportadora.factsof} WHERE {datadeextracao.date.yyyymmdd} BETWEEN '+'"'+date2str($in.0.Min_Date, "yyyy-MM-dd")+'" AND "'+date2str($in.0.Max_Date, "yyyy-MM-dd")+'"';
+	} else {
+		$out.0.syntax_content = 'DELETE FROM {attr.receitatransportadora.factsof}';
+	}
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+<attr name="guiDescription"><![CDATA[GERA STATEMENT DE DELETE]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="AGGREGATE_MENOR_DATA1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge5" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="REFORMAT_MENOR_DATA1:0"/>
+<Edge debugMode="true" fromNode="REFORMAT_MENOR_DATA1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (input)" metadata="Metadata4" outPort="Port 0 (out)" toNode="MAQL_DML_EXECUTE_DELETE_DATA_FATO_HKL1:0"/>
+</Phase>
+<Phase number="30">
+<Node enabled="enabled" guiName="Aggregate" guiX="684" guiY="247" id="AGGREGATE_MENOR_DATA2" mapping="$Min_Date:=min($DATA_EMISSAO);$Max_Date:=max($DATA_EMISSAO);" type="AGGREGATE">
+<attr name="guiDescription"><![CDATA[OBTÉM MAIOR E MENOR DATA]]></attr>
+</Node>
+<Node enabled="enabled" guiName="MAQL DML Execute" guiX="1020" guiY="247" id="MAQL_DML_EXECUTE_DELETE_DATA_FATO_HKL2" maqlInputField="syntax_content" type="MAQL_DML_EXECUTE">
+<attr name="guiDescription"><![CDATA[APAGA DADOS FATO HKL]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="853" guiY="247" id="REFORMAT_MENOR_DATA2" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	long MONTHS_TO_LOAD = str2long('${MONTHS_TO_LOAD}');
+	string THIS_MONTH = right(left(date2str(today(), 'dd/MM/yyyy'), 5), 2);
+	string THIS_YEAR = right(date2str(today(), 'dd/MM/yyyy'), 4);
+	date ETL_MAXDATE = dateAdd(str2date('01/' + THIS_MONTH + '/' + THIS_YEAR, 'dd/MM/yyyy'), -1*MONTHS_TO_LOAD, month);
+	
+	$out.0.syntax_content = 'DELETE FROM {attr.receitatransportadora.factsof} WHERE {datadeextracao.date.yyyymmdd} < "' + ETL_MAXDATE + '"';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+<attr name="guiDescription"><![CDATA[GERA STATEMENT DE DELETE]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="AGGREGATE_MENOR_DATA2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge17" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (out)" toNode="REFORMAT_MENOR_DATA2:0"/>
+<Edge debugMode="true" fromNode="REFORMAT_MENOR_DATA2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge19" inPort="Port 0 (input)" metadata="Metadata4" outPort="Port 0 (out)" toNode="MAQL_DML_EXECUTE_DELETE_DATA_FATO_HKL2:0"/>
+</Phase>
+<Phase number="40">
+<Node dataset="dataset.receitatransportadora" datasetFieldMappings="{&quot;gd_dataset&quot;:{&quot;datasetId&quot;:&quot;dataset.receitatransportadora&quot;,&quot;datasetTitle&quot;:&quot;Receita Transportadora&quot;,&quot;attributes&quot;:[],&quot;referencedAttributes&quot;:[{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.clientedestinatario.idclientedestinatario&quot;,&quot;title&quot;:&quot;ID Cliente Destinatário&quot;,&quot;prettyId&quot;:&quot;attr_clientedestinatario_idclientedestinatario&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.clientedestinatario.idclientedestinatario&quot;,&quot;title&quot;:&quot;ID Cliente Destinatário&quot;,&quot;prettyId&quot;:&quot;clientedestinatario__idclientedestinatario&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_DESTINATARIO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.clientedestinatario.idclientedestinatario&quot;,&quot;title&quot;:&quot;ID Cliente Destinatário&quot;,&quot;prettyId&quot;:&quot;clientedestinatario__idclientedestinatario&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.clientedevedor.idclientedevedor&quot;,&quot;title&quot;:&quot;ID Cliente Devedor&quot;,&quot;prettyId&quot;:&quot;attr_clientedevedor_idclientedevedor&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.clientedevedor.idclientedevedor&quot;,&quot;title&quot;:&quot;ID Cliente Devedor&quot;,&quot;prettyId&quot;:&quot;clientedevedor__idclientedevedor&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_DEVEDOR&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.clientedevedor.idclientedevedor&quot;,&quot;title&quot;:&quot;ID Cliente Devedor&quot;,&quot;prettyId&quot;:&quot;clientedevedor__idclientedevedor&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.clienteremetente.idclienteremetente&quot;,&quot;title&quot;:&quot;ID Cliente Remetente&quot;,&quot;prettyId&quot;:&quot;attr_clienteremetente_idclienteremetente&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.clienteremetente.idclienteremetente&quot;,&quot;title&quot;:&quot;ID Cliente Remetente&quot;,&quot;prettyId&quot;:&quot;clienteremetente__idclienteremetente&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_REMETENTE&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.clienteremetente.idclienteremetente&quot;,&quot;title&quot;:&quot;ID Cliente Remetente&quot;,&quot;prettyId&quot;:&quot;clienteremetente__idclienteremetente&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.componentefrete.idcomponente&quot;,&quot;title&quot;:&quot;ID Componente&quot;,&quot;prettyId&quot;:&quot;attr_componentefrete_idcomponente&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.componentefrete.idcomponente&quot;,&quot;title&quot;:&quot;ID Componente&quot;,&quot;prettyId&quot;:&quot;componentefrete__idcomponente&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_COMPONENTE&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.componentefrete.idcomponente&quot;,&quot;title&quot;:&quot;ID Componente&quot;,&quot;prettyId&quot;:&quot;componentefrete__idcomponente&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.documento1.codigodocumento&quot;,&quot;title&quot;:&quot;Código Documento&quot;,&quot;prettyId&quot;:&quot;attr_documento1_codigodocumento&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.documento1.codigodocumento&quot;,&quot;title&quot;:&quot;Código Documento&quot;,&quot;prettyId&quot;:&quot;documento1__codigodocumento&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;DOCUMENTO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.documento1.codigodocumento&quot;,&quot;title&quot;:&quot;Código Documento&quot;,&quot;prettyId&quot;:&quot;documento1__codigodocumento&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.empresa.codigodaempresa&quot;,&quot;title&quot;:&quot;ID Empresa&quot;,&quot;prettyId&quot;:&quot;attr_empresa_codigodaempresa&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.empresa.codigodaempresa&quot;,&quot;title&quot;:&quot;ID Empresa&quot;,&quot;prettyId&quot;:&quot;empresa__codigodaempresa&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_EMPRESA&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.empresa.codigodaempresa&quot;,&quot;title&quot;:&quot;ID Empresa&quot;,&quot;prettyId&quot;:&quot;empresa__codigodaempresa&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.filial.codigodafilial&quot;,&quot;title&quot;:&quot;ID Filial&quot;,&quot;prettyId&quot;:&quot;attr_filial_codigodafilial&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filial.codigodafilial&quot;,&quot;title&quot;:&quot;ID Filial&quot;,&quot;prettyId&quot;:&quot;filial__codigodafilial&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_FILIAL&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filial.codigodafilial&quot;,&quot;title&quot;:&quot;ID Filial&quot;,&quot;prettyId&quot;:&quot;filial__codigodafilial&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.filialdestino.idfilialdestino&quot;,&quot;title&quot;:&quot;ID Filial Destino&quot;,&quot;prettyId&quot;:&quot;attr_filialdestino_idfilialdestino&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filialdestino.idfilialdestino&quot;,&quot;title&quot;:&quot;ID Filial Destino&quot;,&quot;prettyId&quot;:&quot;filialdestino__idfilialdestino&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_FILIAL_DESTINO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filialdestino.idfilialdestino&quot;,&quot;title&quot;:&quot;ID Filial Destino&quot;,&quot;prettyId&quot;:&quot;filialdestino__idfilialdestino&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.filialdocumento.idfilialdocumento&quot;,&quot;title&quot;:&quot;ID Filial Documento&quot;,&quot;prettyId&quot;:&quot;attr_filialdocumento_idfilialdocumento&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filialdocumento.idfilialdocumento&quot;,&quot;title&quot;:&quot;ID Filial Documento&quot;,&quot;prettyId&quot;:&quot;filialdocumento__idfilialdocumento&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;FILDOC&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filialdocumento.idfilialdocumento&quot;,&quot;title&quot;:&quot;ID Filial Documento&quot;,&quot;prettyId&quot;:&quot;filialdocumento__idfilialdocumento&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.filialorigem.idfilialorigem&quot;,&quot;title&quot;:&quot;ID Filial Origem&quot;,&quot;prettyId&quot;:&quot;attr_filialorigem_idfilialorigem&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filialorigem.idfilialorigem&quot;,&quot;title&quot;:&quot;ID Filial Origem&quot;,&quot;prettyId&quot;:&quot;filialorigem__idfilialorigem&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_FILIAL_ORIGEM&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.filialorigem.idfilialorigem&quot;,&quot;title&quot;:&quot;ID Filial Origem&quot;,&quot;prettyId&quot;:&quot;filialorigem__idfilialorigem&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.modulo.iddomodulo&quot;,&quot;title&quot;:&quot;Id do módulo&quot;,&quot;prettyId&quot;:&quot;attr_modulo_iddomodulo&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.modulo.iddomodulo&quot;,&quot;title&quot;:&quot;Id do módulo&quot;,&quot;prettyId&quot;:&quot;modulo__iddomodulo&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;PK_MODULO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.modulo.iddomodulo&quot;,&quot;title&quot;:&quot;Id do módulo&quot;,&quot;prettyId&quot;:&quot;modulo__iddomodulo&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.negociacaotransporte.idnegociacao&quot;,&quot;title&quot;:&quot;ID Negociação&quot;,&quot;prettyId&quot;:&quot;attr_negociacaotransporte_idnegociacao&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.negociacaotransporte.idnegociacao&quot;,&quot;title&quot;:&quot;ID Negociação&quot;,&quot;prettyId&quot;:&quot;negociacaotransporte__idnegociacao&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_NEGOCIACAO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.negociacaotransporte.idnegociacao&quot;,&quot;title&quot;:&quot;ID Negociação&quot;,&quot;prettyId&quot;:&quot;negociacaotransporte__idnegociacao&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.produto.idproduto&quot;,&quot;title&quot;:&quot;ID Produto&quot;,&quot;prettyId&quot;:&quot;attr_produto_idproduto&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.produto.idproduto&quot;,&quot;title&quot;:&quot;ID Produto&quot;,&quot;prettyId&quot;:&quot;produto__idproduto&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;PRODUTO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.produto.idproduto&quot;,&quot;title&quot;:&quot;ID Produto&quot;,&quot;prettyId&quot;:&quot;produto__idproduto&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.regiao.codigoeestadodomunicipio&quot;,&quot;title&quot;:&quot;ID Região&quot;,&quot;prettyId&quot;:&quot;attr_regiao_codigoeestadodomunicipio&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.regiao.codigoeestadodomunicipio&quot;,&quot;title&quot;:&quot;ID Região&quot;,&quot;prettyId&quot;:&quot;regiao__codigoeestadodomunicipio&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_REGIAO_REM&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.regiao.codigoeestadodomunicipio&quot;,&quot;title&quot;:&quot;ID Região&quot;,&quot;prettyId&quot;:&quot;regiao__codigoeestadodomunicipio&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.regiaotransportedestino.idregiaotransportedestino&quot;,&quot;title&quot;:&quot;ID região Transporte Destino&quot;,&quot;prettyId&quot;:&quot;attr_regiaotransportedestino_idregiaotransportedestino&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.regiaotransportedestino.idregiaotransportedestino&quot;,&quot;title&quot;:&quot;ID região Transporte Destino&quot;,&quot;prettyId&quot;:&quot;regiaotransportedestino__idregiaotransportedestino&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_CDRDES&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.regiaotransportedestino.idregiaotransportedestino&quot;,&quot;title&quot;:&quot;ID região Transporte Destino&quot;,&quot;prettyId&quot;:&quot;regiaotransportedestino__idregiaotransportedestino&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.regiaotransporteorigem.idregiaotransporteorigem&quot;,&quot;title&quot;:&quot;Id região Transporte Origem&quot;,&quot;prettyId&quot;:&quot;attr_regiaotransporteorigem_idregiaotransporteorigem&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.regiaotransporteorigem.idregiaotransporteorigem&quot;,&quot;title&quot;:&quot;Id região Transporte Origem&quot;,&quot;prettyId&quot;:&quot;regiaotransporteorigem__idregiaotransporteorigem&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_CDRORI&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.regiaotransporteorigem.idregiaotransporteorigem&quot;,&quot;title&quot;:&quot;Id região Transporte Origem&quot;,&quot;prettyId&quot;:&quot;regiaotransporteorigem__idregiaotransporteorigem&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.servicodenegociaicaodatransportadora.idservicodenegociacaodatransportadora&quot;,&quot;title&quot;:&quot;ID Serviço de Negociação da Transportadora&quot;,&quot;prettyId&quot;:&quot;attr_servicodenegociaicaodatransportadora_idservicodenegociacaodatransportadora&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.servicodenegociaicaodatransportadora.idservicodenegociacaodatransportadora&quot;,&quot;title&quot;:&quot;ID Serviço de Negociação da Transportadora&quot;,&quot;prettyId&quot;:&quot;servicodenegociaicaodatransportadora__idservicodenegociacaodatransportadora&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_SERVICO&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.servicodenegociaicaodatransportadora.idservicodenegociacaodatransportadora&quot;,&quot;title&quot;:&quot;ID Serviço de Negociação da Transportadora&quot;,&quot;prettyId&quot;:&quot;servicodenegociaicaodatransportadora__idservicodenegociacaodatransportadora&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.tipodocumentodotransporte.iddocumentodotransporte&quot;,&quot;title&quot;:&quot;ID Documento do Transporte&quot;,&quot;prettyId&quot;:&quot;attr_tipodocumentodotransporte_iddocumentodotransporte&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.tipodocumentodotransporte.iddocumentodotransporte&quot;,&quot;title&quot;:&quot;ID Documento do Transporte&quot;,&quot;prettyId&quot;:&quot;tipodocumentodotransporte__iddocumentodotransporte&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_DOCTMS&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.tipodocumentodotransporte.iddocumentodotransporte&quot;,&quot;title&quot;:&quot;ID Documento do Transporte&quot;,&quot;prettyId&quot;:&quot;tipodocumentodotransporte__iddocumentodotransporte&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}},{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.tipodotransporte.idtipodotransporte&quot;,&quot;title&quot;:&quot;ID Tipo do Transporte&quot;,&quot;prettyId&quot;:&quot;attr_tipodotransporte_idtipodotransporte&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.tipodotransporte.idtipodotransporte&quot;,&quot;title&quot;:&quot;ID Tipo do Transporte&quot;,&quot;prettyId&quot;:&quot;tipodotransporte__idtipodotransporte&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;BK_TIPTRA&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.tipodotransporte.idtipodotransporte&quot;,&quot;title&quot;:&quot;ID Tipo do Transporte&quot;,&quot;prettyId&quot;:&quot;tipodotransporte__idtipodotransporte&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}}],&quot;dateAttributes&quot;:[{&quot;gd_dataset_date_attribute&quot;:{&quot;id&quot;:&quot;datadeextracao.date&quot;,&quot;title&quot;:&quot;Date (Data)&quot;,&quot;prettyId&quot;:&quot;datadeextracao&quot;,&quot;assignedMetadataField&quot;:&quot;DATA_EMISSAO&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;datadeextracao.date.yyyymmdd&quot;,&quot;title&quot;:&quot;yyyy-mm-dd (Data)&quot;,&quot;prettyId&quot;:&quot;datadeextracao_date_yyyymmdd&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:true}}],&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;datadeextracao.date.yyyymmdd&quot;,&quot;title&quot;:&quot;yyyy-mm-dd (Data)&quot;,&quot;prettyId&quot;:&quot;datadeextracao_date_yyyymmdd&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:true}},&quot;associatedFact&quot;:null}}],&quot;simpleFacts&quot;:[{&quot;gd_dataset_fact&quot;:{&quot;id&quot;:&quot;fact.receitatransportadora.valordocomponentedatransportadora&quot;,&quot;title&quot;:&quot;Valor do Componente da Transportadora&quot;,&quot;prettyId&quot;:&quot;valordocomponentedatransportadora&quot;,&quot;type&quot;:&quot;DECIMAL&quot;,&quot;assignedMetadataField&quot;:&quot;VALOR_COMPONENTE&quot;}},{&quot;gd_dataset_fact&quot;:{&quot;id&quot;:&quot;fact.receitatransportadora.valordoimpostodatransportadora&quot;,&quot;title&quot;:&quot;Valor do Imposto da Transportadora&quot;,&quot;prettyId&quot;:&quot;valordoimpostodatransportadora&quot;,&quot;type&quot;:&quot;DECIMAL&quot;,&quot;assignedMetadataField&quot;:&quot;VALOR_IMPOSTO&quot;}},{&quot;gd_dataset_fact&quot;:{&quot;id&quot;:&quot;fact.receitatransportadora.valortotaldareceitadatransportadora&quot;,&quot;title&quot;:&quot;Valor total da Receita da Transportadora&quot;,&quot;prettyId&quot;:&quot;valortotaldareceitadatransportadora&quot;,&quot;type&quot;:&quot;DECIMAL&quot;,&quot;assignedMetadataField&quot;:&quot;VALOR_TOTAL&quot;}}],&quot;dateFacts&quot;:[],&quot;unassigneddateFacts&quot;:[],&quot;entitiesWithoutMetadata&quot;:[],&quot;entitiesWithoutValue&quot;:[],&quot;datesWithFactConflict&quot;:[],&quot;fieldsWithMetadataConflict&quot;:[]}}" enabled="enabled" guiName="Receita Transportadora" guiX="995" guiY="404" id="RECEITA_TRANSPORTADORA2" mode="${LOAD_MODE_FCT}" retriesInterval="60" retriesNumber="5" type="GD_DATASET_WRITER"/>
+<Node enabled="enabled" guiName="SimpleCopy" guiX="684" guiY="404" id="SIMPLE_COPY1" type="SIMPLE_COPY"/>
+<Edge debugMode="true" fromNode="SIMPLE_COPY1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge20" inPort="Port 0 (in)" metadata="Metadata5" outPort="Port 0 (out)" toNode="RECEITA_TRANSPORTADORA2:0"/>
+</Phase>
+</Graph>
