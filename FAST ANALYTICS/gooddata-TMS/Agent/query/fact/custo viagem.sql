@@ -5,11 +5,12 @@ select
     VIAGEM.DTR_CODRB3,
     VIAGEM.DTR_CODRB2,
     VIAGEM.DTQ_FILORI,
-    VIAGEM.DATAINI,
-    VIAGEM.HORAINI,
-    VIAGEM.DATAFIM,
-    VIAGEM.HORAFIM,
-    VIAGEM.COMPETENCIA,
+    
+    VIAGEM.CHE_CLIDEV,
+    VIAGEM.SAI_CLIDEV,
+    VIAGEM.CHE_VIAGEM,
+    VIAGEM.SAI_VIAGEM,
+    
     VIAGEM.DTQ_STATUS,
     
     isnull(VIAGEM.DA4_MAT, VIAGEM.DUP_CODMOT) as ID_MOT,
@@ -31,7 +32,7 @@ select
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
             and ZB1010.ZB1_CODDA3 = VIAGEM.DTR_CODVEI
-            and DTW010.DTW_ATIVID in ('050')
+            and DTW010.DTW_ATIVID = 50
     ) as km_fim,
     (
         select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
@@ -48,7 +49,7 @@ select
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
             and ZB1010.ZB1_CODDA3 = VIAGEM.DTR_CODVEI
-            and DTW010.DTW_ATIVID in ('049')
+            and DTW010.DTW_ATIVID = 49
     ) as km_ini,
     VIAGEM.DTQ_KMVGE,
 
@@ -73,6 +74,7 @@ select
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,
     'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB.DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB.DDB_CODNEG, ' ')), ' '), '|') AS BK_NEGOCIACAO,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,
+    'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6.DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6.DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,
     CASE WHEN DT6.DT6_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILIAL AS CHAR (8)) END AS BK_FILIAL,
     CASE WHEN DT6.DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
@@ -81,13 +83,21 @@ select
     CASE WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DES,
     CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
-    DT6.DT6_FILDOC,
+    DTC.DTC_CODPRO as PRODUTO,
     DT6.DT6_DOC,
     DT6.DT6_SERIE,
 
     DIARIAS.DYV_IDCDIA,
     DIARIAS.DYX_DATDIA,
     DIARIAS.DYX_VLRUNI,
+
+    VIAGEM.ID_VIAGEM,
+    VIAGEM.ID_VEICULO_CM,
+    VIAGEM.ID_VEICULO_RB1,
+    VIAGEM.ID_VEICULO_RB2,
+    VIAGEM.ID_VEICULO_RB3,
+    VIAGEM.ID_MOTORISTA,
+    null as INSTANCIA,
 
     null as SEGURO_CARGA, /* PLANILHA DE SEGURO */
     null as OUTROS_CUSTOS
@@ -96,69 +106,28 @@ from DUD010 DUD (nolock)
     left join /* ver modelo para adição de dimensão motorista */
     (
         select
-            DTQ_1.DTQ_FILIAL,
-            DTQ_1.DTQ_FILORI,
-            DTQ_1.DTQ_VIAGEM,
-            DTQ_1.DTQ_DATGER,
-            DTQ_1.DTQ_DATFEC,
-            DTQ_1.DTQ_DATENC,
-            DTQ_1.DTQ_KMVGE,
+            DTQ.DTQ_FILIAL,
+            DTQ.DTQ_FILORI,
+            DTQ.DTQ_VIAGEM,
+            DTQ.DTQ_DATGER,
+            DTQ.DTQ_DATFEC,
+            DTQ.DTQ_DATENC,
             
-            DTR010.DTR_CODVEI,
-            DUP010.DUP_CODMOT,
-            DA4010.DA4_MAT,
-            DTR010.DTR_CODRB1,
-            DTR010.DTR_CODRB2,
-            DTR010.DTR_CODRB3,
+            concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
+            concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
 
-            (
-                select DTW010.DTW_DATREA
-                from DTW010 (nolock)
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = '049'
-            ) as DATAINI,
-            (
-                select DTW010.DTW_HORREA
-                from DTW010 (nolock)
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = '049'
-            ) as HORAINI,
-            (
-                select DTW010.DTW_DATREA
-                from DTW010 (nolock)
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = '050'
-            ) as DATAFIM,
-            (
-                select DTW010.DTW_HORREA
-                from DTW010 (nolock)
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = '050'
-            ) as HORAFIM,
 
-            (
-                select substring(DTW010.DTW_DATREA, 1, 6)
-                from DTW010 (nolock)
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ_1.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ_1.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = '050'
-            ) as COMPETENCIA,
+            case when DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as SAI_CLIDEV,
+            case when DTW010.DTW_ATIVID = 57 /*59 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as CHE_CLIDEV,
+            
+            case DTW010.DTW_ATIVID when 49 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as SAI_VIAGEM,
+            case DTW010.DTW_ATIVID when 50 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as CHE_VIAGEM,
 
-            case DTQ_1.DTQ_STATUS
+            case DTQ.DTQ_STATUS
                 when '1' then 'EXCLUÍDA'
                 when '2' then 'EM TRANSITO'
                 when '3' then 'ENCERRADA'
@@ -168,11 +137,11 @@ from DUD010 DUD (nolock)
                 else 'OUTROS'
             end as DTQ_STATUS
 
-        from DTQ010 DTQ_1 (nolock)
+        from DTQ010 DTQ (nolock)
             inner join DTR010 (nolock)
                 on DTR010.D_E_L_E_T_ = ''
-                and DTR010.DTR_FILORI = DTQ_1.DTQ_FILORI
-                and DTR010.DTR_VIAGEM = DTQ_1.DTQ_VIAGEM
+                and DTR010.DTR_FILORI = DTQ.DTQ_FILORI
+                and DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                 
                 inner join DUP010 (nolock)
                     on DUP010.D_E_L_E_T_ = ''
@@ -184,11 +153,14 @@ from DUD010 DUD (nolock)
                     inner join DA4010 (nolock)
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
-        where DTQ_1.D_E_L_E_T_ = ''
+            
+            inner join DTW010 (nolock)
+                on DTW010.D_E_L_E_T_ = ''
+                and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+        where DTQ.D_E_L_E_T_ = ''
     ) VIAGEM
-        on year(VIAGEM.DTQ_DATGER) = 2022
-        and substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
-        and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
+        on VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
         and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
     left join DT5010 DT5 (nolock)
         on DT5.D_E_L_E_T_ = ''
@@ -201,6 +173,11 @@ from DUD010 DUD (nolock)
         and DT6.DT6_DOC = DUD.DUD_DOC
         and DT6.DT6_SERIE = DUD.DUD_SERIE
 
+        left join DTC010 DTC (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_DOC = DT6.DT6_DOC
+            and DTC.DTC_SERIE = DT6.DT6_SERIE
         left join SA1010 REM
             on REM.A1_FILIAL = '      '
             and REM.A1_COD = DT6.DT6_CLIREM
@@ -253,7 +230,6 @@ from DUD010 DUD (nolock)
             inner join DYX010 (nolock)
                 on DYX010.D_E_L_E_T_ = ''
                 and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
-                and year(DYX010.DYX_DATDIA) = 2022
         where DYV010.D_E_L_E_T_ = ''
     ) DIARIAS
         on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
