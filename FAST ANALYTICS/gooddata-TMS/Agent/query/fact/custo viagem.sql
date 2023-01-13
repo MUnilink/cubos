@@ -93,8 +93,7 @@ select
     null as SEGURO_CARGA, /* PLANILHA DE SEGURO */
     null as OUTROS_CUSTOS
 
-from DUD010 DUD
-    left join /* ver modelo para adição de dimensão motorista */
+from
     (
         select
             DTQ.DTQ_FILIAL,
@@ -104,6 +103,7 @@ from DUD010 DUD
             DTQ.DTQ_DATFEC,
             DTQ.DTQ_DATENC,
             
+            DA4010.DA4_COD,
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
             concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
@@ -150,61 +150,7 @@ from DUD010 DUD
                 and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
         where DTQ.D_E_L_E_T_ = ''
     ) VIAGEM
-        on VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
-        and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
-    left join DT5010 DT5
-        on DT5.D_E_L_E_T_ = ''
-        and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-        and DT5.DT5_NUMSOL = DUD.DUD_DOC
-        and DT5.DT5_SERIE = DUD.DUD_SERIE
-    left join DT6010 DT6
-        on DT6.D_E_L_E_T_ = ''
-        and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-        and DT6.DT6_DOC = DUD.DUD_DOC
-        and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-        left join DTC010 DTC
-            on DTC.D_E_L_E_T_ = ''
-            and DTC.DTC_FILORI = DT6.DT6_FILDOC
-            and DTC.DTC_DOC = DT6.DT6_DOC
-            and DTC.DTC_SERIE = DT6.DT6_SERIE
-        left join SA1010 REM
-            on REM.A1_FILIAL = '      '
-            and REM.A1_COD = DT6.DT6_CLIREM
-            and REM.A1_LOJA = DT6.DT6_LOJREM
-            and REM.D_E_L_E_T_ = ' '
-        left join SA1010 DES
-            on DES.A1_FILIAL = '      '
-            and DES.A1_COD = DT6.DT6_CLIDES
-            and DES.A1_LOJA = DT6.DT6_LOJDES
-            and DES.D_E_L_E_T_ = ' '
-        left join SA1010 DEV
-            on DEV.A1_FILIAL = '      '
-            and DEV.A1_COD = DT6.DT6_CLIDEV
-            and DEV.A1_LOJA = DT6.DT6_LOJDEV
-            and DEV.D_E_L_E_T_ = ' '
-        left join DUY010 DUYORI
-            on DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
-            and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
-            and DUYORI.D_E_L_E_T_ = ' '
-        left join DUY010 DUYDES
-            on DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
-            and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
-            and DUYDES.D_E_L_E_T_ = ' '
-        left join DUY010 DUYDEV
-            on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
-            and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
-            and DUYDEV.D_E_L_E_T_ = ' '
-        left join DDB010 DDB
-            on DDB.DDB_FILIAL = DT6.DT6_FILIAL
-            and DDB.DDB_CODNEG = DT6.DT6_CODNEG
-            and DDB.D_E_L_E_T_ = ' '
-        inner join SX5010 SX5
-            on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
-            and SX5.X5_TABELA = 'L4'
-            and SX5.X5_CHAVE = DT6.DT6_SERVIC
-            and SX5.D_E_L_E_T_ = ' '
-            
     left join
     (
         select
@@ -224,4 +170,62 @@ from DUD010 DUD
     ) DIARIAS
         on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
         and DIARIAS.DYV_VIAGEM = VIAGEM.DTQ_VIAGEM
-where DUD.D_E_L_E_T_ = ''
+        and DIARIAS.DYV_CODMOT = VIAGEM.DA4_COD
+    
+    left join DUD010 DUD
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
+        and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
+        
+        left join DT5010 DT5
+            on DT5.D_E_L_E_T_ = ''
+            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
+            and DT5.DT5_NUMSOL = DUD.DUD_DOC
+            and DT5.DT5_SERIE = DUD.DUD_SERIE
+        left join DT6010 DT6
+            on DT6.D_E_L_E_T_ = ''
+            and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+            and DT6.DT6_DOC = DUD.DUD_DOC
+            and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+            left join DTC010 DTC
+                on DTC.D_E_L_E_T_ = ''
+                and DTC.DTC_FILORI = DT6.DT6_FILDOC
+                and DTC.DTC_DOC = DT6.DT6_DOC
+                and DTC.DTC_SERIE = DT6.DT6_SERIE
+            left join SA1010 REM
+                on REM.A1_FILIAL = '      '
+                and REM.A1_COD = DT6.DT6_CLIREM
+                and REM.A1_LOJA = DT6.DT6_LOJREM
+                and REM.D_E_L_E_T_ = ' '
+            left join SA1010 DES
+                on DES.A1_FILIAL = '      '
+                and DES.A1_COD = DT6.DT6_CLIDES
+                and DES.A1_LOJA = DT6.DT6_LOJDES
+                and DES.D_E_L_E_T_ = ' '
+            left join SA1010 DEV
+                on DEV.A1_FILIAL = '      '
+                and DEV.A1_COD = DT6.DT6_CLIDEV
+                and DEV.A1_LOJA = DT6.DT6_LOJDEV
+                and DEV.D_E_L_E_T_ = ' '
+            left join DUY010 DUYORI
+                on DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
+                and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+                and DUYORI.D_E_L_E_T_ = ' '
+            left join DUY010 DUYDES
+                on DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
+                and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+                and DUYDES.D_E_L_E_T_ = ' '
+            left join DUY010 DUYDEV
+                on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
+                and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+                and DUYDEV.D_E_L_E_T_ = ' '
+            left join DDB010 DDB
+                on DDB.DDB_FILIAL = DT6.DT6_FILIAL
+                and DDB.DDB_CODNEG = DT6.DT6_CODNEG
+                and DDB.D_E_L_E_T_ = ' '
+            inner join SX5010 SX5
+                on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
+                and SX5.X5_TABELA = 'L4'
+                and SX5.X5_CHAVE = DT6.DT6_SERVIC
+                and SX5.D_E_L_E_T_ = ' '
