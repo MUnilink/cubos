@@ -111,6 +111,14 @@ from
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
 
+            (select ) case when DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as SAI_CLIDEV,
+            (select ) case when DTW010.DTW_ATIVID = 57 /*59 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as CHE_CLIDEV,
+            (select ) case DTW010.DTW_ATIVID when 49 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as SAI_VIAGEM,
+            (select ) case DTW010.DTW_ATIVID when 50 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as CHE_VIAGEM,
+
+            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 on DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = )
+
+
             case when DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as SAI_CLIDEV,
             case when DTW010.DTW_ATIVID = 57 /*59 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as CHE_CLIDEV,
             
@@ -143,11 +151,7 @@ from
                     inner join DA4010
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
-            
-            inner join DTW010
-                on DTW010.D_E_L_E_T_ = ''
-                and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+
         where DTQ.D_E_L_E_T_ = ''
     ) VIAGEM
 
