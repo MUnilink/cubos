@@ -5,12 +5,14 @@ select
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-	trim(CTT.CTT_CUSTO) as COD_CC,
-	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-	trim(CTD.CTD_ITEM) as COD_ITEM,
+
+	trim(CTT.CTT_CUSTO) as CC,
+	trim(CTT.CTT_DESC01) as CCUSTO,
+	trim(CTD.CTD_ITEM) as AT,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
     trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
