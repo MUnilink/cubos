@@ -1,26 +1,19 @@
 select
-    VIAGEM.DTQ_VIAGEM,
-    VIAGEM.DTR_CODVEI,
-    VIAGEM.DTR_CODRB1,
-    VIAGEM.DTR_CODRB3,
-    VIAGEM.DTR_CODRB2,
+    'P |01|01' AS BK_EMPRESA,
     VIAGEM.DTQ_FILORI,
+    VIAGEM.DTQ_VIAGEM,
     
     VIAGEM.CHE_CLIDEV,
     VIAGEM.SAI_CLIDEV,
     VIAGEM.CHE_VIAGEM,
     VIAGEM.SAI_VIAGEM,
-    
     VIAGEM.DTQ_STATUS,
-    
-    isnull(VIAGEM.DA4_MAT, VIAGEM.DUP_CODMOT) as ID_MOT,
-    
     convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI, /* CONVERT TEMPORÁRIO ATÉ CRIAÇÃO DO ETL*/
 
     (
         select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-        from DTW010 (nolock)
-            inner join ZB1010 (nolock)
+        from DTW010
+            inner join ZB1010
                 on ZB1010.D_E_L_E_T_ = ''
                 and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
                 and
@@ -31,13 +24,13 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = VIAGEM.DTR_CODVEI
+            and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
             and DTW010.DTW_ATIVID = 50
     ) as km_fim,
     (
         select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-        from DTW010 (nolock)
-            inner join ZB1010 (nolock)
+        from DTW010
+            inner join ZB1010
                 on ZB1010.D_E_L_E_T_ = ''
                 and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
                 and
@@ -48,11 +41,10 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = VIAGEM.DTR_CODVEI
+            and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
             and DTW010.DTW_ATIVID = 49
     ) as km_ini,
-    VIAGEM.DTQ_KMVGE,
-
+    
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
@@ -90,19 +82,18 @@ select
     DIARIAS.DYV_IDCDIA,
     DIARIAS.DYX_DATDIA,
     DIARIAS.DYX_VLRUNI,
-
     VIAGEM.ID_VIAGEM,
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
+    
     null as INSTANCIA,
-
     null as SEGURO_CARGA, /* PLANILHA DE SEGURO */
     null as OUTROS_CUSTOS
 
-from DUD010 DUD (nolock)
+from DUD010 DUD
     left join /* ver modelo para adição de dimensão motorista */
     (
         select
@@ -118,8 +109,7 @@ from DUD010 DUD (nolock)
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
 
             case when DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as SAI_CLIDEV,
             case when DTW010.DTW_ATIVID = 57 /*59 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761 then datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) else null end as CHE_CLIDEV,
@@ -137,24 +127,24 @@ from DUD010 DUD (nolock)
                 else 'OUTROS'
             end as DTQ_STATUS
 
-        from DTQ010 DTQ (nolock)
-            inner join DTR010 (nolock)
-                on DTR010.D_E_L_E_T_ = ''
-                and DTR010.DTR_FILORI = DTQ.DTQ_FILORI
-                and DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+        from DTQ010 DTQ
+            inner join DTR010 DTR
+                on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                 
-                inner join DUP010 (nolock)
+                inner join DUP010
                     on DUP010.D_E_L_E_T_ = ''
-                    and DUP010.DUP_FILORI = DTR010.DTR_FILORI
-                    and DUP010.DUP_VIAGEM = DTR010.DTR_VIAGEM
-                    and DUP010.DUP_ITEDTR = DTR010.DTR_ITEM
-                    and DUP010.DUP_CODVEI = DTR010.DTR_CODVEI
+                    and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                    and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                    and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                    and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                    inner join DA4010 (nolock)
+                    inner join DA4010
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
             
-            inner join DTW010 (nolock)
+            inner join DTW010
                 on DTW010.D_E_L_E_T_ = ''
                 and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                 and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
@@ -162,18 +152,18 @@ from DUD010 DUD (nolock)
     ) VIAGEM
         on VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
         and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
-    left join DT5010 DT5 (nolock)
+    left join DT5010 DT5
         on DT5.D_E_L_E_T_ = ''
         and DT5.DT5_FILDOC = DUD.DUD_FILDOC
         and DT5.DT5_NUMSOL = DUD.DUD_DOC
         and DT5.DT5_SERIE = DUD.DUD_SERIE
-    left join DT6010 DT6 (nolock)
+    left join DT6010 DT6
         on DT6.D_E_L_E_T_ = ''
         and DT6.DT6_FILDOC = DUD.DUD_FILDOC
         and DT6.DT6_DOC = DUD.DUD_DOC
         and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-        left join DTC010 DTC (nolock)
+        left join DTC010 DTC
             on DTC.D_E_L_E_T_ = ''
             and DTC.DTC_FILORI = DT6.DT6_FILDOC
             and DTC.DTC_DOC = DT6.DT6_DOC
@@ -226,8 +216,8 @@ from DUD010 DUD (nolock)
             DYX010.DYX_DATDIA,
             DYX010.DYX_QTDE,
             DYX010.DYX_VLRUNI
-        from DYV010 (nolock)
-            inner join DYX010 (nolock)
+        from DYV010
+            inner join DYX010
                 on DYX010.D_E_L_E_T_ = ''
                 and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
         where DYV010.D_E_L_E_T_ = ''
