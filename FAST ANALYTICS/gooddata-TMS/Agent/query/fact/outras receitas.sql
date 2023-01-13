@@ -123,7 +123,7 @@ from
             and DT6.DT6_FILDOC = DUD.DUD_FILDOC
             and DT6.DT6_DOC = DUD.DUD_DOC
             and DT6.DT6_SERIE = DUD.DUD_SERIE
-
+            
             left join SA1010 REM
                 on REM.A1_FILIAL = '      '
                 and REM.A1_COD = DT6.DT6_CLIREM
@@ -160,3 +160,7 @@ from
                 and SX5.X5_TABELA = 'L4'
                 and SX5.X5_CHAVE = DT6.DT6_SERVIC
                 and SX5.D_E_L_E_T_ = ' '
+where
+        SE1.E1_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+    and RPS.D2_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+    and DTC.DTC_DATENT BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
