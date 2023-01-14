@@ -99,7 +99,6 @@ select
     DT5.DT5_TIPCOL,
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
-
     
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
@@ -251,7 +250,6 @@ from DTQ010 DTQ (nolock)
                 left join DYX010 DYX (nolock)
                     on DYX.D_E_L_E_T_ = ''
                     and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-                    and year(DYX.DYX_DATDIA) = 2022
                     
                     left join SE2010 SE2
                         on SE2.D_E_L_E_T_ = ''
@@ -329,3 +327,9 @@ from DTQ010 DTQ (nolock)
 
 where
         DTQ.D_E_L_E_T_ = ''
+    and
+    (
+        DT6.DT6_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990)
+    or  RPS.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990)
+    or  COMP.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990)
+    )
