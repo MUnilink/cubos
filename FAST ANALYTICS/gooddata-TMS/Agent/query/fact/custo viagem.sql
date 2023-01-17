@@ -111,10 +111,59 @@ from
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
 
-            (select first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761) as SAI_CLIDEV,
-            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 57 /*59 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761) as CHE_CLIDEV,
-            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 49) as SAI_VIAGEM,
-            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 50) as CHE_VIAGEM,
+            (
+                select
+                        first_value(datetimefromparts(year(DTW010.DTW_SYSDAT), month(DTW010.DTW_SYSDAT), day(DTW010.DTW_SYSDAT), substring(DTW010.DTW_SYSHOR, 1, 2), substring(DTW010.DTW_SYSHOR, 3, 4), substring(DTW010.DTW_SYSHOR, 5, 6), 0))
+                        over
+                        (
+                            partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
+                            order by DTW010.DTW_SEQUEN
+                        )
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
+                    and DTW010.DTW_CODCLI != 761
+            ) as CHE_CLIDEV,
+            (
+                select
+                        first_value(datetimefromparts(year(DTW010.DTW_SYSDAT), month(DTW010.DTW_SYSDAT), day(DTW010.DTW_SYSDAT), substring(DTW010.DTW_SYSHOR, 1, 2), substring(DTW010.DTW_SYSHOR, 3, 4), substring(DTW010.DTW_SYSHOR, 5, 6), 0))
+                        over
+                        (
+                            partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
+                            order by DTW010.DTW_SEQUEN
+                        )
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
+                    and DTW010.DTW_CODCLI != 761
+            ) as SAI_CLIDEV,
+
+            (
+                select
+                        datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = 49
+            ) as SAI_VIAGEM,
+            (
+                select
+                        datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = 50
+            ) as CHE_VIAGEM,
 
             case DTQ.DTQ_STATUS
                 when '1' then 'EXCLUÍDA'
