@@ -17,7 +17,8 @@ select
 	ZD3.ZD3_KML,
 	ZD3.ZD3_TOTAL,
 	
-    trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,
+    convert(date, ZD3.ZD3_DATA, 103) as ZD3_DATA,
+	ZD3.ZD3_HORA as ZD3_HORA,
 	ZD3.ZD3_DTPROC,
 
 	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
@@ -26,8 +27,7 @@ select
 	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
 	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT,
 
-	year(ZD3.ZD3_DATA) as ano_ABA,
-    month(ZD3.ZD3_DATA) as mes_ABA,
+	substring(ZD3.ZD3_DATA, 1, 6) as PERIODO,
 	trim(TQM.TQM_NOMCOM) as TQM_NOMCOM
 
 from
@@ -46,7 +46,9 @@ from
 			ZD3010.ZD3_DTPROC,
 			ZD3010.ZD3_TANQUE,
 			ZD3010.ZD3_COMB,
+			/*datetimefromparts(substring(ZD3010.ZD3_DATA, 1, 8), substring(ZD3010.ZD3_DATA, 1, 8), substring(ZD3010.ZD3_DATA, 1, 8), substring(ZD3010.ZD3_DATA, 10, 14), substring(ZD3010.ZD3_DATA, 10, 14), 0, 0) as ZD3_DATA,*/
 			substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
+			substring(ZD3010.ZD3_DATA, 10, 14) as ZD3_HORA,
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD,
 			TQN010.TQN_CCUSTO,
@@ -56,7 +58,9 @@ from
 				on TQN010.D_E_L_E_T_ = ''
 				and TQN010.TQN_FROTA = ZD3010.ZD3_VEICUL
 				and TQN010.TQN_DTABAS + TQN010.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 1, 8) + substring(ZD3010.ZD3_DATA, 10, 14)
-		where ZD3010.D_E_L_E_T_ = ''
+		where
+				ZD3010.D_E_L_E_T_ = ''
+			and substring(ZD3010.ZD3_DATA, 1, 4) > 2021
 	) as ZD3
 
 	left join
