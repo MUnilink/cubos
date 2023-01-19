@@ -4,7 +4,9 @@ select distinct
 	STJ.TJ_CCUSTO,
 	convert(date, STJ.TJ_DTORIGI, 103) as TJ_DTORIGI,
 	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
-	STJ.TJ_ORDEM as CONTADOR_OS,
+	
+	STJ.TJ_SERVICO,
+	STJ.TJ_HORACO1,
 	
 	case when STJ.TJ_CCUSTO = 304 or STJ.TJ_CCUSTO = 302 then 'MATRIZ'
 	else
