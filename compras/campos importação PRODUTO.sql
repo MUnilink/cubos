@@ -1,5 +1,4 @@
 select
-    '01' as EMPRESA,
     SB1.B1_COD as CODIGO,
     SB1.B1_DESC as DESCRICAO,
     SB1.B1_YDESCRI as COMPLEMENTO,
@@ -15,3 +14,4 @@ from SB1010 SB1
         and SBM.BM_GRUPO not like '3%'
 where
         SB1.D_E_L_E_T_ = ''
+    and SB1.B1_MSBLQL = 2
