@@ -12,6 +12,9 @@ select
     SA2.A2_EST as UF,
     SA2.A2_CEP as CEP,
     SA2.A2_INSCR as INSCRICAO_ESTADUAL,
-    SA2.A2_INSCMU as INSCRICAO_MUNICIPAL
+    SA2.A2_INSCMU as INSCRICAO_MUNICIPAL,
+    SA2.A2_COD as CODIGO,
+    SA2.A2_LOJA as LOJA
 from SA2010 SA2
-where SA2.D_E_L_E_T_ = ''
+where
+        SA2.D_E_L_E_T_ = ''
