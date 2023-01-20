@@ -17,6 +17,7 @@ select
     STL.TL_QUANTID as QTD_INSUMO,
     STJ.TJ_CCUSTO,
     STJ.TJ_YITMCT,
+    case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
 	
 	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
 
