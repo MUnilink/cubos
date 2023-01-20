@@ -6,7 +6,10 @@ select distinct
 	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
 	
 	STJ.TJ_SERVICO,
-	STJ.TJ_HORACO1,
+	STJ.TJ_POSCONT as CONTADOR_ATUAL,
+	STJ.TJ_HORACO1 as HORA_CONT,
+	
+	lag(STJ.TJ_POSCONT) over(partition by STJ.TJ_CODBEM order by STJ.TJ_DTORIGI, STJ.TJ_HORACO1) as CONTADOR_ANTERIOR,
 	
 	case when STJ.TJ_CCUSTO = 304 or STJ.TJ_CCUSTO = 302 then 'MATRIZ'
 	else
@@ -67,7 +70,6 @@ select distinct
 	convert(datetime, datetimefromparts(year(STL.TL_DTFIM), month(STL.TL_DTFIM), day(STL.TL_DTFIM), substring(STL.TL_HOFIM, 1, 2), substring(STL.TL_HOFIM, 4, 5), 0, 0), 113) as TL_DTINFIM,
 
 	STL.TL_LOCAL,
-	STJ.TJ_POSCONT,
 	ST1.T1_SALARIO,
 	SB1.B1_UPRC,
 	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
