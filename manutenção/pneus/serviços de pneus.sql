@@ -11,11 +11,23 @@ select
 
     TR7.TR7_LOTE,
     TR7.TR7_SERVIC,
+    TR7.TR7_NFE,
+    TR7.TR7_SERIE,
+    TR7.TR7_FORNEC,
+    TR7.TR7_LOJA,
     TR8.TR8_ORDEM,
     convert(datetime, concat(TR7.TR7_DTLOTE, ' ', TR7.TR7_HRLOTE), 103) as DATA_LOTE,
     convert(datetime, concat(TR7.TR7_DTRECI, ' ', TR7.TR7_HRRECI), 103) as DATA_RECEBIMENTO,
-    SC1.C1_NUM,
-    SC7.C7_NUM,
+    
+    SC1.C1_NUM as NUM_SC,
+    convert(date, SC1.C1_EMISSAO, 103) as DATA_SC,
+    substring(SC1.C1_OP, 1, 6) as C1_OS,
+    trim(SC1.C1_OBS) as OBS_SC,
+    
+    SC7.C7_NUM as NUM_PC,
+    convert(date, SC7.C7_EMISSAO, 103) as DATA_PC,
+    substring(SC7.C7_OP, 1, 6) as C7_OS,
+    trim(SC7.C7_OBS) as OBS_PC,
     
     SER.D1_DOC as NF_SERVICO,
     SER.D1_SERIE as SER_SERVICO,
@@ -36,10 +48,7 @@ select
             and RET.D1_LOCAL in (21, 22, 23, 24, 26)
             and REM.D2_COD = SB1.B1_COD
             and RET.D1_EMISSAO = SER.D1_DTDIGIT
-    ) as REMRET,
-
-    TR7.TR7_NFE,
-    TR7.TR7_SERIE
+    ) as REMRET
 
 from TQS010 TQS (nolock)
     inner join ST9010 ST9 (nolock)
