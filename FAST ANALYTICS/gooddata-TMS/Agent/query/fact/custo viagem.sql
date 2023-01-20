@@ -113,7 +113,7 @@ from
 
             (
                 select
-                        first_value(datetimefromparts(year(DTW010.DTW_SYSDAT), month(DTW010.DTW_SYSDAT), day(DTW010.DTW_SYSDAT), substring(DTW010.DTW_SYSHOR, 1, 2), substring(DTW010.DTW_SYSHOR, 3, 4), substring(DTW010.DTW_SYSHOR, 5, 6), 0))
+                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', DTW010.DTW_SYSHOR), 113))
                         over
                         (
                             partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
@@ -129,7 +129,7 @@ from
             ) as CHE_CLIDEV,
             (
                 select
-                        first_value(datetimefromparts(year(DTW010.DTW_SYSDAT), month(DTW010.DTW_SYSDAT), day(DTW010.DTW_SYSDAT), substring(DTW010.DTW_SYSHOR, 1, 2), substring(DTW010.DTW_SYSHOR, 3, 4), substring(DTW010.DTW_SYSHOR, 5, 6), 0))
+                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', DTW010.DTW_SYSHOR), 113))
                         over
                         (
                             partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
