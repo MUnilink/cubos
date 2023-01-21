@@ -6,6 +6,19 @@ select
     SCP.CP_UM as UN,
     SCP.CP_QUANT as QTD_SOLICTADA,
     SCP.CP_QUJE as QTD_ATENDIDA,
+
+    SD3.D3_DOC,
+    SD3.D3_TM,
+    SD3.D3_CF,
+    SD3.D3_CC,
+    SD3.D3_ITEMCTA,
+    convert(date, SD3.D3_EMISSAO, 103) as D3_EMISSAO,
+    SD3.D3_LOCALIZ,
+    SD3.D3_USUARIO,
+    SD3.D3_NUMSEQ,
+    
+    SB1.B1_COD,
+    SB1.B1_DESC,
     trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
     
     convert(date, SCP.CP_EMISSAO, 103) as DATA_SA,
@@ -28,6 +41,11 @@ from SCP010 SCP (nolock)
         and SCQ.CQ_FILIAL = SCP.CP_FILIAL
         and SCQ.CQ_NUM = SCP.CP_NUM
         and SCQ.CQ_ITEM = SCP.CP_ITEM
+    left join SD3010 SD3 (nolock)
+        on SD3.D_E_L_E_T_ = ''
+        and SD3.D3_FILIAL = SCP.CP_FILIAL
+        and SD3.D3_NUMSA = SCP.CP_NUM
+        and SD3.D3_ITEMSA = SCP.CP_ITEM
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = SCP.CP_PRODUTO
