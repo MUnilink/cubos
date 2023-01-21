@@ -15,7 +15,14 @@ select
     TR7.TR7_SERIE,
     TR7.TR7_FORNEC,
     TR7.TR7_LOJA,
+    SA2.A2_NOME as RAZAO_SOCIAL,
+    SA2.A2_NREDUZ as NOME_FANTASIA,
+    
     TR8.TR8_ORDEM,
+    cast(TR8.TR8_MOTIVO as int) as TR8_MOTIVO,
+    trim(ST8.T8_NOME) as MOTIVO,
+    TR8.TR8_VALOR,
+    
     convert(datetime, concat(TR7.TR7_DTLOTE, ' ', TR7.TR7_HRLOTE), 103) as DATA_LOTE,
     convert(datetime, concat(TR7.TR7_DTRECI, ' ', TR7.TR7_HRRECI), 103) as DATA_RECEBIMENTO,
     
@@ -56,12 +63,21 @@ from TQS010 TQS (nolock)
 		and ST9.T9_CODBEM = TQS.TQS_CODBEM
     inner join TR8010 TR8 (nolock)
         on TR8.D_E_L_E_T_ = ''
-        and TR8.TR8_CODBEM = TQS.TQS_CODBEM    
+        and TR8.TR8_CODBEM = TQS.TQS_CODBEM
 
         inner join TR7010 TR7 (nolock)
             on TR7.D_E_L_E_T_ = ''
             and TR7.TR7_FILIAL = TR8.TR8_FILIAL
             and TR7.TR7_LOTE = TR8.TR8_LOTE
+
+            inner join SA2010 SA2 (nolock)
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = TR7.TR7_FORNEC
+                and SA2.A2_LOJA = TR7.TR7_LOJA
+        
+        left join ST8010 ST8 (nolock)
+            on ST8.D_E_L_E_T_ = ''
+            and ST8.T8_CODOCOR = TR8.TR8_MOTIVO
         left join SC1010 SC1 (nolock)
             on SC1.D_E_L_E_T_ = ''
             and SC1.C1_FILIAL = TR8.TR8_FILIAL
