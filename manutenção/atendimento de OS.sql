@@ -28,6 +28,25 @@ select
     SCP.CP_QUJE as QTD_ATENDIDA,
     trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
 
+    case when STL.TL_TIPOREG = 'P' and STL.TL_DOC = '' then 'NÃO ATENDIDA'
+    else
+        case when STL.TL_TIPOREG = 'P' and STL.TL_DOC != '' then 'ATENDIDA'
+        else
+            case when STL.TL_TIPOREG = 'M' then 'MDO'
+            else
+                case when STL.TL_TIPOREG = 'T' then 'EXTERNO'
+                else
+                    case when STL.TL_TIPOREG = 'E' then 'FUNÇÃO PREVISTA'
+                    else 'OUTROS'
+                    end
+                end
+            end
+        end
+    end as ATENDIMENTO,
+
+    last_value(STL.TL_SEQRELA) over(partition by STJ.TJ_FILIAL, STJ.TJ_ORDEM, STL.TL_CODIGO order by STJ.TJ_FILIAL, STJ.TJ_ORDEM, STL.TL_CODIGO, STL.TL_SEQRELA) as SEQ_INSUMO,
+
+    STL.TL_TIPOREG,
 	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST1.T1_NOME, isnull(ST0.T0_NOME, '-')))
 	else
 		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then trim(SB1.B1_DESC)
