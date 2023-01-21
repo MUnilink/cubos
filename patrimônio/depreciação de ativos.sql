@@ -12,6 +12,7 @@ select
 	SN3.N3_SUBCCON as ATIVIDADE,
 	trim(SN3.N3_CCONTAB) as CONTA,
 
+	SN4.N4_CCUSTOT as CC_ORIGEM,
 	SN4.N4_CCUSTO as CC_DEPREC,
 	SN4.N4_SUBCTA as ATIVIDADE_DEPREC,
 	
@@ -43,7 +44,7 @@ select
 	
 	trim(SN4.N4_CONTA) as CONTA_DEPREC,
 	case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO,
-	SN4.N4_DATA,
+	convert(datetime, concat(SN4.N4_DATA, ' ', SN4.N4_HORA), 113) as N4_DATA,
 	substring(SN4.N4_DATA, 1, 6) as PERIODO,
 	SN4.N4_LA,
 	SN4.N4_VLROC1 as VALOR_DEPREC,
