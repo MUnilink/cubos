@@ -113,55 +113,55 @@ from
 
             (
                 select
-                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2))), 103))
-                        over
-                        (
-                            partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
-                            order by DTW010.DTW_SEQUEN
-                        )
+                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                     and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
+                order by DTW010.DTW_SEQUEN
             ) as CHE_CLIDEV,
             (
                 select
-                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2))), 103))
-                        over
-                        (
-                            partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
-                            order by DTW010.DTW_SEQUEN
-                        )
+                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                     and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
+                order by DTW010.DTW_SEQUEN
             ) as SAI_CLIDEV,
 
             (
                 select
-                        datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                     and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 49
             ) as SAI_VIAGEM,
             (
                 select
-                        datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                     and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 50
             ) as CHE_VIAGEM,
 
