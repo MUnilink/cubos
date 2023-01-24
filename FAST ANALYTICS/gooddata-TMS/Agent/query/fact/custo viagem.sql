@@ -1,4 +1,4 @@
-select
+select /*The conversion of a varchar data type to a datetime data type resulted in an out-of-range value*/
     'P |01|01' AS BK_EMPRESA,
     VIAGEM.DTQ_FILORI,
     VIAGEM.DTQ_VIAGEM,
@@ -113,7 +113,7 @@ from
 
             (
                 select
-                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', DTW010.DTW_SYSHOR), 113))
+                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2))), 103))
                         over
                         (
                             partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
@@ -129,7 +129,7 @@ from
             ) as CHE_CLIDEV,
             (
                 select
-                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', DTW010.DTW_SYSHOR), 113))
+                        first_value(convert(datetime, concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2))), 103))
                         over
                         (
                             partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID, DTW010.DTW_SEQUEN
