@@ -18,6 +18,7 @@ select
 
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
+	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as C1_RESIDUO,
 
 	case SC1.C1_APROV
 		when 'B' then 'PENDENTE'
