@@ -3,13 +3,16 @@ select
     ZC1.ZC1_NUM,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
+    
     ZC1.ZC1_PORTO,
-    ZC1.ZC1_PORTO,
+    (select SX5010.X5_DESCRI from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
     ZC1.ZC1_NAVIO,
-    ZC1.ZC1_VIAGEM,
+    (select ZA3010.ZA3_DESC from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
+    trim(ZC1.ZC1_VIAGEM) as ZC1_VIAGEM,
+    
     ZC2.ZC2_ITEM,
     trim(ZC2.ZC2_COD) as INSUMO,
-    ZC2.ZC2_DESC as DESC_INSUMO,
+    trim(ZC2.ZC2_DESC) as DESC_INSUMO,
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
@@ -22,6 +25,8 @@ select
     ZC2.ZC2_QTDREA,
     ZC2.ZC2_VLUPRV,
     ZC2.ZC2_VLUREA,
+    trim(ZC2.ZC2_CONTEI) as ZC2_CONTEI,
+    trim(ZC2.ZC2_LACRE) as ZC2_LACRE,
     
     substring(ZC2.ZC2_DTINI, 1, 6) as PERIODO_APONT,
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
