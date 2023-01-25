@@ -79,7 +79,8 @@ select
 		end
 	end as TL_UNI,
 
-	trim(isnull(ST5.T5_DESCRIC, isnull(TT9.TT9_DESCRI, '-'))) as T5_TAREFA,
+	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
+	trim(isnull(TT9.TT9_DESCRI, '-')) as T5_TAREFA,
 	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
 	STJ.TJ_SERVICO,
 	STJ.TJ_POSCONT as CONTADOR_ATUAL,
@@ -89,8 +90,7 @@ select
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
-	year(STL.TL_DTINICI) as ANO_APP_OS,
-	month(STL.TL_DTINICI) as MES_APP_OS
+	substring(STL.TL_DTINICI, 1, 6) as PERIODO
 
 from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
@@ -116,18 +116,10 @@ from STJ010 STJ (nolock)
 			and STL.TL_ORDEM = substring(SCP.CP_OP, 1, 6)
 			and STL.TL_CODIGO = SCP.CP_PRODUTO
 
-		left join ST5010 ST5 (nolock)
-			on ST5.D_E_L_E_T_ = ''
-			and ST5.T5_TAREFA = STL.TL_TAREFA
 		left join TT9010 TT9 (nolock)
 			on TT9.D_E_L_E_T_ = ''
 			and TT9.TT9_TAREFA = STL.TL_TAREFA
-		left join SA2010 SA2 (nolock)
-			on SA2.D_E_L_E_T_ = ''
-			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
-		left join SB1010 SB1 (nolock)
-			on SB1.D_E_L_E_T_ = ''
-			and SB1.B1_COD = STL.TL_CODIGO
+
 		left join
 		(
 			select
@@ -144,6 +136,13 @@ from STJ010 STJ (nolock)
 				SB9010.B9_COD
 		) ADESIVO_CUSTO
 			on ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO
+		
+		left join SA2010 SA2 (nolock)
+			on SA2.D_E_L_E_T_ = ''
+			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
+		left join SB1010 SB1 (nolock)
+			on SB1.D_E_L_E_T_ = ''
+			and SB1.B1_COD = STL.TL_CODIGO
 		left join SH4010 SH4 (nolock)
 			on SH4.D_E_L_E_T_ = ''
 			and SH4.H4_CODIGO = STL.TL_CODIGO
