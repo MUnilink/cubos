@@ -1,15 +1,12 @@
 select /*The conversion of a varchar data type to a datetime data type resulted in an out-of-range value*/
     'P |01|01' AS BK_EMPRESA,
-    VIAGEM.DTQ_FILORI,
+    VIAGEM.ID_VIAGEM,
     VIAGEM.DTQ_VIAGEM,
     
     VIAGEM.CHE_CLIDEV,
     VIAGEM.SAI_CLIDEV,
     VIAGEM.CHE_VIAGEM,
     VIAGEM.SAI_VIAGEM,
-    VIAGEM.DTQ_STATUS,
-    convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI, /* CONVERT TEMPORÁRIO ATÉ CRIAÇÃO DO ETL*/
-
     (
         select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
         from DTW010
@@ -45,18 +42,13 @@ select /*The conversion of a varchar data type to a datetime data type resulted 
             and DTW010.DTW_ATIVID = 49
     ) as km_ini,
     
+    DT6.DT6_DOC,
+    DT6.DT6_SERIE,
+    DT6.DT6_DATEMI,
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
-    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
-
-    DT5.DT5_NUMSOL,
-    DT5.DT5_DOC,
-    DT5.DT5_SERIE,
-    DT5.DT5_STATUS,
-    DT5.DT5_TIPCOL,
-    DT5.DT5_CODSOL,
-    DT5.DT5_CODOBC,
+    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VIAGEM,
 
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -75,14 +67,14 @@ select /*The conversion of a varchar data type to a datetime data type resulted 
     CASE WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DES,
     CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
-    DTC.DTC_CODPRO as PRODUTO,
-    DT6.DT6_DOC,
-    DT6.DT6_SERIE,
+    trim(DTC.DTC_CODPRO) as PRODUTO,
 
+    DIARIAS.ID_DIARIA,
     DIARIAS.DYV_IDCDIA,
     DIARIAS.DYX_DATDIA,
+    DIARIAS.DYX_QTDE,
     DIARIAS.DYX_VLRUNI,
-    VIAGEM.ID_VIAGEM,
+    
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
@@ -198,6 +190,7 @@ from
     left join
     (
         select
+            concat(trim(DYV010.DYV_FILORI), trim(DYV010.DYV_VIAGEM), trim(DYV010.DYV_CODMOT), trim(DYV010.DYV_IDCDIA), trim(DYX010.DYX_ITEM)) as ID_DIARIA,
             DYV010.DYV_FILORI,
             DYV010.DYV_VIAGEM,
             DYV010.DYV_CODMOT,
