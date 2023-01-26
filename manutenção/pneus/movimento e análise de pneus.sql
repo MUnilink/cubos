@@ -93,7 +93,7 @@ from TQS010 TQS (nolock)
     inner join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = TQS.TQS_CODBEM
-    inner join STZ010 STZ (nolock)
+    left join STZ010 STZ (nolock)
         on STZ.D_E_L_E_T_ = ''
         and STZ.TZ_CODBEM = TQS.TQS_CODBEM
 
