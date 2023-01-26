@@ -82,8 +82,8 @@ select /*The conversion of a varchar data type to a datetime data type resulted 
     VIAGEM.ID_MOTORISTA,
     
     null as INSTANCIA,
-    null as SEGURO_CARGA, /* PLANILHA DE SEGURO */
-    null as OUTROS_CUSTOS
+    0.0 as SEGURO_CARGA, /* PLANILHA DE SEGURO */
+    0.0 as OUTROS_CUSTOS
 
 from
     (
