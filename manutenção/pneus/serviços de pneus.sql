@@ -5,6 +5,8 @@ select
 	ST9.T9_CCUSTO,
 	ST9.T9_ITEMCTA,
 	ST9.T9_SITBEM,
+    ST9.T9_CODESTO,
+    ST9.T9_LOCPAD,
     
     ST9.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS_PNEU,
@@ -19,7 +21,7 @@ select
     SA2.A2_NREDUZ as NOME_FANTASIA,
     
     TR8.TR8_ORDEM,
-    cast(TR8.TR8_MOTIVO as int) as TR8_MOTIVO,
+    TR8.TR8_MOTIVO as TR8_MOTIVO,
     trim(ST8.T8_NOME) as MOTIVO,
     TR8.TR8_VALOR,
     
