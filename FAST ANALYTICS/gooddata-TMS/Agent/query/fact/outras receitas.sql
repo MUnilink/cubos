@@ -54,13 +54,13 @@ from
             DTQ.DTQ_DATENC,
 
             (
-                select DTW010.DTW_DATREA
+                select DTW010.DTW_SYSDAT
                 from DTW010 (nolock)
                 where 
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                     and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = '050'
+                    and DTW010.DTW_ATIVID = 50
             ) as DATAFIM,
             
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
