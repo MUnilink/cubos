@@ -307,11 +307,11 @@ from DTQ010 DTQ (nolock)
             AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
             AND DUYDEV.D_E_L_E_T_ = ' '
 
-            left join DTC010 DTC (nolock)
-                on DTC.D_E_L_E_T_ = ''
-                and DTC.DTC_FILORI = DT6.DT6_FILDOC
-                and DTC.DTC_DOC = DT6.DT6_DOC
-                and DTC.DTC_SERIE = DT6.DT6_SERIE
+        left join DTC010 DTC (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_DOC = DT6.DT6_DOC
+            and DTC.DTC_SERIE = DT6.DT6_SERIE
     
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
@@ -326,10 +326,10 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_LOJA = SC5.C5_LOJACLI
 
 where
-        DTQ.D_E_L_E_T_ = ''
+        DTQ.D_E_L_E_T_ = ''/*
     and
     (
         DT6.DT6_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990, 54215, 54229, 54230, 54231, 54232, 54235, 54258, 2692, 54570, 54571, 2784, 2811, 54878, 2819, 2820, 2871, 2876)
     or  RPS.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990, 54215, 54229, 54230, 54231, 54232, 54235, 54258, 2692, 54570, 54571, 2784, 2811, 54878, 2819, 2820, 2871, 2876)
     or  COMP.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990, 54215, 54229, 54230, 54231, 54232, 54235, 54258, 2692, 54570, 54571, 2784, 2811, 54878, 2819, 2820, 2871, 2876)
-    )
+    )*/
