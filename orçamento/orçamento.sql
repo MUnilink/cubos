@@ -5,8 +5,8 @@ select
     AK2.AK2_ID as ID,
     AK2.AK2_CO as CONTA_ORC,
     AK2.AK2_PERIOD as PERIODO,
-    AK2.AK2_CLASSE as CC_ORC,
-    AK2.AK2_OPER as ATIV_ORC,
+    AK2.AK2_CLASSE as CC,
+    AK2.AK2_OPER as ATIV,
     
     convert(date, AK2.AK2_DATAI, 103) as DTINI_ITEM,
     convert(date, AK2.AK2_DATAF, 103) as DTFIM_ITEM,
@@ -22,10 +22,7 @@ select
     
     convert(date, AKD.AKD_DATA, 103) as DATA_LANCAMENTO,
     AKD.AKD_DATA as PERIODO_ORCAMENTO,
-    
-    AKD.AKD_CLASSE as CC,
-    AKD.AKD_OPER as ATIV,
-    
+        
     case AKD.AKD_TIPO
         when 1 then 'CREDITO'
         when 2 then 'DEBITO'
