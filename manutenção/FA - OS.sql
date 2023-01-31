@@ -5,7 +5,10 @@ select
 	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO * STL.TL_QUANTID
-		else STL.TL_CUSTO
+		else
+			case when STL.TL_TIPOREG = 'M' and STL.TL_DTINICI > (select SX6010.X6_CONTEUD from SX6010 where SX6010.X6_FIL = STL.TL_FILIAL and SX6010.X6_VAR = 'MV_ULMES') then (select avg(STL010.TL_CUSTO) from STL010 where STL010.D_E_L_E_T_ = '' and STL010.TL_CODIGO = STL.TL_CODIGO)
+				else STL.TL_CUSTO
+			end
 		end
 	end as TL_CUSTO,
 
@@ -24,30 +27,20 @@ select
 	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
 	trim(isnull(STL.TL_LOCAL, '-')) as ARMAZEM,
 	
-	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then 'MÃO-DE-OBRA'
-	else
-		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then 'PEÇAS'
-		else
-			case when SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA then 'TERCEIROS'
-			else
-				case when STL.TL_CODIGO = SH4.H4_CODIGO then 'FERRAMENTA'
-				else 'OUTROS'
-				end
-			end
-		end
+	case STL.TL_TIPOREG
+		when 'M' then 'MÃO-DE-OBRA'
+		when 'E' then 'MÃO-DE-OBRA'
+		when 'P' then 'PEÇAS'
+		when 'T' then 'TERCEIROS'
+		else 'OUTROS'
 	end as TIPO_CUSTO,
-	
-	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST1.T1_NOME, isnull(ST0.T0_NOME, '-')))
-	else
-		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then trim(SB1.B1_DESC)
-		else
-			case when SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA then trim(SA2.A2_NOME)
-			else
-				case when STL.TL_CODIGO = SH4.H4_CODIGO then trim(SH4.H4_DESCRI)
-				else 'OUTROS'
-				end
-			end
-		end
+
+	case STL.TL_TIPOREG
+		when 'M' then trim(ST1.T1_NOME)
+		when 'E' then trim(ST0.T0_NOME)
+		when 'P' then trim(SB1.B1_DESC)
+		when 'T' then trim(SA2.A2_NOME)
+		else 'OUTROS'
 	end as DESC_INSUMO,
 
 	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
