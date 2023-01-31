@@ -9,8 +9,10 @@ select
     trim(STJ.TJ_PLANO) as PLANO,
     trim(STJ.TJ_SERVICO) as SERVICO,
     trim(STJ.TJ_TERMINO) as ENCERRADA,
-    convert(date, STJ.TJ_DTMRINI, 103) as DT_INI_OS,
-    convert(date, STJ.TJ_DTMRFIM, 103) as DT_FIM_OS,
+    convert(date, STJ.TJ_DTMRINI, 103) as DT_REAL_INI,
+    convert(date, STJ.TJ_DTMRFIM, 103) as DT_REAL_FIM,
+    convert(date, STJ.TJ_DTMPINI, 103) as DT_PREV_INI,
+    convert(date, STJ.TJ_DTMPFIM, 103) as DT_PREV_FIM,
     trim(isnull(ST4.T4_NOME, '-')) as DESC_SERVICO,
 
     STJ.TJ_SEQRELA as SEQ_OS,
