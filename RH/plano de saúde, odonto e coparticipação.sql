@@ -321,7 +321,7 @@ union
         convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
         datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
         
-        substring(RHR.RHR_DATA, 1, 6) as PERIODO,
+        substring(RHR.RHR_COMPPG, 1, 6) as PERIODO,
 
         case when RHR.RHR_PD in (87, 565, 571) then 'HAPVIDA'
         else
@@ -470,7 +470,7 @@ union
         convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
         datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
-        substring(RHS.RHS_DATA, 1, 6) as PERIODO,
+        substring(RHS.RHS_COMPPG, 1, 6) as PERIODO,
 
         case when RHS.RHS_PD in (87, 565, 571) then 'HAPVIDA'
         else
