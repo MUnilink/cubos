@@ -17,7 +17,16 @@ select
     STL.TL_QUANTID as QTD_INSUMO,
     STJ.TJ_CCUSTO,
     STJ.TJ_YITMCT,
-    case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
+    
+    case when STL.TL_QUANTID = SCP.CP_QUJE then 'TOT. ATENDIDA'
+    else
+        case when SCP.CP_QUJE = 0.0 then 'PENDENTE'
+        else
+            case when STL.TL_QUANTID > SCP.CP_QUJE then 'PAR. ATENDIDA'
+            else 'OUTROS'
+            end
+        end
+    end as APP_INSUMO,
 	
 	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
 
@@ -81,8 +90,8 @@ from STL010 STL (nolock)
     left join SCP010 SCP (nolock)
         on SCP.D_E_L_E_T_ = ''
         and STL.TL_FILIAL = SCP.CP_FILIAL
-        and STL.TL_ORDEM = substring(SCP.CP_OP, 1, 6)
-        and STL.TL_CODIGO = SCP.CP_PRODUTO
+        and STL.TL_NUMSA = SCP.CP_NUM
+        and STL.TL_ITEMSA = SCP.CP_ITEM
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = STL.TL_CODIGO            
