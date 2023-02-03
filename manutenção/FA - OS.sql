@@ -6,8 +6,18 @@ select
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO * STL.TL_QUANTID
 		else
-			case when STL.TL_TIPOREG = 'M' and STL.TL_DTINICI > (select SX6010.X6_CONTEUD from SX6010 where SX6010.X6_FIL = STL.TL_FILIAL and SX6010.X6_VAR = 'MV_ULMES') then (select avg(STL010.TL_CUSTO) from STL010 where STL010.D_E_L_E_T_ = '' and STL010.TL_CODIGO = STL.TL_CODIGO)
-				else STL.TL_CUSTO
+			case when STL.TL_TIPOREG = 'M' and STL.TL_DTINICI > (select SX6010.X6_CONTEUD from SX6010 where SX6010.X6_FIL = STL.TL_FILIAL and SX6010.X6_VAR = 'MV_ULMES')
+				then
+				(
+					select avg(STL010.TL_CUSTO)
+					from STL010
+					where
+							STL010.D_E_L_E_T_ = ''
+						and STL010.TL_CODIGO = STL.TL_CODIGO
+						and datediff(month, STL010.TL_DTINICI, STL.TL_DTINICI) = 2
+						/*and substring(STL010.TL_DTINICI, 1, 6) = (select substring(SX6010.X6_CONTEUD, 1, 6) from SX6010 where SX6010.X6_FIL = STL.TL_FILIAL and SX6010.X6_VAR = 'MV_ULMES')*/
+				)
+			else STL.TL_CUSTO
 			end
 		end
 	end as TL_CUSTO,
@@ -65,9 +75,22 @@ select
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18') then ST1.T1_SALARIO
 		else
-			case when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID
+			case when STL.TL_QUANTID != 0.0 and STL.TL_TIPOREG = 'M' and STL.TL_DTINICI > (select SX6010.X6_CONTEUD from SX6010 where SX6010.X6_FIL = STL.TL_FILIAL and SX6010.X6_VAR = 'MV_ULMES')
+				then
+				(
+					select avg(STL010.TL_CUSTO)
+					from STL010
+					where
+							STL010.D_E_L_E_T_ = ''
+						and STL010.TL_CODIGO = STL.TL_CODIGO
+						and datediff(month, STL010.TL_DTINICI, STL.TL_DTINICI) = 2
+						/*and substring(STL010.TL_DTINICI, 1, 6) = (select substring(SX6010.X6_CONTEUD, 1, 6) from SX6010 where SX6010.X6_FIL = STL.TL_FILIAL and SX6010.X6_VAR = 'MV_ULMES')*/
+				) / STL.TL_QUANTID
 			else
-				0.0
+				case when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID
+				else
+					0.0
+				end
 			end
 		end
 	end as TL_UNI,
