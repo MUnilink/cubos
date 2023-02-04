@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="diego.guedes" created="Mon Oct 23 06:58:29 CDT 2017" guiVersion="3.4.4.P" id="1508859235635" licenseType="Commercial" modified="Tue Aug 10 16:48:34 BRT 2021" modifiedBy="Breno" name="xxx_xxx_UltimaCarga" revision="1.142" showComponentDetails="true">
+<Global>
+<Metadata fileURL="${META_DIR}/obj_dto.fmt" id="Metadata5"/>
+<Metadata id="Metadata3" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Indenizacao Transporte.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Indenizacao Transporte.csv" name="Indenizacao_Transporte_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="BK_EMPRESA" type="string"/>
+<Field name="BK_FILIAL" type="string"/>
+<Field name="DATA_REGISTRO" type="string"/>
+<Field name="HORA_REGISTRO" type="string"/>
+<Field name="ITEM" type="string"/>
+<Field name="FILIAL_REGISTRO" type="string"/>
+<Field name="NUMERO_REGISTRO" type="string"/>
+<Field name="RAMO_SEGURO" type="string"/>
+<Field name="BK_CODIGO_OCORRENCIA" type="string"/>
+<Field name="NUMERO_PROCESSO" type="string"/>
+<Field name="BK_CDRORI" type="string"/>
+<Field name="BK_CDRDES" type="string"/>
+<Field name="BK_STATUS_INDENIZACAO" type="string"/>
+<Field name="BK_CLIENTE" type="string"/>
+<Field name="QUANTIDADE_OCORRENCIA" type="string"/>
+<Field name="VALOR_PREJUIZO" type="string"/>
+<Field name="VALOR_INDENIZADO" type="string"/>
+<Field name="DATA_VENCIMENTO" type="string"/>
+<Field name="DATA_ENCERRAMENTO" type="string"/>
+<Field name="BK_FILIAL_DOCTO" type="string"/>
+<Field name="BK_NUMERO_DOCUMENTO" type="string"/>
+<Field name="BK_SERIE" type="string"/>
+<Field name="BK_STATUS" type="string"/>
+<Field name="BK_DOCTMS" type="string"/>
+<Field name="BK_TIPTRA" type="string"/>
+<Field name="RESPONSAVEL_OCORRENCIA" type="string"/>
+<Field name="BK_REGIAO_CLI" type="string"/>
+<Field name="BK_REGIAO_REM" type="string"/>
+<Field name="BK_REGIAO_DES" type="string"/>
+<Field name="BK_REGIAO_DEV" type="string"/>
+<Field name="BK_REGIAO_CDRCAL" type="string"/>
+<Field eofAsDelimiter="false" name="BK_REGIAO_CDRORI" type="string"/>
+<Field name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata6" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Movimentacao Carga.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Movimentacao Carga.csv" name="Movimentacao_Carga_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="BK_EMPRESA" type="string"/>
+<Field name="BK_FILIAL" type="string"/>
+<Field name="DATA_EMISSAO" type="string"/>
+<Field name="BK_REMETENTE" type="string"/>
+<Field name="BK_DESTINATARIO" type="string"/>
+<Field name="BK_DEVEDOR" type="string"/>
+<Field name="BK_CDRORI" type="string"/>
+<Field name="BK_CDRDES" type="string"/>
+<Field name="BK_CODNEG" type="string"/>
+<Field name="BK_SERNEG" type="string"/>
+<Field name="BK_FILIAL_ORIGEM" type="string"/>
+<Field name="BK_FILIAL_DESTINO" type="string"/>
+<Field name="BK_FILIAL_DOCTO" type="string"/>
+<Field name="BK_DOCTMS" type="string"/>
+<Field name="BK_TIPTRA" type="string"/>
+<Field name="BK_REGIAO_REM" type="string"/>
+<Field name="BK_REGIAO_DES" type="string"/>
+<Field name="BK_REGIAO_DEV" type="string"/>
+<Field name="BK_REGIAO_CDRCAL" type="string"/>
+<Field name="BK_REGIAO_CDRORI" type="string"/>
+<Field name="FILIAL_DOCUMENTO" type="string"/>
+<Field name="DOCUMENTO" type="string"/>
+<Field name="SERIE" type="string"/>
+<Field name="PESO" type="string"/>
+<Field name="PESO_CUBADO" type="string"/>
+<Field name="PESO_M3" type="string"/>
+<Field name="VOLUME" type="string"/>
+<Field name="VALOR_MERCADORIA" type="string"/>
+<Field eofAsDelimiter="false" name="VALOR_TOTAL" type="string"/>
+<Field name="BK_MOEDA" type="string"/>
+<Field name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata7" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Ocorrencias Transporte.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Ocorrencias Transporte.csv" name="Ocorrencias_Transporte_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="BK_EMPRESA" type="string"/>
+<Field name="BK_FILIAL" type="string"/>
+<Field name="DATA_OCORRENCIA" type="string"/>
+<Field name="HORA_OCORRENCIA" type="string"/>
+<Field name="FILIAL_OCORRENCIA" type="string"/>
+<Field name="NUMERO_OCORRENCIA" type="string"/>
+<Field name="NUMERO_VIAGEM" type="string"/>
+<Field name="SEQUENCIA_OCORRENCIA" type="string"/>
+<Field name="CODIGO_OCORRENCA" type="string"/>
+<Field name="TIPO_OCORRENCA" type="string"/>
+<Field name="BK_REMETENTE" type="string"/>
+<Field name="BK_DESTINATARIO" type="string"/>
+<Field name="BK_DEVEDOR" type="string"/>
+<Field name="BK_CDRORI" type="string"/>
+<Field name="BK_CDRDES" type="string"/>
+<Field name="BK_CODNEG" type="string"/>
+<Field name="BK_SERNEG" type="string"/>
+<Field name="BK_FILIAL_ORIGEM" type="string"/>
+<Field name="BK_FILIAL_DESTINO" type="string"/>
+<Field name="BK_DOCTMS" type="string"/>
+<Field name="BK_TIPTRA" type="string"/>
+<Field name="BK_SERTMS" type="string"/>
+<Field name="BK_REGIAO_REM" type="string"/>
+<Field name="BK_REGIAO_DES" type="string"/>
+<Field name="BK_REGIAO_DEV" type="string"/>
+<Field name="BK_REGIAO_CDRCAL" type="string"/>
+<Field name="BK_REGIAO_CDRORI" type="string"/>
+<Field name="FILIAL_DOCUMENTO" type="string"/>
+<Field name="DOCUMENTO" type="string"/>
+<Field eofAsDelimiter="false" name="SERIE" type="string"/>
+<Field name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata4" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Performance Entrega.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Performance Entrega.csv" name="Performance_Entrega_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field name="BK_EMPRESA" type="string"/>
+<Field name="BK_FILIAL" type="string"/>
+<Field name="DATA_EMISSAO" type="string"/>
+<Field name="BK_REMETENTE" type="string"/>
+<Field name="BK_DESTINATARIO" type="string"/>
+<Field name="BK_DEVEDOR" type="string"/>
+<Field name="BK_CDRORI" type="string"/>
+<Field name="BK_CDRDES" type="string"/>
+<Field name="BK_CODNEG" type="string"/>
+<Field name="BK_SERNEG" type="string"/>
+<Field name="BK_FILIAL_ORIGEM" type="string"/>
+<Field name="BK_FILIAL_DESTINO" type="string"/>
+<Field name="BK_FILIAL_DOCTO" type="string"/>
+<Field name="BK_DOCTMS" type="string"/>
+<Field name="BK_TIPTRA" type="string"/>
+<Field name="DOCUMENTO" type="string"/>
+<Field name="SERIE" type="string"/>
+<Field name="PRAZO_ENTREGA" type="string"/>
+<Field name="DATA_ENTREGA" type="string"/>
+<Field name="BK_STATUS" type="string"/>
+<Field name="BK_REGIAO_REM" type="string"/>
+<Field name="BK_REGIAO_DES" type="string"/>
+<Field name="BK_REGIAO_DEV" type="string"/>
+<Field name="BK_REGIAO_CDRCAL" type="string"/>
+<Field eofAsDelimiter="false" name="BK_REGIAO_CDRORI" type="string"/>
+<Field name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata2" previewAttachment="zip:(${DATA_SOURCE_DIR}/PROTHEUS.zip)#TMS Receita Transporte.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," label="zip:(./data/source/PROTHEUS.zip)#TMS Receita Transporte.csv" name="Receita_Transportadora_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field label="BK_EMPRESA" name="BK_EMPRESA" type="string"/>
+<Field label="BK_FILIAL" name="BK_FILIAL" type="string"/>
+<Field label="DATA_EMISSAO" name="DATA_EMISSAO" type="string"/>
+<Field label="BK_REMETENTE" name="BK_REMETENTE" type="string"/>
+<Field label="BK_DESTINATARIO" name="BK_DESTINATARIO" type="string"/>
+<Field label="BK_DEVEDOR" name="BK_DEVEDOR" type="string"/>
+<Field label="BK_CDRORI" name="BK_CDRORI" type="string"/>
+<Field label="BK_CDRDES" name="BK_CDRDES" type="string"/>
+<Field label="BK_CDRCAL" name="BK_CDRCAL" type="string"/>
+<Field label="BK_COMPONENTE" name="BK_COMPONENTE" type="string"/>
+<Field label="BK_NEGOCIACAO" name="BK_NEGOCIACAO" type="string"/>
+<Field label="BK_SERVICO" name="BK_SERVICO" type="string"/>
+<Field label="BK_FILIAL_ORIGEM" name="BK_FILIAL_ORIGEM" type="string"/>
+<Field label="BK_FILIAL_DESTINO" name="BK_FILIAL_DESTINO" type="string"/>
+<Field label="BK_FILIAL_DOCTO" name="BK_FILIAL_DOCTO" type="string"/>
+<Field label="BK_DOCTMS" name="BK_DOCTMS" type="string"/>
+<Field label="BK_TIPTRA" name="BK_TIPTRA" type="string"/>
+<Field label="FILDOC" name="FILDOC" type="string"/>
+<Field label="DOCUMENTO" name="DOCUMENTO" type="string"/>
+<Field label="SERIE" name="SERIE" type="string"/>
+<Field label="PRODUTO" name="PRODUTO" type="string"/>
+<Field label="BK_REGIAO_REM" name="BK_REGIAO_REM" type="string"/>
+<Field label="BK_REGIAO_DES" name="BK_REGIAO_DES" type="string"/>
+<Field label="BK_REGIAO_DEV" name="BK_REGIAO_DEV" type="string"/>
+<Field label="BK_REGIAO_CDRCAL" name="BK_REGIAO_CDRCAL" type="string"/>
+<Field label="BK_REGIAO_CDRORI" name="BK_REGIAO_CDRORI" type="string"/>
+<Field label="BK_FILIAL_ORIGEM" name="BK_FILIAL_ORIGEM_1" type="string"/>
+<Field label="VALOR_COMPONENTE" name="VALOR_COMPONENTE" type="string"/>
+<Field label="VALOR_IMPOSTO" name="VALOR_IMPOSTO" type="string"/>
+<Field eofAsDelimiter="false" label="VALOR_TOTAL" name="VALOR_TOTAL" type="string"/>
+<Field name="BK_MOEDA" type="string"/>
+<Field name="INSTANCIA" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata0" previewAttachment="zip:(${DATA_SOURCE_DIR}/FASTANALYTICS.zip)#UnidadeNegocio.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="UltimaCarga_Input" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field format="yyyyMMdd HH:mm:ss" name="Data" type="date"/>
+<Field name="Dummy" type="string"/>
+</Record>
+</Metadata>
+<Metadata id="Metadata1" previewAttachment="zip:(${DATA_SOURCE_DIR}/FASTANALYTICS.zip)#UnidadeNegocio.csv" previewAttachmentCharset="ISO-8859-1">
+<Record fieldDelimiter="," name="UltimaCarga_Output" previewAttachmentCharset="ISO-8859-1" quoteChar="&quot;" quotedStrings="true" recordDelimiter="\n" skipSourceRows="1" type="delimited">
+<Field format="yyyyMMdd HH:mm:ssZ" name="Data" type="date"/>
+<Field name="Tempo" type="integer"/>
+<Field name="pk_Modulo" type="string"/>
+</Record>
+</Metadata>
+<Property fileURL="workspace.prm" id="GraphParameter0"/>
+<LookupTable id="LookupTable0" initialSize="512" key="Dummy" metadata="Metadata0" name="Lkp_UltimaCarga" type="simpleLookup"/>
+<Note alignment="1" backgroundColorB="225" backgroundColorG="255" backgroundColorR="255" enabled="true" folded="false" height="622" id="Note0" textColorB="0" textColorG="0" textColorR="0" textFontSize="8" title="1. CARGA DO DATASET DE ÚLTIMA CARGA DO ETL" titleColorB="0" titleColorG="0" titleColorR="0" titleFontSize="10" width="1424" x="31" y="43"/>
+<Dictionary/>
+</Global>
+<Phase number="10">
+<Node aggregateKey="Dummy" enabled="enabled" guiName="Aggregate" guiX="855" guiY="250" id="AGGREGATE" mapping="$Dummy:=first($Dummy);" type="AGGREGATE"/>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(${DATA_SOURCE_DIR}/${gdc_agent_zip})#TMS Indenizacao Transporte.csv*" guiName="Indenização Transporte" guiX="75" guiY="533" id="INDENIZACAO_TRANSPORTE" numRecords="10" type="DATA_READER"/>
+<Node enabled="enabled" guiName="LookupTableReaderWriter" guiX="1057" guiY="250" id="LOOKUP_TABLE_READER_WRITER" lookupTable="LookupTable0" type="LOOKUP_TABLE_READER_WRITER"/>
+<Node enabled="enabled" guiName="Merge" guiX="670" guiY="242" id="MERGE" mergeKey="Dummy" type="MERGE"/>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(${DATA_SOURCE_DIR}/${gdc_agent_zip})#TMS Movimentacao Carga.csv*" guiName="Movimentação Carga" guiX="81" guiY="61" id="MOVIMENTACAO_CARGA" numRecords="10" type="DATA_READER"/>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(${DATA_SOURCE_DIR}/${gdc_agent_zip})#TMS Ocorrencias Transporte.csv*" guiName="Ocorrências Transporte" guiX="75" guiY="179" id="OCORRENCIAS_TRANSPORTE" numRecords="10" type="DATA_READER"/>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(${DATA_SOURCE_DIR}/${gdc_agent_zip})#TMS Performance Entrega.csv*" guiName="Performance Entrega" guiX="80" guiY="286" id="PERFORMANCE_ENTREGA" numRecords="10" type="DATA_READER"/>
+<Node charset="ISO-8859-1" enabled="enabled" fileURL="zip:(${DATA_SOURCE_DIR}/${gdc_agent_zip})#TMS Receita Transporte.csv*" guiName="Receita Transportadora" guiX="75" guiY="406" id="RECEITA_TRANSPORTADORA1" numRecords="10" type="DATA_READER"/>
+<Node enabled="enabled" guiName="Reformat" guiX="287" guiY="61" id="REFORMAT1" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import 'trans/lib.ctl';
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Data = null;
+	$out.0.Dummy = '1';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="294" guiY="179" id="REFORMAT2" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import 'trans/lib.ctl';
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Data = null;
+	$out.0.Dummy = '1';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="294" guiY="286" id="REFORMAT3" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import 'trans/lib.ctl';
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Data = null;
+	$out.0.Dummy = '1';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="294" guiY="406" id="REFORMAT4" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import 'trans/lib.ctl';
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Data = null;
+	$out.0.Dummy = '1';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="287" guiY="533" id="REFORMAT5" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import 'trans/lib.ctl';
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Data = null;
+	$out.0.Dummy = '1';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="AGGREGATE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge7" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="LOOKUP_TABLE_READER_WRITER:0"/>
+<Edge fromNode="INDENIZACAO_TRANSPORTE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge29" inPort="Port 0 (in)" metadata="Metadata3" outPort="Port 0 (output)" toNode="REFORMAT5:0"/>
+<Edge debugMode="true" fromNode="MERGE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge8" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="AGGREGATE:0"/>
+<Edge fromNode="MOVIMENTACAO_CARGA:0" guiBendpoints="" guiRouter="Manhattan" id="Edge25" inPort="Port 0 (in)" metadata="Metadata6" outPort="Port 0 (output)" toNode="REFORMAT1:0"/>
+<Edge fromNode="OCORRENCIAS_TRANSPORTE:0" guiBendpoints="" guiRouter="Manhattan" id="Edge26" inPort="Port 0 (in)" metadata="Metadata7" outPort="Port 0 (output)" toNode="REFORMAT2:0"/>
+<Edge fromNode="PERFORMANCE_ENTREGA:0" guiBendpoints="" guiRouter="Manhattan" id="Edge27" inPort="Port 0 (in)" metadata="Metadata4" outPort="Port 0 (output)" toNode="REFORMAT3:0"/>
+<Edge fromNode="RECEITA_TRANSPORTADORA1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge28" inPort="Port 0 (in)" metadata="Metadata2" outPort="Port 0 (output)" toNode="REFORMAT4:0"/>
+<Edge fromNode="REFORMAT1:0" guiBendpoints="" guiRouter="Manhattan" id="Edge9" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="MERGE:0"/>
+<Edge fromNode="REFORMAT2:0" guiBendpoints="" guiRouter="Manhattan" id="Edge10" inPort="Port 1 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="MERGE:1"/>
+<Edge fromNode="REFORMAT3:0" guiBendpoints="" guiRouter="Manhattan" id="Edge11" inPort="Port 2 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="MERGE:2"/>
+<Edge fromNode="REFORMAT4:0" guiBendpoints="" guiRouter="Manhattan" id="Edge30" inPort="Port 3 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="MERGE:3"/>
+<Edge fromNode="REFORMAT5:0" guiBendpoints="" guiRouter="Manhattan" id="Edge17" inPort="Port 4 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="MERGE:4"/>
+</Phase>
+<Phase number="20">
+<Node enabled="enabled" guiName="DataGenerator" guiX="600" guiY="413" id="DATA_GENERATOR" recordsNumber="1" type="DATA_GENERATOR">
+<attr name="generate"><![CDATA[function integer generate() {
+	$out.0.Data = today();
+	$out.0.Dummy = '1';
+	
+	return ALL;
+}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="LookupJoin" guiX="773" guiY="413" id="LOOKUP_JOIN" joinKey="Dummy" lookupTable="LookupTable0" type="LOOKUP_JOIN">
+<attr name="transform"><![CDATA[//#CTL2
+
+// Transforms input record into output record.
+function integer transform() {
+	$out.0.Data = $in.0.Data;
+	$out.0.Dummy = $in.0.Dummy;
+
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Reformat" guiX="938" guiY="413" id="REFORMAT" type="REFORMAT">
+<attr name="transform"><![CDATA[//#CTL2
+import 'trans/lib.ctl';
+
+// Transforms input record into output record.
+function integer transform() {
+	obj_dto dto;
+	dto = getSecondsFromTime($in.0.Data);
+	
+	$out.0.Data = dto.Data;
+	$out.0.Tempo = dto.Offset_seconds;
+	$out.0.pk_Modulo = 'TMS|TMS';
+	
+	return ALL;
+}
+
+// Called during component initialization.
+// function boolean init() {}
+
+// Called during each graph run before the transform is executed. May be used to allocate and initialize resources
+// required by the transform. All resources allocated within this method should be released
+// by the postExecute() method.
+// function void preExecute() {}
+
+// Called only if transform() throws an exception.
+// function integer transformOnError(string errorMessage, string stackTrace) {}
+
+// Called during each graph run after the entire transform was executed. Should be used to free any resources
+// allocated within the preExecute() method.
+// function void postExecute() {}
+
+// Called to return a user-defined error message when an error occurs.
+// function string getMessage() {}
+]]></attr>
+</Node>
+<Node dataset="dataset.cargasdoetl" datasetFieldMappings="{&quot;gd_dataset&quot;:{&quot;datasetId&quot;:&quot;dataset.cargasdoetl&quot;,&quot;datasetTitle&quot;:&quot;Cargas do ETL&quot;,&quot;attributes&quot;:[],&quot;referencedAttributes&quot;:[{&quot;gd_dataset_attribute&quot;:{&quot;id&quot;:&quot;attr.modulo.iddomodulo&quot;,&quot;title&quot;:&quot;Id do módulo&quot;,&quot;prettyId&quot;:&quot;attr_modulo_iddomodulo&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.modulo.iddomodulo&quot;,&quot;title&quot;:&quot;Id do módulo&quot;,&quot;prettyId&quot;:&quot;modulo__iddomodulo&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}],&quot;assignedMetadataField&quot;:&quot;pk_Modulo&quot;,&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;label.modulo.iddomodulo&quot;,&quot;title&quot;:&quot;Id do módulo&quot;,&quot;prettyId&quot;:&quot;modulo__iddomodulo&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:false}}}}],&quot;dateAttributes&quot;:[{&quot;gd_dataset_date_attribute&quot;:{&quot;id&quot;:&quot;datadecargadoetl.date&quot;,&quot;title&quot;:&quot;Date (Data de carga do ETL)&quot;,&quot;prettyId&quot;:&quot;datadecargadoetl&quot;,&quot;assignedMetadataField&quot;:&quot;Data&quot;,&quot;displayForms&quot;:[{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;datadecargadoetl.date.yyyymmdd&quot;,&quot;title&quot;:&quot;yyyy-mm-dd (Data de carga do ETL)&quot;,&quot;prettyId&quot;:&quot;datadecargadoetl_date_yyyymmdd&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:true}}],&quot;selectedDisplayForm&quot;:{&quot;gd_dataset_attribute_display_form&quot;:{&quot;id&quot;:&quot;datadecargadoetl.date.yyyymmdd&quot;,&quot;title&quot;:&quot;yyyy-mm-dd (Data de carga do ETL)&quot;,&quot;prettyId&quot;:&quot;datadecargadoetl_date_yyyymmdd&quot;,&quot;assignedMetadataField&quot;:null,&quot;type&quot;:&quot;STRING&quot;,&quot;referenceKey&quot;:true}},&quot;associatedFact&quot;:null}}],&quot;simpleFacts&quot;:[{&quot;gd_dataset_fact&quot;:{&quot;id&quot;:&quot;fact.cargasdoetl.tempodacargadoetlsegundos&quot;,&quot;title&quot;:&quot;Tempo da carga do ETL (segundos)&quot;,&quot;prettyId&quot;:&quot;tempodacargadoetlsegundos&quot;,&quot;type&quot;:&quot;DECIMAL&quot;,&quot;assignedMetadataField&quot;:&quot;Tempo&quot;}}],&quot;dateFacts&quot;:[],&quot;unassigneddateFacts&quot;:[],&quot;entitiesWithoutMetadata&quot;:[],&quot;entitiesWithoutValue&quot;:[],&quot;datesWithFactConflict&quot;:[],&quot;fieldsWithMetadataConflict&quot;:[]}}" enabled="enabled" guiName="Última carga" guiX="1098" guiY="406" id="ULTIMA_CARGA1" mode="${LOAD_MODE_KPI}" retriesInterval="60" retriesNumber="5" type="GD_DATASET_WRITER"/>
+<Edge debugMode="true" fromNode="DATA_GENERATOR:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="LOOKUP_JOIN:0"/>
+<Edge debugMode="true" fromNode="LOOKUP_JOIN:0" guiBendpoints="" guiRouter="Manhattan" id="Edge6" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (joined records)" toNode="REFORMAT:0"/>
+<Edge debugMode="true" fromNode="REFORMAT:0" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 0 (in)" metadata="Metadata1" outPort="Port 0 (out)" toNode="ULTIMA_CARGA1:0"/>
+</Phase>
+</Graph>
