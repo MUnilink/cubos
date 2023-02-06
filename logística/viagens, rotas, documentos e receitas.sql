@@ -89,6 +89,8 @@ select
     DTC.DTC_SERNFC,
     DTC.DTC_CODPRO,
     DTC.DTC_VALOR,
+    DTC.DTC_PESO,
+    DTC.DTC_PESLIQ,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
