@@ -5,9 +5,9 @@ select
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
     
     ZC1.ZC1_PORTO,
-    (select SX5010.X5_DESCRI from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
+    (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
     ZC1.ZC1_NAVIO,
-    (select ZA3010.ZA3_DESC from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
+    (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as ZC1_VIAGEM,
     
     ZC2.ZC2_ITEM,
@@ -20,6 +20,12 @@ select
         when 3 then 'EQUIPAMENTO'
         else 'OUTROS'
     end as TIPO_INSUMO,
+
+    case ZC1.ZC1_STATUS
+        when 1 then 'ABERTA'
+        when 6 then 'FECHADA'
+        else 'OUTROS'
+    end as STATUS_OS,
     
     ZC2.ZC2_QTDPRV,
     ZC2.ZC2_QTDREA,
