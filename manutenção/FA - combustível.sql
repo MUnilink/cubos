@@ -51,13 +51,16 @@ from
 			substring(ZD3010.ZD3_DATA, 10, 14) as ZD3_HORA,
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD,
-			TQN010.TQN_CCUSTO,
-			TQN010.TQN_YITMCT
+			TQN.TQN_CCUSTO,
+			TQN.TQN_YITMCT,
+			
+			TQN.TQN_NUMSEQ
 		from ZD3010 (nolock)
-			inner join TQN010 (nolock)
-				on TQN010.D_E_L_E_T_ = ''
-				and TQN010.TQN_FROTA = ZD3010.ZD3_VEICUL
-				and TQN010.TQN_DTABAS + TQN010.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 1, 8) + substring(ZD3010.ZD3_DATA, 10, 14)
+			inner join TQN010 TQN (nolock)
+				on TQN.D_E_L_E_T_ = ''
+				and TQN.TQN_FROTA = ZD3010.ZD3_VEICUL
+				and TQN.TQN_DTABAS = substring(ZD3010.ZD3_DATA, 1, 8)
+				and TQN.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 10, 14)
 		where
 				ZD3010.D_E_L_E_T_ = ''
 			and substring(ZD3010.ZD3_DATA, 1, 4) > 2021
