@@ -40,6 +40,7 @@ select
 	SC8.C8_PRECO as PRECO_COTADO,
 	SC8.C8_TOTAL as VALOR_COTADO,
 	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
+	substring(SC8.C8_EMISSAO, 1, 6) as PERIODO_COTACAO,
 	trim(isnull(FCO.A2_NOME, '-')) as NOME_FOR_COTACAO,
 	trim(isnull(FCO.A2_NREDUZ, '-')) as NOMERED_FOR_COTACAO,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
