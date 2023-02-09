@@ -1,7 +1,21 @@
 select
 	ZD3.ZD3_LITROS,
 	ZD3.ZD3_VLUNI,
+	ZD3.ZD3_HODOM,
+	ZD3.ZD3_KMRD,
+	ZD3.ZD3_KML,
+	ZD3.ZD3_TOTAL,
+	
+    convert(date, ZD3.ZD3_DATA, 103) as ZD3_DATA,
 
+	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
+	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
+	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
+	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
+	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT,
+
+	substring(ZD3.ZD3_DATA, 1, 6) as PERIODO_ZD3,
+	trim(TQM.TQM_NOMCOM) as TQM_NOMCOM,
 	(
 		select avg(SD1010.D1_VUNIT)
 		from SD1010
@@ -11,25 +25,20 @@ select
 			and SD1010.D1_TES = 42
 			and substring(SD1010.D1_DTDIGIT, 1, 6) = substring(ZD3.ZD3_DATA, 1, 6)
 	) as VALOR_COMPRA,
-	
-	ZD3.ZD3_HODOM,
-	ZD3.ZD3_KMRD,
-	ZD3.ZD3_KML,
-	ZD3.ZD3_TOTAL,
-	
-    convert(date, ZD3.ZD3_DATA, 103) as ZD3_DATA,
 	ZD3.ZD3_HORA as ZD3_HORA,
-	ZD3.ZD3_DTPROC,
-
-	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
-	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
-	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
-	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT,
-
-	substring(ZD3.ZD3_DATA, 1, 6) as PERIODO,
-	trim(TQM.TQM_NOMCOM) as TQM_NOMCOM
-
+	ZD3.ZD3_DTPROC as ULT_PROC,
+	ZD3.DATA_ABA,
+	ZD3.TQN_DTABAS as PERIODO_TQN,
+	ZD3.TQN_QUANT,
+	ZD3.TQN_VALUNI,
+	ZD3.TQN_VALTOT,
+	ZD3.D3_NUMSEQ,
+	ZD3.D3_LOCAL,
+	ZD3.D3_DOC,
+	ZD3.D3_TM,
+	ZD3.D3_CF,
+	ZD3.D3_QUANT,
+	ZD3.D3_CUSTO1
 from
 	(
 		select
@@ -46,24 +55,41 @@ from
 			ZD3010.ZD3_DTPROC,
 			ZD3010.ZD3_TANQUE,
 			ZD3010.ZD3_COMB,
-			/*datetimefromparts(substring(ZD3010.ZD3_DATA, 1, 8), substring(ZD3010.ZD3_DATA, 1, 8), substring(ZD3010.ZD3_DATA, 1, 8), substring(ZD3010.ZD3_DATA, 10, 14), substring(ZD3010.ZD3_DATA, 10, 14), 0, 0) as ZD3_DATA,*/
 			substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
 			substring(ZD3010.ZD3_DATA, 10, 14) as ZD3_HORA,
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD,
 			TQN.TQN_CCUSTO,
-			TQN.TQN_YITMCT,
+			TQN.TQN_YITMCT,	
 			
-			TQN.TQN_NUMSEQ
-		from ZD3010 (nolock)
-			inner join TQN010 TQN (nolock)
-				on TQN.D_E_L_E_T_ = ''
+			convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
+			substring(TQN.TQN_DTABAS, 1, 6) as TQN_DTABAS,
+			TQN.TQN_QUANT,
+			TQN.TQN_VALUNI,
+			TQN.TQN_VALTOT,
+
+			SD3.D3_NUMSEQ,
+			SD3.D3_LOCAL,
+			SD3.D3_DOC,
+			SD3.D3_TM,
+			SD3.D3_CF,
+			SD3.D3_COD,
+			SD3.D3_QUANT,
+			SD3.D3_CUSTO1
+		from TQN010 TQN (nolock)
+			left join ZD3010 (nolock)
+				on ZD3010.D_E_L_E_T_ = ''
 				and TQN.TQN_FROTA = ZD3010.ZD3_VEICUL
 				and TQN.TQN_DTABAS = substring(ZD3010.ZD3_DATA, 1, 8)
 				and TQN.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 10, 14)
+				and substring(ZD3010.ZD3_DATA, 1, 4) > 2021
+			inner join SD3010 SD3 (nolock)
+				on SD3.D_E_L_E_T_ = ''
+				and SD3.D3_FILIAL = TQN.TQN_FILIAL
+				and SD3.D3_LOCAL = TQN.TQN_TANQUE
+				and SD3.D3_NUMSEQ = TQN.TQN_NUMSEQ
 		where
-				ZD3010.D_E_L_E_T_ = ''
-			and substring(ZD3010.ZD3_DATA, 1, 4) > 2021
+				TQN.D_E_L_E_T_ = ''
 	) as ZD3
 
 	left join
