@@ -23,12 +23,13 @@ select
 				SD1010.D_E_L_E_T_ = ''
 			and SD1010.D1_COD = '11100008'
 			and SD1010.D1_TES = 42
-			and substring(SD1010.D1_DTDIGIT, 1, 6) = substring(ZD3.ZD3_DATA, 1, 6)
+			and substring(SD1010.D1_DTDIGIT, 1, 6) = isnull(substring(ZD3.ZD3_DATA, 1, 6), ZD3.TQN_DTABAS)
 	) as VALOR_COMPRA,
 	ZD3.ZD3_HORA as ZD3_HORA,
 	ZD3.ZD3_DTPROC as ULT_PROC,
 	ZD3.DATA_ABA,
 	ZD3.TQN_DTABAS as PERIODO_TQN,
+	ZD3.TQN_DTABAS,
 	ZD3.TQN_QUANT,
 	ZD3.TQN_VALUNI,
 	ZD3.TQN_VALTOT,
@@ -42,25 +43,25 @@ select
 from
 	(
 		select
-			case cast(ZD3010.ZD3_TANQUE as int)
+			case cast(isnull(ZD3010.ZD3_TANQUE, TQN.TQN_TANQUE) as int)
 				when 12 then '010102'
-				else trim(isnull(ZD3010.ZD3_FILIAL, '-'))
+				else trim(isnull(ZD3010.ZD3_FILIAL, TQN.TQN_FILIAL))
 			end as ZD3_FILIAL,
 			ZD3010.ZD3_KM as ZD3_HODOM,
 
-			ZD3010.ZD3_VEICUL,
-			ZD3010.ZD3_LITROS,
-			ZD3010.ZD3_VLUNI,
-			ZD3010.ZD3_TOTAL,
+			isnull(ZD3010.ZD3_VEICUL, TQN.TQN_FROTA) as ZD3_VEICUL,
+			isnull(ZD3010.ZD3_LITROS, TQN.TQN_QUANT) as ZD3_LITROS,
+			isnull(ZD3010.ZD3_VLUNI, TQN.TQN_VALUNI) as ZD3_VLUNI,
+			isnull(ZD3010.ZD3_TOTAL, TQN.TQN_VALTOT) as ZD3_TOTAL,
 			ZD3010.ZD3_DTPROC,
-			ZD3010.ZD3_TANQUE,
+			isnull(ZD3010.ZD3_TANQUE, TQN.TQN_TANQUE) as ZD3_TANQUE,
 			ZD3010.ZD3_COMB,
 			substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
 			substring(ZD3010.ZD3_DATA, 10, 14) as ZD3_HORA,
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD,
 			TQN.TQN_CCUSTO,
-			TQN.TQN_YITMCT,	
+			TQN.TQN_YITMCT,
 			
 			convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
 			substring(TQN.TQN_DTABAS, 1, 6) as TQN_DTABAS,
@@ -82,7 +83,6 @@ from
 				and TQN.TQN_FROTA = ZD3010.ZD3_VEICUL
 				and TQN.TQN_DTABAS = substring(ZD3010.ZD3_DATA, 1, 8)
 				and TQN.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 10, 14)
-				and substring(ZD3010.ZD3_DATA, 1, 4) > 2021
 			inner join SD3010 SD3 (nolock)
 				on SD3.D_E_L_E_T_ = ''
 				and SD3.D3_FILIAL = TQN.TQN_FILIAL
@@ -90,6 +90,7 @@ from
 				and SD3.D3_NUMSEQ = TQN.TQN_NUMSEQ
 		where
 				TQN.D_E_L_E_T_ = ''
+			and year(TQN.TQN_DTABAS) > 2021
 	) as ZD3
 
 	left join
