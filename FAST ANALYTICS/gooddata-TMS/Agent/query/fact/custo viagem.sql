@@ -1,4 +1,4 @@
-select /*The conversion of a varchar data type to a datetime data type resulted in an out-of-range value*/
+select
     'P |01|01' AS BK_EMPRESA,
     VIAGEM.ID_VIAGEM,
     VIAGEM.DTQ_VIAGEM,
@@ -260,7 +260,9 @@ from
                 and DDB.DDB_CODNEG = DT6.DT6_CODNEG
                 and DDB.D_E_L_E_T_ = ' '
             inner join SX5010 SX5
-                on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
+                on SX5.X5_FILIAL = '      '
                 and SX5.X5_TABELA = 'L4'
                 and SX5.X5_CHAVE = DT6.DT6_SERVIC
                 and SX5.D_E_L_E_T_ = ' '
+
+where VIAGEM.CHE_VIAGEM BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
