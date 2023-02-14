@@ -71,4 +71,6 @@ from TM5010 TM5 (nolock)
         and TMD.TMD_EXAME = TM5.TM5_EXAME
         and TMD.TMD_FORNEC = TM5.TM5_FORNEC
         and TMD.TMD_LOJA = TM5.TM5_LOJA
-where TM5.D_E_L_E_T_ = ''
+where
+        TM5.D_E_L_E_T_ = ''
+    and year(TM5.TM5_DTPROG) > 2019
