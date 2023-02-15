@@ -156,17 +156,7 @@ from
                     and DTW010.DTW_SYSHOR != ''
                     and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 50
-            ) as CHE_VIAGEM,
-
-            case DTQ.DTQ_STATUS
-                when '1' then 'EXCLUÍDA'
-                when '2' then 'EM TRANSITO'
-                when '3' then 'ENCERRADA'
-                when '4' then 'CHEGADA EM FILIAL'
-                when '5' then 'FECHADA'
-                when '9' then 'CANCELADA'
-                else 'OUTROS'
-            end as DTQ_STATUS
+            ) as CHE_VIAGEM
 
         from DTQ010 DTQ
             inner join DTR010 DTR
