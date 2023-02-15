@@ -1,14 +1,5 @@
 select
-    (
-        select substring(DTW010.DTW_DATREA, 1, 6)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = 50
-    ) as COMPETENCIA,
-
+    VIAGEM.COMPETENCIA,
     'P |01|01' AS BK_EMPRESA,
     VIAGEM.ID_VIAGEM,
     VIAGEM.DTQ_VIAGEM,
@@ -54,7 +45,6 @@ select
     MANUTENCAO.DESC_INSUMO,
     MANUTENCAO.TL_CUSTO,
     
-    COMBUSTIVEL.CUSTO_ABA,
     COMBUSTIVEL.ZD3_VLUNI,
     COMBUSTIVEL.ZD3_DATA,
 
@@ -70,7 +60,6 @@ select
     FOLHA.CENTRO_CUSTO,
     FOLHA.NOME,
     FOLHA.FUNCAO,
-    FOLHA.VALOR_FOLHA,
 
     DEPRECIACAO.N4_VLROC1 as DEPRECIACAO,
 
@@ -125,7 +114,8 @@ from
             
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
             concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
-            DA4010.DA4_COD as COD_MOT,
+            DA4010.DA4_COD,
+            DA4010.DA4_MAT,
             
             (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
             DTR.DTR_CODVEI as COD_CM,
@@ -191,7 +181,16 @@ from
                     and DTW010.DTW_SYSHOR != ''
                     and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 50
-            ) as CHE_VIAGEM
+            ) as CHE_VIAGEM,
+            (
+                select substring(DTW010.DTW_SYSDAT, 1, 6)
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = 50
+            ) as COMPETENCIA
 
         from DTQ010 DTQ
             inner join DTR010 DTR
@@ -373,7 +372,7 @@ from
             and STJ.TJ_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
 
     ) MANUTENCAO
-        on MANUTENCAO.PERIODO_MNT = substring(VIAGEM.CHE_VIAGEM, 1, 6)
+        on MANUTENCAO.PERIODO_MNT = VIAGEM.COMPETENCIA
         and
         (
             MANUTENCAO.TJ_CODBEM = VIAGEM.COD_CM or
@@ -468,12 +467,9 @@ from
             left join TQM010 as TQM
                 on TQM.D_E_L_E_T_ = ''
                 and TQM.TQM_CODCOM = ZD3.ZD3_COMB
-        where
-                ZD3.TQN_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
-            and ZD3.ZD3_DATA > 20211231
     ) COMBUSTIVEL
         on COMBUSTIVEL.T9_CODBEM = VIAGEM.COD_CM
-        and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = substring(VIAGEM.CHE_VIAGEM, 1, 6)
+        and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = VIAGEM.COMPETENCIA
     
     left join /* ver amortização das taxas dos veículos */
     (
@@ -510,10 +506,8 @@ from
                 and CTD010.CTD_ITEM = TS1010.TS1_YITEM
         where
                 TS1010.D_E_L_E_T_ = ''
-            and SE2010.E2_VENCREA > 20211231
-            and ST9010.T9_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
     ) DOCUMENTACAO
-        on substring(DOCUMENTACAO.TS1_DTVENC, 1, 6) = substring(VIAGEM.CHE_VIAGEM, 1, 6)
+        on substring(DOCUMENTACAO.TS1_DTVENC, 1, 6) = VIAGEM.COMPETENCIA
         and
         (
             DOCUMENTACAO.T9_CODBEM = VIAGEM.COD_CM or
@@ -538,9 +532,8 @@ from
                     and ST9010.T9_CODBEM = SN1010.N1_CODBEM
         where
                 SN4010.D_E_L_E_T_ = ''
-            and SN4010.N4_LA = 'S'
     ) DEPRECIACAO
-        on substring(DEPRECIACAO.N4_DATA, 1, 6) = substring(VIAGEM.CHE_VIAGEM, 1, 6)
+        on substring(DEPRECIACAO.N4_DATA, 1, 6) = VIAGEM.COMPETENCIA
         and
         (
             DEPRECIACAO.T9_CODBEM = VIAGEM.COD_CM or
@@ -622,7 +615,6 @@ from
                     and VERBAS.CONTA != '01 N/A Custo'
             where
                     SRA.D_E_L_E_T_ = ''
-                and (SRA.RA_CC = 304 or SRA.RA_MAT = '002282')
             group by
                 SRA.RA_FILIAL,
                 VERBAS.PERIODO,
@@ -634,5 +626,5 @@ from
                 SRJ.RJ_DESC
         ) FOLHA
             on FOLHA.RA_FILIAL = VIAGEM.DTQ_FILORI
-            and FOLHA.PERIODO = substring(VIAGEM.CHE_VIAGEM, 1, 6)
-            and FOLHA.MATRICULA = VIAGEM.COD_MOT
+            and FOLHA.PERIODO = VIAGEM.COMPETENCIA
+            and FOLHA.MATRICULA = VIAGEM.DA4_MAT
