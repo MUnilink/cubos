@@ -6,7 +6,7 @@ select /*The conversion of a varchar data type to a datetime data type resulted 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
             and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as COMPETENCIA,
 
     'P |01|01' AS BK_EMPRESA,
@@ -17,41 +17,9 @@ select /*The conversion of a varchar data type to a datetime data type resulted 
     VIAGEM.SAI_CLIDEV,
     VIAGEM.CHE_VIAGEM,
     VIAGEM.SAI_VIAGEM,
-    (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-        from DTW010
-            inner join ZB1010
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
-            and DTW010.DTW_ATIVID = 50
-    ) as km_fim,
-    (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-        from DTW010
-            inner join ZB1010
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
-            and DTW010.DTW_ATIVID = 49
-    ) as km_ini,
-    
+    VIAGEM.km_fim,
+    VIAGEM.km_ini,
+   
     DT6.DT6_DOC,
     DT6.DT6_SERIE,
     DT6.DT6_DATEMI,
@@ -102,6 +70,41 @@ from
             DTQ.DTQ_DATGER,
             DTQ.DTQ_DATFEC,
             DTQ.DTQ_DATENC,
+
+            (
+                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                from DTW010
+                    inner join ZB1010
+                        on ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
+                    and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
+                    and DTW010.DTW_ATIVID = 50
+            ) as km_fim,
+            (
+                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                from DTW010
+                    inner join ZB1010
+                        on ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
+                    and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
+                    and DTW010.DTW_ATIVID = 49
+            ) as km_ini,
             
             DA4010.DA4_COD,
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
@@ -163,17 +166,7 @@ from
                     and DTW010.DTW_SYSHOR != ''
                     and DTW010.DTW_SYSDAT != ''
                     and DTW010.DTW_ATIVID = 50
-            ) as CHE_VIAGEM,
-
-            case DTQ.DTQ_STATUS
-                when '1' then 'EXCLUÍDA'
-                when '2' then 'EM TRANSITO'
-                when '3' then 'ENCERRADA'
-                when '4' then 'CHEGADA EM FILIAL'
-                when '5' then 'FECHADA'
-                when '9' then 'CANCELADA'
-                else 'OUTROS'
-            end as DTQ_STATUS
+            ) as CHE_VIAGEM
 
         from DTQ010 DTQ
             inner join DTR010 DTR
@@ -222,11 +215,6 @@ from
         and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
         and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
         
-        left join DT5010 DT5
-            on DT5.D_E_L_E_T_ = ''
-            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-            and DT5.DT5_NUMSOL = DUD.DUD_DOC
-            and DT5.DT5_SERIE = DUD.DUD_SERIE
         left join DT6010 DT6
             on DT6.D_E_L_E_T_ = ''
             and DT6.DT6_FILDOC = DUD.DUD_FILDOC
