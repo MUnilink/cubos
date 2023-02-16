@@ -33,8 +33,7 @@
     LEFT JOIN CTH010 CTH ON CTH_FILIAL = CT2_FILIAL
     AND CTH_CLVL = CT2_CLVLDB
     AND CTH.D_E_L_E_T_ = ' '
-  WHERE CT2_DATA between <<START_DATE>> and <<FINAL_DATE>>
-    AND (CT2_DC = '1' OR CT2_DC = '3')
+  WHERE (CT2_DC = '1' OR CT2_DC = '3')
     AND CT2_VALOR <> '0'
     AND CT2.D_E_L_E_T_ = ' '
 UNION
@@ -73,7 +72,6 @@ UNION
     LEFT JOIN CTH010 CTH ON CTH_FILIAL = CT2_FILIAL
     AND CTH_CLVL = CT2_CLVLCR
     AND CTH.D_E_L_E_T_ = ' '
-  WHERE CT2_DATA between <<START_DATE>> and <<FINAL_DATE>>
-    AND (CT2_DC = '2' OR CT2_DC = '3')
+  WHERE (CT2_DC = '2' OR CT2_DC = '3')
     AND CT2_VALOR <> '0'
     AND CT2.D_E_L_E_T_ = ' '
