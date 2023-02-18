@@ -7,6 +7,16 @@ select
     SCP.CP_QUANT as QTD_SOLICTADA,
     SCP.CP_QUJE as QTD_ATENDIDA,
 
+    case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
+    else
+        case when SCP.CP_QUJE = 0.0 then 'PENDENTE'
+        else
+            case when SCP.CP_QUANT > SCP.CP_QUJE then 'PAR. ATENDIDA'
+            else 'OUTROS'
+            end
+        end
+    end as SA_ATENDIDA,
+
     SD3.D3_DOC,
     SD3.D3_TM,
     SD3.D3_CF,
@@ -20,10 +30,6 @@ select
     SB1.B1_COD,
     SB1.B1_DESC,
     trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
-    SBF.BF_LOCALIZ,
-    SBF.BF_QUANT,
-    SBF.BF_EMPENHO,
-    SBF.BF_QEMPPRE,
     
     convert(date, SCP.CP_EMISSAO, 103) as DATA_SA,
     substring(SCP.CP_EMISSAO, 1, 6) as PERIODO,
@@ -34,6 +40,7 @@ select
     SCP.CP_STATSA,
     SCP.CP_SALBLQ,
 
+    SCQ.CQ_NUMREQ,
     SCQ.CQ_QUANT,
     SCQ.CQ_QTDISP,
     SCP.CP_NUMSC,
@@ -53,11 +60,5 @@ from SCP010 SCP (nolock)
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = SCP.CP_PRODUTO
-
-    left join SBF010 SBF (nolock)
-        on SBF.D_E_L_E_T_ = ''
-        and SBF.BF_FILIAL = SCP.CP_FILIAL
-        and SBF.BF_LOCAL = SCP.CP_LOCAL
-        and SBF.BF_PRODUTO = SCP.CP_PRODUTO
 
 where SCP.D_E_L_E_T_ = ''
