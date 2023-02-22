@@ -36,21 +36,28 @@ select
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     trim(DTC.DTC_CODPRO) as PRODUTO,
 
-    MANUTENCAO.TJ_CODBEM,
-    MANUTENCAO.TJ_ORDEM,
-    MANUTENCAO.TIPO_CUSTO,
-    MANUTENCAO.TL_TIPOREG,
-    MANUTENCAO.TL_DTINICI,
-    MANUTENCAO.INSUMO,
-    MANUTENCAO.DESC_INSUMO,
-    MANUTENCAO.TL_CUSTO,
+    MANUTENCAO.TJ_CODBEM as MNT_,
+    MANUTENCAO.TJ_ORDEM as MNT_,
+    MANUTENCAO.TIPO_CUSTO as MNT_,
+    MANUTENCAO.TL_TIPOREG as MNT_,
+    MANUTENCAO.TL_LOCAL as MNT_,
+    MANUTENCAO.TL_UNIDADE as MNT_,
+    MANUTENCAO.TL_QUANTID as MNT_,
+    MANUTENCAO.TL_CUSTO as MNT_,
     
-    COMBUSTIVEL.ZD3_VLUNI,
-    COMBUSTIVEL.ZD3_DATA,
+    COMBUSTIVEL.ZD3_VEICUL as COM_,
+    COMBUSTIVEL.TQN_CCUSTO as COM_,
+    COMBUSTIVEL.km as COM_,
+    COMBUSTIVEL.CUSTO as COM_,
+    COMBUSTIVEL.PERIODO_ABA as COM_,
+    COMBUSTIVEL.TQM_NOMCOM as COM_,
 
-    DOCUMENTACAO.TS0_DOCTO,
-    DOCUMENTACAO.VALOR_PARCELA,
-    DOCUMENTACAO.VALOR_TAXA,
+    DOCUMENTACAO.TS0_DOCTO as TAX_,
+    DOCUMENTACAO.ANO_DOCTO as TAX_,
+    DOCUMENTACAO.CC as TAX_,
+    DOCUMENTACAO.VALOR_TAXA as TAX_,
+
+    DEPRECIACAO.N4_VLROC1 as DEPRECIACAO,
 
     FOLHA.RA_FILIAL,
     FOLHA.PERIODO,
@@ -60,8 +67,6 @@ select
     FOLHA.CENTRO_CUSTO,
     FOLHA.NOME,
     FOLHA.FUNCAO,
-
-    DEPRECIACAO.N4_VLROC1 as DEPRECIACAO,
 
     null as AUTOTRAC,
     null as SEGURO_VEICULO,
@@ -270,106 +275,79 @@ from
         select
             STJ.TJ_CODBEM,
             STJ.TJ_ORDEM,
-            STL.TL_DTINICI,
-            STL.TL_QUANTID,
- 
-            trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
+            STL.TL_TIPOREG,
+            STL.PERIODO_MNT,
+            STL.TIPO_CUSTO,
+            STJ.TJ_CCUSTO,
+            STL.TL_UNIDADE,
+            sum(STL.TL_QUANTID) as TL_QUANTID,
+            sum(STL.TL_CUSTO) as TL_CUSTO
 
-            case STL.TL_TIPOREG
-                when 'M' then 'MÃO-DE-OBRA'
-                when 'E' then 'MÃO-DE-OBRA'
-                when 'P' then 'PEÇAS'
-                when 'T' then 'TERCEIROS'
-                else 'OUTROS'
-            end as TL_TIPOREG,
-
-            case STL.TL_TIPOREG
-                when 'M' then trim(ST1.T1_NOME)
-                when 'E' then trim(ST0.T0_NOME)
-                when 'P' then trim(SB1.B1_DESC)
-                when 'T' then trim(SA2.A2_NOME)
-                else 'OUTROS'
-            end as DESC_INSUMO,
-
-            substring(STL.TL_DTINICI, 1, 6) as PERIODO_MNT,
-
-            case when STJ.TJ_SERVICO = 'PNEMOV' then 'PNEU' else 'MANUTENÇÃO' end as TIPO_CUSTO,
-
-            case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
-            else
-                case when trim(STL.TL_CODIGO) like '1130%' then PNEU_CUSTO.B9_CM * STL.TL_QUANTID
-                else
-                    STL.TL_CUSTO
-                end
-            end as TL_CUSTO
-        
         from STJ010 STJ (nolock)
             inner join ST9010 ST9 (nolock)
                 on ST9.D_E_L_E_T_ = ''
                 and ST9.T9_CODBEM = STJ.TJ_CODBEM
 
-            inner join STL010 STL (nolock)
-                on STL.D_E_L_E_T_ = ''
+            inner join
+            (
+                select
+                    STL010.TL_ORDEM,
+                    STL010.TL_PLANO,
+                    STL010.TL_FILIAL,
+                    substring(STL010.TL_DTINICI, 1, 6) as PERIODO_MNT,
+                    STL010.TL_CODIGO,
+                    STL010.TL_UNIDADE,
+                    STL010.TL_QUANTID,
+
+                    case STL010.TL_TIPOREG
+                        when 'M' then 'MÃO-DE-OBRA'
+                        when 'E' then 'MÃO-DE-OBRA'
+                        when 'P' then 'PEÇAS'
+                        when 'T' then 'TERCEIROS'
+                        else 'OUTROS'
+                    end as TL_TIPOREG,
+
+                    case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then 'PNEU' else 'MANUTENÇÃO' end as TIPO_CUSTO,
+                    case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then PNEU_CUSTO.B9_CM * STL010.TL_QUANTID else STL010.TL_CUSTO end as TL_CUSTO
+
+                from STL010 (nolock)
+                    left join
+                    (
+                        select
+                            SB9010.B9_COD,
+                            min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM,
+                            min(SB9010.B9_DATA) as B9_DATA
+                        from SB9010 (nolock)
+                        where
+                                SB9010.D_E_L_E_T_ = ''
+                            and SB9010.B9_LOCAL = '20'
+                            and SB9010.B9_COD like '1130%'
+                            and SB9010.B9_QINI != 0
+                        group by
+                            SB9010.B9_COD
+                    ) PNEU_CUSTO /* custo médio de pneu novo do período */
+                        on PNEU_CUSTO.B9_COD = STL010.TL_CODIGO
+                where
+                        STL010.D_E_L_E_T_ = ''
+                    and STL010.TL_TIPOREG in ('P', 'T')
+                    and STL010.TL_SEQRELA > 0
+                    and STL010.TL_DTINICI > 20211231
+            ) STL
+                on STL.TL_FILIAL = STJ.TJ_FILIAL
                 and STL.TL_ORDEM = STJ.TJ_ORDEM
                 and STL.TL_PLANO = STJ.TJ_PLANO
-                and STL.TL_FILIAL = STJ.TJ_FILIAL
-
-                left join SA2010 SA2 (nolock)
-                    on SA2.D_E_L_E_T_ = ''
-                    and SA2.A2_COD = STL.TL_FORNEC
-                    and SA2.A2_LOJA = STL.TL_LOJA
-                left join SB1010 SB1 (nolock)
-                    on SB1.D_E_L_E_T_ = ''
-                    and SB1.B1_COD = STL.TL_CODIGO
-                left join
-                (
-                    select
-                        SB9010.B9_COD,
-                        min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM,
-                        min(SB9010.B9_DATA) as B9_DATA
-                    from SB9010 (nolock)
-                    where
-                            SB9010.D_E_L_E_T_ = ''
-                        and SB9010.B9_LOCAL = '01'
-                        and SB9010.B9_COD in ('11380003', '11380004', '11380005')
-                        and SB9010.B9_QINI != 0
-                    group by
-                        SB9010.B9_COD
-                ) ADESIVO_CUSTO
-                    on ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO
-                left join
-                (
-                    select
-                        SB9010.B9_COD,
-                        min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM,
-                        min(SB9010.B9_DATA) as B9_DATA
-                    from SB9010 (nolock)
-                    where
-                            SB9010.D_E_L_E_T_ = ''
-                        and SB9010.B9_LOCAL = '20'
-                        and SB9010.B9_COD like '1130%'
-                        and SB9010.B9_QINI != 0
-                    group by
-                        SB9010.B9_COD
-                ) PNEU_CUSTO
-                    on PNEU_CUSTO.B9_COD = STL.TL_CODIGO
-                left join SH4010 SH4 (nolock)
-                    on SH4.D_E_L_E_T_ = ''
-                    and SH4.H4_CODIGO = STL.TL_CODIGO
-                left join ST0010 ST0 (nolock)
-                    on ST0.D_E_L_E_T_ = ''
-                    and ST0.T0_ESPECIA = STL.TL_CODIGO
-                left join ST1010 ST1 (nolock)
-                    on ST1.D_E_L_E_T_ = ''
-                    and ST1.T1_FILIAL = STL.TL_FILIAL
-                    and ST1.T1_CODFUNC = STL.TL_CODIGO
         where
                 STJ.D_E_L_E_T_ = ''
-            and STL.TL_TIPOREG in ('P', 'T')
             and ST9.T9_CODFAMI in ('VP', 'VM')
-            and STL.TL_SEQRELA > 0
-            and STL.TL_DTINICI > 20211231
             and STJ.TJ_CCUSTO = 304 /* ver veículo portuário do BRANDAO */
+        group by
+            STJ.TJ_CODBEM,
+            STJ.TJ_ORDEM,
+            STL.TL_TIPOREG,
+            STL.PERIODO_MNT,
+            STL.TIPO_CUSTO,
+            STJ.TJ_CCUSTO,
+            STL.TL_UNIDADE
 
     ) MANUTENCAO
         on MANUTENCAO.PERIODO_MNT = VIAGEM.COMPETENCIA
@@ -384,19 +362,12 @@ from
     left join
     (
         select
-            case when ZD3.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
-            ZD3.ZD3_LITROS,
-            ZD3.ZD3_VLUNI,
-            ZD3.ZD3_HODOM,
-            ZD3.ZD3_KMRD,
-            ZD3.ZD3_KML,
-            ZD3.ZD3_TOTAL as CUSTO,
-            trim(ZD3.ZD3_DATA) as ZD3_DATA,
-
-            trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
-            trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-            trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
-            trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO
+            ZD3.ZD3_VEICUL,
+            ZD3.TQN_CCUSTO,
+            sum(ZD3.ZD3_KMRD) as km,
+            sum(ZD3.ZD3_TOTAL) as CUSTO,
+            ZD3.PERIODO_ABA,
+            trim(isnull(TQM.TQM_NOMCOM, '-')) as TQM_NOMCOM
         from
             (
                 select
@@ -405,7 +376,8 @@ from
                         else trim(isnull(ZD3010.ZD3_FILIAL, '-'))
                     end as ZD3_FILIAL,
                     ZD3010.ZD3_KM as ZD3_HODOM,
-
+                    
+                    case when ZD3010.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
                     ZD3010.ZD3_VEICUL,
                     ZD3010.ZD3_LITROS,
                     ZD3010.ZD3_VLUNI,
@@ -414,8 +386,9 @@ from
                     ZD3010.ZD3_TANQUE as ZD3_TANQUE,
                     ZD3010.ZD3_COMB,
                     substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
+                    substring(ZD3010.ZD3_DATA, 1, 6) as PERIODO_ABA,
                     ZD3010.ZD3_KML,
-                    ZD3010.ZD3_KMRD,
+                    case ZD3010.ZD3_COMB when 2 then 0.0 else ZD3010.ZD3_KMRD end as ZD3_KMRD,
                     TQN010.TQN_CCUSTO
                 from ZD3010 (nolock)
                     inner join TQN010 (nolock)
@@ -425,89 +398,56 @@ from
                 where ZD3010.D_E_L_E_T_ = ''
             ) as ZD3
 
-            left join
-            (
-                select
-                    case cast(TQI010.TQI_CODPOS as int)
-                        when 59 then '010102'
-                        else trim(isnull(TQI010.TQI_FILIAL, '-'))
-                    end as TQI_FILIAL,
+                left join ST9010 as ST9
+                    on ST9.D_E_L_E_T_ = ''
+                    and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
+                    and ST9.T9_CODFAMI in ('VP', 'VM')
+                left join TQM010 as TQM
+                    on TQM.D_E_L_E_T_ = ''
+                    and TQM.TQM_CODCOM = ZD3.ZD3_COMB
+        group by
+            ZD3.ZD3_VEICUL,
+            ZD3.TQN_CCUSTO,
+            ZD3.PERIODO_ABA,
+            TQM.TQM_NOMCOM
 
-                    TQI010.TQI_CODPOS,
-                    TQI010.TQI_LOJA,
-                    TQI010.TQI_TANQUE as TQI_TANQUE,
-                    TQI010.TQI_YDETAN,
-                    TQI010.TQI_CODCOM,
-                    TQI010.TQI_PRODUT,
-                    TQI010.TQI_FABRIC
-                from TQI010
-                where TQI010.D_E_L_E_T_ = ''
-            ) as TQI
-                on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
-                and TQI.TQI_TANQUE = ZD3.ZD3_TANQUE
-
-                left join
-                (
-                    select
-                        case cast(TQF010.TQF_CODIGO as int)
-                            when 59 then '010102'
-                            else trim(isnull(TQF010.TQF_CODFIL, '-'))
-                        end as TQF_FILIAL,
-                        TQF010.TQF_CODIGO,
-                        TQF010.TQF_LOJA
-                    from TQF010
-                    where TQF010.D_E_L_E_T_ = ''
-                ) as TQF
-                    on TQF.TQF_FILIAL = TQI.TQI_FILIAL
-                    and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
-
-            left join ST9010 as ST9
-                on ST9.D_E_L_E_T_ = ''
-                and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-            left join TQM010 as TQM
-                on TQM.D_E_L_E_T_ = ''
-                and TQM.TQM_CODCOM = ZD3.ZD3_COMB
     ) COMBUSTIVEL
-        on COMBUSTIVEL.T9_CODBEM = VIAGEM.COD_CM
-        and substring(COMBUSTIVEL.ZD3_DATA, 1, 6) = VIAGEM.COMPETENCIA
+        on COMBUSTIVEL.ZD3_VEICUL = VIAGEM.COD_CM
+        and COMBUSTIVEL.PERIODO_ABA = VIAGEM.COMPETENCIA
     
-    left join /* ver amortização das taxas dos veículos */
+    left join
     (
         select
-            trim(isnull(TS1010.TS1_DTEMIS, '-')) as TS1_DTEMIS,
-            trim(isnull(SE2010.E2_VENCREA, '-')) as TS1_DTVENC,
-            TS1010.TS1_QTDPAR,
-            SE2010.E2_PARCELA,
-            TS1010.TS1_VALOR/TS1010.TS1_QTDPAR as VALOR_PARCELA,
-            TS1010.TS1_VALOR as VALOR_TAXA,
-
+            sum(TS1.TS1_VALOR) as VALOR_TAXA,
             trim(isnull(TS0010.TS0_NOMDOC, '-')) as TS0_DOCTO,
             trim(isnull(ST9010.T9_CODBEM, '-')) as T9_CODBEM,
-
-            year(SE2010.E2_VENCREA) as ano_VENCTO,
-            month(SE2010.E2_VENCREA) as mes_VENCTO
-
-        from TS1010
+            TS1.ANO_DOCTO,
+            TS1.CC
+        from
+            (
+                select
+                    TS1010.TS1_DOCTO,
+                    TS1010.TS1_CODBEM,
+                    TS1010.TS1_VALOR,
+                    TS1010.TS1_YCC as CC,
+                    year(TS1010.TS1_DTEMIS) as ANO_DOCTO
+                from TS1010
+                where TS1010.D_E_L_E_T_ = ''
+            ) TS1
             left join TS0010
                 on TS0010.D_E_L_E_T_ = ''
-                and TS0010.TS0_DOCTO = TS1010.TS1_DOCTO
-            left join SE2010
-                on SE2010.D_E_L_E_T_ = ''
-                and trim(SE2010.E2_PREFIXO) = 'MNT'
-                and SE2010.E2_NUM = TS1010.TS1_NUMSE2
+                and TS0010.TS0_DOCTO = TS1.TS1_DOCTO
             left join ST9010
                 on ST9010.D_E_L_E_T_ = ''
-                and ST9010.T9_CODBEM = TS1010.TS1_CODBEM
-            left join CTT010
-                on CTT010.D_E_L_E_T_ = ''
-                and CTT010.CTT_CUSTO = TS1010.TS1_YCC
-            left join CTD010
-                on CTD010.D_E_L_E_T_ = ''
-                and CTD010.CTD_ITEM = TS1010.TS1_YITEM
-        where
-                TS1010.D_E_L_E_T_ = ''
+                and ST9010.T9_CODBEM = TS1.TS1_CODBEM
+        group by
+            TS0010.TS0_NOMDOC,
+            ST9010.T9_CODBEM,
+            TS1.ANO_DOCTO,
+            TS1.CC
+
     ) DOCUMENTACAO
-        on substring(DOCUMENTACAO.TS1_DTVENC, 1, 6) = VIAGEM.COMPETENCIA
+        on DOCUMENTACAO.ANO_DOCTO = substring(VIAGEM.COMPETENCIA, 1, 4)
         and
         (
             DOCUMENTACAO.T9_CODBEM = VIAGEM.COD_CM or
