@@ -4,6 +4,8 @@ select
     STL.TL_TIPOREG,
     STL.PERIODO_MNT,
     STL.TIPO_CUSTO,
+    STJ.TJ_CCUSTO,
+    STL.TL_UNIDADE,
     sum(STL.TL_QUANTID) as TL_QUANTID,
     sum(STL.TL_CUSTO) as TL_CUSTO
 
@@ -20,8 +22,8 @@ from STJ010 STJ (nolock)
             STL010.TL_FILIAL,
             substring(STL010.TL_DTINICI, 1, 6) as PERIODO_MNT,
             STL010.TL_CODIGO,
+            STL010.TL_UNIDADE,
             STL010.TL_QUANTID,
-            STL010.TL_CUSTO,
 
             case STL010.TL_TIPOREG
                 when 'M' then 'MÃO-DE-OBRA'
@@ -34,7 +36,7 @@ from STJ010 STJ (nolock)
             case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then 'PNEU' else 'MANUTENÇÃO' end as TIPO_CUSTO,
             case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then PNEU_CUSTO.B9_CM * STL010.TL_QUANTID else STL010.TL_CUSTO end as TL_CUSTO
 
-        from STL010
+        from STL010 (nolock)
             left join
             (
                 select
@@ -56,7 +58,7 @@ from STJ010 STJ (nolock)
             and STL010.TL_TIPOREG in ('P', 'T')
             and STL010.TL_SEQRELA > 0
             and STL010.TL_DTINICI > 20211231
-    ) STL (nolock)
+    ) STL
         on STL.TL_FILIAL = STJ.TJ_FILIAL
         and STL.TL_ORDEM = STJ.TJ_ORDEM
         and STL.TL_PLANO = STJ.TJ_PLANO
@@ -69,4 +71,6 @@ group by
     STJ.TJ_ORDEM,
     STL.TL_TIPOREG,
     STL.PERIODO_MNT,
-    STL.TIPO_CUSTO
+    STL.TIPO_CUSTO,
+    STJ.TJ_CCUSTO,
+    STL.TL_UNIDADE
