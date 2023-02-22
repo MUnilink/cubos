@@ -1,17 +1,10 @@
 select
-    case when ZD3.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
-    ZD3.ZD3_LITROS,
-    ZD3.ZD3_VLUNI,
-    ZD3.ZD3_HODOM,
-    ZD3.ZD3_KMRD,
-    ZD3.ZD3_KML,
-    ZD3.ZD3_TOTAL as CUSTO,
-    trim(ZD3.ZD3_DATA) as ZD3_DATA,
-
-    trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
-    trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-    trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
-    trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO
+    ZD3.ZD3_VEICUL,
+    ZD3.TQN_CCUSTO,
+    sum(ZD3.ZD3_KMRD) as km,
+    sum(ZD3.ZD3_TOTAL) as CUSTO,
+    ZD3.PERIODO_ABA,
+    trim(isnull(TQM.TQM_NOMCOM, '-')) as TQM_NOMCOM
 from
     (
         select
@@ -20,7 +13,8 @@ from
                 else trim(isnull(ZD3010.ZD3_FILIAL, '-'))
             end as ZD3_FILIAL,
             ZD3010.ZD3_KM as ZD3_HODOM,
-
+            
+            case when ZD3010.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
             ZD3010.ZD3_VEICUL,
             ZD3010.ZD3_LITROS,
             ZD3010.ZD3_VLUNI,
@@ -29,8 +23,9 @@ from
             ZD3010.ZD3_TANQUE as ZD3_TANQUE,
             ZD3010.ZD3_COMB,
             substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
+            substring(ZD3010.ZD3_DATA, 1, 6) as PERIODO_ABA,
             ZD3010.ZD3_KML,
-            ZD3010.ZD3_KMRD,
+            case ZD3010.ZD3_COMB when 2 then 0.0 else ZD3010.ZD3_KMRD end as ZD3_KMRD,
             TQN010.TQN_CCUSTO
         from ZD3010 (nolock)
             inner join TQN010 (nolock)
@@ -40,45 +35,15 @@ from
         where ZD3010.D_E_L_E_T_ = ''
     ) as ZD3
 
-    left join
-    (
-        select
-            case cast(TQI010.TQI_CODPOS as int)
-                when 59 then '010102'
-                else trim(isnull(TQI010.TQI_FILIAL, '-'))
-            end as TQI_FILIAL,
-
-            TQI010.TQI_CODPOS,
-            TQI010.TQI_LOJA,
-            TQI010.TQI_TANQUE as TQI_TANQUE,
-            TQI010.TQI_YDETAN,
-            TQI010.TQI_CODCOM,
-            TQI010.TQI_PRODUT,
-            TQI010.TQI_FABRIC
-        from TQI010
-        where TQI010.D_E_L_E_T_ = ''
-    ) as TQI
-        on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
-        and TQI.TQI_TANQUE = ZD3.ZD3_TANQUE
-
-        left join
-        (
-            select
-                case cast(TQF010.TQF_CODIGO as int)
-                    when 59 then '010102'
-                    else trim(isnull(TQF010.TQF_CODFIL, '-'))
-                end as TQF_FILIAL,
-                TQF010.TQF_CODIGO,
-                TQF010.TQF_LOJA
-            from TQF010
-            where TQF010.D_E_L_E_T_ = ''
-        ) as TQF
-            on TQF.TQF_FILIAL = TQI.TQI_FILIAL
-            and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
-
-    left join ST9010 as ST9
-        on ST9.D_E_L_E_T_ = ''
-        and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-    left join TQM010 as TQM
-        on TQM.D_E_L_E_T_ = ''
-        and TQM.TQM_CODCOM = ZD3.ZD3_COMB
+        left join ST9010 as ST9
+            on ST9.D_E_L_E_T_ = ''
+            and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
+            and ST9.T9_CODFAMI in ('VP', 'VM')
+        left join TQM010 as TQM
+            on TQM.D_E_L_E_T_ = ''
+            and TQM.TQM_CODCOM = ZD3.ZD3_COMB
+group by
+    ZD3.ZD3_VEICUL,
+    ZD3.TQN_CCUSTO,
+    ZD3.PERIODO_ABA,
+    TQM.TQM_NOMCOM
