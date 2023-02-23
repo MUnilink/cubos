@@ -1,4 +1,4 @@
-select
+select distinct
     AK1.AK1_CODIGO as ORCAMENTO,
     AK2.AK2_VERSAO as VERSAO,
     AK1.AK1_DESCRI as DESC_ORC,
@@ -36,7 +36,7 @@ select
     case when AKD.AKD_CHAVE like 'SD2%' then concat(substring(AKD.AKD_CHAVE, 1, 9), substring(AKD.AKD_HIST, 10, 9))
     else
         case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 1, 19)
-        else AKD.AKD_CHAVE
+        else trim(AKD.AKD_CHAVE)
         end
     end as REF_LANCAMENTO,
 
@@ -52,7 +52,7 @@ select
         end
     end as VALOR_EMPENHADO,
     
-    case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0R' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
+    case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0I' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
     
     AKD.AKD_USER as USUARIO,
     trim(AKD.AKD_HIST) as HISTORICO,
