@@ -70,7 +70,8 @@ select
     
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
-    datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0) as CHE_CLIDEV_PREV,
+    datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0) as CHE_CLI_PRCV_COL,
+    datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0) as CHE_CLI_PREV_ENT,
     DF1.DF1_YDSPOR as PORTO,
     DF1.DF1_YDIBOO as BOOKING,
     DF1.DF1_YOSCLI as OS_CLIENTE,
@@ -89,199 +90,198 @@ select
 	trim(REG_ENT.EST_ENT) as UF_ENTREGA,
 	trim(REG_ENT.MUN_ENT) as MUN_ENTREGA
 
-from
+from DF1010 DF1 (nolock)
+    left join
     (
         select
-            DTQ.DTQ_FILIAL,
-            DTQ.DTQ_FILORI,
-            DTQ.DTQ_VIAGEM,
-            DTQ.DTQ_DATGER,
-            DTQ.DTQ_DATFEC,
-            DTQ.DTQ_DATENC,
-            DA4010.DA4_COD,
-            DTR.DTR_CODVEI,
-            DTR.DTR_CODRB1,
-            DTR.DTR_CODRB2,
-            DTR.DTR_CODRB3,
-            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_CM,
-            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
-            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB2) as PLACA_RB2,
-            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB3) as PLACA_RB3,
-
-            (
-                select
-                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
-                from DTW010
-                where
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
-                    and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
-                    and DTW010.DTW_CODCLI != 761
-                order by DTW010.DTW_SEQUEN
-            ) as CHE_CLIDEV_REAL,
-            (
-                select
-                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
-                from DTW010
-                where
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
-                    and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
-                    and DTW010.DTW_CODCLI != 761
-                order by DTW010.DTW_SEQUEN
-            ) as SAI_CLIDEV_REAL,
-
-            (
-                select
-                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
-                from DTW010
-                where
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
-                    and DTW010.DTW_ATIVID = 49
-            ) as SAI_VIAGEM_REAL,
-            (
-                select
-                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
-                from DTW010
-                where
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
-                    and DTW010.DTW_ATIVID = 50
-            ) as CHE_VIAGEM_REAL
-
-        from DTQ010 DTQ
-            inner join DTR010 DTR (nolock)
-                on DTR.D_E_L_E_T_ = ''
-                and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-                and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
-                
-                inner join DUP010 (nolock)
-                    on DUP010.D_E_L_E_T_ = ''
-                    and DUP010.DUP_FILORI = DTR.DTR_FILORI
-                    and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
-                    and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
-                    and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
-
-                    inner join DA4010 (nolock)
-                        on DA4010.D_E_L_E_T_ = ''
-                        and DA4010.DA4_COD = DUP010.DUP_CODMOT
-
-        where DTQ.D_E_L_E_T_ = ''
-    ) VIAGEM
+            DUY010.DUY_GRPVEN as GRP_COL,
+            DUY010.DUY_EST as EST_COL,
+            DUY010.DUY_DESCRI as MUN_COL
+        from DUY010 (nolock)
+        where DUY010.D_E_L_E_T_ = ''
+    ) AS REG_COL
+    on REG_COL.GRP_COL = DF1.DF1_CDRORI
 
     left join
     (
         select
-            DYV010.DYV_FILORI,
-            DYV010.DYV_VIAGEM,
-            DYV010.DYV_CODMOT,
-            DYV010.DYV_IDCDIA,
-            DYX010.DYX_ITEM,
-            DYX010.DYX_DATDIA,
-            DYX010.DYX_QTDE,
-            DYX010.DYX_VLRUNI
-        from DYV010
-            inner join DYX010 (nolock)
-                on DYX010.D_E_L_E_T_ = ''
-                and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
-        where DYV010.D_E_L_E_T_ = ''
-    ) DIARIAS
-        on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
-        and DIARIAS.DYV_VIAGEM = VIAGEM.DTQ_VIAGEM
-        and DIARIAS.DYV_CODMOT = VIAGEM.DA4_COD
+            DUY010.DUY_GRPVEN as GRP_ENT,
+            DUY010.DUY_EST as EST_ENT,
+            DUY010.DUY_DESCRI as MUN_ENT
+        from DUY010 (nolock)
+        where DUY010.D_E_L_E_T_ = ''
+    ) AS REG_ENT
+    on REG_ENT.GRP_ENT = DF1.DF1_CDRDES
+
+    left join DT5010 DT5 (nolock)
+        on DT5.D_E_L_E_T_ = ''
+        and DT5.DT5_FILDOC = DF1.DF1_FILDOC
+        and DT5.DT5_NUMSOL = DF1.DF1_DOC
     
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
+        and DUD.DUD_FILORI = DF1.DF1_FILORI
+        and DUD.DUD_FILDOC = DF1.DF1_FILDOC
+        and DUD.DUD_DOC = DF1.DF1_DOC
+        and DUD.DUD_SERIE = DF1.DF1_SERIE
+    
+        left join
+        (
+            select
+                DTQ.DTQ_FILIAL,
+                DTQ.DTQ_FILORI,
+                DTQ.DTQ_VIAGEM,
+                DTQ.DTQ_DATGER,
+                DTQ.DTQ_DATFEC,
+                DTQ.DTQ_DATENC,
+                DA4010.DA4_COD,
+                DTR.DTR_CODVEI,
+                DTR.DTR_CODRB1,
+                DTR.DTR_CODRB2,
+                DTR.DTR_CODRB3,
+                (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_CM,
+                (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
+                (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB2) as PLACA_RB2,
+                (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB3) as PLACA_RB3,
+
+                (
+                    select
+                            top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                    from DTW010
+                    where
+                            DTW010.D_E_L_E_T_ = ''
+                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                        and DTW010.DTW_SYSHOR != ''
+                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
+                        and DTW010.DTW_CODCLI != 761
+                    order by DTW010.DTW_SEQUEN
+                ) as CHE_CLIDEV_REAL,
+                (
+                    select
+                            top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                    from DTW010
+                    where
+                            DTW010.D_E_L_E_T_ = ''
+                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                        and DTW010.DTW_SYSHOR != ''
+                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
+                        and DTW010.DTW_CODCLI != 761
+                    order by DTW010.DTW_SEQUEN
+                ) as SAI_CLIDEV_REAL,
+
+                (
+                    select
+                            concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                    from DTW010
+                    where
+                            DTW010.D_E_L_E_T_ = ''
+                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                        and DTW010.DTW_SYSHOR != ''
+                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_ATIVID = 49
+                ) as SAI_VIAGEM_REAL,
+                (
+                    select
+                            concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                    from DTW010
+                    where
+                            DTW010.D_E_L_E_T_ = ''
+                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                        and DTW010.DTW_SYSHOR != ''
+                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_ATIVID = 50
+                ) as CHE_VIAGEM_REAL
+
+            from DTQ010 DTQ
+                inner join DTR010 DTR (nolock)
+                    on DTR.D_E_L_E_T_ = ''
+                    and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                    and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                    
+                    inner join DUP010 (nolock)
+                        on DUP010.D_E_L_E_T_ = ''
+                        and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                        and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                        and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                        and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+
+                        inner join DA4010 (nolock)
+                            on DA4010.D_E_L_E_T_ = ''
+                            and DA4010.DA4_COD = DUP010.DUP_CODMOT
+
+            where DTQ.D_E_L_E_T_ = ''
+        ) VIAGEM
+        on DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
         and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
-        left join DF1010 DF1 (nolock)
-            on DF1.D_E_L_E_T_ = ''
-            and DF1.DF1_FILDOC = DUD.DUD_FILORI
-            and DF1.DF1_DOC = substring(concat(isnull(DUD.DUD_DOC, ''), DF1.DF1_DOC), 1, 9)
-            and DF1.DF1_SERIE = isnull(DUD.DUD_SERIE, 'COL')
-
             left join
             (
                 select
-                    DUY010.DUY_GRPVEN as GRP_COL,
-                    DUY010.DUY_EST as EST_COL,
-                    DUY010.DUY_DESCRI as MUN_COL
-                from DUY010 (nolock)
-                where DUY010.D_E_L_E_T_ = ''
-            ) AS REG_COL
-            on REG_COL.GRP_COL = DF1.DF1_CDRORI
+                    DYV010.DYV_FILORI,
+                    DYV010.DYV_VIAGEM,
+                    DYV010.DYV_CODMOT,
+                    DYV010.DYV_IDCDIA,
+                    DYX010.DYX_ITEM,
+                    DYX010.DYX_DATDIA,
+                    DYX010.DYX_QTDE,
+                    DYX010.DYX_VLRUNI
+                from DYV010
+                    inner join DYX010 (nolock)
+                        on DYX010.D_E_L_E_T_ = ''
+                        and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
+                where DYV010.D_E_L_E_T_ = ''
+            ) DIARIAS
+                on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
+                and DIARIAS.DYV_VIAGEM = VIAGEM.DTQ_VIAGEM
+                and DIARIAS.DYV_CODMOT = VIAGEM.DA4_COD         
+             
+                left join DT6010 DT6 (nolock)
+                    on DT6.D_E_L_E_T_ = ''
+                    and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+                    and DT6.DT6_DOC = DUD.DUD_DOC
+                    and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-            left join
-            (
-                select
-                    DUY010.DUY_GRPVEN as GRP_ENT,
-                    DUY010.DUY_EST as EST_ENT,
-                    DUY010.DUY_DESCRI as MUN_ENT
-                from DUY010 (nolock)
-                where DUY010.D_E_L_E_T_ = ''
-            ) AS REG_ENT
-            on REG_ENT.GRP_ENT = DF1.DF1_CDRDES
-
-        left join DT5010 DT5 (nolock)
-            on DT5.D_E_L_E_T_ = ''
-            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-            and DT5.DT5_NUMSOL = DUD.DUD_DOC
-            and DUD.DUD_SERIE = 'COL'
-        
-        left join DT6010 DT6 (nolock)
-            on DT6.D_E_L_E_T_ = ''
-            and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-            and DT6.DT6_DOC = DUD.DUD_DOC
-            and DT6.DT6_SERIE = DUD.DUD_SERIE
-
-            left join DTC010 DTC (nolock)
-                on DTC.D_E_L_E_T_ = ''
-                and DTC.DTC_FILORI = DT6.DT6_FILDOC
-                and DTC.DTC_DOC = DT6.DT6_DOC
-                and DTC.DTC_SERIE = DT6.DT6_SERIE
-            left join SA1010 REM (nolock)
-                on REM.A1_FILIAL = '      '
-                and REM.A1_COD = DT6.DT6_CLIREM
-                and REM.A1_LOJA = DT6.DT6_LOJREM
-                and REM.D_E_L_E_T_ = ' '
-            left join SA1010 DES (nolock)
-                on DES.A1_FILIAL = '      '
-                and DES.A1_COD = DT6.DT6_CLIDES
-                and DES.A1_LOJA = DT6.DT6_LOJDES
-                and DES.D_E_L_E_T_ = ' '
-            left join SA1010 DEV (nolock)
-                on DEV.A1_FILIAL = '      '
-                and DEV.A1_COD = DT6.DT6_CLIDEV
-                and DEV.A1_LOJA = DT6.DT6_LOJDEV
-                and DEV.D_E_L_E_T_ = ' '
-            left join DUY010 DUYORI (nolock)
-                on DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
-                and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
-                and DUYORI.D_E_L_E_T_ = ' '
-            left join DUY010 DUYDES (nolock)
-                on DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
-                and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
-                and DUYDES.D_E_L_E_T_ = ' '
-            left join DUY010 DUYDEV (nolock)
-                on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
-                and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
-                and DUYDEV.D_E_L_E_T_ = ' '
-            inner join SX5010 SX5 (nolock)
-                on SX5.X5_FILIAL = '      '
-                and SX5.X5_TABELA = 'L4'
-                and SX5.X5_CHAVE = DT6.DT6_SERVIC
-                and SX5.D_E_L_E_T_ = ' '
+                    left join DTC010 DTC (nolock)
+                        on DTC.D_E_L_E_T_ = ''
+                        and DTC.DTC_FILORI = DT6.DT6_FILDOC
+                        and DTC.DTC_DOC = DT6.DT6_DOC
+                        and DTC.DTC_SERIE = DT6.DT6_SERIE
+                    left join SA1010 REM (nolock)
+                        on REM.A1_FILIAL = '      '
+                        and REM.A1_COD = DT6.DT6_CLIREM
+                        and REM.A1_LOJA = DT6.DT6_LOJREM
+                        and REM.D_E_L_E_T_ = ' '
+                    left join SA1010 DES (nolock)
+                        on DES.A1_FILIAL = '      '
+                        and DES.A1_COD = DT6.DT6_CLIDES
+                        and DES.A1_LOJA = DT6.DT6_LOJDES
+                        and DES.D_E_L_E_T_ = ' '
+                    left join SA1010 DEV (nolock)
+                        on DEV.A1_FILIAL = '      '
+                        and DEV.A1_COD = DT6.DT6_CLIDEV
+                        and DEV.A1_LOJA = DT6.DT6_LOJDEV
+                        and DEV.D_E_L_E_T_ = ' '
+                    left join DUY010 DUYORI (nolock)
+                        on DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
+                        and DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+                        and DUYORI.D_E_L_E_T_ = ' '
+                    left join DUY010 DUYDES (nolock)
+                        on DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
+                        and DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+                        and DUYDES.D_E_L_E_T_ = ' '
+                    left join DUY010 DUYDEV (nolock)
+                        on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
+                        and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+                        and DUYDEV.D_E_L_E_T_ = ' '
+                    left join SX5010 SX5 (nolock)
+                        on SX5.X5_FILIAL = '      '
+                        and SX5.X5_TABELA = 'L4'
+                        and SX5.X5_CHAVE = DT6.DT6_SERVIC
+                        and SX5.D_E_L_E_T_ = ' '
+where DF1.D_E_L_E_T_ = ''
