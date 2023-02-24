@@ -1,14 +1,11 @@
 select
     'P |01|01' AS BK_EMPRESA,
-    VIAGEM.ID_VIAGEM,
     VIAGEM.DTQ_VIAGEM,
     
-    VIAGEM.CHE_CLIDEV,
-    VIAGEM.SAI_CLIDEV,
-    VIAGEM.CHE_VIAGEM,
-    VIAGEM.SAI_VIAGEM,
-    VIAGEM.km_fim,
-    VIAGEM.km_ini,
+    VIAGEM.CHE_CLIDEV_REAL,
+    VIAGEM.SAI_CLIDEV_REAL,
+    VIAGEM.CHE_VIAGEM_REAL,
+    VIAGEM.SAI_VIAGEM_REAL,
     
     DT6.DT6_DOC,
     DT6.DT6_SERIE,
@@ -22,10 +19,7 @@ select
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,
-    'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB.DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB.DDB_CODNEG, ' ')), ' '), '|') AS BK_NEGOCIACAO,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,
-    'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6.DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,
-    'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6.DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,
     CASE WHEN DT6.DT6_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILIAL AS CHAR (8)) END AS BK_FILIAL,
     CASE WHEN DT6.DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
     CASE WHEN DT6.DT6_FILDES IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDES AS CHAR (8)) END AS BK_FILIAL_DESTINO,
@@ -35,28 +29,19 @@ select
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     trim(DTC.DTC_CODPRO) as PRODUTO,
 
-    DIARIAS.ID_DIARIA,
     DIARIAS.DYV_IDCDIA,
     DIARIAS.DYX_DATDIA,
     DIARIAS.DYX_QTDE,
     DIARIAS.DYX_VLRUNI,
     
-    VIAGEM.ID_VEICULO_CM,
-    VIAGEM.ID_VEICULO_RB1,
-    VIAGEM.ID_VEICULO_RB2,
-    VIAGEM.ID_VEICULO_RB3,
-    VIAGEM.ID_MOTORISTA,
-    
-    DTR.DTR_CODVEI,
-    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_VEI,
-    DTR.DTR_CODRB1,
-    (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
-    DTR.DTR_CODRB2,
-    DTR.DTR_CODRB3,
+    VIAGEM.DTR_CODVEI,
+    VIAGEM.DTR_CODRB1,
+    VIAGEM.DTR_CODRB2,
+    VIAGEM.DTR_CODRB3,
 
-    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
+    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = VIAGEM.DTQ_VIAGEM) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
+    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = VIAGEM.DTQ_VIAGEM) IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
 
@@ -97,8 +82,12 @@ select
     datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0) as DATA_CONTEINER,
     DF1.DF1_YARMAD as ARMADORA,
     DF1.DF1_YLJARM as LOJA_ARMADORA,
-    DF1.DF1_CODOBC,
     DF1.DF1_YDSARM as NOME_ARMADORA,
+
+    trim(REG_COL.EST_COL) as UF_COLETA,
+	trim(REG_COL.MUN_COL) as MUN_COLETA,
+	trim(REG_ENT.EST_ENT) as UF_ENTREGA,
+	trim(REG_ENT.MUN_ENT) as MUN_ENTREGA
 
 from
     (
@@ -109,49 +98,15 @@ from
             DTQ.DTQ_DATGER,
             DTQ.DTQ_DATFEC,
             DTQ.DTQ_DATENC,
-
-            (
-                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-                from DTW010
-                    inner join ZB1010 (nolock)
-                        on ZB1010.D_E_L_E_T_ = ''
-                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                        and
-                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                            =
-                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-                    and DTW010.DTW_ATIVID = 50
-            ) as km_fim,
-            (
-                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-                from DTW010
-                    inner join ZB1010 (nolock)
-                        on ZB1010.D_E_L_E_T_ = ''
-                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                        and
-                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                            =
-                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-                where
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-                    and DTW010.DTW_ATIVID = 49
-            ) as km_ini,
-            
             DA4010.DA4_COD,
-            concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-            concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
+            DTR.DTR_CODVEI,
+            DTR.DTR_CODRB1,
+            DTR.DTR_CODRB2,
+            DTR.DTR_CODRB3,
+            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_CM,
+            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB1) as PLACA_RB1,
+            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB2) as PLACA_RB2,
+            (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB3) as PLACA_RB3,
 
             (
                 select
@@ -227,10 +182,9 @@ from
         where DTQ.D_E_L_E_T_ = ''
     ) VIAGEM
 
-    left join (nolock)
+    left join
     (
         select
-            concat(trim(DYV010.DYV_FILORI), trim(DYV010.DYV_VIAGEM), trim(DYV010.DYV_CODMOT), trim(DYV010.DYV_IDCDIA), trim(DYX010.DYX_ITEM)) as ID_DIARIA,
             DYV010.DYV_FILORI,
             DYV010.DYV_VIAGEM,
             DYV010.DYV_CODMOT,
@@ -254,18 +208,39 @@ from
         and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
         and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
+        left join DF1010 DF1 (nolock)
+            on DF1.D_E_L_E_T_ = ''
+            and DF1.DF1_FILDOC = DUD.DUD_FILORI
+            and DF1.DF1_DOC = substring(concat(isnull(DUD.DUD_DOC, ''), DF1.DF1_DOC), 1, 9)
+            and DF1.DF1_SERIE = isnull(DUD.DUD_SERIE, 'COL')
+
+            left join
+            (
+                select
+                    DUY010.DUY_GRPVEN as GRP_COL,
+                    DUY010.DUY_EST as EST_COL,
+                    DUY010.DUY_DESCRI as MUN_COL
+                from DUY010 (nolock)
+                where DUY010.D_E_L_E_T_ = ''
+            ) AS REG_COL
+            on REG_COL.GRP_COL = DF1.DF1_CDRORI
+
+            left join
+            (
+                select
+                    DUY010.DUY_GRPVEN as GRP_ENT,
+                    DUY010.DUY_EST as EST_ENT,
+                    DUY010.DUY_DESCRI as MUN_ENT
+                from DUY010 (nolock)
+                where DUY010.D_E_L_E_T_ = ''
+            ) AS REG_ENT
+            on REG_ENT.GRP_ENT = DF1.DF1_CDRDES
+
         left join DT5010 DT5 (nolock)
             on DT5.D_E_L_E_T_ = ''
             and DT5.DT5_FILDOC = DUD.DUD_FILDOC
             and DT5.DT5_NUMSOL = DUD.DUD_DOC
             and DUD.DUD_SERIE = 'COL'
-
-                left join DF1010 DF1 (nolock)
-                    on DF1.D_E_L_E_T_ = ''
-                    and DF1.DF1_FILDOC = DT5.DT5_FILORI
-                    and DF1.DF1_DOC = DT5.DT5_DOC
-                    and DF1.DF1_SERIE = DT5.DT5_SERIE
-
         
         left join DT6010 DT6 (nolock)
             on DT6.D_E_L_E_T_ = ''
@@ -305,10 +280,6 @@ from
                 on DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
                 and DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
                 and DUYDEV.D_E_L_E_T_ = ' '
-            left join DDB010 DDB (nolock)
-                on DDB.DDB_FILIAL = DT6.DT6_FILIAL
-                and DDB.DDB_CODNEG = DT6.DT6_CODNEG
-                and DDB.D_E_L_E_T_ = ' '
             inner join SX5010 SX5 (nolock)
                 on SX5.X5_FILIAL = '      '
                 and SX5.X5_TABELA = 'L4'
