@@ -1,13 +1,9 @@
 select
 	trim(isnull(SC1.C1_FILIAL, '-')) as FILIAL,
-	substring(SC1.C1_OP, 1, 6) as OS,
 	trim(isnull(SB1.B1_COD, '-')) as PRODUTO,
 	trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
 	trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
 	trim(isnull(SB1.B1_UM, '-')) as UN,
-
-	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE,
-	trim(isnull(CTT.CTT_DESC01, '-')) as CC,
 
 	trim(isnull(SC1.C1_NUM, '-')) as SC,
 	trim(isnull(SC1.C1_ITEM, '-')) as ITEM_SC,
@@ -27,8 +23,6 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
-	concat(SC1.C1_FILIAL, SC1.C1_NUM, SC1.C1_ITEM) as ID_SC,
-
 	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
 
 	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
@@ -45,8 +39,6 @@ select
 	trim(isnull(FCO.A2_NREDUZ, '-')) as NOMERED_FOR_COTACAO,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
 
-	concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) as ID_CO,
-
 	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
 
 	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
@@ -60,6 +52,7 @@ select
 	trim(isnull(SC7.C7_OBSM, '-')) as MEMO_PC,
 
 	convert(date, SC7.C7_EMISSAO, 103) as DATA_PEDIDO,
+
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
 	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE_PC,
 
@@ -69,8 +62,6 @@ select
 		when 'R' then 'REJEITADO'
 		else 'OUTROS'
 	end as APROVACAO_PC,
-
-	case when concat(SC7.C7_FILIAL, SC7.C7_NUM, SC7.C7_ITEM) = '' then 0 else 1 end as ID_PC,
 
 	/*case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,*/
 
@@ -112,10 +103,17 @@ select
 
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
-	convert(datetime, SD1.D1_EMISSAO, 103) as NF_EMI,
-	convert(datetime, SD1.D1_DTDIGIT, 103) as NF_DATA,
-	
-	case when concat(SD1.D1_FILIAL, SD1.D1_DOC, SD1.D1_ITEM) = '' then 0 else 1 end as ID_NF
+	convert(date, SD1.D1_EMISSAO, 103) as NF_EMI,
+	convert(date, SD1.D1_DTDIGIT, 103) as NF_DATA,
+
+	STJ.TJ_ORDEM as OS,
+	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
+    STJ.TJ_DTMRINI,
+    STJ.TJ_DTMRFIM,
+	convert(date, STJ.TJ_DTORIGI, 103) as DATA_OS,
+	STJ.TJ_USUAINI as USR_INI,
+	STJ.TJ_USUAFIM as USR_FIM,
+	STJ.TJ_TERMINO as OS_ENCERRADA
 
 from SC1010 SC1 (nolock)
 	inner join SB1010 SB1 (nolock)
@@ -153,12 +151,10 @@ from SC1010 SC1 (nolock)
 		left join SY1010 SY1 (nolock)
 			on SY1.D_E_L_E_T_ = ''
 			and SY1.Y1_USER = SC7.C7_USER
-
-	left join CTT010 CTT (nolock)
-		on CTT.D_E_L_E_T_ = ''
-		and CTT.CTT_CUSTO = SC1.C1_CC
-	left join CTD010 CTD (nolock)
-		on CTD.D_E_L_E_T_ = ''
-		and CTD.CTD_ITEM = SC1.C1_ITEMCTA
+	
+	left join STJ010 STJ (nolock)
+		on STJ.D_E_L_E_T_ = ''
+		and STJ.TJ_FILIAL = SC1.C1_FILIAL
+		and STJ.TJ_ORDEM = substring(SC1.C1_OP, 1, 6)
 where 
 		SC1.D_E_L_E_T_ = ''
