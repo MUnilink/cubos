@@ -19,7 +19,7 @@ select
 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
 	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
-	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT
+	isnull(ZD3.TQN_YITMCT, '-') as TQN_YITMCT
 from
 	(
 		select
@@ -40,7 +40,19 @@ from
 			ZD3010.ZD3_KML,
 			ZD3010.ZD3_KMRD,
 			TQN010.TQN_CCUSTO,
-			TQN010.TQN_YITMCT
+			
+			case when TQN010.TQN_YITMCT is not null and TQN010.TQN_YITMCT != '' then TQN010.TQN_YITMCT
+			else
+				case TQN010.TQN_CCUSTO
+					when 302 then 11
+					when 304 then 11
+					when 303 then 21
+					when 305 then 21
+					when 306 then 21
+					else 90
+				end
+			end as TQN_YITMCT
+		
 		from ZD3010 (nolock)
 			inner join TQN010 (nolock)
 				on TQN010.D_E_L_E_T_ = ''
