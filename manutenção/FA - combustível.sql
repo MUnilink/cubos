@@ -83,7 +83,7 @@ from
 				and TQN.TQN_FROTA = ZD3010.ZD3_VEICUL
 				and TQN.TQN_DTABAS = substring(ZD3010.ZD3_DATA, 1, 8)
 				and TQN.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 10, 14)
-			inner join SD3010 SD3 (nolock)
+			left join SD3010 SD3 (nolock)
 				on SD3.D_E_L_E_T_ = ''
 				and SD3.D3_FILIAL = TQN.TQN_FILIAL
 				and SD3.D3_LOCAL = TQN.TQN_TANQUE
