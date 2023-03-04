@@ -1,11 +1,10 @@
 select
-    'P |01|01' AS BK_EMPRESA,
     VIAGEM.DTQ_VIAGEM,
     
-    VIAGEM.CHE_CLIDEV_REAL,
-    VIAGEM.SAI_CLIDEV_REAL,
-    VIAGEM.CHE_VIAGEM_REAL,
-    VIAGEM.SAI_VIAGEM_REAL,
+    convert(datetime, VIAGEM.CHE_CLIDEV_REAL, 113) as CHE_CLIDEV_REAL,
+    convert(datetime, VIAGEM.SAI_CLIDEV_REAL, 113) as SAI_CLIDEV_REAL,
+    convert(datetime, VIAGEM.CHE_VIAGEM_REAL, 113) as CHE_VIAGEM_REAL,
+    convert(datetime, VIAGEM.SAI_VIAGEM_REAL, 113) as SAI_VIAGEM_REAL,
     
     DT6.DT6_DOC,
     DT6.DT6_SERIE,
@@ -13,9 +12,25 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
-    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
-    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
-    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,
+    DT6.DT6_CLIREM +'-'+ DT6.DT6_LOJREM as REM,
+    REM.A1_CGC as REM_CNPJ,
+    REM.A1_NOME as REMETENTE,
+    REM.A1_NREDUZ as REM_RED,
+    
+    DT6.DT6_CLIDES +'-'+ DT6.DT6_LOJDES as DES,
+    DES.A1_CGC as DES_CNPJ,
+    DES.A1_NOME as DESTINATARIO,
+    DES.A1_NREDUZ as DES_RED,
+    
+    DT6.DT6_CLIDEV +'-'+ DT6.DT6_LOJDEV as DEV,
+    DEV.A1_CGC as CLI_CNPJ,
+    DEV.A1_NOME as CLIENTE,
+    DEV.A1_NREDUZ as CLIENTE_RED,
+
+    trim(DUYORI.DUY_DESCRI) as ORIGEM,
+    trim(DUYDES.DUY_DESCRI) as DESTINO,
+    trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
+    
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,
@@ -28,14 +43,11 @@ select
     CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     
-
     DIARIAS.DYV_IDCDIA,
     DIARIAS.DYX_DATDIA,
     DIARIAS.DYX_QTDE,
     DIARIAS.DYX_VLRUNI,
-    
-    VIAGEM.DTR_CODVEI as CM,
-    VIAGEM.DTR_CODRB1 as SR1,
+
     VIAGEM.DTR_CODRB2 as SR2,
     VIAGEM.DTR_CODRB3 as SR3,
 
@@ -60,7 +72,7 @@ select
     case when DT5.DT5_STATUS = '4' then 'CORTESIA' else case when DT5.DT5_STATUS like '[0-9]' then 'DOCUMENTO PENDENTE' else 'DOCUMENTO OK' end end as TIPO_VIAGEM,
 
     DT5.DT5_NUMSOL,
-    DT5.DT5_DOC,
+    DT5.DT5_DOC as OS_COLETA,
     DT5.DT5_SERIE,
     DT5.DT5_STATUS as STATUS_COLETA,
     DT5.DT5_TIPCOL,
@@ -68,30 +80,38 @@ select
     DT5.DT5_CODOBC,
     
     case DF0.DF0_STATUS
-		when '1' then 'A Confirmar'
-		when '2' then 'Confirmado'
-		when '3' then 'Em Processo'
-		when '4' then 'Encerrado'
-		when '5' then 'Planejado'
-		when '9' then 'Cancelado'
+		when '1' then 'A CONFIRMAR'
+		when '2' then 'CONFIRMADO'
+		when '3' then 'EM PROCESSO'
+		when '4' then 'ENCERRADO'
+		when '5' then 'PLANEJADO'
+		when '9' then 'CANCELADO'
 	end as STATUS_AGENDA,
 
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
-    datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0) as CHE_CLI_PREV_COL,
-    datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0) as CHE_CLI_PREV_ENT,
-    DF1.DF1_YDSPOR as PORTO,
-    DF1.DF1_YDIBOO as BOOKING,
-    DF1.DF1_YOSCLI as OS_CLIENTE,
-    DF1.DF1_YNAVIO as NAVIO,
-    DF1.DF1_YDSNAV as NOME_NAVIO,
-    DF1.DF1_YVIAGE as VIAGEM_PORT,
-    DF1.DF1_YCONT as CONTEINER,
-    DF1.DF1_YLACRE as LACRE,
-    datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0) as DATA_CONTEINER,
-    DF1.DF1_YARMAD as ARMADORA,
+    null as PERIODO_AGENDA,
+    convert(datetime, datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0), 113) as CHE_CLI_PREV_COL,
+    convert(datetime, datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0), 113) as CHE_CLI_PREV_ENT,
+    trim(DF1.DF1_YDSPOR) as PORTO,
+    trim(DF1.DF1_YDIBOO) as BOOKING,
+    trim(DF1.DF1_YOSCLI) as OS_CLIENTE,
+    trim(DF1.DF1_YNAVIO) as NAVIO_COD,
+    trim(DF1.DF1_YDSNAV) as NAVIO,
+    trim(DF1.DF1_YVIAGE) as VIAGEM_PORT,
+    trim(DF1.DF1_YCONT) as CONTEINER,
+    trim(DF1.DF1_YLACRE) as LACRE,
+    convert(datetime, datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0), 113) as DATA_CONTEINER,
+    DF1.DF1_YARMAD as ARMADORA_COD,
     DF1.DF1_YLJARM as LOJA_ARMADORA,
-    DF1.DF1_YDSARM as NOME_ARMADORA,
+    trim(DF1.DF1_YDSARM) as ARMADORA,
+        
+    ZA0.ZA0_VEICUL as CM,
+    ZA0.ZA0_PLACA as CM_PLACA,
+    ZA0.ZA0_CARRET as SR1,
+    ZA0.ZA0_PLCCAR as SR1_PLACA,
+    ZA0.ZA0_MOTORI as MOTORISTA_CODIGO,
+    trim(ZA0.ZA0_NOMMOT) as MOTORISTA,
 
     trim(REG_COL.EST_COL) as UF_COLETA,
 	trim(REG_COL.MUN_COL) as MUN_COLETA,
@@ -99,6 +119,10 @@ select
 	trim(REG_ENT.MUN_ENT) as MUN_ENTREGA
 
 from DF1010 DF1 (nolock)
+    left join DF0010 DF0 (nolock)
+        on DF0.D_E_L_E_T_ = ''
+        and DF0.DF0_FILIAL = DF1.DF1_FILIAL
+        and DF0.DF0_NUMAGE = DF1.DF1_NUMAGE
     left join ZA0010 ZA0 (nolock)
         on ZA0.D_E_L_E_T_ = ''
         and ZA0.ZA0_FILIAL = DF1.DF1_FILIAL
