@@ -52,7 +52,7 @@ from SRA010 SRA (nolock)
             isnull(SRD010.RD_MAT, SRT010.RT_MAT) as MATRICULA,
             SRV010.RV_COD, /* VER ELIMINAÇÃO DE VERBAS INDIVIDUAIS, OQ PERMITIRIA USAR DISTINCT NESTA TABELA E VINCULAR AO EMPREGADO SEM DUPLICATAS */
             isnull(SRD010.RD_PD, SRT010.RT_VERBA) as EVENTO,
-            case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
+            case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783', '451', '452') then '02 Salários e Ordenados'
             else
                 case when SRD010.RD_PD in ('029', '111', '113') then '03 Hora Extra'
                 else
