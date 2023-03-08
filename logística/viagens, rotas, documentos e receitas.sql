@@ -82,6 +82,13 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
+    DT6.DT6_PRZENT AS PRAZO_ENTREGA,
+    DT6.DT6_DATENT AS DATA_ENTREGA,
+    CASE
+        WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'
+        ELSE 'DENTRO DO PRAZO'
+    END AS STATUS_ATENDIMENTO,
+
     DTC.DTC_FILORI,
     DTC.DTC_DOC,
     DTC.DTC_SERIE,
@@ -262,6 +269,7 @@ from DTQ010 DTQ (nolock)
 
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILORI = DTQ.DTQ_FILORI
         and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
 
         left join DT5010 DT5 (nolock)
