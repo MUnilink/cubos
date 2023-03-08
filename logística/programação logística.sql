@@ -60,6 +60,13 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
+    DT6.DT6_PRZENT AS PRAZO_ENTREGA,
+    DT6.DT6_DATENT AS DATA_ENTREGA,
+    CASE
+        WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'
+        ELSE 'DENTRO DO PRAZO'
+    END AS STATUS_ATENDIMENTO,
+
     DTC.DTC_DOC as NFCLI_DOCTO_TMS,
     DTC.DTC_SERIE as NFCLI_SERIE_TMS,
     DTC.DTC_NUMNFC as NFCLI_NUM,
@@ -251,11 +258,32 @@ from DF1010 DF1 (nolock)
                         inner join DA4010 (nolock)
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
+                
+                left join DUD010 DUD (nolock)
+                    on DUD.D_E_L_E_T_ = ''
+                    and DUD.DUD_FILORI = DTQ.DTQ_FILORI
+                    and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+
+                    left join DT5010 (nolock)
+                        on DT5010.D_E_L_E_T_ = ''
+                        and DT5010.DT5_FILDOC = DUD.DUD_FILDOC
+                        and DT5010.DT5_NUMSOL = DUD.DUD_DOC
+                        and DUD.DUD_SERIE = 'COL'
+
+                            left join DF1010 (nolock)
+                                on DF1010.D_E_L_E_T_ = ''
+                                and DF1010.DF1_FILDOC = DT5010.DT5_FILORI
+                                and DF1010.DF1_DOC = DT5010.DT5_DOC
+                                and DF1010.DF1_SERIE = DT5010.DT5_SERIE
 
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
-        on DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
-        and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
+        on DF1.DF1_FILORI = VIAGEM.DTQ_FILORI
+        and DF1.DF1_VIAGEM = VIAGEM.DTQ_VIAGEM
+        and DF1.DF1_FILORI = VIAGEM.DUD_FILORI
+        and DF1.DF1_FILDOC = VIAGEM.DUD_FILDOC
+        and DF1.DF1_DOC = VIAGEM.DUD_DOC
+        and DF1.DF1_SERIE = VIAGEM.DUD_SERIE
 
             left join
             (
@@ -276,7 +304,7 @@ from DF1010 DF1 (nolock)
             ) DIARIAS
                 on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
                 and DIARIAS.DYV_VIAGEM = VIAGEM.DTQ_VIAGEM
-                and DIARIAS.DYV_CODMOT = VIAGEM.DA4_COD         
+                and DIARIAS.DYV_CODMOT = VIAGEM.DA4_COD
              
                 left join DT6010 DT6 (nolock)
                     on DT6.D_E_L_E_T_ = ''
