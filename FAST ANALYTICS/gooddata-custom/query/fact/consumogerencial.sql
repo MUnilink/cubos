@@ -44,7 +44,7 @@ from
 						TQN010.D_E_L_E_T_ = ''
 					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
 					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
-					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 14)
+					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
 			) as TQN_CCUSTO,
 			(
 				select
@@ -64,7 +64,7 @@ from
 						TQN010.D_E_L_E_T_ = ''
 					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
 					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
-					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 14)
+					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
 			) as TQN_YITMCT		
 		from ZD3010 ZD30
 		where ZD30.D_E_L_E_T_ = ''
