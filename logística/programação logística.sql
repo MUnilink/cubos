@@ -162,13 +162,6 @@ from DF1010 DF1 (nolock)
         and DT5.DT5_FILDOC = DF1.DF1_FILDOC
         and DT5.DT5_NUMSOL = DF1.DF1_DOC
     
-    left join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILORI = DF1.DF1_FILORI
-        and DUD.DUD_FILDOC = DF1.DF1_FILDOC
-        and DUD.DUD_DOC = DF1.DF1_DOC
-        and DUD.DUD_SERIE = DF1.DF1_SERIE
-    
         left join
         (
             select
@@ -240,7 +233,13 @@ from DF1010 DF1 (nolock)
                         and DTW010.DTW_SYSHOR != ''
                         and DTW010.DTW_SYSDAT != ''
                         and DTW010.DTW_ATIVID = 50
-                ) as CHE_VIAGEM_REAL
+                ) as CHE_VIAGEM_REAL,
+                
+                DF1010.DF1_NUMAGE,
+                DF1010.DF1_ITEAGE,
+                DUD010.DUD_FILDOC,
+                DUD010.DUD_DOC,
+                DUD010.DUD_SERIE
 
             from DTQ010 DTQ
                 inner join DTR010 DTR (nolock)
@@ -259,31 +258,21 @@ from DF1010 DF1 (nolock)
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
                 
-                left join DUD010 DUD (nolock)
-                    on DUD.D_E_L_E_T_ = ''
-                    and DUD.DUD_FILORI = DTQ.DTQ_FILORI
-                    and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+                left join DUD010 (nolock)
+                    on DUD010.D_E_L_E_T_ = ''
+                    and DUD010.DUD_FILORI = DTQ.DTQ_FILORI
+                    and DUD010.DUD_VIAGEM = DTQ.DTQ_VIAGEM
 
-                    left join DT5010 (nolock)
-                        on DT5010.D_E_L_E_T_ = ''
-                        and DT5010.DT5_FILDOC = DUD.DUD_FILDOC
-                        and DT5010.DT5_NUMSOL = DUD.DUD_DOC
-                        and DUD.DUD_SERIE = 'COL'
-
-                            left join DF1010 (nolock)
-                                on DF1010.D_E_L_E_T_ = ''
-                                and DF1010.DF1_FILDOC = DT5010.DT5_FILORI
-                                and DF1010.DF1_DOC = DT5010.DT5_DOC
-                                and DF1010.DF1_SERIE = DT5010.DT5_SERIE
+                    left join DF1010 (nolock)
+                        on DF1010.D_E_L_E_T_ = ''
+                        and DF1010.DF1_FILDOC = DUD010.DUD_FILDOC
+                        and DF1010.DF1_DOC = DUD010.DUD_DOC
+                        and DF1010.DF1_SERIE = DUD010.DUD_SERIE
 
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
         on DF1.DF1_FILORI = VIAGEM.DTQ_FILORI
-        and DF1.DF1_VIAGEM = VIAGEM.DTQ_VIAGEM
-        and DF1.DF1_FILORI = VIAGEM.DUD_FILORI
-        and DF1.DF1_FILDOC = VIAGEM.DUD_FILDOC
-        and DF1.DF1_DOC = VIAGEM.DUD_DOC
-        and DF1.DF1_SERIE = VIAGEM.DUD_SERIE
+        and DF1.DF1_NUMAGE = VIAGEM.DF1_NUMAGE
 
             left join
             (
@@ -308,9 +297,9 @@ from DF1010 DF1 (nolock)
              
                 left join DT6010 DT6 (nolock)
                     on DT6.D_E_L_E_T_ = ''
-                    and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-                    and DT6.DT6_DOC = DUD.DUD_DOC
-                    and DT6.DT6_SERIE = DUD.DUD_SERIE
+                    and DT6.DT6_FILDOC = VIAGEM.DUD_FILDOC
+                    and DT6.DT6_DOC = VIAGEM.DUD_DOC
+                    and DT6.DT6_SERIE = VIAGEM.DUD_SERIE
 
                     left join DTC010 DTC (nolock)
                         on DTC.D_E_L_E_T_ = ''
