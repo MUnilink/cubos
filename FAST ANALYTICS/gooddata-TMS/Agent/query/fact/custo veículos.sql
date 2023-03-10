@@ -36,28 +36,25 @@ select
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     trim(DTC.DTC_CODPRO) as PRODUTO,
 
-    MANUTENCAO.TJ_CODBEM as MNT_,
-    MANUTENCAO.TJ_ORDEM as MNT_,
-    MANUTENCAO.TIPO_CUSTO as MNT_,
-    MANUTENCAO.TL_TIPOREG as MNT_,
-    MANUTENCAO.TL_LOCAL as MNT_,
-    MANUTENCAO.TL_UNIDADE as MNT_,
-    MANUTENCAO.TL_QUANTID as MNT_,
-    MANUTENCAO.TL_CUSTO as MNT_,
+    MANUTENCAO.TJ_ORDEM as MNT_TJ_ORDEM,
+    MANUTENCAO.TIPO_CUSTO as MNT_TIPO_CUSTO,
+    MANUTENCAO.TL_TIPOREG as MNT_TL_TIPOREG,
+    MANUTENCAO.TL_UNIDADE as MNT_TL_UNIDADE,
+    MANUTENCAO.TL_QUANTID as MNT_TL_QUANTID,
+    MANUTENCAO.TL_CUSTO as MNT_TL_CUSTO,
     
-    COMBUSTIVEL.ZD3_VEICUL as COM_,
-    COMBUSTIVEL.TQN_CCUSTO as COM_,
-    COMBUSTIVEL.km as COM_,
-    COMBUSTIVEL.CUSTO as COM_,
-    COMBUSTIVEL.PERIODO_ABA as COM_,
-    COMBUSTIVEL.TQM_NOMCOM as COM_,
+    COMBUSTIVEL.TQN_CCUSTO as COM_TQN_CCUSTO,
+    COMBUSTIVEL.km as COM_km,
+    COMBUSTIVEL.CUSTO as COM_CUSTO,
+    COMBUSTIVEL.PERIODO_ABA as COM_PERIODO_ABA,
+    COMBUSTIVEL.TQM_NOMCOM as COM_TQM_NOMCOM,
 
-    DOCUMENTACAO.TS0_DOCTO as TAX_,
-    DOCUMENTACAO.ANO_DOCTO as TAX_,
-    DOCUMENTACAO.CC as TAX_,
-    DOCUMENTACAO.VALOR_TAXA as TAX_,
+    DOCUMENTACAO.TS0_DOCTO as TAX_TS0_DOCTO,
+    DOCUMENTACAO.ANO_DOCTO as TAX_ANO_DOCTO,
+    DOCUMENTACAO.CC as TAX_CC,
+    DOCUMENTACAO.VALOR_TAXA as TAX_VALOR_TAXA,
 
-    DEPRECIACAO.N4_VLROC1 as DEPRECIACAO,
+    DEPRECIACAO.VALOR_MOV as DEPRECIACAO,
 
     FOLHA.RA_FILIAL,
     FOLHA.PERIODO,
@@ -67,6 +64,12 @@ select
     FOLHA.CENTRO_CUSTO,
     FOLHA.NOME,
     FOLHA.FUNCAO,
+
+    VIAGEM.ID_VEICULO_CM,
+    VIAGEM.ID_VEICULO_RB1,
+    VIAGEM.ID_VEICULO_RB2,
+    VIAGEM.ID_VEICULO_RB3,
+    VIAGEM.ID_MOTORISTA,
 
     null as AUTOTRAC,
     null as SEGURO_VEICULO,
@@ -371,31 +374,52 @@ from
         from
             (
                 select
-                    case cast(ZD3010.ZD3_TANQUE as int)
+                    case cast(ZD30.ZD3_TANQUE as int)
                         when 12 then '010102'
-                        else trim(isnull(ZD3010.ZD3_FILIAL, '-'))
+                        else trim(isnull(ZD30.ZD3_FILIAL, '-'))
                     end as ZD3_FILIAL,
-                    ZD3010.ZD3_KM as ZD3_HODOM,
-                    
-                    case when ZD3010.ZD3_LITROS = 0 then 'PARCIAL' else 'COMPLETO' end as TIPO_ABA,
-                    ZD3010.ZD3_VEICUL,
-                    ZD3010.ZD3_LITROS,
-                    ZD3010.ZD3_VLUNI,
-                    ZD3010.ZD3_TOTAL,
-                    
-                    ZD3010.ZD3_TANQUE as ZD3_TANQUE,
-                    ZD3010.ZD3_COMB,
-                    substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
-                    substring(ZD3010.ZD3_DATA, 1, 6) as PERIODO_ABA,
-                    ZD3010.ZD3_KML,
-                    case ZD3010.ZD3_COMB when 2 then 0.0 else ZD3010.ZD3_KMRD end as ZD3_KMRD,
-                    TQN010.TQN_CCUSTO
-                from ZD3010 (nolock)
-                    inner join TQN010 (nolock)
-                        on TQN010.D_E_L_E_T_ = ''
-                        and TQN010.TQN_FROTA = ZD3010.ZD3_VEICUL
-                        and TQN010.TQN_DTABAS + TQN010.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 1, 8) + substring(ZD3010.ZD3_DATA, 10, 14)
-                where ZD3010.D_E_L_E_T_ = ''
+                    ZD30.ZD3_KM as ZD3_HODOM,
+                    ZD30.ZD3_VEICUL,
+                    ZD30.ZD3_LITROS,
+                    ZD30.ZD3_TOTAL,
+                    ZD30.ZD3_TANQUE,
+                    ZD30.ZD3_COMB,
+                    substring(ZD30.ZD3_DATA, 1, 8) as PERIODO_ABA,
+                    substring(ZD30.ZD3_DATA, 1, 8) as ZD3_DATA,
+                    ZD30.ZD3_KML,
+                    ZD30.ZD3_KMRD,
+
+                    (
+                        select TQN010.TQN_CCUSTO
+                        from TQN010
+                        where
+                                TQN010.D_E_L_E_T_ = ''
+                            and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
+                            and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
+                            and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
+                    ) as TQN_CCUSTO,
+                    (
+                        select
+                            case when TQN010.TQN_YITMCT is not null and TQN010.TQN_YITMCT != '' then TQN010.TQN_YITMCT
+                            else
+                                case TQN010.TQN_CCUSTO
+                                    when 302 then 11
+                                    when 304 then 11
+                                    when 303 then 21
+                                    when 305 then 21
+                                    when 306 then 21
+                                    else 90
+                                end
+                            end
+                        from TQN010
+                        where
+                                TQN010.D_E_L_E_T_ = ''
+                            and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
+                            and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
+                            and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
+                    ) as TQN_YITMCT		
+                from ZD3010 ZD30
+                where ZD30.D_E_L_E_T_ = ''
             ) as ZD3
 
                 left join ST9010 as ST9
@@ -458,22 +482,89 @@ from
     left join /* ver depreciação */
     (
         select
-            ST9010.T9_CODBEM,
-            SN1010.N1_CBASE,
-            SN4010.N4_DATA,
-            SN4010.N4_VLROC1
-        from SN4010
-            left join SN1010 (nolock)
-                on SN1010.D_E_L_E_T_ = ''
-                and SN1010.N1_CBASE = SN4010.N4_CBASE
+            SN1.N1_GRUPO as GRUPO,
+            trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
+            trim(isnull(SN1.N1_DESCRIC, '-')) as DESC_ATIVO,
+            trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
+            convert(date, SN3.N3_DINDEPR, 103) as INI_DEPREC,
+            SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
+            SNG.NG_TXDEPR1 /12 as DEPREC_MENSAL_GRUPO,
+
+            SN3.N3_TIPO,
+
+            SN3.N3_CUSTBEM as CC,
+            SN3.N3_SUBCCON as ATIVIDADE,
+            trim(SN3.N3_CCONTAB) as CONTA,
+
+            SN4.N4_CCUSTOT as CC_ORIGEM,
+            SN4.N4_CCUSTO as CC_MOV,
+            SN4.N4_SUBCTA as ATIVIDADE_MOV,
             
-                inner join ST9010 (nolock)
-                    on ST9010.D_E_L_E_T_ = ''
-                    and ST9010.T9_CODBEM = SN1010.N1_CODBEM
+            SN3.N3_CCUSTO as CC_DESPESA,
+            SN3.N3_SUBCTA as ATIV_DESPESA,
+
+            SN3.N3_CCCDEP as CC_DEPR_ACUM,
+            SN3.N3_SUBCCDE as ATIV_DEPR_ACUM,
+            trim(SN3.N3_CCDEPR) as CONTA_DEPR_ACUM,
+
+            SN3.N3_CCDESP as CC_DESP_DEPR,
+            SN3.N3_SUBCDEP as ATIV_DESP_DEPR,
+            trim(SN3.N3_CDEPREC) as CONTA_DESP_DEPR,
+
+            SN1.N1_QUANTD,
+            SN3.N3_VORIG1 as VALOR_ORIGINAL,
+            SN3.N3_VORIG2,
+            SN3.N3_VORIG3,
+            SN3.N3_VORIG4,
+            SN3.N3_VORIG5,
+
+            SN1.N1_NFISCAL,
+
+            SN3.N3_TXDEPR1 as DEPREC_ANUAL,
+            SN3.N3_TXDEPR2,
+            SN3.N3_TXDEPR3,
+            SN3.N3_TXDEPR4,
+            SN3.N3_TXDEPR5,
+            
+            trim(SN4.N4_CONTA) as N4_CONTA,
+            case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO_CONTA_MOV,
+            convert(datetime, concat(SN4.N4_DATA, ' ', SN4.N4_HORA), 113) as DATA_MOV,
+            substring(SN4.N4_DATA, 1, 6) as PERIODO,
+            SN4.N4_LA,
+            SN4.N4_VLROC1 as VALOR_MOV,
+            SN4.N4_VLROC2,
+            SN4.N4_VLROC3,
+            SN4.N4_ORIGEM as ROTINA,
+            SN4.N4_TIPO,
+            SN4.N4_LP,
+            SN4.N4_OCORR,
+            SN4.N4_MOTIVO,
+            (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '16' and SX5010.X5_CHAVE = SN4.N4_MOTIVO) as MOTIVO_MOV
+
+        from SN4010 SN4 (nolock)
+            inner join SN3010 SN3 (nolock)
+                on SN3.D_E_L_E_T_ = ''
+                and SN3.N3_CBASE = SN4.N4_CBASE
+                and SN3.N3_ITEM = SN4.N4_ITEM
+
+                left join SN1010 SN1 (nolock)
+                    on SN1.D_E_L_E_T_ = ''
+                    and SN1.N1_CBASE = SN3.N3_CBASE
+                    and SN1.N1_ITEM = SN3.N3_ITEM
+
+                    left join ST9010 ST9 (nolock)
+                        on ST9.D_E_L_E_T_ = ''
+                        and ST9.T9_CODBEM = SN1.N1_CODBEM
+                        
+                        left join SNG010 SNG (nolock)
+                            on SNG.D_E_L_E_T_ = ''
+                            and SNG.NG_GRUPO = SN1.N1_GRUPO
         where
-                SN4010.D_E_L_E_T_ = ''
+                SN4.D_E_L_E_T_ = ''
+            and SN4.N4_OCORR = 6
+
     ) DEPRECIACAO
-        on substring(DEPRECIACAO.N4_DATA, 1, 6) = VIAGEM.COMPETENCIA
+        on DEPRECIACAO.PERIODO = VIAGEM.COMPETENCIA
         and
         (
             DEPRECIACAO.T9_CODBEM = VIAGEM.COD_CM or
