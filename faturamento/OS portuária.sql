@@ -18,6 +18,7 @@ select
         when 1 then 'RECEITA'
         when 2 then 'FUNÇÃO'
         when 3 then 'EQUIPAMENTO'
+        when 6 then 'APROPRIAÇÃO DE CUSTO'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
