@@ -104,7 +104,20 @@ select
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
-	substring(STL.TL_DTINICI, 1, 6) as PERIODO
+	substring(STL.TL_DTINICI, 1, 6) as PERIODO,
+	SCP.CP_NUM as SA,
+	SCP.CP_QUANT as SA_QTD_SOLICTADA,
+    SCP.CP_QUJE as SA_QTD_ATENDIDA,
+
+    case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
+    else
+        case when SCP.CP_QUJE = 0.0 then 'PENDENTE'
+        else
+            case when SCP.CP_QUANT > SCP.CP_QUJE then 'PAR. ATENDIDA'
+            else 'OUTROS'
+            end
+        end
+    end as SA_ATENDIDA
 
 from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
