@@ -30,8 +30,8 @@ select
     SD3.D3_NUMSEQ,
     SD3.D3_ESTORNO,
         
-    SB1.B1_COD,
-    SB1.B1_DESC,
+    trim(SB1.B1_COD) as B1_COD,
+    trim(SB1.B1_DESC) as B1_DESC,
     trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
     
     convert(date, SCP.CP_EMISSAO, 103) as DATA_SA,
@@ -51,16 +51,19 @@ select
     
     case when SD3.D3_ESTORNO = 'S' then 'ATENDIMENTO ESTORNADO'
     else
-        case when SCQ.CQ_NUMREQ != '' and SD3.D3_DOC != '' then 'ATENDIDA' /* normal */
+        case when SCQ.CQ_NUMREQ != '' and SD3.D3_DOC != '' and SCP.CP_QUANT = SCP.CP_QUJE then 'ATENDIDA TOTAL' /* normal */
         else
-            case when SCQ.CQ_NUMREQ != '' and SD3.D3_DOC = '' then 'GERADA' /* incomum quando SCQ.CQ_NUMREQ = '' */
+            case when SCQ.CQ_NUMREQ != '' and SD3.D3_DOC != '' and SCP.CP_QUANT > SCP.CP_QUJE then 'ATENDIDA PARCIAL' /* normal */
             else
-                case when SCQ.CQ_NUMREQ = '' and SCP.CP_PREREQU = '' then 'NÃO GERADA' /* SEMPRE quantidade nula SCQ, além de que sempre SD3.D3_DOC = '' */
+                case when SCQ.CQ_NUMREQ != '' and SD3.D3_DOC = '' then 'GERADA' /* incomum quando SCQ.CQ_NUMREQ = '' */
                 else
-                    case when SCQ.CQ_NUMREQ = '' and SCP.CP_STATUS = 'E' then 'ENCERRADA' /* se não gerada e encerrada, sempre SCP.CP_PREREQU = 'S' */
+                    case when SCQ.CQ_NUMREQ = '' and SCP.CP_PREREQU = '' then 'NÃO GERADA' /* SEMPRE quantidade nula SCQ, além de que sempre SD3.D3_DOC = '' */
                     else
-                        case when SCQ.CQ_NUMREQ = '' and SCP.CP_PREREQU = 'S' then 'EMPENHO' /* NUNCA quantidade nula SCQ */
-                        else 'OUTROS'
+                        case when SCQ.CQ_NUMREQ = '' and SCP.CP_STATUS = 'E' then 'ENCERRADA' /* se não gerada e encerrada, sempre SCP.CP_PREREQU = 'S' */
+                        else
+                            case when SCQ.CQ_NUMREQ = '' and SCP.CP_PREREQU = 'S' then 'EMPENHO' /* NUNCA quantidade nula SCQ */
+                            else 'OUTROS'
+                            end
                         end
                     end
                 end
