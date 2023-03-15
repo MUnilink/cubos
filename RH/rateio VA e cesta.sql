@@ -39,8 +39,8 @@
         
         inner join RFO010 RFO (nolock)
             on RFO.D_E_L_E_T_ = ''
-            and RFO.RIS_TPBENE = SR0.R0_BENEF
-            and RFO.RIS_COD = SR0.R0_TABELA
+            and RFO.RFO_TPVALE = SR0.R0_TPVALE
+            and RFO.RFO_CODIGO = SR0.R0_CODIGO
     where SR0.D_E_L_E_T_ = ''
 
 union
@@ -64,24 +64,24 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
-        RIS.RIS_TPBENE,
-        RIS.RIS_COD,
-        RIS.RIS_DESC,
-        RIS.RIS_REF,
-        RIS.RIS_FUNCP,
-        RIS.RIS_TPDESC,
-        RIS.RIS_FUNCD,
-        RIS.RIS_EMP,
-        RIS.RIS_MINIMO,
-        RIS.RIS_MAXIMO,
-        RIS.RIS_PD,
-        RIS.RIS_PD1,
-        RIS.RIS_PD2,
+        RIS.RIS_TPBENE as ,
+        RIS.RIS_COD as ,
+        RIS.RIS_DESC as ,
+        RIS.RIS_REF as ,
+        RIS.RIS_FUNCP as ,
+        RIS.RIS_TPDESC as ,
+        RIS.RIS_FUNCD as ,
+        RIS.RIS_EMP as ,
+        RIS.RIS_MINIMO as ,
+        RIS.RIS_MAXIMO as ,
+        RIS.RIS_PD as ,
+        RIS.RIS_PD1 as ,
+        RIS.RIS_PD2 as ,
 
-        RI1.RI1_MAT,
-        RI1.RI1_TABELA,
-        RI1.RI1_DINIPG,
-        RI1.RI1_DFIMPG
+        RI1.RI1_MAT as CESTA_FUNC,
+        RI1.RI1_TABELA as ,
+        RI1.RI1_DINIPG as ,
+        RI1.RI1_DFIMPG as 
 
     from RI1010 RI1 (nolock)
         inner join SRA010 SRA (nolock)
