@@ -30,6 +30,17 @@
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                 and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+            inner join CTT010 CTT (nolock)
+                on CTT.D_E_L_E_T_ = ''
+                and CTT.CTT_CUSTO = SRA.RA_CC
+            inner join CTD010 CTD (nolock)
+                on CTD.D_E_L_E_T_ = ''
+                and CTD.CTD_ITEM = SRA.RA_ITEM
+        
+        inner join RFO010 RFO (nolock)
+            on RFO.D_E_L_E_T_ = ''
+            and RFO.RIS_TPBENE = SR0.R0_BENEF
+            and RFO.RIS_COD = SR0.R0_TABELA
     where SR0.D_E_L_E_T_ = ''
 
 union
@@ -52,6 +63,26 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+
+        RIS.RIS_TPBENE,
+        RIS.RIS_COD,
+        RIS.RIS_DESC,
+        RIS.RIS_REF,
+        RIS.RIS_FUNCP,
+        RIS.RIS_TPDESC,
+        RIS.RIS_FUNCD,
+        RIS.RIS_EMP,
+        RIS.RIS_MINIMO,
+        RIS.RIS_MAXIMO,
+        RIS.RIS_PD,
+        RIS.RIS_PD1,
+        RIS.RIS_PD2,
+
+        RI1.RI1_MAT,
+        RI1.RI1_TABELA,
+        RI1.RI1_DINIPG,
+        RI1.RI1_DFIMPG
+
     from RI1010 RI1 (nolock)
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
@@ -66,8 +97,15 @@ union
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                 and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+            inner join CTT010 CTT (nolock)
+                on CTT.D_E_L_E_T_ = ''
+                and CTT.CTT_CUSTO = SRA.RA_CC
+            inner join CTD010 CTD (nolock)
+                on CTD.D_E_L_E_T_ = ''
+                and CTD.CTD_ITEM = SRA.RA_ITEM
+        
         inner join RIS010 RIS (nolock)
-            on RIS.D_E_L_E_T_ = 
+            on RIS.D_E_L_E_T_ = ''
             and RIS.RIS_TPBENE = RI1.RI1_BENEF
-            and RIS.RIS_COD = RI1.RI1_COD
-    where SR0.D_E_L_E_T_ = ''
+            and RIS.RIS_COD = RI1.RI1_TABELA
+    where RI1.D_E_L_E_T_ = ''
