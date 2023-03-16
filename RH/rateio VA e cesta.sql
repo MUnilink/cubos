@@ -71,7 +71,7 @@
         inner join CTT010 CTT (nolock)
             on CTT.D_E_L_E_T_ = ''
             and CTT.CTT_CUSTO = SR0.R0_CC        
-        inner join RFO010 RFO (nolock)
+        left join RFO010 RFO (nolock)
             on RFO.D_E_L_E_T_ = ''
             and RFO.RFO_TPVALE = SR0.R0_TPVALE
             and RFO.RFO_CODIGO = SR0.R0_CODIGO
