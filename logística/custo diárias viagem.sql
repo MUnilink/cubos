@@ -21,7 +21,7 @@ from DYV010 DYV (nolock)
     inner join DYX010 DYX (nolock)
         on DYX.D_E_L_E_T_ = ''
         and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-        and year(DYX.DYX_DATDIA) = 2022
+        and year(DYX.DYX_DATDIA) > 2021
 
             inner join SX5010 SX5 (nolock)
                 on SX5.D_E_L_E_T_ = ''
