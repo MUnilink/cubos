@@ -290,14 +290,14 @@ from
                     STL010.TL_QUANTID,
 
                     case STL010.TL_TIPOREG
-                        when 'M' then 'MÃO-DE-OBRA'
-                        when 'E' then 'MÃO-DE-OBRA'
-                        when 'P' then 'PEÇAS'
+                        when 'M' then 'MAO-DE-OBRA'
+                        when 'E' then 'MAO-DE-OBRA'
+                        when 'P' then 'PECAS'
                         when 'T' then 'TERCEIROS'
                         else 'OUTROS'
                     end as TL_TIPOREG,
 
-                    case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then 'PNEU' else 'MANUTENÇÃO' end as TIPO_CUSTO,
+                    case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then 'PNEU' else 'MANUTENCAO' end as TIPO_CUSTO,
                     case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then PNEU_CUSTO.B9_CM * STL010.TL_QUANTID else STL010.TL_CUSTO end as TL_CUSTO
 
                 from STL010
