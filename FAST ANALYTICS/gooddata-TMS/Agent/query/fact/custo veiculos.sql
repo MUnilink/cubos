@@ -56,15 +56,6 @@ select
 
     DEPRECIACAO.VALOR_MOV as DEPRECIACAO,
 
-    FOLHA.RA_FILIAL,
-    FOLHA.PERIODO,
-    FOLHA.MATRICULA,
-    FOLHA.CONTA,
-    FOLHA.ATIVIDADE,
-    FOLHA.CENTRO_CUSTO,
-    FOLHA.NOME,
-    FOLHA.FUNCAO,
-
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
@@ -192,7 +183,7 @@ from
             ) as CHE_VIAGEM,
             (
                 select substring(DTW010.DTW_SYSDAT, 1, 6)
-                from DTW010 (nolock)
+                from DTW010
                 where 
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
@@ -217,7 +208,9 @@ from
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
 
-        where DTQ.D_E_L_E_T_ = ''
+        where
+                DTQ.D_E_L_E_T_ = ''
+            and year(DTQ.DTQ_DATENC) > 2021
     ) VIAGEM
         
     left join DUD010 DUD
@@ -286,8 +279,8 @@ from
             sum(STL.TL_QUANTID) as TL_QUANTID,
             sum(STL.TL_CUSTO) as TL_CUSTO
 
-        from STJ010 STJ (nolock)
-            inner join ST9010 ST9 (nolock)
+        from STJ010 STJ
+            inner join ST9010 ST9
                 on ST9.D_E_L_E_T_ = ''
                 and ST9.T9_CODBEM = STJ.TJ_CODBEM
 
@@ -313,14 +306,14 @@ from
                     case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then 'PNEU' else 'MANUTENÇÃO' end as TIPO_CUSTO,
                     case when STL010.TL_LOCAL in ('20', '21', '22', '23', '24', '26') then PNEU_CUSTO.B9_CM * STL010.TL_QUANTID else STL010.TL_CUSTO end as TL_CUSTO
 
-                from STL010 (nolock)
+                from STL010
                     left join
                     (
                         select
                             SB9010.B9_COD,
                             min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM,
                             min(SB9010.B9_DATA) as B9_DATA
-                        from SB9010 (nolock)
+                        from SB9010
                         where
                                 SB9010.D_E_L_E_T_ = ''
                             and SB9010.B9_LOCAL = '20'
@@ -334,7 +327,6 @@ from
                         STL010.D_E_L_E_T_ = ''
                     and STL010.TL_TIPOREG in ('P', 'T')
                     and STL010.TL_SEQRELA > 0
-                    and STL010.TL_DTINICI > 20211231
             ) STL
                 on STL.TL_FILIAL = STJ.TJ_FILIAL
                 and STL.TL_ORDEM = STJ.TJ_ORDEM
@@ -541,22 +533,22 @@ from
             SN4.N4_MOTIVO,
             (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '16' and SX5010.X5_CHAVE = SN4.N4_MOTIVO) as MOTIVO_MOV
 
-        from SN4010 SN4 (nolock)
-            inner join SN3010 SN3 (nolock)
+        from SN4010 SN4
+            inner join SN3010 SN3
                 on SN3.D_E_L_E_T_ = ''
                 and SN3.N3_CBASE = SN4.N4_CBASE
                 and SN3.N3_ITEM = SN4.N4_ITEM
 
-                left join SN1010 SN1 (nolock)
+                left join SN1010 SN1
                     on SN1.D_E_L_E_T_ = ''
                     and SN1.N1_CBASE = SN3.N3_CBASE
                     and SN1.N1_ITEM = SN3.N3_ITEM
 
-                    left join ST9010 ST9 (nolock)
+                    left join ST9010 ST9
                         on ST9.D_E_L_E_T_ = ''
                         and ST9.T9_CODBEM = SN1.N1_CODBEM
                         
-                        left join SNG010 SNG (nolock)
+                        left join SNG010 SNG
                             on SNG.D_E_L_E_T_ = ''
                             and SNG.NG_GRUPO = SN1.N1_GRUPO
         where
@@ -572,90 +564,3 @@ from
             DEPRECIACAO.T9_CODBEM = VIAGEM.COD_RB2 or
             DEPRECIACAO.T9_CODBEM = VIAGEM.COD_RB3
         )
-    inner join
-        (
-            select
-                SRA.RA_FILIAL + VERBAS.PERIODO + VERBAS.MATRICULA + substring(VERBAS.CONTA, 1, 2) as ID_LANCAMENTO,
-                SRA.RA_FILIAL,
-                VERBAS.PERIODO,
-                VERBAS.MATRICULA,
-
-                substring(VERBAS.CONTA, 4, len(VERBAS.CONTA)) as CONTA,
-
-                trim(CTD.CTD_DESC01) as ATIVIDADE,
-                trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-                trim(SRA.RA_NOME) as NOME,
-                trim(SRJ.RJ_DESC) as FUNCAO,
-                
-                sum(VERBAS.VALOR) as VALOR
-
-            from SRA010 SRA (nolock)
-                inner join SRJ010 SRJ (nolock)
-                    on SRJ.D_E_L_E_T_ = ''
-                    and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                    and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-                inner join CTT010 CTT (nolock)
-                    on CTT.D_E_L_E_T_ = ''
-                    and CTT.CTT_CUSTO = SRA.RA_CC
-                inner join CTD010 CTD (nolock)
-                    on CTD.D_E_L_E_T_ = ''
-                    and CTD.CTD_ITEM = SRA.RA_ITEM
-                inner join
-                (
-                    select
-                        isnull(SRD010.RD_FILIAL, SRT010.RT_FILIAL) as FILIAL,
-                        isnull(SRD010.RD_PERIODO, SRT010.RT_DATACAL) as PERIODO,
-                        isnull(SRD010.RD_MAT, SRT010.RT_MAT) as MATRICULA,
-                        case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783', '451', '452') then '02 Salários e Ordenados'
-                        else
-                            case when SRD010.RD_PD in ('029', '111', '113') then '03 Hora Extra'
-                            else
-                                case when SRD010.RD_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
-                                else
-                                    case when SRD010.RD_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
-                                    else
-                                        case when SRT010.RT_VERBA in ('845', '846') then '06 13º Salário'
-                                        else
-                                            case when SRT010.RT_VERBA in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
-                                            else
-                                                case when SRT010.RT_VERBA in ('830', '831', '832') then '08 Férias'
-                                                else '01 N/A Custo'
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
-                            end
-                        end as CONTA,
-                        isnull(SRD010.RD_VALOR, SRT010.RT_VALOR) as VALOR
-                    from SRV010 (nolock)
-                        left join SRD010 (nolock)
-                            on SRD010.D_E_L_E_T_ = ''
-                            and SRV010.RV_FILIAL = substring(SRD010.RD_FILIAL, 1, 4)
-                            and SRV010.RV_COD = SRD010.RD_PD
-                            and SRD010.RD_PERIODO > '20211231'
-                        left join SRT010 (nolock)
-                            on SRT010.D_E_L_E_T_ = ''
-                            and SRV010.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
-                            and SRV010.RV_COD = SRT010.RT_VERBA
-                            and SRT010.RT_DATACAL > '20211231'
-                    where SRV010.D_E_L_E_T_ = ''
-                ) VERBAS
-                    on VERBAS.FILIAL = SRA.RA_FILIAL
-                    and VERBAS.MATRICULA = SRA.RA_MAT
-                    and VERBAS.CONTA != '01 N/A Custo'
-            where
-                    SRA.D_E_L_E_T_ = ''
-            group by
-                SRA.RA_FILIAL,
-                VERBAS.PERIODO,
-                VERBAS.MATRICULA,
-                VERBAS.CONTA,
-                CTD.CTD_DESC01,
-                CTT.CTT_DESC01,
-                SRA.RA_NOME,
-                SRJ.RJ_DESC
-        ) FOLHA
-            on FOLHA.RA_FILIAL = VIAGEM.DTQ_FILORI
-            and FOLHA.PERIODO = VIAGEM.COMPETENCIA
-            and FOLHA.MATRICULA = VIAGEM.DA4_MAT
