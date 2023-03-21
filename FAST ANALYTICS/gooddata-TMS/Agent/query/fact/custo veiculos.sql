@@ -464,67 +464,16 @@ from
             DOCUMENTACAO.T9_CODBEM = VIAGEM.COD_RB2 or
             DOCUMENTACAO.T9_CODBEM = VIAGEM.COD_RB3
         )
-    left join /* ver depreciação */
+    left join
     (
         select
             SN1.N1_GRUPO as GRUPO,
             trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
-            trim(isnull(SN1.N1_DESCRIC, '-')) as DESC_ATIVO,
             trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
             convert(date, SN3.N3_DINDEPR, 103) as INI_DEPREC,
             SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
-            SNG.NG_TXDEPR1 /12 as DEPREC_MENSAL_GRUPO,
-
-            SN3.N3_TIPO,
-
-            SN3.N3_CUSTBEM as CC,
-            SN3.N3_SUBCCON as ATIVIDADE,
-            trim(SN3.N3_CCONTAB) as CONTA,
-
-            SN4.N4_CCUSTOT as CC_ORIGEM,
-            SN4.N4_CCUSTO as CC_MOV,
-            SN4.N4_SUBCTA as ATIVIDADE_MOV,
-            
-            SN3.N3_CCUSTO as CC_DESPESA,
-            SN3.N3_SUBCTA as ATIV_DESPESA,
-
-            SN3.N3_CCCDEP as CC_DEPR_ACUM,
-            SN3.N3_SUBCCDE as ATIV_DEPR_ACUM,
-            trim(SN3.N3_CCDEPR) as CONTA_DEPR_ACUM,
-
-            SN3.N3_CCDESP as CC_DESP_DEPR,
-            SN3.N3_SUBCDEP as ATIV_DESP_DEPR,
-            trim(SN3.N3_CDEPREC) as CONTA_DESP_DEPR,
-
-            SN1.N1_QUANTD,
-            SN3.N3_VORIG1 as VALOR_ORIGINAL,
-            SN3.N3_VORIG2,
-            SN3.N3_VORIG3,
-            SN3.N3_VORIG4,
-            SN3.N3_VORIG5,
-
-            SN1.N1_NFISCAL,
-
-            SN3.N3_TXDEPR1 as DEPREC_ANUAL,
-            SN3.N3_TXDEPR2,
-            SN3.N3_TXDEPR3,
-            SN3.N3_TXDEPR4,
-            SN3.N3_TXDEPR5,
-            
-            trim(SN4.N4_CONTA) as N4_CONTA,
-            case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO_CONTA_MOV,
-            convert(datetime, concat(SN4.N4_DATA, ' ', SN4.N4_HORA), 113) as DATA_MOV,
             substring(SN4.N4_DATA, 1, 6) as PERIODO,
-            SN4.N4_LA,
-            SN4.N4_VLROC1 as VALOR_MOV,
-            SN4.N4_VLROC2,
-            SN4.N4_VLROC3,
-            SN4.N4_ORIGEM as ROTINA,
-            SN4.N4_TIPO,
-            SN4.N4_LP,
-            SN4.N4_OCORR,
-            SN4.N4_MOTIVO,
-            (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '16' and SX5010.X5_CHAVE = SN4.N4_MOTIVO) as MOTIVO_MOV
+            SN4.N4_VLROC1 as VALOR_MOV
 
         from SN4010 SN4
             inner join SN3010 SN3
@@ -540,10 +489,6 @@ from
                     left join ST9010 ST9
                         on ST9.D_E_L_E_T_ = ''
                         and ST9.T9_CODBEM = SN1.N1_CODBEM
-                        
-                        left join SNG010 SNG
-                            on SNG.D_E_L_E_T_ = ''
-                            and SNG.NG_GRUPO = SN1.N1_GRUPO
         where
                 SN4.D_E_L_E_T_ = ''
             and SN4.N4_OCORR = 6
