@@ -120,9 +120,9 @@ from SC7010 SC7 (nolock)
 
 		left join SC1010 SC1 (nolock)
 			on SC1.D_E_L_E_T_ = ''
-			and SC8.C8_FILIAL = SC1.C1_FILIAL
-			and SC8.C8_NUMSC = SC1.C1_NUM
-			and SC8.C8_ITEMSC = SC1.C1_ITEM
+			and isnull(SC8.C8_FILIAL, SC7.C7_FILIAL) = SC1.C1_FILIAL
+			and isnull(SC8.C8_NUMSC, SC7.C7_NUMSC) = SC1.C1_NUM
+			and isnull(SC8.C8_ITEMSC, SC7.C7_ITEMSC) = SC1.C1_ITEM
 
 	left join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
