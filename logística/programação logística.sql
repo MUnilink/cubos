@@ -60,12 +60,7 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
-    DT6.DT6_PRZENT AS PRAZO_ENTREGA,
-    DT6.DT6_DATENT AS DATA_ENTREGA,
-    CASE
-        WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'
-        ELSE 'DENTRO DO PRAZO'
-    END AS STATUS_ATENDIMENTO,
+    case when isnull(DF1.DF1_DATPRC, DF1.DF1_DATPRE) < VIAGEM.CHE_CLIDEV_REAL then 'FORA DO PRAZO' else 'DENTRO DO PRAZO' end as STATUS_ATENDIMENTO,
 
     DTC.DTC_DOC as NFCLI_DOCTO_TMS,
     DTC.DTC_SERIE as NFCLI_SERIE_TMS,
@@ -97,7 +92,7 @@ select
 
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
-    null as PERIODO_AGENDA,
+    substring(isnull(DF1.DF1_DATPRC, DF1.DF1_DATPRE), 1, 6) as PERIODO_AGECOL,
     convert(datetime, datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0), 113) as CHE_CLI_PREV_COL,
     convert(datetime, datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0), 113) as CHE_CLI_PREV_ENT,
     case when DF1.DF1_DATPRC = DF1.DF1_DATPRE then 'OK' else 'DIFF' end as DIFF_ENTCOL,
