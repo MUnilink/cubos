@@ -100,6 +100,7 @@ select
     null as PERIODO_AGENDA,
     convert(datetime, datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0), 113) as CHE_CLI_PREV_COL,
     convert(datetime, datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0), 113) as CHE_CLI_PREV_ENT,
+    case when DF1.DF1_DATPRC = DF1.DF1_DATPRE then 'OK' else 'DIFF' end as DIFF_ENTCOL,
     trim(DF1.DF1_YDSPOR) as PORTO,
     trim(DF1.DF1_YDIBOO) as BOOKING,
     trim(DF1.DF1_YOSCLI) as OS_CLIENTE,
