@@ -9,12 +9,23 @@ select
     VIAGEM.DTQ_DATGER,
     VIAGEM.DTQ_DATFEC,
     VIAGEM.DTQ_DATENC,
+    VIAGEM.DTR_CODRB2 as SR2,
+    VIAGEM.DTR_CODRB3 as SR3,
+
+    DIARIAS.DYV_IDCDIA,
+    DIARIAS.DYX_DATDIA,
+    DIARIAS.DYX_QTDE,
+    DIARIAS.DYX_VLRUNI,
 
     DT6.DT6_DOC,
     DT6.DT6_SERIE,
     DT6.DT6_DATEMI,
-    DT6.DT6_CLIDEV,
-    DT6.DT6_LOJDEV,
+
+    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), 0) from DTR010 where DTR010.DTR_VIAGEM = VIAGEM.DUD_VIAGEM), 1) as CTE_CM,
+    DT6.DT6_VALFRE as CTE_TOTAL,
+    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), 0) from DTR010 where DTR010.DTR_VIAGEM = VIAGEM.DUD_VIAGEM), 1) IMPOSTO_CM,
+    DT6.DT6_VALIMP as IMPOSTO_TOTAL,
+    DT6.DT6_VALTOT,
 
     DT6.DT6_CLIREM +'-'+ DT6.DT6_LOJREM as REM,
     REM.A1_CGC as REM_CNPJ,
@@ -31,49 +42,18 @@ select
     DEV.A1_NOME as CLIENTE,
     DEV.A1_NREDUZ as CLIENTE_RED,
 
-    trim(DUYORI.DUY_DESCRI) as ORIGEM,
-    trim(DUYDES.DUY_DESCRI) as DESTINO,
-    trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
-    
-    'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRORI, ' ')), ' '), '|') AS BK_CDRORI,
-    'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,
-    'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CDRCAL, ' ')), ' '), '|') AS BK_CDRCAL,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,
-    CASE WHEN DT6.DT6_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILIAL AS CHAR (8)) END AS BK_FILIAL,
-    CASE WHEN DT6.DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
-    CASE WHEN DT6.DT6_FILDES IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDES AS CHAR (8)) END AS BK_FILIAL_DESTINO,
-    CASE WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_REM,
-    CASE WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DES,
-    CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
-    CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     
-    DIARIAS.DYV_IDCDIA,
-    DIARIAS.DYX_DATDIA,
-    DIARIAS.DYX_QTDE,
-    DIARIAS.DYX_VLRUNI,
-
-    VIAGEM.DTR_CODRB2 as SR2,
-    VIAGEM.DTR_CODRB3 as SR3,
-
-    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), 0) from DTR010 where DTR010.DTR_VIAGEM = VIAGEM.DUD_VIAGEM), 1) as CTE_CM,
-    DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), 0) from DTR010 where DTR010.DTR_VIAGEM = VIAGEM.DUD_VIAGEM), 1) IMPOSTO_CM,
-    DT6.DT6_VALIMP as IMPOSTO_TOTAL,
-    DT6.DT6_VALTOT,
-
-    DT6.DT6_CLIDEV,
-    DT6.DT6_LOJDEV,
-
-    case when isnull
-    (
-        datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0),
-        datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0)
-    ) <= VIAGEM.CHE_CLIDEV_REAL then 'FORA DO PRAZO' else 'DENTRO DO PRAZO'
-    end as STATUS_ATENDIMENTO,
+    trim(DUYORI.DUY_EST) as UF_ORIGEM,
+	trim(DUYORI.DUY_DESCRI) as MUN_ORIGEM,
+    trim(DUYDES.DUY_EST) as UF_DESTINO,
+	trim(DUYDES.DUY_DESCRI) as MUN_DESTINO,
+    trim(DUYDEV.DUY_EST) as UF_DEVEDOR,
+	trim(DUYDEV.DUY_DESCRI) as MUN_DEVEDOR,
 
     DTC.DTC_DOC as NFCLI_DOCTO_TMS,
     DTC.DTC_SERIE as NFCLI_SERIE_TMS,
-    DTC.DTC_NUMNFC as NFCLI_NUM,
+    DTC.DTC_NUMNFC as NFCLI_DOC,
     DTC.DTC_SERNFC as NFCLI_SERIE,
     DTC.DTC_CODPRO as NFCLI_PRODUTO,
     DTC.DTC_VALOR as NFCLI_VALOR,
@@ -97,6 +77,13 @@ select
 		when '5' then 'PLANEJADO'
 		when '9' then 'CANCELADO'
 	end as STATUS_AGENDA,
+
+    case when isnull
+    (
+        datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0),
+        datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0)
+    ) <= VIAGEM.CHE_CLIDEV_REAL then 'FORA DO PRAZO' else 'DENTRO DO PRAZO'
+    end as STATUS_ATENDIMENTO,
 
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
@@ -124,10 +111,10 @@ select
     isnull(ZA0.ZA0_MOTORI, VIAGEM.DA4_COD) as MOTORISTA_CODIGO,
     trim(ZA0.ZA0_NOMMOT) as MOTORISTA,
 
-    trim(REG_COL.EST_COL) as UF_COLETA,
-	trim(REG_COL.MUN_COL) as MUN_COLETA,
-	trim(REG_ENT.EST_ENT) as UF_ENTREGA,
-	trim(REG_ENT.MUN_ENT) as MUN_ENTREGA
+    trim(DUYCOL.DUY_EST) as UF_COLETA,
+	trim(DUYCOL.DUY_DESCRI) as MUN_COLETA,
+	trim(DUYENT.DUY_EST) as UF_ENTREGA,
+	trim(DUYENT.DUY_DESCRI) as MUN_ENTREGA
 
 from
     (
@@ -224,6 +211,7 @@ from
 
         where DUD.D_E_L_E_T_ = ''
     ) VIAGEM
+        
         left join
         (
             select
@@ -252,9 +240,9 @@ from
             and DT6.DT6_SERIE = VIAGEM.DUD_SERIE
 
             left join DF1010 DF1 (nolock)
-                on DF1.DF1_FILDOC = VIAGEM.DUD_FILDOC
-                and DF1.DF1_DOC = VIAGEM.DUD_DOC
-                and DF1.DF1_SERIE = VIAGEM.DUD_SERIE
+                on isnull(DF1.DF1_FILDOC, VIAGEM.DUD_FILDOC) = DT6.DT6_FILDOC
+                and isnull(DF1.DF1_DOC, VIAGEM.DUD_DOC) = DT6.DT6_DOC
+                and isnull(DF1.DF1_SERIE, VIAGEM.DUD_SERIE) = DT6.DT6_SERIE
                 and DF1.DF1_NUMAGE > 5800
                 
                 left join DF0010 DF0 (nolock)
@@ -266,28 +254,15 @@ from
                     and ZA0.ZA0_FILIAL = DF1.DF1_FILIAL
                     and ZA0.ZA0_AGENDA = DF1.DF1_NUMAGE
                     and ZA0.ZA0_ITEAGE = DF1.DF1_ITEAGE
-                left join
-                (
-                    select
-                        DUY010.DUY_GRPVEN as GRP_COL,
-                        DUY010.DUY_EST as EST_COL,
-                        DUY010.DUY_DESCRI as MUN_COL
-                    from DUY010 (nolock)
-                    where DUY010.D_E_L_E_T_ = ''
-                ) AS REG_COL
-                on REG_COL.GRP_COL = DF1.DF1_CDRORI
-
-                left join
-                (
-                    select
-                        DUY010.DUY_GRPVEN as GRP_ENT,
-                        DUY010.DUY_EST as EST_ENT,
-                        DUY010.DUY_DESCRI as MUN_ENT
-                    from DUY010 (nolock)
-                    where DUY010.D_E_L_E_T_ = ''
-                ) AS REG_ENT
-                on REG_ENT.GRP_ENT = DF1.DF1_CDRDES
-
+                left join DUY010 DUYCOL (nolock)
+                    on DUYCOL.D_E_L_E_T_ = ''
+                    and DUYCOL.DUY_FILIAL = DT6.DT6_FILIAL
+                    and DUYCOL.DUY_GRPVEN = DT6.DT6_CDRCAL
+                left join DUY010 DUYENT (nolock)
+                    on DUYENT.D_E_L_E_T_ = ''
+                    and DUYENT.DUY_FILIAL = DT6.DT6_FILIAL
+                    and DUYENT.DUY_GRPVEN = DT6.DT6_CDRCAL
+                
                 left join DT5010 DT5 (nolock)
                     on DT5.D_E_L_E_T_ = ''
                     and DT5.DT5_FILDOC = DF1.DF1_FILDOC
