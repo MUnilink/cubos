@@ -257,12 +257,10 @@ from
                     and ZA0.ZA0_ITEAGE = DF1.DF1_ITEAGE
                 left join DUY010 DUYCOL (nolock)
                     on DUYCOL.D_E_L_E_T_ = ''
-                    and DUYCOL.DUY_FILIAL = DT6.DT6_FILIAL
-                    and DUYCOL.DUY_GRPVEN = DT6.DT6_CDRCAL
+                    and DUYCOL.DUY_GRPVEN = DF1.DF1_CDRORI
                 left join DUY010 DUYENT (nolock)
                     on DUYENT.D_E_L_E_T_ = ''
-                    and DUYENT.DUY_FILIAL = DT6.DT6_FILIAL
-                    and DUYENT.DUY_GRPVEN = DT6.DT6_CDRCAL
+                    and DUYENT.DUY_GRPVEN = DF1.DF1_CDRDES
                 
                 left join DT5010 DT5 (nolock)
                     on DT5.D_E_L_E_T_ = ''
