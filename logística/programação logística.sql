@@ -42,7 +42,7 @@ select
     DEV.A1_NOME as CLIENTE,
     DEV.A1_NREDUZ as CLIENTE_RED,
 
-    'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,
+    DT6.DT6_SERVIC as BK_SERVICO,
     
     trim(DUYORI.DUY_EST) as UF_ORIGEM,
 	trim(DUYORI.DUY_DESCRI) as MUN_ORIGEM,
@@ -91,6 +91,10 @@ select
     convert(datetime, datetimefromparts(year(DF1.DF1_DATPRC), month(DF1.DF1_DATPRC), day(DF1.DF1_DATPRC), substring(DF1.DF1_HORPRC, 1, 2), substring(DF1.DF1_HORPRC, 4, 5), 0, 0), 113) as CHE_CLI_PREV_COL,
     convert(datetime, datetimefromparts(year(DF1.DF1_DATPRE), month(DF1.DF1_DATPRE), day(DF1.DF1_DATPRE), substring(DF1.DF1_HORPRE, 1, 2), substring(DF1.DF1_HORPRE, 4, 5), 0, 0), 113) as CHE_CLI_PREV_ENT,
     case when DF1.DF1_DATPRC = DF1.DF1_DATPRE then 'OK' else 'DIFF' end as DIFF_ENTCOL,
+    
+    DF1.DF1_YARMAD as ARMADORA_COD,
+    DF1.DF1_YLJARM as LOJA_ARMADORA,
+    trim(DF1.DF1_YDSARM) as ARMADORA,
     trim(DF1.DF1_YDSPOR) as PORTO,
     trim(DF1.DF1_YDIBOO) as BOOKING,
     trim(DF1.DF1_YOSCLI) as OS_CLIENTE,
@@ -100,9 +104,6 @@ select
     trim(DF1.DF1_YCONT) as CONTEINER,
     trim(DF1.DF1_YLACRE) as LACRE,
     convert(datetime, datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0), 113) as DATA_CONTEINER,
-    DF1.DF1_YARMAD as ARMADORA_COD,
-    DF1.DF1_YLJARM as LOJA_ARMADORA,
-    trim(DF1.DF1_YDSARM) as ARMADORA,
         
     isnull(ZA0.ZA0_VEICUL, VIAGEM.DTR_CODVEI) as CM,
     isnull(ZA0.ZA0_PLACA, VIAGEM.PLACA_CM) as CM_PLACA,
