@@ -105,12 +105,12 @@ select
     trim(DF1.DF1_YLACRE) as LACRE,
     convert(datetime, datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0), 113) as DATA_CONTEINER,
         
-    isnull(ZA0.ZA0_VEICUL, VIAGEM.DTR_CODVEI) as CM,
-    isnull(ZA0.ZA0_PLACA, VIAGEM.PLACA_CM) as CM_PLACA,
-    isnull(ZA0.ZA0_CARRET, VIAGEM.DTR_CODRB1) as SR1,
-    isnull(ZA0.ZA0_PLCCAR, VIAGEM.PLACA_RB1) as SR1_PLACA,
-    isnull(ZA0.ZA0_MOTORI, VIAGEM.DA4_COD) as MOTORISTA_CODIGO,
-    trim(ZA0.ZA0_NOMMOT) as MOTORISTA,
+    trim(isnull(ZA0.ZA0_VEICUL, VIAGEM.DTR_CODVEI)) as CM,
+    trim(isnull(ZA0.ZA0_PLACA, VIAGEM.PLACA_CM)) as CM_PLACA,
+    trim(isnull(ZA0.ZA0_CARRET, VIAGEM.DTR_CODRB1)) as SR1,
+    trim(isnull(ZA0.ZA0_PLCCAR, VIAGEM.PLACA_RB1)) as SR1_PLACA,
+    trim(isnull(ZA0.ZA0_MOTORI, VIAGEM.DA4_COD)) as MOTORISTA_CODIGO,
+    trim(isnull(ZA0.ZA0_NOMMOT, VIAGEM.DA4_NOME)) as MOTORISTA,
 
     trim(DUYCOL.DUY_EST) as UF_COLETA,
 	trim(DUYCOL.DUY_DESCRI) as MUN_COLETA,
@@ -124,6 +124,7 @@ from
             (select convert(date, DTQ010.DTQ_DATFEC, 103) from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATFEC,
             (select convert(date, DTQ010.DTQ_DATENC, 103) from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATENC,
             DA4010.DA4_COD,
+            DA4010.DA4_NOME,
             DTR.DTR_CODVEI,
             DTR.DTR_CODRB1,
             DTR.DTR_CODRB2,
@@ -240,44 +241,44 @@ from
             and DT6.DT6_DOC = VIAGEM.DUD_DOC
             and DT6.DT6_SERIE = VIAGEM.DUD_SERIE
 
-            left join DF1010 DF1 (nolock)
-                on isnull(DF1.DF1_FILDOC, VIAGEM.DUD_FILDOC) = DT6.DT6_FILDOC
-                and isnull(DF1.DF1_DOC, VIAGEM.DUD_DOC) = DT6.DT6_DOC
-                and isnull(DF1.DF1_SERIE, VIAGEM.DUD_SERIE) = DT6.DT6_SERIE
-                and DF1.DF1_NUMAGE > 5800
-                
-                left join DF0010 DF0 (nolock)
-                    on DF0.D_E_L_E_T_ = ''
-                    and DF0.DF0_FILIAL = DF1.DF1_FILIAL
-                    and DF0.DF0_NUMAGE = DF1.DF1_NUMAGE
-                left join ZA0010 ZA0 (nolock)
-                    on ZA0.D_E_L_E_T_ = ''
-                    and ZA0.ZA0_FILIAL = DF1.DF1_FILIAL
-                    and ZA0.ZA0_AGENDA = DF1.DF1_NUMAGE
-                    and ZA0.ZA0_ITEAGE = DF1.DF1_ITEAGE
-                left join DUY010 DUYCOL (nolock)
-                    on DUYCOL.D_E_L_E_T_ = ''
-                    and DUYCOL.DUY_GRPVEN = DF1.DF1_CDRORI
-                left join DUY010 DUYENT (nolock)
-                    on DUYENT.D_E_L_E_T_ = ''
-                    and DUYENT.DUY_GRPVEN = DF1.DF1_CDRDES
-                
-                left join DT5010 DT5 (nolock)
-                    on DT5.D_E_L_E_T_ = ''
-                    and DT5.DT5_FILDOC = DF1.DF1_FILDOC
-                    and DT5.DT5_NUMSOL = DF1.DF1_DOC
-
-                    left join DUA010 DUA (nolock)
-                        on DUA.D_E_L_E_T_ = ''
-                        and DUA.DUA_FILDOC = DT5.DT5_FILDOC
-                        and DUA.DUA_DOC = DT5.DT5_DOC
-                        and DUA.DUA_SERIE = DT5.DT5_SERIE
-
             left join DTC010 DTC (nolock)
                 on DTC.D_E_L_E_T_ = ''
                 and DTC.DTC_FILORI = DT6.DT6_FILDOC
                 and DTC.DTC_DOC = DT6.DT6_DOC
                 and DTC.DTC_SERIE = DT6.DT6_SERIE
+
+                left join DF1010 DF1 (nolock)
+                    on DF1.D_E_L_E_T_ = ''
+                    and DF1.DF1_FILDOC = DTC.DTC_FILDOC
+                    and DF1.DF1_DOC = DTC.DTC_NUMSOL
+                    
+                    left join DF0010 DF0 (nolock)
+                        on DF0.D_E_L_E_T_ = ''
+                        and DF0.DF0_FILIAL = DF1.DF1_FILIAL
+                        and DF0.DF0_NUMAGE = DF1.DF1_NUMAGE
+                    left join ZA0010 ZA0 (nolock)
+                        on ZA0.D_E_L_E_T_ = ''
+                        and ZA0.ZA0_FILIAL = DF1.DF1_FILIAL
+                        and ZA0.ZA0_AGENDA = DF1.DF1_NUMAGE
+                        and ZA0.ZA0_ITEAGE = DF1.DF1_ITEAGE
+                    left join DUY010 DUYCOL (nolock)
+                        on DUYCOL.D_E_L_E_T_ = ''
+                        and DUYCOL.DUY_GRPVEN = DF1.DF1_CDRORI
+                    left join DUY010 DUYENT (nolock)
+                        on DUYENT.D_E_L_E_T_ = ''
+                        and DUYENT.DUY_GRPVEN = DF1.DF1_CDRDES
+                    
+                    left join DT5010 DT5 (nolock)
+                        on DT5.D_E_L_E_T_ = ''
+                        and DT5.DT5_FILDOC = DF1.DF1_FILDOC
+                        and DT5.DT5_NUMSOL = DF1.DF1_DOC
+
+                        left join DUA010 DUA (nolock)
+                            on DUA.D_E_L_E_T_ = ''
+                            and DUA.DUA_FILDOC = DT5.DT5_FILDOC
+                            and DUA.DUA_DOC = DT5.DT5_DOC
+                            and DUA.DUA_SERIE = DT5.DT5_SERIE
+            
             left join SA1010 REM (nolock)
                 on REM.A1_FILIAL = '      '
                 and REM.A1_COD = DT6.DT6_CLIREM
