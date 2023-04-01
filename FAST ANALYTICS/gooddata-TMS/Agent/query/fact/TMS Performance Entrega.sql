@@ -4,7 +4,7 @@ SELECT
         WHEN DT6_FILIAL IS NULL THEN 'P |01||'
         ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8))
     END AS BK_FILIAL,
-    VIAGEM.DATAFIM AS DATA_EMISSAO,
+    VIAGEM.CHE_VIAGEM_REAL AS DATA_EMISSAO,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,
@@ -31,7 +31,7 @@ SELECT
     
     DF1.CHE_CLIDEV_PREV as PRAZO_ENTREGA,
     VIAGEM.CHE_CLIDEV_REAL as DATA_ENTREGA,
-    case when DF1.CHE_CLIDEV_PREV < VIAGEM.CHEGADA_CLIENTE then 'FORA DO PRAZO' else 'DENTRO DO PRAZO' end as BK_STATUS,
+    case when DF1.CHE_CLIDEV_PREV < VIAGEM.CHE_CLIDEV_REAL then 'FORA DO PRAZO' else 'DENTRO DO PRAZO' end as BK_STATUS,
     
     CASE
         WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')
@@ -99,73 +99,105 @@ FROM DT6010 DT6
         AND SX5.X5_TABELA = 'L4'
         AND SX5.X5_CHAVE = DT6.DT6_SERVIC
         AND SX5.D_E_L_E_T_ = ' '
-    
-    inner join DUD010 DUD
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILDOC = DT6.DT6_FILDOC
-        and DUD.DUD_DOC = DT6.DT6_DOC
-        and DUD.DUD_SERIE = DT6.DT6_SERIE
 
-        left join /* ver modelo para adição de dimensão motorista */
-        (
-            select
-                DTQ.DTQ_FILIAL,
-                DTQ.DTQ_FILORI,
-                DTQ.DTQ_VIAGEM,
-                DTQ.DTQ_DATGER,
-                DTQ.DTQ_DATFEC,
-                DTQ.DTQ_DATENC,
-                (
-                    select
-                            top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
-                    from DTW010
-                    where
-                            DTW010.D_E_L_E_T_ = ''
-                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
-                        and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
-                        and DTW010.DTW_CODCLI != 761
-                    order by DTW010.DTW_SEQUEN
-                ) as CHE_CLIDEV_REAL,
-                (
-                    select DTW010.DTW_SYSDAT
-                    from DTW010 (nolock)
-                    where 
-                            DTW010.D_E_L_E_T_ = ''
-                        and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                        and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_ATIVID = 50
-                ) as DATAFIM,
+    left join /* ver modelo para adição de dimensão motorista */
+    (
+        select
+            DA4010.DA4_COD,
+            DTR.DTR_CODVEI,
+            DTR.DTR_CODRB1,
+            DTR.DTR_CODRB2,
+            DTR.DTR_CODRB3,
 
-                concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-                concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
-                (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
-                (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
-                (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-                (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-            from DTQ010 DTQ (nolock)
-                inner join DTR010 DTR (nolock)
-                    on DTR.D_E_L_E_T_ = ''
-                    and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-                    and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
-                    
-                    inner join DUP010 (nolock)
-                        on DUP010.D_E_L_E_T_ = ''
-                        and DUP010.DUP_FILORI = DTR.DTR_FILORI
-                        and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
-                        and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
-                        and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+            concat(trim(DUD.DUD_FILDOC), trim(DUD.DUD_VIAGEM)) as ID_VIAGEM,
+            concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
 
-                        inner join DA4010 (nolock)
-                            on DA4010.D_E_L_E_T_ = ''
-                            and DA4010.DA4_COD = DUP010.DUP_CODMOT
-            where DTQ.D_E_L_E_T_ = ''
-        ) VIAGEM
-            on substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
-            and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
-            and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
+            (
+                select
+                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                    and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
+                    and DTW010.DTW_CODCLI != 761
+                order by DTW010.DTW_SEQUEN
+            ) as CHE_CLIDEV_REAL,
+            (
+                select
+                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                    and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
+                    and DTW010.DTW_CODCLI != 761
+                order by DTW010.DTW_SEQUEN
+            ) as SAI_CLIDEV_REAL,
+
+            (
+                select
+                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                    and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_ATIVID = 49
+            ) as SAI_VIAGEM_REAL,
+            (
+                select
+                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                    and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                    and DTW010.DTW_SYSHOR != ''
+                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_ATIVID = 50
+            ) as CHE_VIAGEM_REAL,
+            
+            DUD.DUD_FILDOC,
+            DUD.DUD_DOC,
+            DUD.DUD_SERIE,
+            DUD.DUD_VIAGEM
+
+        from DUD010 DUD
+            left join DTR010 DTR
+                on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILORI = DUD.DUD_FILORI
+                and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+                
+                left join DUP010
+                    on DUP010.D_E_L_E_T_ = ''
+                    and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                    and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                    and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                    and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+
+                    left join DA4010
+                        on DA4010.D_E_L_E_T_ = ''
+                        and DA4010.DA4_COD = DUP010.DUP_CODMOT
+
+        where DUD.D_E_L_E_T_ = ''
+    ) VIAGEM
+        on DT6.DT6_FILDOC = VIAGEM.DUD_FILDOC
+        and DT6.DT6_DOC = VIAGEM.DUD_DOC
+        and DT6.DT6_SERIE = VIAGEM.DUD_SERIE
+
         left join
         (
             select
@@ -176,8 +208,8 @@ FROM DT6010 DT6
                 
                 isnull
                 (
-                    datetimefromparts(year(DF1010.DF1_DATPRC), month(DF1010.DF1_DATPRC), day(DF1010.DF1_DATPRC), substring(DF1010.DF1_HORPRC, 1, 2), substring(DF1010.DF1_HORPRC, 4, 5), 0, 0),
-                    datetimefromparts(year(DF1010.DF1_DATPRE), month(DF1010.DF1_DATPRE), day(DF1010.DF1_DATPRE), substring(DF1010.DF1_HORPRE, 1, 2), substring(DF1010.DF1_HORPRE, 4, 5), 0, 0)
+                    concat(DF1010.DF1_DATPRC, ' ', concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')),
+                    concat(DF1010.DF1_DATPRE, ' ', concat(substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00'))
                 ) as CHE_CLIDEV_PREV
             from DF1010
                 inner join DTC010
@@ -186,11 +218,11 @@ FROM DT6010 DT6
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
             where DF1010.D_E_L_E_T_ = ''
         ) DF1
-            on DF1.DTC_FILDOC = DUD.DUD_FILDOC
-            and DF1.DTC_DOC = DUD.DUD_DOC
-            and DF1.DTC_SERIE = DUD.DUD_SERIE
-WHERE
-        DT6.DT6_DATEMI BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+            on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
+            and DF1.DTC_DOC = VIAGEM.DUD_DOC
+            and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
+where
+        VIAGEM.CHE_VIAGEM_REAL between <<START_DATE>> and <<FINAL_DATE>>
     AND DT6.D_E_L_E_T_ = ' '
     AND DT6.DT6_DATENT <> ' '
     AND DT6.DT6_SERIE <> 'COL'
