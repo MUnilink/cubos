@@ -3,6 +3,8 @@ select
     convert(datetime, VIAGEM.SAI_CLIDEV_REAL, 113) as SAI_CLIDEV_REAL,
     convert(datetime, VIAGEM.CHE_VIAGEM_REAL, 113) as CHE_VIAGEM_REAL,
     convert(datetime, VIAGEM.SAI_VIAGEM_REAL, 113) as SAI_VIAGEM_REAL,
+
+    case DT6.DT6_CLIDES when 761 then 'COLETA' when 576 then 'COLETA' else 'ENTREGA' end as TIPO_VIAGEM,
     
     VIAGEM.DUD_VIAGEM,
     substring(VIAGEM.SAI_VIAGEM_REAL, 1, 6) as PERIODO_VIAGEM,
@@ -59,7 +61,7 @@ select
     DTC.DTC_VALOR as NFCLI_VALOR,
     DTC.DTC_PESO as NFCLI_PESO,
 
-    case when DT5.DT5_STATUS = '4' then 'CORTESIA' else case when DT5.DT5_STATUS like '[0-9]' then 'DOCUMENTO PENDENTE' else 'DOCUMENTO OK' end end as TIPO_VIAGEM,
+    case when DT5.DT5_STATUS = '4' then 'CORTESIA' else case when DT5.DT5_STATUS like '[0-9]' then 'DOCUMENTO PENDENTE' else 'DOCUMENTO OK' end end as CLASSE_VIAGEM,
 
     DT5.DT5_NUMSOL,
     DT5.DT5_DOC as OS_COLETA,
@@ -243,7 +245,7 @@ from
 
             left join DTC010 DTC (nolock)
                 on DTC.D_E_L_E_T_ = ''
-                and DTC.DTC_FILORI = DT6.DT6_FILDOC
+                and DTC.DTC_FILDOC = DT6.DT6_FILDOC
                 and DTC.DTC_DOC = DT6.DT6_DOC
                 and DTC.DTC_SERIE = DT6.DT6_SERIE
 
