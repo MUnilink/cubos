@@ -29,12 +29,9 @@ SELECT
     DT6.DT6_DOC AS DOCUMENTO,
     DT6.DT6_SERIE AS SERIE,
     
-    DT6.DT6_PRZENT AS PRAZO_ENTREGA,
-    VIAGEM.CHEGADA_CLIENTE AS DATA_ENTREGA,
-    CASE
-        WHEN DT6.DT6_PRZENT < VIAGEM.CHEGADA_CLIENTE THEN 'FORA DO PRAZO'
-        ELSE 'DENTRO DO PRAZO'
-    END AS BK_STATUS,
+    DF1.CHE_CLIDEV_PREV as PRAZO_ENTREGA,
+    VIAGEM.CHE_CLIDEV_REAL as DATA_ENTREGA,
+    case when DF1.CHE_CLIDEV_PREV < VIAGEM.CHEGADA_CLIENTE then 'FORA DO PRAZO' else 'DENTRO DO PRAZO' end as BK_STATUS,
     
     CASE
         WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')
@@ -131,7 +128,7 @@ FROM DT6010 DT6
                         and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
                         and DTW010.DTW_CODCLI != 761
                     order by DTW010.DTW_SEQUEN
-                ) as CHEGADA_CLIENTE,
+                ) as CHE_CLIDEV_REAL,
                 (
                     select DTW010.DTW_SYSDAT
                     from DTW010 (nolock)
@@ -169,7 +166,29 @@ FROM DT6010 DT6
             on substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
             and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
             and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
-
+        left join
+        (
+            select
+                DF1010.DF1_NUMAGE,
+                DTC010.DTC_FILDOC,
+                DTC010.DTC_DOC,
+                DTC010.DTC_SERIE,
+                
+                isnull
+                (
+                    datetimefromparts(year(DF1010.DF1_DATPRC), month(DF1010.DF1_DATPRC), day(DF1010.DF1_DATPRC), substring(DF1010.DF1_HORPRC, 1, 2), substring(DF1010.DF1_HORPRC, 4, 5), 0, 0),
+                    datetimefromparts(year(DF1010.DF1_DATPRE), month(DF1010.DF1_DATPRE), day(DF1010.DF1_DATPRE), substring(DF1010.DF1_HORPRE, 1, 2), substring(DF1010.DF1_HORPRE, 4, 5), 0, 0)
+                ) as CHE_CLIDEV_PREV
+            from DF1010
+                inner join DTC010
+                    on DTC010.D_E_L_E_T_ = ''
+                    and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
+                    and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
+            where DF1010.D_E_L_E_T_ = ''
+        ) DF1
+            on DF1.DTC_FILDOC = DUD.DUD_FILDOC
+            and DF1.DTC_DOC = DUD.DUD_DOC
+            and DF1.DTC_SERIE = DUD.DUD_SERIE
 WHERE
         DT6.DT6_DATEMI BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     AND DT6.D_E_L_E_T_ = ' '
