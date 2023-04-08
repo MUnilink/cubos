@@ -19,7 +19,7 @@ select
     
     trim(isnull(upper(SCP.CP_SOLICIT), '-')) as SOLICITANTE,
 
-    case SCR.CR_NUM when '' then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
+    case SCR.CR_NUM when null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
     case SCR.CR_DATALIB when '' then 'NÃO APROVADA' else 'APROVADA' end as STATUS,
     upper(trim(SAK.AK_LOGIN)) as APROVADOR,
     SCR.CR_GRUPO,
@@ -32,7 +32,6 @@ from SCP010 SCP (nolock)
         on SCR.D_E_L_E_T_ = ''
         and SCR.CR_FILIAL = SCP.CP_FILIAL
         and SCR.CR_NUM = SCP.CP_NUM
-        and SCR.CR_LIBAPRO is not null
         and SCR.CR_TIPO = 'SA'
         
         left join SAK010 SAK (nolock)
