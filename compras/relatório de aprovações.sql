@@ -10,6 +10,8 @@ select
 
     trim(isnull(SCP.CP_ITEMCTA, '-')) as ATIVIDADE,
     trim(isnull(SCP.CP_CC, '-')) as CC,
+    trim(isnull(SCP.CP_CONTA, '-')) as CONTA,
+    (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA) DESC_CONTA,
 
     trim(isnull(SCP.CP_NUM, '-')) as NUMERO,
     trim(isnull(SCP.CP_ITEM, '-')) as ITEM,
@@ -19,8 +21,8 @@ select
     
     trim(isnull(upper(SCP.CP_SOLICIT), '-')) as SOLICITANTE,
 
-    case SCR.CR_NUM when null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
-    case SCR.CR_DATALIB when '' then 'NÃO APROVADA' else 'APROVADA' end as STATUS,
+    case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
+    case SCR.CR_DATALIB when '' then 'NÃO APROVADA' else 'LIBERADA' end as STATUS,
     upper(trim(SAK.AK_LOGIN)) as APROVADOR,
     SCR.CR_GRUPO,
     SCR.CR_ITGRP,
