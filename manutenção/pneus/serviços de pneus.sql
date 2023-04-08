@@ -32,6 +32,9 @@ select
     convert(date, SC1.C1_EMISSAO, 103) as DATA_SC,
     substring(SC1.C1_OP, 1, 6) as C1_OS,
     trim(SC1.C1_OBS) as OBS_SC,
+    SC1.C1_USER,
+    SC1.C1_CODCOMP,
+    SC1.C1_SOLICIT,
     
     SC7.C7_NUM as NUM_PC,
     convert(date, SC7.C7_EMISSAO, 103) as DATA_PC,
