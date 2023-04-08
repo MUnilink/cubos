@@ -54,7 +54,7 @@ SELECT
         WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')
         ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')
     END AS BK_REGIAO_CDRORI,
-    null AS INSTANCIA,
+    1 AS INSTANCIA,
 
     VIAGEM.CHE_CLIDEV_REAL,
     VIAGEM.SAI_CLIDEV_REAL,
@@ -216,7 +216,7 @@ FROM DT6010 DT6
                     then concat(DF1010.DF1_DATPRC, ' ', concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00'))
                     else null
                 end as CHE_CLIDEV_PREV
-                
+
             from DF1010
                 inner join DTC010
                     on DTC010.D_E_L_E_T_ = ''
