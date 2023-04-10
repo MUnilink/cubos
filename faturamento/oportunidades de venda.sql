@@ -14,8 +14,10 @@ select
     SA1.A1_CGC as CNPJ_CLI,
     AD1.AD1_NROPOR as OPORTUNIDADE,
     AD1.AD1_REVISA as VERSAO,
-    trim(AD1.AD1_DESCRI) as DESCRICAO
-
+    trim(AD1.AD1_DESCRI) as DESCRICAO,
+    substring(AD1.AD1_DATA, 1, 6) as PERIODO_OPORTUNIDADE,
+    convert(datetime, datetimefromparts(year(AD1.AD1_DATA), month(AD1.AD1_DATA), day(AD1.AD1_DATA), substring(AD1.AD1_HORA, 1, 2), substring(AD1.AD1_HORA, 4, 5), 0, 0), 113) as DATA_OPORTUNIDADE,
+    1 as contador
 
 from AD1010 AD1 (nolock)
     inner join SA3010 SA3 (nolock)
