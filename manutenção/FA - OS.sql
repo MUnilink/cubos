@@ -70,6 +70,8 @@ select
 	ST1.T1_SALARIO,
 	SB1.B1_UPRC,
 
+	/* ABAIXO DADOS DE CONTROLE PELO RM*/
+
 	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18') then ST1.T1_SALARIO
