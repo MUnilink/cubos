@@ -1,5 +1,4 @@
 select
-    AC2.AC2_FILIAL,
     AC2.AC2_PROVEN,
     AC2.AC2_STAGE,
     AC2.AC2_DESCRI
