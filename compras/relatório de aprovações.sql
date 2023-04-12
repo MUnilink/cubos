@@ -16,7 +16,9 @@ select
     trim(isnull(SCP.CP_NUM, '-')) as NUMERO,
     trim(isnull(SCP.CP_ITEM, '-')) as ITEM,
     convert(date, SCP.CP_EMISSAO, 103) as DATA,
+    convert(date, SCP.CP_DATPRF, 103) as DATA_ITEM,
     substring(SCP.CP_EMISSAO, 1, 6) as PERIODO,
+    substring(SCP.CP_DATPRF, 1, 6) as PERIODO_ITEM,
     trim(isnull(SCP.CP_OBS, '-')) as OBS,
     
     trim(isnull(upper(SCP.CP_SOLICIT), '-')) as SOLICITANTE,
