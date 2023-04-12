@@ -29,7 +29,8 @@ select
     SCR.CR_GRUPO,
     SCR.CR_ITGRP,
     SCR.CR_STATUS,
-    convert(date, SCR.CR_DATALIB, 103) as DATAAPROV
+    convert(date, SCR.CR_DATALIB, 103) as DATAAPROV,
+    STJ.TJ_CODBEM
 
 from SCP010 SCP (nolock)
     left join SCR010 SCR (nolock)
@@ -45,4 +46,8 @@ from SCP010 SCP (nolock)
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = SCP.CP_PRODUTO
+    left join STJ010 STJ (nolock)
+        on STJ.D_E_L_E_T_ = ''
+        and STJ.TJ_FILIAL = SCP.CP_FILIAL
+        and STJ.TJ_ORDEM = substring(SCP.CP_OP, 1, 6)
 where SCP.D_E_L_E_T_ = ''
