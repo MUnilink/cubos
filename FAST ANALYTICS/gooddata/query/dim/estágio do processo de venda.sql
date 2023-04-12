@@ -1,0 +1,7 @@
+select
+    AC2.AC2_FILIAL,
+    AC2.AC2_PROVEN,
+    AC2.AC2_STAGE,
+    AC2.AC2_DESCRI
+from AC2010 AC2
+where AC2.D_E_L_E_T_ = ''
