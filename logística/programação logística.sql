@@ -60,16 +60,6 @@ select
     DTC.DTC_CODPRO as NFCLI_PRODUTO,
     DTC.DTC_VALOR as NFCLI_VALOR,
     DTC.DTC_PESO as NFCLI_PESO,
-
-    case when DT5.DT5_STATUS = '4' then 'CORTESIA' else case when DT5.DT5_STATUS like '[0-9]' then 'DOCUMENTO PENDENTE' else 'DOCUMENTO OK' end end as CLASSE_VIAGEM,
-
-    DT5.DT5_NUMSOL,
-    DT5.DT5_DOC as OS_COLETA,
-    DT5.DT5_SERIE,
-    DT5.DT5_STATUS as STATUS_COLETA,
-    DT5.DT5_TIPCOL,
-    DT5.DT5_CODSOL,
-    DT5.DT5_CODOBC,
     
     case DF0.DF0_STATUS
 		when '1' then 'A CONFIRMAR'
@@ -113,12 +103,6 @@ select
     trim(isnull(ZA0.ZA0_PLCCAR, VIAGEM.PLACA_RB1)) as SR1_PLACA,
     trim(isnull(ZA0.ZA0_MOTORI, VIAGEM.DA4_COD)) as MOTORISTA_CODIGO,
     trim(isnull(ZA0.ZA0_NOMMOT, VIAGEM.DA4_NOME)) as MOTORISTA,
-
-    DUA.DUA_ as ,
-    DUA.DUA_ as ,
-    DUA.DUA_ as ,
-    DUA.DUA_ as ,
-    DUA.DUA_ as ,
 
     trim(DUYCOL.DUY_EST) as UF_COLETA,
 	trim(DUYCOL.DUY_DESCRI) as MUN_COLETA,
@@ -275,17 +259,6 @@ from
                     left join DUY010 DUYENT (nolock)
                         on DUYENT.D_E_L_E_T_ = ''
                         and DUYENT.DUY_GRPVEN = DF1.DF1_CDRDES
-                    
-                    left join DT5010 DT5 (nolock)
-                        on DT5.D_E_L_E_T_ = ''
-                        and DT5.DT5_FILDOC = DF1.DF1_FILDOC
-                        and DT5.DT5_NUMSOL = DF1.DF1_DOC
-
-                        left join DUA010 DUA (nolock)
-                            on DUA.D_E_L_E_T_ = ''
-                            and DUA.DUA_FILDOC = DT5.DT5_FILDOC
-                            and DUA.DUA_DOC = DT5.DT5_DOC
-                            and DUA.DUA_SERIE = DT5.DT5_SERIE
             
             left join SA1010 REM (nolock)
                 on REM.A1_FILIAL = '      '
