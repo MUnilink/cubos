@@ -76,7 +76,7 @@
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
-        left join SE1010 SE1 (nolock)
+        inner join SE1010 SE1 (nolock)
             on SE1.D_E_L_E_T_ = ''
             and SE1.E1_FILIAL = VIAGEM.DTQ_FILORI
             and
@@ -220,7 +220,7 @@ union
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
 
-        left join SC5010 SC5 (nolock)
+        inner join SC5010 SC5 (nolock)
             on SC5.D_E_L_E_T_ = ''
             and SC5.C5_FILIAL = VIAGEM.DTQ_FILORI
             and trim(SC5.C5_YVIAGEM) = VIAGEM.DTQ_VIAGEM
@@ -366,7 +366,7 @@ union
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
-        left join DTC010 DOCAV (nolock)
+        inner join DTC010 DOCAV (nolock)
             on DOCAV.D_E_L_E_T_ = ''
             and DOCAV.DTC_FILIAL = VIAGEM.DTQ_FILORI
             and trim(DOCAV.DTC_YVIAGE) = VIAGEM.DTQ_VIAGEM
