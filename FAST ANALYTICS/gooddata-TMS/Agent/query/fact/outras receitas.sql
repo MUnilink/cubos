@@ -1,10 +1,9 @@
     select
         'P |01|01' AS BK_EMPRESA,
-        VIAGEM.DATAFIM as DATA_EMISSAO,
-        SE1.E1_EMISSAO as DATA_DOC,
+        SE1.E1_EMISSAO as DATA_EMISSAO,
         
-        SE1.E1_NUM as ND_NUM,
-        SE1.E1_VALOR as ND_VALOR,
+        SE1.E1_NUM as DOC,
+        SE1.E1_VALOR as VALOR,
 
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -97,7 +96,12 @@
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
-                
+
+                left join DTC010 DTC (nolock)
+                    on DTC.D_E_L_E_T_ = ''
+                    and DTC.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC.DTC_DOC = DT6.DT6_DOC
+                    and DTC.DTC_SERIE = DT6.DT6_SERIE                
                 left join SA1010 REM
                     on REM.A1_FILIAL = '      '
                     and REM.A1_COD = DT6.DT6_CLIREM
@@ -136,16 +140,13 @@
                     and SX5.D_E_L_E_T_ = ' '
     where
             SE1.E1_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-        or RPS.D2_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-        or DTC.DTC_DATENT BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
 union
     select
         'P |01|01' AS BK_EMPRESA,
-        VIAGEM.DATAFIM as DATA_EMISSAO,
-        DT6.DT6_DATEMI as DATA_DOC,
+        DT6.DT6_DATEMI as DATA_EMISSAO,
 
-        SC5.C5_NUM as RPS_PEDIDO,
-        RPS.D2_TOTAL as RPS_TOTAL,
+        SC5.C5_NUM as DOC,
+        RPS.D2_TOTAL as VALOR,
 
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -243,7 +244,12 @@ union
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
-                
+
+                left join DTC010 DTC (nolock)
+                    on DTC.D_E_L_E_T_ = ''
+                    and DTC.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC.DTC_DOC = DT6.DT6_DOC
+                    and DTC.DTC_SERIE = DT6.DT6_SERIE                
                 left join SA1010 REM
                     on REM.A1_FILIAL = '      '
                     and REM.A1_COD = DT6.DT6_CLIREM
@@ -285,8 +291,9 @@ union
 union
     select
         'P |01|01' AS BK_EMPRESA,
-        VIAGEM.DATAFIM as DATA_EMISSAO,
-        DTC.DTC_DATENT as DATA_DOC,
+        DOCAV.DTC_DATENT as DATA_EMISSAO,
+        DOCAV.DTC_DOC as DOC,
+        DOCAV.DTC_VALOR as VALOR,
 
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -359,10 +366,10 @@ union
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
-        left join DTC010 DTC (nolock)
-            on DTC.D_E_L_E_T_ = ''
-            and DTC.DTC_FILIAL = VIAGEM.DTQ_FILORI
-            and trim(DTC.DTC_YVIAGE) = VIAGEM.DTQ_VIAGEM
+        left join DTC010 DOCAV (nolock)
+            on DOCAV.D_E_L_E_T_ = ''
+            and DOCAV.DTC_FILIAL = VIAGEM.DTQ_FILORI
+            and trim(DOCAV.DTC_YVIAGE) = VIAGEM.DTQ_VIAGEM
         inner join DUD010 DUD (nolock)
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
@@ -374,7 +381,12 @@ union
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
-                
+
+                left join DTC010 DTC (nolock)
+                    on DTC.D_E_L_E_T_ = ''
+                    and DTC.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC.DTC_DOC = DT6.DT6_DOC
+                    and DTC.DTC_SERIE = DT6.DT6_SERIE
                 left join SA1010 REM
                     on REM.A1_FILIAL = '      '
                     and REM.A1_COD = DT6.DT6_CLIREM
@@ -412,4 +424,4 @@ union
                     and SX5.X5_CHAVE = DT6.DT6_SERVIC
                     and SX5.D_E_L_E_T_ = ' '
     where
-           DTC.DTC_DATENT BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+           DOCAV.DTC_DATENT BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
