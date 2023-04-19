@@ -15,8 +15,13 @@ select
     AD1.AD1_NROPOR as OPORTUNIDADE,
     AD1.AD1_REVISA as VERSAO,
     trim(AD1.AD1_DESCRI) as DESCRICAO,
-    substring(AD1.AD1_DATA, 1, 6) as PERIODO_OPORTUNIDADE,
+    substring(AD1.AD1_DTFIM, 1, 6) as PERIODO_OPORTUNIDADE,
     convert(datetime, datetimefromparts(year(AD1.AD1_DATA), month(AD1.AD1_DATA), day(AD1.AD1_DATA), substring(AD1.AD1_HORA, 1, 2), substring(AD1.AD1_HORA, 4, 5), 0, 0), 113) as DATA_OPORTUNIDADE,
+    convert(date, AD1.AD1_DTINI, 103) as DTINI,
+    convert(date, AD1.AD1_DTFIM, 103) as DTFIM,
+    (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = AD1.AD1_FCS) as FATOR_SUCESSO,
+    (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = AD1.AD1_FCI) as FATOR_INSUCESSO,
+    AD1.AD1_OBSPRO as OBS,
     1 as contador
 
 from AD1010 AD1 (nolock)
@@ -35,5 +40,4 @@ from AD1010 AD1 (nolock)
     left join SA1010 SA1 (nolock)
         on SA1.D_E_L_E_T_ = ''
         and SA1.A1_COD = AD1.AD1_CODCLI
-        and SA1.A1_LOJA = AD1.AD1_LOJCLI
 where AD1.D_E_L_E_T_ = ''
