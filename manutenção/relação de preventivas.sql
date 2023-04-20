@@ -81,7 +81,7 @@ from STJ010 STJ (nolock)
         and STF.TF_SERVICO = STJ.TJ_SERVICO
         and STF.TF_SEQRELA = STJ.TJ_SEQRELA
 
-        inner join STG010 STG (nolock)
+        left join STG010 STG (nolock)
             on STG.D_E_L_E_T_ = ''
             and STG.TG_CODBEM = STF.TF_CODBEM
             and STG.TG_SERVICO = STF.TF_SERVICO
