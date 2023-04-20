@@ -1,0 +1,15 @@
+pendências
+Gancho entregue e recebido pela manutenção, a ter testes realizados na semana do dia 23/04.
+Eduardo informa que o Adilson foi cobrado pela CIPP pelo contêiner guarda-volumes da operação, e que o contrato de aquisição estaria para avaliação do jurídico.
+Contêineres de apoio para a operação não foram autorizados até o dia, e Ricardo Abeal disse que verificaria com o Silvio sobre.
+Aguardando assinatura do jurídico, apesar da cobrança do Silvio pela aquisição do sistema para o restante da frota.
+Wellington achou alto o orçamento do aríete para as HYSTER, e que a 3G ou outro fornecedor faria o serviço. Verificar com a 3G o orçamento, após avaliação da real necessidade e da utilização corriqueira do componente.
+Medição de indicadores pelo FCA e indicador de reforma estão sendo tratados.
+Lucas relata a RS17 funcionando "sem motorista" conforme relatório SASCAR, de forma que qualquer cartão pode ativar o veículo, ou mesmo nenhum cartão. Wellington pergunta se é possível analisar o problema pelo relatório SASCAR, ao que o Lucas informa que sim, embora o motorista não possa ser identificado rapidamente. Cristianne pede mais informações sobre o problema, ao que o Wellintgon diz que foi tardiamente observado, de forma que o problema foi generalizado para várias máquinas.
+Eduardo diz que foi cobrado pelo Lucas consultor sobre o pórtico do CFS e foi realizada visita para avaliação e orçamento já foi recebido para avalaição e execução.
+
+indicadores
+Leandro diz que dificilmente alcançará a disponibilidade de máquinas e CMs, devido a preventivas, que até afetaram o indicador no início do mês pela não realização devido à operação.
+atendimento de preventivas ok
+indicadores SASCAR refletem o problema do sistema, a ser avaliado por visita do fornecedor. Wellington pergunta da cerca, e o Lucas explica que a depender da configuração das cercas, para verificar qual atividade o veículo está realizando de fato. Leandro sugere atrair o problema para solução em casa.
+Wellington informa a Cristianne sobre a inclusão de indicadores de logística na reunião mensal, e ao Eduardo sobre indicadores operacionais e do CFS.
