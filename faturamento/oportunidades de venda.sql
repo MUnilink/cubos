@@ -30,6 +30,7 @@ from AD1010 AD1 (nolock)
         and SA3.A3_COD = AD1.AD1_VEND
     inner join AC2010 AC2 (nolock)
         on AC2.D_E_L_E_T_ = ''
+        and AC2.AC2_FILIAL = substring(AD1.AD1_FILIAL, 1, 4)
         and AC2.AC2_PROVEN = AD1.AD1_PROVEN
         and AC2.AC2_STAGE = AD1.AD1_STAGE
     left join SUS010 SUS (nolock)
@@ -40,4 +41,5 @@ from AD1010 AD1 (nolock)
     left join SA1010 SA1 (nolock)
         on SA1.D_E_L_E_T_ = ''
         and SA1.A1_COD = AD1.AD1_CODCLI
+        and SA1.A1_LOJA = AD1.AD1_LOJCLI
 where AD1.D_E_L_E_T_ = ''
