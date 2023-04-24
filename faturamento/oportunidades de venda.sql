@@ -7,6 +7,8 @@ select
     trim(SUS.US_NREDUZ) as RAZAOSOCIAL_PROS,
     SUS.US_CGC as CNPJ_PROS,
     convert(datetime, datetimefromparts(year(SUS.US_DTCAD), month(SUS.US_DTCAD), day(SUS.US_DTCAD), substring(SUS.US_HRCAD, 1, 2), substring(SUS.US_HRCAD, 4, 5), 0, 0), 113) as DATA_PROSPECT,
+    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(A1_COD, ' '))+RTRIM(COALESCE(A1_LOJA, ' ')), ' '), '|') AS BK_CLIENTE,
+    'P |01|SUS010|'+ COALESCE(NULLIF(RTRIM(COALESCE(US_FILIAL, ' '))+'|'+RTRIM(COALESCE(US_COD, ' '))+RTRIM(COALESCE(US_LOJA, ' ')), ' '), '|') AS BK_PROSPECT,
     SA1.A1_COD as COD_CLI,
     SA1.A1_LOJA as LOJA_CLI,
     trim(SA1.A1_NOME) as NOME_CLI,
@@ -19,8 +21,6 @@ select
     convert(datetime, datetimefromparts(year(AD1.AD1_DATA), month(AD1.AD1_DATA), day(AD1.AD1_DATA), substring(AD1.AD1_HORA, 1, 2), substring(AD1.AD1_HORA, 4, 5), 0, 0), 113) as DATA_OPORTUNIDADE,
     convert(date, AD1.AD1_DTINI, 103) as DTINI,
     convert(date, AD1.AD1_DTFIM, 103) as DTFIM,
-    (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = AD1.AD1_FCS) as FATOR_SUCESSO,
-    (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = AD1.AD1_FCI) as FATOR_INSUCESSO,
     AD1.AD1_OBSPRO as OBS,
     1 as contador
 
