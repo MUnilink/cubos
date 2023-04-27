@@ -1,6 +1,10 @@
 select
     AC2.AC2_DESCRI as ESTAGIO_PROCESSO,
     trim(SA3.A3_NREDUZ) as VENDEDOR,
+    AD2.AD2_VEND,
+    AD2.AD2_PERC,
+    AD1.AD1_VERBA as RECEITA_ESTIMADA,
+    .01*AD2.AD2_PERC * AD1.AD1_VERBA as RECEITA_ESTIMADA_PERC,
     SUS.US_COD as COD_PROS,
     SUS.US_LOJA as LOJA_PROS,
     trim(SUS.US_NOME) as NOME_PROS,
@@ -27,9 +31,6 @@ select
     1 as contador
 
 from AD1010 AD1 (nolock)
-    inner join SA3010 SA3 (nolock)
-        on SA3.D_E_L_E_T_ = ''
-        and SA3.A3_COD = AD1.AD1_VEND
     inner join AC2010 AC2 (nolock)
         on AC2.D_E_L_E_T_ = ''
         and AC2.AC2_FILIAL = substring(AD1.AD1_FILIAL, 1, 4)
@@ -48,4 +49,13 @@ from AD1010 AD1 (nolock)
         on SUN.D_E_L_E_T_ = ''
         and SUN.UN_FILIAL = substring(AD1.AD1_FILIAL, 1, 4)
         and SUN.UN_ENCERR = AD1.AD1_ENCERR
+    left join AD2010 AD2 (nolock)
+        on AD2.D_E_L_E_T_ = ''
+        and AD2.AD2_NROPOR = AD1.AD1_NROPOR
+        and AD2.AD2_REVISA = AD1.AD1_REVISA
+        
+        left join SA3010 SA3 (nolock)
+            on SA3.D_E_L_E_T_ = ''
+            and SA3.A3_COD = AD2.AD2_VEND
+
 where AD1.D_E_L_E_T_ = ''

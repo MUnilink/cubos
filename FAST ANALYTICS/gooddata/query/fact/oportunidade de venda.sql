@@ -15,12 +15,10 @@ select
     AD1.AD1_DTINI as DTINI,
     AD1.AD1_DTFIM as DTFIM,
     trim(AD1.AD1_OBSPRO) as OBS,
-    AD1.AD1_VERBA as RECEITA_ESTIMADA
+    0.01 * AD1.AD1_VERBA * AD2.AD2_PERC as RECEITA_ESTIMADA,
+    AD2.AD2_PERC
 
 from AD1010 AD1
-    inner join SA3010 SA3
-        on SA3.D_E_L_E_T_ = ''
-        and SA3.A3_COD = AD1.AD1_VEND
     inner join AC2010 AC2
         on AC2.D_E_L_E_T_ = ''
         and AC2.AC2_FILIAL = substring(AD1.AD1_FILIAL, 1, 4)
@@ -35,6 +33,14 @@ from AD1010 AD1
         on SA1.D_E_L_E_T_ = ''
         and SA1.A1_COD = AD1.AD1_CODCLI
         and SA1.A1_LOJA = AD1.AD1_LOJCLI
+    left join AD2010 AD2 (nolock)
+        on AD2.D_E_L_E_T_ = ''
+        and AD2.AD2_NROPOR = AD1.AD1_NROPOR
+        and AD2.AD2_REVISA = AD1.AD1_REVISA
+        
+        left join SA3010 SA3 (nolock)
+            on SA3.D_E_L_E_T_ = ''
+            and SA3.A3_COD = AD2.AD2_VEND
 where
         AD1.D_E_L_E_T_ = ''
     and AD1.AD1_DATA between <<START_DATE>> and <<FINAL_DATE>>
