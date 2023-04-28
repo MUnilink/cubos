@@ -4,7 +4,7 @@ select
     convert(datetime, VIAGEM.CHE_VIAGEM_REAL, 113) as CHE_VIAGEM_REAL,
     convert(datetime, VIAGEM.SAI_VIAGEM_REAL, 113) as SAI_VIAGEM_REAL,
 
-    case DT6.DT6_CLIDES when 761 then 'COLETA' when 576 then 'COLETA' else 'ENTREGA' end as TIPO_VIAGEM,
+    case DUA.DUA_CODOCO when 'C004' then 'COLETA' else 'ENTREGA' end as TIPO_VIAGEM,
     
     substring(VIAGEM.SAI_VIAGEM_REAL, 1, 6) as PERIODO_VIAGEM,
     VIAGEM.DUD_VIAGEM as VIAGEM,
@@ -107,7 +107,23 @@ select
     trim(DUYCOL.DUY_EST) as UF_COLETA,
 	trim(DUYCOL.DUY_DESCRI) as MUN_COLETA,
 	trim(DUYENT.DUY_EST) as UF_ENTREGA,
-	trim(DUYENT.DUY_DESCRI) as MUN_ENTREGA
+	trim(DUYENT.DUY_DESCRI) as MUN_ENTREGA,
+    
+    case when DT5.DT5_STATUS = '4' then 'CORTESIA' else case when DT5.DT5_STATUS like '[0-9]' then 'DOCUMENTO PENDENTE' else 'DOCUMENTO OK' end end as CLASSE_VIAGEM,
+
+    DT5.DT5_NUMSOL,
+    DT5.DT5_DOC as OS_COLETA,
+    DT5.DT5_SERIE,
+    DT5.DT5_STATUS as STATUS_COLETA,
+    DT5.DT5_TIPCOL,
+    DT5.DT5_CODSOL,
+    DT5.DT5_CODOBC,
+
+    DUA.DUA_NUMOCO as OCORRENCIA,
+    DUA.DUA_SEQOCO as ITEM_OCORR,
+    DUA.DUA_CODOCO as TIPO_OCORR,
+    convert(datetime, datetimefromparts(year(DUA.DUA_DATOCO), month(DUA.DUA_DATOCO), day(DUA.DUA_DATOCO), substring(DUA.DUA_HOROCO, 1, 2), substring(DUA.DUA_HOROCO, 4, 5), 0, 0), 113) as DATA_OCORR,
+    (select DT2010.DT2_DESCRI from DT2010 where DT2010.D_E_L_E_T_ = '' and DT2010.DT2_FILIAL = DUA.DUA_FILIAL and DT2010.DT2_CODOCO = DUA.DUA_CODOCO) as DESC_OCORR
 
 from
     (
@@ -259,7 +275,16 @@ from
                     left join DUY010 DUYENT (nolock)
                         on DUYENT.D_E_L_E_T_ = ''
                         and DUYENT.DUY_GRPVEN = DF1.DF1_CDRDES
+                    left join DT5010 DT5 (nolock)
+                        on DT5.D_E_L_E_T_ = ''
+                        and DT5.DT5_FILDOC = DF1.DF1_FILDOC
+                        and DT5.DT5_NUMSOL = DF1.DF1_DOC
             
+            left join DUA010 DUA (nolock)
+                on DUA.D_E_L_E_T_ = ''
+                and DUA.DUA_FILORI = VIAGEM.DUD_FILORI
+                and DUA.DUA_FILDOC = VIAGEM.DUD_FILDOC
+                and DUA.DUA_VIAGEM = VIAGEM.DUD_VIAGEM
             left join SA1010 REM (nolock)
                 on REM.A1_FILIAL = '      '
                 and REM.A1_COD = DT6.DT6_CLIREM
