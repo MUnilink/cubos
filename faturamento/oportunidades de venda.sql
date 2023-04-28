@@ -1,5 +1,5 @@
 select
-    AC2.AC2_DESCRI as ESTAGIO_PROCESSO,
+    trim(AC2.AC2_DESCRI) as ESTAGIO_PROCESSO,
     trim(SA3.A3_NREDUZ) as VENDEDOR,
     AD2.AD2_VEND,
     AD2.AD2_PERC,
@@ -19,15 +19,17 @@ select
     AD1.AD1_NROPOR as OPORTUNIDADE,
     AD1.AD1_REVISA as VERSAO,
     trim(AD1.AD1_DESCRI) as DESCRICAO,
-    substring(AD1.AD1_DTFIM, 1, 6) as PERIODO_OPORTUNIDADE,
+    substring(AD1.AD1_DATA, 1, 6) as PERIODO_OPORTUNIDADE,
     AD1.AD1_FEELIN,
+    AD1.AD1_PRIOR,
     convert(datetime, datetimefromparts(year(AD1.AD1_DATA), month(AD1.AD1_DATA), day(AD1.AD1_DATA), substring(AD1.AD1_HORA, 1, 2), substring(AD1.AD1_HORA, 4, 5), 0, 0), 113) as DATA_OPORTUNIDADE,
-    (select upper(SX5010.X5_DESCRI) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'A6' and SX5010.X5_CHAVE = AD1.AD1_FCS) as FATOR_SUCESSO,
-    (select upper(SX5010.X5_DESCRI) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'A6' and SX5010.X5_CHAVE = AD1.AD1_FCI) as FATOR_INSUCESSO,
+    (select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'A6' and SX5010.X5_CHAVE = AD1.AD1_FCS) as FATOR_SUCESSO,
+    (select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'A6' and SX5010.X5_CHAVE = AD1.AD1_FCI) as FATOR_INSUCESSO,
     convert(date, AD1.AD1_DTINI, 103) as DTINI,
     convert(date, AD1.AD1_DTFIM, 103) as DTFIM,
     trim(SUN.UN_DESC) as MOTIVO_ENCERR,
     AD1.AD1_OBSPRO as OBS,
+    AD1.AD1_STATUS,
     1 as contador
 
 from AD1010 AD1 (nolock)
