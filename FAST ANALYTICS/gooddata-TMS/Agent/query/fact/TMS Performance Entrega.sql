@@ -228,7 +228,7 @@ FROM DT6010 DT6
             and DF1.DTC_DOC = VIAGEM.DUD_DOC
             and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
 where
-        VIAGEM.CHE_VIAGEM_REAL between <<START_DATE>> and <<FINAL_DATE>>
+        VIAGEM.CHE_CLIDEV_REAL between <<START_DATE>> and <<FINAL_DATE>>
     AND DT6.D_E_L_E_T_ = ' '
     AND DT6.DT6_DATENT <> ' '
     AND DT6.DT6_SERIE <> 'COL'
