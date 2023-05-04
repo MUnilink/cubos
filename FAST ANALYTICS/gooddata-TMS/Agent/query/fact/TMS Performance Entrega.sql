@@ -59,6 +59,7 @@ SELECT
     VIAGEM.CHE_CLIDEV_REAL,
     VIAGEM.SAI_CLIDEV_REAL,
     VIAGEM.SAI_VIAGEM_REAL,
+    VIAGEM.CHE_VIAGEM_REAL,
 
     VIAGEM.ID_VIAGEM,
     VIAGEM.ID_VEICULO_CM,
@@ -222,7 +223,10 @@ FROM DT6010 DT6
                     on DTC010.D_E_L_E_T_ = ''
                     and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
-            where DF1010.D_E_L_E_T_ = ''
+            where
+                    DF1010.D_E_L_E_T_ = ''
+                and (DF1010.DF1_HORPRC != '' or DF1010.DF1_HORPRE != '')
+                and (DF1010.DF1_DATPRC != '' or DF1010.DF1_DATPRE != '')
         ) DF1
             on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
             and DF1.DTC_DOC = VIAGEM.DUD_DOC
