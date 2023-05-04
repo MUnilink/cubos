@@ -67,6 +67,7 @@ SELECT
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
+    DF1.DF1_YOSCLI,
     1 as FATO1
 
 FROM DT6010 DT6
@@ -209,6 +210,7 @@ FROM DT6010 DT6
         (
             select
                 DF1010.DF1_NUMAGE,
+                DF1.DF1_YOSCLI,
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
