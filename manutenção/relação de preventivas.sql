@@ -96,7 +96,6 @@ from STJ010 STJ (nolock)
             left join SB2010 SB2 (nolock)
                 on SB2.D_E_L_E_T_ = ''
                 and SB2.B2_COD = STG.TG_CODIGO
-                and SB2.B2_QATU > 0
     
     inner join ST4010 ST4 (nolock)
 		on ST4.D_E_L_E_T_ = ''
