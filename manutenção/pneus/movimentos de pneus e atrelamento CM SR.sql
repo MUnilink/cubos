@@ -4,6 +4,51 @@ select
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
 
+	(
+		select
+			(
+                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                from DTW010
+                    inner join ZB1010
+                        on ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    and DTW010.DTW_ATIVID = 50
+            )
+			-
+            (
+                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                from DTW010
+                    inner join ZB1010
+                        on ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                    and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    and DTW010.DTW_ATIVID = 49
+            ) as km
+		from DUD010 DUD (nolock)
+            left join DTR010 DTR (nolock)
+                on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILORI = DUD.DUD_FILORI
+                and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+		where DTR.D_E_L_E_T_ = '' and DTR.DTR_CODRB1 like 'SR%' DTR.DTR_CODRB1 = CARRO.T9_CODBEM
+	),
+
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
 	trim(isnull(STZ.TZ_DATAMOV, '-')) as TZ_DATAMOV,
