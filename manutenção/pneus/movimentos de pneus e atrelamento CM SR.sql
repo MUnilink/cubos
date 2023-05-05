@@ -3,7 +3,6 @@ select
 	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
-	trim(isnull(SD3.D3_COD, '-')) as D3_COD,
 
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
@@ -45,24 +44,5 @@ from STZ010 STZ (nolock)
 		on CARRO.D_E_L_E_T_ = ''
 		and CARRO.T9_CODBEM = STZ.TZ_BEMPAI
 		and trim(CARRO.T9_CODBEM) not like '[0-9]%'
-
-		left join STJ010 STJ (nolock)
-			on STJ.D_E_L_E_T_ = ''
-			and STJ.TJ_CODBEM = CARRO.T9_CODBEM
-			and STJ.TJ_SERVICO = 'PNEUMOV'
-
-				left join SD3010 SD3 (nolock)
-					on SD3.D_E_L_E_T_ = ''
-					and SD3.D3_FILIAL = STJ.TJ_FILIAL
-					and SD3.D3_COD = 
-					and substring(SD3.D3_OP, 1, 6) = STJ.TJ_ORDEM
-					and SD3.D3_GRUPO = '1130'
-
-inner join STL010 STL (nolock)
-	on STL.D_E_L_E_T_ = ''
-	and STL.TL_ORDEM = STJ.TJ_ORDEM
-	and STL.TL_PLANO = STJ.TJ_PLANO
-	and STL.TL_FILIAL = STJ.TJ_FILIAL
-
 where
 		STZ.D_E_L_E_T_ = ''
