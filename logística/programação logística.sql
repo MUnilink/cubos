@@ -6,7 +6,7 @@ select
 
     case DUA.DUA_CODOCO when 'C004' then 'COLETA' else 'ENTREGA' end as TIPO_VIAGEM,
     
-    substring(VIAGEM.SAI_VIAGEM_REAL, 1, 6) as PERIODO_VIAGEM,
+    substring(DF1.DF1_DATPRE, 1, 6) as PERIODO_VIAGEM,
     VIAGEM.DUD_VIAGEM as VIAGEM,
     VIAGEM.DTQ_DATGER as DAT_GER_VGA,
     VIAGEM.DTQ_DATFEC as DAT_FEC_VGA,
