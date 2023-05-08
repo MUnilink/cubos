@@ -210,7 +210,7 @@ FROM DT6010 DT6
         (
             select
                 DF1010.DF1_NUMAGE,
-                DF1.DF1_YOSCLI,
+                DF1010.DF1_YOSCLI,
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
