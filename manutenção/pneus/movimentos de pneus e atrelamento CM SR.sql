@@ -7,7 +7,7 @@ select
 	(
 		select
 			(
-                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                select min(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)))
                 from DTW010
                     inner join ZB1010
                         on ZB1010.D_E_L_E_T_ = ''
@@ -21,11 +21,15 @@ select
                     and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                     and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                     and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+					and
+					(
+						concat(DTW010.DTW_DATREA, ' '. DTW010.DTW_HORREA) >= concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT)
+					)
                     and DTW010.DTW_ATIVID = 50
             )
 			-
             (
-                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                select max(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)))
                 from DTW010
                     inner join ZB1010
                         on ZB1010.D_E_L_E_T_ = ''
@@ -39,6 +43,10 @@ select
                     and DTW010.DTW_FILORI = DUD.DUD_FILORI
                     and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
                     and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+					and
+					(
+						concat(DTW010.DTW_DATREA, ' '. DTW010.DTW_HORREA) <= concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI)
+					)
                     and DTW010.DTW_ATIVID = 49
             ) as km
 		from DUD010 DUD (nolock)
@@ -46,13 +54,13 @@ select
                 on DTR.D_E_L_E_T_ = ''
                 and DTR.DTR_FILORI = DUD.DUD_FILORI
                 and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
-		where DTR.D_E_L_E_T_ = '' and DTR.DTR_CODRB1 like 'SR%' DTR.DTR_CODRB1 = CARRO.T9_CODBEM
+		where DTR.D_E_L_E_T_ = '' and DTR.DTR_CODRB1 like 'SR%' and DTR.DTR_CODRB1 = CARRO.T9_CODBEM
 	),
 
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
-	trim(isnull(STZ.TZ_DATAMOV, '-')) as TZ_DATAMOV,
-	trim(isnull(STZ.TZ_DATASAI, '-')) as TZ_DATASAI,
+	convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103) as TZ_DATAMOV,
+	convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 103) as TZ_DATASAI,
 	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
 	trim(isnull(STZ.TZ_HORAENT, '-')) as TZ_HORAENT,
 	trim(isnull(STZ.TZ_HORASAI, '-')) as TZ_HORASAI,
@@ -66,13 +74,9 @@ select
 	TQS.TQS_KMR6,
 	TQS.TQS_KMR7,
 
+	substring(STZ.TZ_DATAMOV, 1, 6) as PERIODO_ENT,
+	substring(STZ.TZ_DATASAI, 1, 6) as PERIODO_SAI,	
 	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
-
-	year(STZ.TZ_DATAMOV) as ano_DATAMOV,
-	month(STZ.TZ_DATAMOV) as mes_DATAMOV,
-	year(STZ.TZ_DATASAI) as ano_DATASAI,
-	month(STZ.TZ_DATASAI) as mes_DATASAI,
-
 	case when cast(PNEU.T9_CODBEM as int) > 11140 then 'PNEU NOVO' else 'PNEU ANTIGO' end as TIPO_PNEU
 
 from STZ010 STZ (nolock)			
