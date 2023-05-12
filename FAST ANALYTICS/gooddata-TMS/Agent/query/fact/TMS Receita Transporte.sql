@@ -151,19 +151,19 @@ FROM DT8010 DT8
                     (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
                     (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
                 from DTQ010 DTQ (nolock)
-                    inner join DTR010 DTR (nolock)
+                    left join DTR010 DTR (nolock)
                         on DTR.D_E_L_E_T_ = ''
                         and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                         and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                         
-                        inner join DUP010 (nolock)
+                        left join DUP010 (nolock)
                             on DUP010.D_E_L_E_T_ = ''
                             and DUP010.DUP_FILORI = DTR.DTR_FILORI
                             and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                             and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                             and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                            inner join DA4010 (nolock)
+                            left join DA4010 (nolock)
                                 on DA4010.D_E_L_E_T_ = ''
                                 and DA4010.DA4_COD = DUP010.DUP_CODMOT
                 where DTQ.D_E_L_E_T_ = ''

@@ -186,14 +186,14 @@
                     and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                     and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                     
-                    inner join DUP010
+                    left join DUP010
                         on DUP010.D_E_L_E_T_ = ''
                         and DUP010.DUP_FILORI = DTR.DTR_FILORI
                         and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                         and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                         and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                        inner join DA4010
+                        left join DA4010
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
 
@@ -663,19 +663,19 @@ union
                 ) as COMPETENCIA
 
             from DTQ010 DTQ
-                inner join DTR010 DTR
+                left join DTR010 DTR
                     on DTR.D_E_L_E_T_ = ''
                     and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                     and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                     
-                    inner join DUP010
+                    left join DUP010
                         on DUP010.D_E_L_E_T_ = ''
                         and DUP010.DUP_FILORI = DTR.DTR_FILORI
                         and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                         and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                         and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                        inner join DA4010
+                        left join DA4010
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
 
