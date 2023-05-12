@@ -21,8 +21,8 @@ select
 		end
 	end as TL_CUSTO,
 
-	convert(datetime, datetimefromparts(year(STL.TL_DTINICI), month(STL.TL_DTINICI), day(STL.TL_DTINICI), substring(STL.TL_HOINICI, 1, 2), substring(STL.TL_HOINICI, 4, 5), 0, 0), 113) as TL_DTINICI,
-	convert(datetime, datetimefromparts(year(STL.TL_DTFIM), month(STL.TL_DTFIM), day(STL.TL_DTFIM), substring(STL.TL_HOFIM, 1, 2), substring(STL.TL_HOFIM, 4, 5), 0, 0), 113) as TL_DTINFIM,
+	convert(datetime, concat(STL.TL_DTINICI, ' ', replace(STL.TL_HOINICI, ':', '')), 103) as TL_DTINICI,
+	convert(datetime, concat(STL.TL_DTFIM, ' ', replace(STL.TL_HOFIM, ':', '')), 103) as TL_DTINFIM,
 	convert(date, STJ.TJ_DTORIGI, 103) as TJ_DTORIGI,
 	
 	STJ.TJ_POSCONT,
