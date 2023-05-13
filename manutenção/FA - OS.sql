@@ -21,8 +21,8 @@ select
 		end
 	end as TL_CUSTO,
 
-	convert(datetime, concat(STL.TL_DTINICI, ' ', replace(STL.TL_HOINICI, ':', '')), 103) as TL_DTINICI,
-	convert(datetime, concat(STL.TL_DTFIM, ' ', replace(STL.TL_HOFIM, ':', '')), 103) as TL_DTINFIM,
+	concat(STL.TL_DTINICI, ' ', replace(STL.TL_HOINICI, ':', '')) as TL_DTINICI,
+	concat(STL.TL_DTFIM, ' ', replace(STL.TL_HOFIM, ':', '')) as TL_DTINFIM,
 	convert(date, STJ.TJ_DTORIGI, 103) as TJ_DTORIGI,
 	
 	STJ.TJ_POSCONT,
