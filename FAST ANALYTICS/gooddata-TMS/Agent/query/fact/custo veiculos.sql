@@ -201,7 +201,7 @@
                     DTQ.D_E_L_E_T_ = ''
                 and year(DTQ.DTQ_DATENC) > 2021
         ) VIAGEM
-            
+
         left join DUD010 DUD
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
@@ -524,9 +524,9 @@ union
         MANUTENCAO.TL_TIPOREG as MNT_TL_TIPOREG,
         MANUTENCAO.TL_CUSTO as MNT_TL_CUSTO,
         
-        COMBUSTIVEL.km as COMB_km,
-        COMBUSTIVEL.TQM_NOMCOM as COMB_NOME,
-        COMBUSTIVEL.CUSTO as COMB_CUSTO,
+        null as COMB_km,
+        null as COMB_NOME,
+        null as COMB_CUSTO,
 
         DOCUMENTACAO.TS0_DOCTO as TAX_TS0_DOCTO,
         DOCUMENTACAO.VALOR_TAXA as TAX_CUSTO,
@@ -817,83 +817,6 @@ union
         ) MANUTENCAO
             on MANUTENCAO.PERIODO_MNT = VIAGEM.COMPETENCIA
             and MANUTENCAO.TJ_CODBEM = VIAGEM.COD_RB1
-        
-        left join
-        (
-            select
-                ZD3.ZD3_VEICUL,
-                ZD3.TQN_CCUSTO,
-                sum(ZD3.ZD3_KMRD) as km,
-                sum(ZD3.ZD3_TOTAL) as CUSTO,
-                ZD3.PERIODO_ABA,
-                trim(isnull(TQM.TQM_NOMCOM, '-')) as TQM_NOMCOM
-            from
-                (
-                    select
-                        case cast(ZD30.ZD3_TANQUE as int)
-                            when 12 then '010102'
-                            else trim(isnull(ZD30.ZD3_FILIAL, '-'))
-                        end as ZD3_FILIAL,
-                        ZD30.ZD3_KM as ZD3_HODOM,
-                        ZD30.ZD3_VEICUL,
-                        ZD30.ZD3_LITROS,
-                        ZD30.ZD3_TOTAL,
-                        ZD30.ZD3_TANQUE,
-                        ZD30.ZD3_COMB,
-                        substring(ZD30.ZD3_DATA, 1, 8) as PERIODO_ABA,
-                        substring(ZD30.ZD3_DATA, 1, 8) as ZD3_DATA,
-                        ZD30.ZD3_KML,
-                        ZD30.ZD3_KMRD,
-
-                        (
-                            select TQN010.TQN_CCUSTO
-                            from TQN010
-                            where
-                                    TQN010.D_E_L_E_T_ = ''
-                                and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
-                                and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
-                                and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
-                        ) as TQN_CCUSTO,
-                        (
-                            select
-                                case when TQN010.TQN_YITMCT is not null and TQN010.TQN_YITMCT != '' then TQN010.TQN_YITMCT
-                                else
-                                    case TQN010.TQN_CCUSTO
-                                        when 302 then 11
-                                        when 304 then 11
-                                        when 303 then 21
-                                        when 305 then 21
-                                        when 306 then 21
-                                        else 90
-                                    end
-                                end
-                            from TQN010
-                            where
-                                    TQN010.D_E_L_E_T_ = ''
-                                and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
-                                and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
-                                and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
-                        ) as TQN_YITMCT
-                    from ZD3010 ZD30
-                    where ZD30.D_E_L_E_T_ = ''
-                ) as ZD3
-
-                    left join ST9010 as ST9
-                        on ST9.D_E_L_E_T_ = ''
-                        and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-                        and ST9.T9_CODFAMI in ('VP', 'VM')
-                    left join TQM010 as TQM
-                        on TQM.D_E_L_E_T_ = ''
-                        and TQM.TQM_CODCOM = ZD3.ZD3_COMB
-            group by
-                ZD3.ZD3_VEICUL,
-                ZD3.TQN_CCUSTO,
-                ZD3.PERIODO_ABA,
-                TQM.TQM_NOMCOM
-
-        ) COMBUSTIVEL
-            on COMBUSTIVEL.ZD3_VEICUL = VIAGEM.COD_RB1
-            and COMBUSTIVEL.PERIODO_ABA = VIAGEM.COMPETENCIA
         
         left join
         (
