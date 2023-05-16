@@ -37,19 +37,19 @@
         VIAGEM.ID_VEICULO_RB3,
         VIAGEM.ID_MOTORISTA,
 
-        MANUTENCAO.TJ_ORDEM as MNT_TJ_ORDEM,
-        MANUTENCAO.TIPO_CUSTO as MNT_TIPO_CUSTO,
-        MANUTENCAO.TL_TIPOREG as MNT_TL_TIPOREG,
-        MANUTENCAO.TL_CUSTO as MNT_TL_CUSTO,
+        case MANUTENCAO.TIPO_VEICULO when 'CM' then MANUTENCAO.TJ_ORDEM else null end as MNT_TJ_ORDEM,
+        case MANUTENCAO.TIPO_VEICULO when 'CM' then MANUTENCAO.TIPO_CUSTO else null end as MNT_TIPO_CUSTO,
+        case MANUTENCAO.TIPO_VEICULO when 'CM' then MANUTENCAO.TL_TIPOREG else null end as MNT_TL_TIPOREG,
+        case MANUTENCAO.TIPO_VEICULO when 'CM' then MANUTENCAO.TL_CUSTO else null end as MNT_TL_CUSTO,
         
         COMBUSTIVEL.km as COMB_km,
         COMBUSTIVEL.TQM_NOMCOM as COMB_NOME,
         COMBUSTIVEL.CUSTO as COMB_CUSTO,
 
-        DOCUMENTACAO.TS0_DOCTO as TAX_TS0_DOCTO,
-        DOCUMENTACAO.VALOR_TAXA as TAX_CUSTO,
+        case DOCUMENTACAO.TIPO_VEICULO when 'CM' then DOCUMENTACAO.TS0_DOCTO else null end as TAX_TS0_DOCTO,
+        case DOCUMENTACAO.TIPO_VEICULO when 'CM' then DOCUMENTACAO.VALOR_TAXA else null end as TAX_CUSTO,
 
-        DEPRECIACAO.VALOR_MOV as DEPRECIACAO,
+        case DEPRECIACAO.TIPO_VEICULO when 'CM' then DEPRECIACAO.VALOR_MOV else null end as DEPRECIACAO,
 
         0.0 as AUTOTRAC,
         0.0 as SEGURO_VEICULO,
@@ -266,7 +266,8 @@
                 STJ.TJ_CCUSTO,
                 STL.TL_UNIDADE,
                 sum(STL.TL_QUANTID) as TL_QUANTID,
-                sum(STL.TL_CUSTO) as TL_CUSTO
+                sum(STL.TL_CUSTO) as TL_CUSTO,
+                case when STJ.TJ_CODBEM like 'CM%' then 'CM' when STJ.TJ_CODBEM like 'SR%' then 'SR' else 'OUTROS' end as TIPO_VEICULO
 
             from STJ010 STJ
                 inner join ST9010 ST9
@@ -419,7 +420,8 @@
                 sum(TS1.TS1_VALOR) as VALOR_TAXA,
                 trim(isnull(TS0010.TS0_NOMDOC, '-')) as TS0_DOCTO,
                 trim(isnull(ST9010.T9_CODBEM, '-')) as T9_CODBEM,
-                TS1.ANO_DOCTO
+                TS1.ANO_DOCTO,
+                case when ST9010.T9_CODBEM like 'CM%' then 'CM' when ST9010.T9_CODBEM like 'SR%' then 'SR' else 'OUTROS' end as TIPO_VEICULO
             from
                 (
                     select
@@ -444,6 +446,7 @@
         ) DOCUMENTACAO
             on DOCUMENTACAO.ANO_DOCTO = substring(VIAGEM.COMPETENCIA, 1, 4)
             and DOCUMENTACAO.T9_CODBEM = VIAGEM.COD_CM
+        
         left join
         (
             select
@@ -453,7 +456,8 @@
                 convert(date, SN3.N3_DINDEPR, 103) as INI_DEPREC,
                 SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
                 substring(SN4.N4_DATA, 1, 6) as PERIODO,
-                SN4.N4_VLROC1 as VALOR_MOV
+                SN4.N4_VLROC1 as VALOR_MOV,
+                case when SN1.N1_CODBEM like 'CM%' then 'CM' when SN1.N1_CODBEM like 'SR%' then 'SR' else 'OUTROS' end as TIPO_VEICULO
 
             from SN4010 SN4
                 inner join SN3010 SN3
@@ -519,19 +523,19 @@ union
         VIAGEM.ID_VEICULO_RB3,
         VIAGEM.ID_MOTORISTA,
 
-        MANUTENCAO.TJ_ORDEM as MNT_TJ_ORDEM,
-        MANUTENCAO.TIPO_CUSTO as MNT_TIPO_CUSTO,
-        MANUTENCAO.TL_TIPOREG as MNT_TL_TIPOREG,
-        MANUTENCAO.TL_CUSTO as MNT_TL_CUSTO,
+        case MANUTENCAO.TIPO_VEICULO when 'SR' then MANUTENCAO.TJ_ORDEM else null end as MNT_TJ_ORDEM,
+        case MANUTENCAO.TIPO_VEICULO when 'SR' then MANUTENCAO.TIPO_CUSTO else null end as MNT_TIPO_CUSTO,
+        case MANUTENCAO.TIPO_VEICULO when 'SR' then MANUTENCAO.TL_TIPOREG else null end as MNT_TL_TIPOREG,
+        case MANUTENCAO.TIPO_VEICULO when 'SR' then MANUTENCAO.TL_CUSTO else null end as MNT_TL_CUSTO,
         
         null as COMB_km,
         null as COMB_NOME,
         null as COMB_CUSTO,
 
-        DOCUMENTACAO.TS0_DOCTO as TAX_TS0_DOCTO,
-        DOCUMENTACAO.VALOR_TAXA as TAX_CUSTO,
+        case DOCUMENTACAO.TIPO_VEICULO when 'SR' then DOCUMENTACAO.TS0_DOCTO else null end as TAX_TS0_DOCTO,
+        case DOCUMENTACAO.TIPO_VEICULO when 'SR' then DOCUMENTACAO.VALOR_TAXA else null end as TAX_CUSTO,
 
-        DEPRECIACAO.VALOR_MOV as DEPRECIACAO,
+        case DEPRECIACAO.TIPO_VEICULO when 'SR' then DEPRECIACAO.VALOR_MOV else null end as DEPRECIACAO,
 
         0.0 as AUTOTRAC,
         0.0 as SEGURO_VEICULO,
@@ -748,7 +752,8 @@ union
                 STJ.TJ_CCUSTO,
                 STL.TL_UNIDADE,
                 sum(STL.TL_QUANTID) as TL_QUANTID,
-                sum(STL.TL_CUSTO) as TL_CUSTO
+                sum(STL.TL_CUSTO) as TL_CUSTO,
+                case when STJ.TJ_CODBEM like 'CM%' then 'CM' when STJ.TJ_CODBEM like 'SR%' then 'SR' else 'OUTROS' end as TIPO_VEICULO
 
             from STJ010 STJ
                 inner join ST9010 ST9
@@ -824,7 +829,8 @@ union
                 sum(TS1.TS1_VALOR) as VALOR_TAXA,
                 trim(isnull(TS0010.TS0_NOMDOC, '-')) as TS0_DOCTO,
                 trim(isnull(ST9010.T9_CODBEM, '-')) as T9_CODBEM,
-                TS1.ANO_DOCTO
+                TS1.ANO_DOCTO,
+                case when ST9010.T9_CODBEM like 'CM%' then 'CM' when ST9010.T9_CODBEM like 'SR%' then 'SR' else 'OUTROS' end as TIPO_VEICULO
             from
                 (
                     select
@@ -849,6 +855,7 @@ union
         ) DOCUMENTACAO
             on DOCUMENTACAO.ANO_DOCTO = substring(VIAGEM.COMPETENCIA, 1, 4)
             and DOCUMENTACAO.T9_CODBEM = VIAGEM.COD_RB1
+        
         left join
         (
             select
@@ -858,7 +865,8 @@ union
                 convert(date, SN3.N3_DINDEPR, 103) as INI_DEPREC,
                 SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
                 substring(SN4.N4_DATA, 1, 6) as PERIODO,
-                SN4.N4_VLROC1 as VALOR_MOV
+                SN4.N4_VLROC1 as VALOR_MOV,
+                case when SN1.N1_CODBEM like 'CM%' then 'CM' when SN1.N1_CODBEM like 'SR%' then 'SR' else 'OUTROS' end as TIPO_VEICULO
 
             from SN4010 SN4
                 inner join SN3010 SN3
