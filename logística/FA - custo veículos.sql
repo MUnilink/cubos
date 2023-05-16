@@ -101,7 +101,7 @@
                 ) as km_ini,
                 
                 concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-                concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
+                trim(DA4010.DA4_COD) as ID_MOTORISTA,
                 DA4010.DA4_COD,
                 DA4010.DA4_MAT,
                 
@@ -586,7 +586,7 @@ union
                 ) as km_ini,
                 
                 concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-                concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
+                trim(DA4010.DA4_COD) as ID_MOTORISTA,
                 DA4010.DA4_COD,
                 DA4010.DA4_MAT,
                 
