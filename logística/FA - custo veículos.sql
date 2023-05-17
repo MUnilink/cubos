@@ -125,8 +125,8 @@
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
                         and DTW010.DTW_CODCLI != 761
                     order by DTW010.DTW_SEQUEN
@@ -139,8 +139,8 @@
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
                         and DTW010.DTW_CODCLI != 761
                     order by DTW010.DTW_SEQUEN
@@ -154,8 +154,8 @@
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 49
                 ) as SAI_VIAGEM,
                 (
@@ -166,8 +166,8 @@
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 50
                 ) as CHE_VIAGEM,
                 (
@@ -610,8 +610,8 @@ union
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
                         and DTW010.DTW_CODCLI != 761
                     order by DTW010.DTW_SEQUEN
@@ -624,8 +624,8 @@ union
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
                         and DTW010.DTW_CODCLI != 761
                     order by DTW010.DTW_SEQUEN
@@ -639,8 +639,8 @@ union
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 49
                 ) as SAI_VIAGEM,
                 (
@@ -651,8 +651,8 @@ union
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_SYSHOR != ''
-                        and DTW010.DTW_SYSDAT != ''
+                        and DTW010.DTW_HORREA != ''
+                        and DTW010.DTW_DATREA != ''
                         and DTW010.DTW_ATIVID = 50
                 ) as CHE_VIAGEM,
                 (
