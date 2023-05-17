@@ -126,28 +126,28 @@ FROM DT6010 DT6
 
             (
                 select
-                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                        top 1 concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DUD.DUD_FILORI
                     and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
                 order by DTW010.DTW_SEQUEN
             ) as CHE_CLIDEV_REAL,
             (
                 select
-                        top 1 concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                        top 1 concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DUD.DUD_FILORI
                     and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
                 order by DTW010.DTW_SEQUEN
@@ -155,26 +155,26 @@ FROM DT6010 DT6
 
             (
                 select
-                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                        concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DUD.DUD_FILORI
                     and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 49
             ) as SAI_VIAGEM_REAL,
             (
                 select
-                        concat(DTW010.DTW_SYSDAT, ' ', concat(substring(DTW010.DTW_SYSHOR, 1, 2), ':', substring(DTW010.DTW_SYSHOR, 3, 2), ':', substring(DTW010.DTW_SYSHOR, 5, 2)))
+                        concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
                     and DTW010.DTW_FILORI = DUD.DUD_FILORI
                     and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-                    and DTW010.DTW_SYSHOR != ''
-                    and DTW010.DTW_SYSDAT != ''
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 50
             ) as CHE_VIAGEM_REAL,
             
