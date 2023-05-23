@@ -143,8 +143,7 @@ from
             (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODRB3) as PLACA_RB3,
 
             (
-                select
-                        top 1 concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                select top 1 first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
                 from DTW010 (nolock)
                 where
                         DTW010.D_E_L_E_T_ = ''
@@ -154,11 +153,9 @@ from
                     and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
-                order by DTW010.DTW_SEQUEN
             ) as CHE_CLIDEV_REAL,
             (
-                select
-                        top 1 concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                select top 1 first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
                 from DTW010 (nolock)
                 where
                         DTW010.D_E_L_E_T_ = ''
@@ -168,7 +165,6 @@ from
                     and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
-                order by DTW010.DTW_SEQUEN
             ) as SAI_CLIDEV_REAL,
 
             (
