@@ -23,7 +23,7 @@
 
         SR0.R0_TPBEN as TIPO_BENEFICIO,
         SR0.R0_CODIGO as COD_BENEFICIO,
-        RFO.RFO_DESCR as DESC_BENEFICIO,
+        isnull(RFO.RFO_DESCR, SRN.RN_DESC) as DESC_BENEFICIO,
         SR0.R0_VALCAL as REFERENCIA,
         RFO.RFO_PERC as PERC_FUNC,
         SR0.R0_VLRFUNC as VALOR_FUNC,
@@ -75,6 +75,10 @@
             on RFO.D_E_L_E_T_ = ''
             and RFO.RFO_TPVALE = SR0.R0_TPVALE
             and RFO.RFO_CODIGO = SR0.R0_CODIGO
+        left join SRN010 SRN (nolock)
+            on SRN.D_E_L_E_T_ = ''
+            and SRN.RN_FILIAL = substring(SR0.R0_FILIAL, 1, 4)
+            and SRN.RN_COD = SR0.R0_CODIGO
     where SR0.D_E_L_E_T_ = ''
 
 union
