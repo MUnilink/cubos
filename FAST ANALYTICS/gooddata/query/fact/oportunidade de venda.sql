@@ -4,7 +4,8 @@ select
     'P |01|AC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(AC2.AC2_FILIAL, ' '))+'|'+RTRIM(COALESCE(AC2.AC2_PROVEN, ' '))+RTRIM(COALESCE(AC2.AC2_STAGE, ' ')), ' '), '|') AS BK_ESTAGIOVENDA,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') AS BK_CLIENTE,
     'P |01|SUS010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SUS.US_FILIAL, ' '))+'|'+RTRIM(COALESCE(SUS.US_COD, ' '))+RTRIM(COALESCE(SUS.US_LOJA, ' ')), ' '), '|') AS BK_PROSPECT,
-    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA3.A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA3.A3_COD, ' ')), ' '), '|') AS BK_VENDEDOR,
+    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(VEN.A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(VEN.A3_COD, ' ')), ' '), '|') AS BK_VENDEDOR,
+    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(TIM.A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(TIM.A3_COD, ' ')), ' '), '|') as BK_TIMEVENDAS,
     AD1.AD1_DATA as DATA,
     AD1.AD1_NROPOR as OPORTUNIDADE,
     AD1.AD1_REVISA as VERSAO,
@@ -41,9 +42,13 @@ from AD1010 AD1
         and AD2.AD2_NROPOR = AD1.AD1_NROPOR
         and AD2.AD2_REVISA = AD1.AD1_REVISA
         
-        left join SA3010 SA3 (nolock)
-            on SA3.D_E_L_E_T_ = ''
-            and SA3.A3_COD = AD2.AD2_VEND
+        left join SA3010 TIM (nolock)
+            on TIM.D_E_L_E_T_ = ''
+            and TIM.A3_COD = AD2.AD2_VEND
+
+    left join SA3010 VEN (nolock)
+        on VEN.D_E_L_E_T_ = ''
+        and VEN.A3_COD = AD1.AD1_VEND
 where
         AD1.D_E_L_E_T_ = ''
     and AD1.AD1_DATA between <<START_DATE>> and <<FINAL_DATE>>
