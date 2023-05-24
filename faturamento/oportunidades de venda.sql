@@ -1,6 +1,7 @@
 select
     trim(AC2.AC2_DESCRI) as ESTAGIO_PROCESSO,
-    trim(SA3.A3_NREDUZ) as VENDEDOR,
+    trim(VEN.A3_NREDUZ) as VENDEDOR,
+    trim(TIM.A3_NREDUZ) as TIMEVENDAS,
     AD2.AD2_VEND,
     AD2.AD2_PERC,
     AD1.AD1_VERBA as RECEITA_ESTIMADA,
@@ -56,8 +57,12 @@ from AD1010 AD1 (nolock)
         and AD2.AD2_NROPOR = AD1.AD1_NROPOR
         and AD2.AD2_REVISA = AD1.AD1_REVISA
         
-        left join SA3010 SA3 (nolock)
-            on SA3.D_E_L_E_T_ = ''
-            and SA3.A3_COD = AD2.AD2_VEND
+        left join SA3010 TIM (nolock)
+            on TIM.D_E_L_E_T_ = ''
+            and TIM.A3_COD = AD2.AD2_VEND
+
+    left join SA3010 VEN (nolock)
+        on VEN.D_E_L_E_T_ = ''
+        and VEN.A3_COD = AD1.AD1_VEND
 
 where AD1.D_E_L_E_T_ = ''
