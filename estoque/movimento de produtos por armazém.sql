@@ -9,13 +9,11 @@ select
 	trim(SB1.B1_DESC) as B1_DESC,
     substring(SD3.D3_OP, 1, 6) as D3_OP,
     SD3.D3_CF,
-
     SD3.D3_TM + ' - ' + trim(isnull(SF5.F5_TEXTO, SF4.F4_TEXTO)) as D3_TM,
-    isnull(SD1.D1_DOC, SD3.D3_DOC) as NF,
+    SD1.D1_DOC,
+    SD3.D3_DOC,
     SD1.D1_FORNECE,
-
-    year(SD3.D3_EMISSAO) as ano_MOV,
-    month(SD3.D3_EMISSAO) as mes_MOV
+    substring(SD3.D3_EMISSAO, 1, 6) as PERIODO_MOV
 
 from SD3010 SD3 (nolock)
 	inner join SB1010 SB1 (nolock)
@@ -33,8 +31,12 @@ from SD3010 SD3 (nolock)
         left join SF4010 SF4 (nolock)
             on SF4.D_E_L_E_T_ = ''
             and SF4.F4_CODIGO = SD1.D1_TES
-    left join SCP010 SCP (nolock)
-        on SCP.
+    
+    left join SB9010 SB9 (nolock)
+        on SB9.D_E_L_E_T_ = ''
+        and SB9.B9_FILIAL = SD3.D3_FILIAL
+        and SB9.B9_LOCAL = SD3.D3_LOCAL
+        and SB9.B9_COD = SD3.D3_COD
 where
         SD3.D_E_L_E_T_ = ''
-    and SD3.D3_LOCAL = '01'
+    and year(SD3.D3_EMISSAO) > 2021
