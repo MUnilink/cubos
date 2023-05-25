@@ -14,6 +14,7 @@ select
 	trim(isnull(TQT.TQT_DESMED, '-')) as TQT_DESMED,
 
 	ST9.T9_VALCPA as T9_VALCPA,
+	convert(date, ST9.T9_DTCOMPR, 103) as T9_DTCOMPR,
 	ST9.T9_SITBEM,
 
 	TQS.TQS_KMOR,
