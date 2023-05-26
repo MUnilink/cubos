@@ -1,0 +1,12 @@
+reunião portal do cliente para acompanhamento
+
+Felipe diz que repassará a necessidade para a empresa provedora da página, além de reunir as informações que seriam exibidas.
+Cristianne aponta para que clientes não saibam de informações de outros clientes.
+Carregamento, em viagem, descarregamento, saída e chegada de viagem.
+Raquel diz que é uma evolução no sentido de o cliente acompanhar ativamente a viagem, sem precisar recorrer sempre à equipe de logística, que manteria os acompanhamentos.
+Cristianne e Raquel lembram que há clientes que contratam serviços de clientes como ALIANÇA e MERCOSUL. Cristianne cita a OCEANA também.
+Paulino diz que o agendamento é uma forma de encontrar a viagem, em vez de o cliente ter um cadastro.
+Acesso por uma "área do cliente" na qual será colocado um número automaticamente criado ao se fechar a viagem, em vez do número da viagem ou do agendamento do TMS.
+Serão informadas as macros do autotrac, que serão obtidas pelas operações de transporte, dentro da viagem.
+Quando fechada a viagem, o código será enviado por email após o usuário escolher o email em uma tela customizada.
+Felipe explica o problema de atualização das macros, que será tratado em agenda no dia 30/05.
