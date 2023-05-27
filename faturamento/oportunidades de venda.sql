@@ -31,6 +31,12 @@ select
     case AD1.AD1_STATUS when 1 then 'ABERTA' when 2 then 'PERDIDA' when 3 then 'SUSPENSA' when 9 then 'GANHA' else 'OUTROS' end as AD1_STATUS,
     case AD1.AD1_FEELIN when 1 then 'BAIXA' when 2 then 'MEDIA' when 3 then 'ALTA' else 'OUTROS' end as AD1_FEELIN,
     case AD1.AD1_PRIOR when 1 then 'BAIXA' when 2 then 'MEDIA' when 3 then 'ALTA' else 'OUTROS' end as AD1_PRIOR,
+    ADJ.ADJ_ITEM,
+    SB1.B1_COD,
+    SB1.B1_DESC,
+    ADJ.ADJ_QUANT,
+    ADJ.ADJ_PRUNIT,
+    ADJ.ADJ_VALOR,
     1 as contador
 
 from AD1010 AD1 (nolock)
@@ -64,5 +70,19 @@ from AD1010 AD1 (nolock)
     left join SA3010 VEN (nolock)
         on VEN.D_E_L_E_T_ = ''
         and VEN.A3_COD = AD1.AD1_VEND
+
+    left join ADJ010 ADJ
+        on ADJ.D_E_L_E_T_ = ''
+        and ADJ.ADJ_FILIAL = AD1.AD1_FILIAL
+        and ADJ.ADJ_NROPOR = AD1.AD1_NROPOR
+        and ADJ.ADJ_REVISA = AD1.AD1_REVISA
+
+        left join SB1010 SB1
+            on SB1.D_E_L_E_T_= ' '
+            and SB1.B1_COD = ADJ.ADJ_PROD
+
+            left join SBM010 SBM
+                on SBM.D_E_L_E_T_ = ' '
+                and SBM.BM_GRUPO = SB1.B1_GRUPO
 
 where AD1.D_E_L_E_T_ = ''
