@@ -20,7 +20,13 @@ select
     AD1.AD1_DTFIM as DTFIM,
     trim(AD1.AD1_OBSPRO) as OBS,
     0.01 * AD1.AD1_VERBA * AD2.AD2_PERC as RECEITA_ESTIMADA,
-    AD2.AD2_PERC
+    AD2.AD2_PERC,
+    ADJ.ADJ_ITEM,
+    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ADJ.ADJ_PROD, ' ')), ' '), '|') AS BK_PRODUTO,
+    'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SBM.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_PRODUTO,
+    ADJ.ADJ_QUANT,
+    ADJ.ADJ_PRUNIT,
+    ADJ.ADJ_VALOR
 
 from AD1010 AD1
     inner join AC2010 AC2
@@ -37,18 +43,33 @@ from AD1010 AD1
         on SA1.D_E_L_E_T_ = ''
         and SA1.A1_COD = AD1.AD1_CODCLI
         and SA1.A1_LOJA = AD1.AD1_LOJCLI
-    left join AD2010 AD2 (nolock)
+    left join AD2010 AD2
         on AD2.D_E_L_E_T_ = ''
+        and AD2.AD2_FILIAL = AD1.AD1_FILIAL
         and AD2.AD2_NROPOR = AD1.AD1_NROPOR
         and AD2.AD2_REVISA = AD1.AD1_REVISA
         
-        left join SA3010 TIM (nolock)
+        left join SA3010 TIM
             on TIM.D_E_L_E_T_ = ''
             and TIM.A3_COD = AD2.AD2_VEND
 
-    left join SA3010 VEN (nolock)
+    left join SA3010 VEN
         on VEN.D_E_L_E_T_ = ''
         and VEN.A3_COD = AD1.AD1_VEND
+
+    left join ADJ010 ADJ
+        on ADJ.D_E_L_E_T_ = ''
+        and ADJ.ADJ_FILIAL = AD1.AD1_FILIAL
+        and ADJ.ADJ_NROPOR = AD1.AD1_NROPOR
+        and ADJ.ADJ_REVISA = AD1.AD1_REVISA
+
+        left join SB1010 SB1
+            on SB1.D_E_L_E_T_= ' '
+            and SB1.B1_COD = ADJ.ADJ_PROD
+
+            left join SBM010 SBM
+                on SBM.D_E_L_E_T_ = ' '
+                and SBM.BM_GRUPO = SB1.B1_GRUPO
 where
         AD1.D_E_L_E_T_ = ''
     and AD1.AD1_DATA between <<START_DATE>> and <<FINAL_DATE>>
