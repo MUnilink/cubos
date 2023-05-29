@@ -33,7 +33,7 @@ select
     case AD1.AD1_PRIOR when 1 then 'BAIXA' when 2 then 'MEDIA' when 3 then 'ALTA' else 'OUTROS' end as AD1_PRIOR,
     ADJ.ADJ_ITEM,
     SB1.B1_COD,
-    SB1.B1_DESC,
+    trim(SB1.B1_DESC) as B1_DESC,
     ADJ.ADJ_QUANT,
     ADJ.ADJ_PRUNIT,
     ADJ.ADJ_VALOR,
