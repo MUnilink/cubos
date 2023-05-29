@@ -10,3 +10,4 @@ Acesso por uma "área do cliente" na qual será colocado um número automaticame
 Serão informadas as macros do autotrac, que serão obtidas pelas operações de transporte, dentro da viagem.
 Quando fechada a viagem, o código será enviado por email após o usuário escolher o email em uma tela customizada.
 Felipe explica o problema de atualização das macros, que será tratado em agenda no dia 30/05.
+Felipe define que analisará com a mconsult o orçamento das customizações, e que o Rhayan contata a provedora do site para a outra integração.
