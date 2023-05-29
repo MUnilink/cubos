@@ -102,7 +102,7 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
-        null as PERIODO,
+        RIQ.RIQ_PERIOD as PERIODO,
 
         case RIS.RIS_TPBENE when 81 then 'CESTA' when 84 then 'CESTA' else null end as BENEFICIO,
 
@@ -120,8 +120,8 @@ union
         RIS.RIS_PD as VERBA,
         RIS.RIS_PD1 as VERBA_DESC,
         RIS.RIS_PD2 as VERBA_EMPR,
-        RI1.RI1_DINIPG as INI_PGTO,
-        RI1.RI1_DFIMPG as FIM_PGTO,
+        null as INI_PGTO,
+        null as FIM_PGTO,
 
         null as DIAS_CALCULO,
         null as DIAS_PROPORC,
@@ -135,11 +135,11 @@ union
         null as VALOR_EMPR,
         null as FERIAS
 
-    from RI1010 RI1 (nolock)
+    from RIQ010 RIQ (nolock)
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
-            and SRA.RA_FILIAL = RI1.RI1_FILIAL
-            and SRA.RA_MAT = RI1.RI1_MAT
+            and SRA.RA_FILIAL = RIQ.RIQ_FILIAL
+            and SRA.RA_MAT = RIQ.RIQ_MAT
 
             inner join SQB010 SQB (nolock)
                 on SQB.D_E_L_E_T_ = ''
@@ -158,6 +158,6 @@ union
         
         inner join RIS010 RIS (nolock)
             on RIS.D_E_L_E_T_ = ''
-            and RIS.RIS_TPBENE = RI1.RI1_BENEF
-            and RIS.RIS_COD = RI1.RI1_TABELA
-    where RI1.D_E_L_E_T_ = ''
+            and RIS.RIS_TPBENE = RIQ.RIQ_TPBENE
+            and RIS.RIS_COD = RIQ.RIQ_COD
+    where RIQ.D_E_L_E_T_ = ''
