@@ -80,6 +80,7 @@
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                         and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                        and ZB1010.ZB1_MACRON = 7
                         and DTW010.DTW_ATIVID = 50
                 ) as km_fim,
                 (
@@ -97,6 +98,7 @@
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                         and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                        and ZB1010.ZB1_MACRON = 1
                         and DTW010.DTW_ATIVID = 49
                 ) as km_ini,
                 
@@ -566,6 +568,7 @@ union
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                         and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                        and ZB1010.ZB1_MACRON = 7
                         and DTW010.DTW_ATIVID = 50
                 ) as km_fim,
                 (
@@ -583,6 +586,7 @@ union
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
                         and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                        and ZB1010.ZB1_MACRON = 1
                         and DTW010.DTW_ATIVID = 49
                 ) as km_ini,
                 
