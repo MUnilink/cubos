@@ -36,10 +36,8 @@ select
     trim(DTC.DTC_CODPRO) as PRODUTO,
 
     DIARIAS.ID_DIARIA,
-    DIARIAS.DYV_IDCDIA,
     DIARIAS.DYX_DATDIA,
-    DIARIAS.DYX_QTDE,
-    DIARIAS.DYX_VLRUNI,
+    DIARIAS.E2_BAIXA,
     
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
@@ -191,11 +189,19 @@ from
             DYX010.DYX_ITEM,
             DYX010.DYX_DATDIA,
             DYX010.DYX_QTDE,
-            DYX010.DYX_VLRUNI
+            DYX010.DYX_VLRUNI,
+            SE2010.E2_NUM,
+            SE2010.E2_BAIXA
         from DYV010
             inner join DYX010
                 on DYX010.D_E_L_E_T_ = ''
                 and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
+
+                left join SE2010
+                    on SE2010.D_E_L_E_T_ = ''
+                    and SE2010.E2_PREFIXO = DYX010.DYX_PRETIT
+                    and SE2010.E2_NUM = DYX010.DYX_NUMTIT
+        
         where DYV010.D_E_L_E_T_ = ''
     ) DIARIAS
         on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
