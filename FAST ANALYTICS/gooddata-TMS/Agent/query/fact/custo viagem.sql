@@ -37,6 +37,8 @@ select
 
     DIARIAS.ID_DIARIA,
     DIARIAS.DYX_DATDIA,
+    DIARIAS.DYX_QTDE,
+    DIARIAS.DYX_VLRUNI,
     DIARIAS.E2_BAIXA,
     
     VIAGEM.ID_VEICULO_CM,
@@ -181,7 +183,7 @@ from
     left join
     (
         select
-            concat(trim(DYV010.DYV_FILORI), trim(DYV010.DYV_VIAGEM), trim(DYV010.DYV_CODMOT), trim(DYV010.DYV_IDCDIA), trim(DYX010.DYX_ITEM)) as ID_DIARIA,
+            concat(trim(DYV010.DYV_FILORI), trim(DYV010.DYV_VIAGEM), trim(DYV010.DYV_CODMOT), trim(DYV010.DYV_IDCDIA)) as ID_DIARIA,
             DYV010.DYV_FILORI,
             DYV010.DYV_VIAGEM,
             DYV010.DYV_CODMOT,
