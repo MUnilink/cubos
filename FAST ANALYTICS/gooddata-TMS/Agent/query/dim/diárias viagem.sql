@@ -1,5 +1,5 @@
 select
-    concat(trim(DYV.DYV_FILORI), trim(DYV.DYV_VIAGEM), trim(DYV.DYV_CODMOT), trim(DYV.DYV_IDCDIA), trim(DYX.DYX_ITEM)) as ID_DIARIA,
+    concat(trim(DYV.DYV_FILORI), trim(DYV.DYV_VIAGEM), trim(DYV.DYV_CODMOT), trim(DYV.DYV_IDCDIA)) as ID_DIARIA,
     DYV.DYV_IDCDIA as TITULO_TMS,
     DYX.DYX_ITEM as ITEM,
     DYX.DYX_STATUS,
