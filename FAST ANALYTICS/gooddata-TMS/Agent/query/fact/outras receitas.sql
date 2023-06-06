@@ -2,7 +2,6 @@
         'P |01|01' AS BK_EMPRESA,
         VIAGEM.DATAFIM as DATA_EMISSAO,
         
-        SE1.E1_NUM as DOC,
         SE1.E1_VALOR as VALOR,
         SE1.E1_EMISSAO as DATA_DOC,
 
@@ -45,7 +44,7 @@
 
                 (
                     select DTW010.DTW_SYSDAT
-                    from DTW010 (nolock)
+                    from DTW010 
                     where 
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
@@ -59,26 +58,26 @@
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-            from DTQ010 DTQ (nolock)
-                left join DTR010 DTR (nolock)
+            from DTQ010 DTQ 
+                left join DTR010 DTR 
                     on DTR.D_E_L_E_T_ = ''
                     and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                     and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                     
-                    left join DUP010 (nolock)
+                    left join DUP010 
                         on DUP010.D_E_L_E_T_ = ''
                         and DUP010.DUP_FILORI = DTR.DTR_FILORI
                         and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                         and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                         and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                        left join DA4010 (nolock)
+                        left join DA4010 
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
         
-        inner join SE1010 SE1 (nolock)
+        inner join SE1010 SE1 
             on SE1.D_E_L_E_T_ = ''
             and SE1.E1_FILIAL = VIAGEM.DTQ_FILORI
             and
@@ -87,19 +86,19 @@
                 trim(SE1.E1_YVIAGEM) = VIAGEM.DTQ_VIAGEM
             )
 
-        inner join DUD010 DUD (nolock)
+        inner join DUD010 DUD 
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
             and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
             and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
-            left join DT6010 DT6 (nolock)
+            left join DT6010 DT6 
                 on DT6.D_E_L_E_T_ = ''
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-                left join DTC010 DTC (nolock)
+                left join DTC010 DTC 
                     on DTC.D_E_L_E_T_ = ''
                     and DTC.DTC_FILDOC = DT6.DT6_FILDOC
                     and DTC.DTC_DOC = DT6.DT6_DOC
@@ -147,7 +146,6 @@ union
         'P |01|01' AS BK_EMPRESA,
         VIAGEM.DATAFIM as DATA_EMISSAO,
 
-        SC5.C5_NUM as DOC,
         RPS.D2_TOTAL as VALOR,
         SC5.C5_EMISSAO as DATA_DOC,
 
@@ -190,7 +188,7 @@ union
 
                 (
                     select DTW010.DTW_SYSDAT
-                    from DTW010 (nolock)
+                    from DTW010 
                     where 
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
@@ -204,31 +202,31 @@ union
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-            from DTQ010 DTQ (nolock)
-                left join DTR010 DTR (nolock)
+            from DTQ010 DTQ 
+                left join DTR010 DTR 
                     on DTR.D_E_L_E_T_ = ''
                     and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                     and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                     
-                    left join DUP010 (nolock)
+                    left join DUP010 
                         on DUP010.D_E_L_E_T_ = ''
                         and DUP010.DUP_FILORI = DTR.DTR_FILORI
                         and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                         and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                         and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                        left join DA4010 (nolock)
+                        left join DA4010 
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
 
-        inner join SC5010 SC5 (nolock)
+        inner join SC5010 SC5 
             on SC5.D_E_L_E_T_ = ''
             and SC5.C5_FILIAL = VIAGEM.DTQ_FILORI
             and trim(SC5.C5_YVIAGEM) = VIAGEM.DTQ_VIAGEM
 
-            left join SD2010 RPS (nolock)
+            left join SD2010 RPS 
                 on RPS.D_E_L_E_T_ = ''
                 and RPS.D2_FILIAL = SC5.C5_FILIAL
                 and RPS.D2_DOC = SC5.C5_NOTA
@@ -236,19 +234,19 @@ union
                 and RPS.D2_CLIENTE = SC5.C5_CLIENTE
                 and RPS.D2_LOJA = SC5.C5_LOJACLI
 
-        inner join DUD010 DUD (nolock)
+        inner join DUD010 DUD 
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
             and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
             and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
-            left join DT6010 DT6 (nolock)
+            left join DT6010 DT6 
                 on DT6.D_E_L_E_T_ = ''
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-                left join DTC010 DTC (nolock)
+                left join DTC010 DTC 
                     on DTC.D_E_L_E_T_ = ''
                     and DTC.DTC_FILDOC = DT6.DT6_FILDOC
                     and DTC.DTC_DOC = DT6.DT6_DOC
@@ -296,7 +294,6 @@ union
         'P |01|01' AS BK_EMPRESA,
         VIAGEM.DATAFIM as DATA_EMISSAO,
         
-        DOCAV.DTC_DOC as DOC,
         DOCAV.DTC_VALOR as VALOR,
         DOCAV.DTC_DATENT as DATA_DOC,
 
@@ -339,7 +336,7 @@ union
 
                 (
                     select DTW010.DTW_SYSDAT
-                    from DTW010 (nolock)
+                    from DTW010 
                     where 
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
@@ -353,41 +350,41 @@ union
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-            from DTQ010 DTQ (nolock)
-                left join DTR010 DTR (nolock)
+            from DTQ010 DTQ 
+                left join DTR010 DTR 
                     on DTR.D_E_L_E_T_ = ''
                     and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                     and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                     
-                    left join DUP010 (nolock)
+                    left join DUP010 
                         on DUP010.D_E_L_E_T_ = ''
                         and DUP010.DUP_FILORI = DTR.DTR_FILORI
                         and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                         and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                         and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                        left join DA4010 (nolock)
+                        left join DA4010 
                             on DA4010.D_E_L_E_T_ = ''
                             and DA4010.DA4_COD = DUP010.DUP_CODMOT
             where DTQ.D_E_L_E_T_ = ''
         ) VIAGEM
-        inner join DTC010 DOCAV (nolock)
+        inner join DTC010 DOCAV 
             on DOCAV.D_E_L_E_T_ = ''
             and DOCAV.DTC_FILIAL = VIAGEM.DTQ_FILORI
             and trim(DOCAV.DTC_YVIAGE) = VIAGEM.DTQ_VIAGEM
-        inner join DUD010 DUD (nolock)
+        inner join DUD010 DUD 
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
             and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
             and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
-            left join DT6010 DT6 (nolock)
+            left join DT6010 DT6 
                 on DT6.D_E_L_E_T_ = ''
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-                left join DTC010 DTC (nolock)
+                left join DTC010 DTC 
                     on DTC.D_E_L_E_T_ = ''
                     and DTC.DTC_FILDOC = DT6.DT6_FILDOC
                     and DTC.DTC_DOC = DT6.DT6_DOC
