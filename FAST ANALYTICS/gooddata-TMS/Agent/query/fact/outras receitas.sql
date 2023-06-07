@@ -58,8 +58,8 @@
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
                 (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-            from DTQ010 DTQ 
-                left join DTR010 DTR 
+            from DTQ010 DTQ
+                left join DTR010 DTR
                     on DTR.D_E_L_E_T_ = ''
                     and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                     and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
@@ -86,19 +86,19 @@
                 trim(SE1.E1_YVIAGEM) = VIAGEM.DTQ_VIAGEM
             )
 
-        inner join DUD010 DUD 
+        inner join DUD010 DUD
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
             and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
             and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
-            left join DT6010 DT6 
+            left join DT6010 DT6
                 on DT6.D_E_L_E_T_ = ''
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-                left join DTC010 DTC 
+                left join DTC010 DTC
                     on DTC.D_E_L_E_T_ = ''
                     and DTC.DTC_FILDOC = DT6.DT6_FILDOC
                     and DTC.DTC_DOC = DT6.DT6_DOC
