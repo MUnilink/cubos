@@ -208,6 +208,7 @@ FROM DT6010 DT6
             select
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
+                DF1010.DF1_YDIBOO,
                 DF1010.DF1_YOSCLI,
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
