@@ -132,7 +132,7 @@ FROM DT8010 DT8
                     DTQ.DTQ_DATFEC,
                     DTQ.DTQ_DATENC,
                     (
-                        select DTW010.DTW_SYSDAT
+                        select DTW010.DTW_DATREA
                         from DTW010 (nolock)
                         where 
                                 DTW010.D_E_L_E_T_ = ''

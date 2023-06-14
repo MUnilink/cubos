@@ -171,7 +171,7 @@
                         and DTW010.DTW_ATIVID = 50
                 ) as CHE_VIAGEM,
                 (
-                    select substring(DTW010.DTW_SYSDAT, 1, 6)
+                    select substring(DTW010.DTW_DATREA, 1, 6)
                     from DTW010
                     where 
                             DTW010.D_E_L_E_T_ = ''
