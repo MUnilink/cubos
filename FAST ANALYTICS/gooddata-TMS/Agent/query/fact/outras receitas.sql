@@ -43,7 +43,7 @@
                 DTQ.DTQ_DATENC,
 
                 (
-                    select DTW010.DTW_SYSDAT
+                    select DTW010.DTW_DATREA
                     from DTW010 
                     where 
                             DTW010.D_E_L_E_T_ = ''
@@ -187,7 +187,7 @@ union
                 DTQ.DTQ_DATENC,
 
                 (
-                    select DTW010.DTW_SYSDAT
+                    select DTW010.DTW_DATREA
                     from DTW010 
                     where 
                             DTW010.D_E_L_E_T_ = ''
@@ -335,7 +335,7 @@ union
                 DTQ.DTQ_DATENC,
 
                 (
-                    select DTW010.DTW_SYSDAT
+                    select DTW010.DTW_DATREA
                     from DTW010 
                     where 
                             DTW010.D_E_L_E_T_ = ''
