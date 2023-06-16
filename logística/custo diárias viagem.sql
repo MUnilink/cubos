@@ -1,21 +1,22 @@
 select
-    DYV.DYV_VIAGEM as VIAGEM,
-    DYV.DYV_CODMOT as CODMOT,
-    DA4.DA4_MAT as MATRICULA,
-    DA4.DA4_NOME as MOTORISTA,
-    DA4.DA4_FORNEC as FORNECEDOR,
-    DYV.DYV_IDCDIA as TITULO_TMS,
-    DYX.DYX_ITEM as ITEM,
-    convert(date, DYX.DYX_DATDIA, 103) as DATA_DIARIA,
+    DYV.DYV_VIAGEM,
+    DYV.DYV_CODMOT,
+    DA4.DA4_MAT,
+    DA4.DA4_NOME,
+    DA4.DA4_FORNEC,
+    DYV.DYV_IDCDIA,
+    DYX.DYX_ITEM,
+    convert(date, DYX.DYX_DATDIA, 103) as DYX_DATDIA,
     DYX.DYX_QTDE,
     DYX.DYX_VLRUNI,
     DYX.DYX_STATUS,
     DYX.DYX_USRAPR,
-    convert(date, DYX.DYX_DATAPR, 103) as DATA_APROV,
-    SE2.E2_NUM as TITULO_FIN,
-    convert(date, SE2.E2_BAIXA, 103) as DATA_BAIXA,
+    convert(date, DYX.DYX_DATAPR, 103) as DYX_DATAPR,
+    SE2.E2_NUM,
     SE2.E2_VALOR as VALOR_DIARIA,    
-    substring(DYX.DYX_DATDIA, 1, 6) as PERIODO_DIARIA
+    year(DYX.DYX_DATDIA) as ano_DIARIA,
+    month(DYX.DYX_DATDIA) as mes_DIARIA
+
 from DYV010 DYV (nolock)
     inner join DYX010 DYX (nolock)
         on DYX.D_E_L_E_T_ = ''
