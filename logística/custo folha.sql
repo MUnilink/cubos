@@ -7,7 +7,7 @@ select
 	trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
 	trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
 	trim(isnull(SRJ.RJ_DESC, '-')) as RJ_DESC,
-	trim(isnull(SRA.RA_CC, '-')) as RA_CC
+	trim(isnull(SRA.RA_CC, '-')) as RA_CC,
 
 	case trim(SRV.RV_TIPOCOD)
 		when '1' then 'PROVENTO'
