@@ -10,9 +10,9 @@ select
     SB2.B2_QATU as QTD,
     SB2.B2_VATU1 as VALOR,
     SB2.B2_CM1 as CM
-from SB1010 SB1 (nolock)
-    left join SB2010 SB2 (nolock)
-        on SB2.D_E_L_E_T_ = ''
-        and SB2.B2_COD = SB1.B1_COD
+from SB2010 SB2 (nolock)
+    left join SB1010 SB1 (nolock)
+        on SB1.D_E_L_E_T_ = ''
+        and SB1.B1_COD = SB2.B2_COD
 where
-        SB1.D_E_L_E_T_ = ''
+        SB2.D_E_L_E_T_ = ''
