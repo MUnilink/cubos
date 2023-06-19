@@ -41,26 +41,11 @@ select
     substring(SC7.C7_OP, 1, 6) as C7_OS,
     trim(SC7.C7_OBS) as OBS_PC,
     
-    SER.D1_DOC as NF_SERVICO,
-    SER.D1_SERIE as SER_SERVICO,
-    convert(date, SER.D1_DTDIGIT, 103) as DT_NFS,
-
-    (
-        select concat(REM.D2_DOC, ' - ', RET.D1_DOC)
-        from SD2010 REM (nolock)
-            left join SD1010 RET (nolock)
-                on RET.D_E_L_E_T_ = ''
-                and RET.D1_FILIAL = REM.D2_FILIAL
-                and RET.D1_DOC = REM.D2_NFORI
-                and RET.D1_SERIE = REM.D2_SERIORI
-                and RET.D1_ITEM = REM.D2_ITEMORI
-        where
-                REM.D_E_L_E_T_ = ''
-            and REM.D2_TES = 548
-            and RET.D1_LOCAL in (21, 22, 23, 24, 26)
-            and REM.D2_COD = SB1.B1_COD
-            and RET.D1_EMISSAO = SER.D1_DTDIGIT
-    ) as REMRET
+    SD1.D1_DOC as NF_SERVICO,
+    SD1.D1_SERIE as SER_SERVICO,
+    SD1.D1_TOTAL as VALOR_SERVICO,
+    SD1.D1_CUSTO as CUSTO_SERVICO,
+    convert(date, SD1.D1_DTDIGIT, 103) as DT_NFS
 
 from TQS010 TQS (nolock)
     inner join ST9010 ST9 (nolock)
@@ -91,10 +76,10 @@ from TQS010 TQS (nolock)
             on SC7.D_E_L_E_T_ = ''
             and SC7.C7_FILIAL = TR8.TR8_FILIAL
             and substring(SC7.C7_OP, 1, 6) = TR8.TR8_ORDEM
-        left join SD1010 SER (nolock)
-            on SER.D_E_L_E_T_ = ''
-            and SER.D1_FILIAL = TR8.TR8_FILIAL
-            and substring(SER.D1_OP, 1, 6) = TR8.TR8_ORDEM
+        left join SD1010 SD1 (nolock)
+            on SD1.D_E_L_E_T_ = ''
+            and SD1.D1_FILIAL = TR8.TR8_FILIAL
+            and substring(SD1.D1_OP, 1, 6) = TR8.TR8_ORDEM
     
     inner join TQY010 TQY (nolock)
         on TQY.D_E_L_E_T_ = ''
