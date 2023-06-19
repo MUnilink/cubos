@@ -19,7 +19,7 @@ select
     trim(DEV.A1_NOME) as CLIENTE,
 
     (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -36,7 +36,7 @@ select
             and DTW010.DTW_ATIVID in ('050')
     ) as km_fim,
     (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -336,10 +336,4 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_LOJA = SC5.C5_LOJACLI
 
 where
-        DTQ.D_E_L_E_T_ = ''/*
-    and
-    (
-        DT6.DT6_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990, 54215, 54229, 54230, 54231, 54232, 54235, 54258, 2692, 54570, 54571, 2784, 2811, 54878, 2819, 2820, 2871, 2876)
-    or  RPS.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990, 54215, 54229, 54230, 54231, 54232, 54235, 54258, 2692, 54570, 54571, 2784, 2811, 54878, 2819, 2820, 2871, 2876)
-    or  COMP.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990, 54215, 54229, 54230, 54231, 54232, 54235, 54258, 2692, 54570, 54571, 2784, 2811, 54878, 2819, 2820, 2871, 2876)
-    )*/
+        DTQ.D_E_L_E_T_ = ''
