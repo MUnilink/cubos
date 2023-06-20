@@ -45,7 +45,16 @@ select
     SD1.D1_SERIE as SER_SERVICO,
     SD1.D1_TOTAL as VALOR_SERVICO,
     SD1.D1_CUSTO as CUSTO_SERVICO,
-    convert(date, SD1.D1_DTDIGIT, 103) as DT_NFS
+    convert(date, SD1.D1_DTDIGIT, 103) as DT_NFS,
+
+    (
+        select top 1 last_value(STZ010.TZ_BEMPAI) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)
+        from STZ010 (nolock)
+        where
+                STZ010.D_E_L_E_T_ = ''
+            and STZ010.TZ_CODBEM = TR8.TR8_CODBEM
+            and STZ010.TZ_DATASAI + STZ010.TZ_HORASAI <= TR7.TR7_DTLOTE + TR7.TR7_HRLOTE
+    ) as ULTIMO_CARRO
 
 from TQS010 TQS (nolock)
     inner join ST9010 ST9 (nolock)
