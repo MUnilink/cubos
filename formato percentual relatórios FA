@@ -17,3 +17,10 @@ PARA RECEITA E BUSCA PELO AUMENTO
 [<-0,05][color=D3362C]▼#,##0.0%;
 
 NEUTRO
+
+[=null]--;
+[>0,05][blue]▲#,##0.0%;
+[>0][blue]▲#.##0,0%;
+[=0][blue]◄#.##0,0%;
+[>=-0,05][blue]▼#,##0.0%;
+[<-0,05][blue]▼#,##0.0%;
