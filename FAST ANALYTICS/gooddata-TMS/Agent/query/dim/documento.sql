@@ -1,4 +1,5 @@
     select
+        'CTRC' + DT6.DT6_DOC AS ID_DOCUMENTO,
         DT6.DT6_DOC as DOCUMENTO,
         DT6.DT6_SERIE as SERIE,
         1 as INSTANCIA
@@ -6,6 +7,7 @@
     where DT6.D_E_L_E_T_ = ''
 union
     select
+        'ND' + SE1.E1_NUM AS ID_DOCUMENTO,
         SE1.E1_NUM as DOCUMENTO,
         null as SERIE,
         1 as INSTANCIA
@@ -13,6 +15,7 @@ union
     where SE1.D_E_L_E_T_ = '' and (SE1.E1_YVIATMS is not null or SE1.E1_YVIAGEM is not null or SE1.E1_YVIATMS != '' or SE1.E1_YVIAGEM != '')
 union
     select
+        'RPS' + SD2.D2_DOC AS ID_DOCUMENTO,
         SD2.D2_DOC as DOCUMENTO,
         SD2.D2_SERIE as SERIE,
         1 as INSTANCIA
@@ -27,6 +30,7 @@ union
     where SC5.D_E_L_E_T_ = '' and (SC5.C5_YVIAGEM is not null or SC5.C5_YVIAGEM != '')
 union
     select
+        'DOCAV' + DTC.DTC_DOC AS ID_DOCUMENTO,
         DTC.DTC_DOC as DOCUMENTO,
         DTC.DTC_SERIE as SERIE,
         1 as INSTANCIA
