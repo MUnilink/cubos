@@ -26,7 +26,7 @@ from ST9010 ST9 (nolock)
         on TQS.D_E_L_E_T_ = ''
         and TQS.TQS_CODBEM = ST9.T9_CODBEM
 
-        left join TQT010 TQT (nolock) /* medida do pneu */
+        left join TQT010 TQT (nolock)
             on TQT.D_E_L_E_T_ = ''
             and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
     
