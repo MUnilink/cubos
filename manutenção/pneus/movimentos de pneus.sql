@@ -4,7 +4,7 @@ select
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
 
-	STZ.TZ_CONTSAI - STZ.TZ_POSCONT as km,
+    case when STZ.TZ_CONTSAI = 0 or STZ.TZ_POSCONT = 0 then -999999 else STZ.TZ_CONTSAI - STZ.TZ_POSCONT end as km,
 
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
