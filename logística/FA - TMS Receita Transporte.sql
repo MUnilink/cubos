@@ -61,6 +61,8 @@ SELECT
     1 as INSTANCIA,
     DT6_DATEMI as DATA_DOC,
 
+    SD2.D2_DOC,
+    SD2.D2_TOTAL,
     VIAGEM.ID_VIAGEM,
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
@@ -172,12 +174,10 @@ FROM DT8010 DT8
                 and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
                 and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
 
-        INNER JOIN SD2010 SD2
+        inner join SD2010 SD2
             on SD2.D_E_L_E_T_ = ''
             and SD2.D2_NFORI = DT6.DT6_DOC
             and SD2.D2_SERIORI = DT6.DT6_SERIE
             and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
-WHERE
-        VIAGEM.DATAFIM BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-    and DT8.D_E_L_E_T_ = ' '
+WHERE DT8.D_E_L_E_T_ = ' '
