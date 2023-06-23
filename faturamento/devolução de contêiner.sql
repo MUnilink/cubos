@@ -1,6 +1,8 @@
 select
     ZC1.ZC1_FILIAL,
     ZC1.ZC1_NUM,
+    substring(ZC1.ZC1_NUM, 6, 10) as OS,
+    substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
     
@@ -57,4 +59,4 @@ from ZC1010 ZC1 (nolock)
         and DES.A2_LOJA = ZC1.ZC1_LJDESP
 where
         ZC2.D_E_L_E_T_ = ''
-    and ZC2.ZC2_NUM = :NUMERO_OS
+    /*and ZC2.ZC2_NUM = :NUMERO_OS*/
