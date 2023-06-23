@@ -13,7 +13,8 @@ select
     DYX.DYX_USRAPR,
     convert(date, DYX.DYX_DATAPR, 103) as DYX_DATAPR,
     SE2.E2_NUM,
-    SE2.E2_VALOR as VALOR_DIARIA,    
+    SE2.E2_VALOR as VALOR_DIARIA,
+    substring(DYX.DYX_DATDIA, 1, 6) as PERIODO,
     year(DYX.DYX_DATDIA) as ano_DIARIA,
     month(DYX.DYX_DATDIA) as mes_DIARIA
 
