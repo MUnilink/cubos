@@ -6,14 +6,14 @@
         ZC2_TOTAL as TOTAL_OS,
         0 TOTAL_FOLHA,
         ZC2.R_E_C_N_O_
-    from ZC2010 ZC2, SRJ010 SRJ
-    where
-            ZC2.D_E_L_E_T_=''
+    from ZC2010 ZC2
+    join SRJ010 SRJ
+        on ZC2.D_E_L_E_T_=''
         and SRJ.D_E_L_E_T_= ''
-        and ZC2_COMPET <> ''
+        and ZC2_COMPET != ''
         and ZC2_TIPO = 2
         and ZC2_COD = RJ_FUNCAO
-        and ZC2.ZC2_INCLUS = 'M'
+    and ZC2.ZC2_INCLUS = 'M'
 
 union
 
@@ -25,9 +25,9 @@ union
         0 TOTAL_OS,
         RD_VALOR as TOTAL_FOLHA,
         SRD.R_E_C_N_O_
-    from SRD010 SRD, SRV010 SRV
-    where
-            SRD.D_E_L_E_T_ = ''
+    from SRD010 SRD 
+    join SRV010 SRV
+        on SRD.D_E_L_E_T_ = ''
         and RD_YCHVOS <> ''
         and SRV.D_E_L_E_T_=''
-        and RD_PD = RV_COD
+    and RD_PD = RV_COD
