@@ -13,6 +13,7 @@ select
     ZC2.ZC2_ITEM,
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_DESC) as DESC_INSUMO,
+    ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
@@ -56,4 +57,6 @@ from ZC1010 ZC1 (nolock)
         on DES.D_E_L_E_T_ = ''
         and DES.A2_COD = ZC1.ZC1_DESPA
         and DES.A2_LOJA = ZC1.ZC1_LJDESP
-where ZC2.D_E_L_E_T_ = ''
+where
+        ZC2.D_E_L_E_T_ = ''
+    and ZC2.ZC2_INCLUS != 'C'
