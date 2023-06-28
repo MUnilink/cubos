@@ -26,10 +26,13 @@
         else
             case when RHP.RHP_PD in (88) then 'UNIMED'
             else
-                case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                case when RHP.RHP_PD in (428, 429) then 'REDE SAUDE'
                 else
-                    case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
-                    else 'OUTROS'
+                    case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                    else
+                        case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
+                        else 'OUTROS'
+                        end
                     end
                 end
             end
@@ -177,10 +180,13 @@ union
         else
             case when RHO.RHO_PD in (88) then 'UNIMED'
             else
-                case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                case when RHO.RHO_PD in (428, 429) then 'REDE SAUDE'
                 else
-                    case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
-                    else 'OUTROS'
+                    case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                    else
+                        case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
+                        else 'OUTROS'
+                        end
                     end
                 end
             end
@@ -327,10 +333,13 @@ union
         else
             case when RHR.RHR_PD in (88) then 'UNIMED'
             else
-                case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                case when RHR.RHR_PD in (428, 429) then 'REDE SAUDE'
                 else
-                    case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
-                    else 'OUTROS'
+                    case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                    else
+                        case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
+                        else 'OUTROS'
+                        end
                     end
                 end
             end
@@ -476,10 +485,13 @@ union
         else
             case when RHS.RHS_PD in (88) then 'UNIMED'
             else
-                case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
+                case when RHS.RHS_PD in (428, 429) then 'REDE SAUDE'
                 else
-                    case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
-                    else 'OUTROS'
+                    case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
+                    else
+                        case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
+                        else 'OUTROS'
+                        end
                     end
                 end
             end
