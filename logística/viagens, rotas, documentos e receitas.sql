@@ -33,7 +33,7 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID in ('050')
+            and DTW010.DTW_ATIVID = 50
     ) as km_fim,
     (
         select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
@@ -50,7 +50,7 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID in ('049')
+            and DTW010.DTW_ATIVID = 49
     ) as km_ini,
 
     DTR.DTR_ITEM,
@@ -84,6 +84,7 @@ select
 
     DT6.DT6_PRZENT AS PRAZO_ENTREGA,
     DT6.DT6_DATENT AS DATA_ENTREGA,
+    
     CASE
         WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'
         ELSE 'DENTRO DO PRAZO'
@@ -147,7 +148,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
+            and DTW010.DTW_ATIVID = 49
     ) as DATAINI,
     (
         select DTW010.DTW_HORREA
@@ -156,7 +157,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
+            and DTW010.DTW_ATIVID = 49
     ) as HORAINI,
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -165,7 +166,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as DATAFIM,
     (
         select DTW010.DTW_HORREA
@@ -174,7 +175,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as HORAFIM,
     (
         select distinct first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
@@ -219,7 +220,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as COMPETENCIA,
 
     case DTQ.DTQ_STATUS
@@ -278,11 +279,11 @@ from DTQ010 DTQ (nolock)
             and DT5.DT5_NUMSOL = DUD.DUD_DOC
             and DUD.DUD_SERIE = 'COL'
 
-                left join DF1010 DF1 (nolock)
-                    on DF1.D_E_L_E_T_ = ''
-                    and DF1.DF1_FILDOC = DT5.DT5_FILORI
-                    and DF1.DF1_DOC = DT5.DT5_DOC
-                    and DF1.DF1_SERIE = DT5.DT5_SERIE
+            left join DF1010 DF1 (nolock)
+                on DF1.D_E_L_E_T_ = ''
+                and DF1.DF1_FILDOC = DT5.DT5_FILORI
+                and DF1.DF1_DOC = DT5.DT5_DOC
+                and DF1.DF1_SERIE = DT5.DT5_SERIE
 
 		left join DT6010 DT6 (nolock)
 			on DT6.D_E_L_E_T_ = ''
