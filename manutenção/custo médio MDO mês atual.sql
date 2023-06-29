@@ -1,0 +1,12 @@
+select
+	STL.TL_FILIAL,
+	STL.TL_CODIGO,
+	substring(STL.TL_DTINICI, 1, 6) as PERIODO,
+	STL.TL_DTINICI,
+	STL.TL_QUANTID,
+	STL.TL_SEQRELA,
+	STL.TL_CUSTO
+from STL010 STL
+where
+		STL.D_E_L_E_T_ = ''
+	and substring(STL.TL_DTINICI, 1, 6) = (select SX6010.X6_CONTEUD from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')

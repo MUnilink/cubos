@@ -1,0 +1,26 @@
+PARA CUSTO E DESPESA E BUSCA PELA QUEDA
+
+[=null]--;
+[>0,05][color=D3362C]▲#,##0.0%;
+[>0][color=F0CA38]▲#.##0,0%;
+[=0][color=F0CA38]◄#.##0,0%;
+[>=-0,05][color=F0CA38]▼#,##0.0%;
+[<-0,05][color=198762]▼#,##0.0%;
+
+PARA RECEITA E BUSCA PELO AUMENTO
+
+[=null]--;
+[>0,05][color=198762]▲#,##0.0%;
+[>0][color=F0CA38]▲#.##0,0%;
+[=0][color=F0CA38]◄#.##0,0%;
+[>=-0,05][color=F0CA38]▼#,##0.0%;
+[<-0,05][color=D3362C]▼#,##0.0%;
+
+NEUTRO
+
+[=null]--;
+[>0,05][blue]▲#,##0.0%;
+[>0][blue]▲#.##0,0%;
+[=0][blue]◄#.##0,0%;
+[>=-0,05][blue]▼#,##0.0%;
+[<-0,05][blue]▼#,##0.0%;

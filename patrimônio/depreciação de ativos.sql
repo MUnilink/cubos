@@ -8,12 +8,16 @@ select
 	SN3.N3_TXDEPR1 /12 as DEPREC_MENSAL,
 	SNG.NG_TXDEPR1 /12 as DEPREC_MENSAL_GRUPO,
 
+	SN3.N3_TIPO,
+
 	SN3.N3_CUSTBEM as CC,
 	SN3.N3_SUBCCON as ATIVIDADE,
 	trim(SN3.N3_CCONTAB) as CONTA,
+	(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SN3.N3_CCONTAB) as CONTA_ATIVO,
 
-	SN4.N4_CCUSTO as CC_DEPREC,
-	SN4.N4_SUBCTA as ATIVIDADE_DEPREC,
+	SN4.N4_CCUSTOT as CC_ORIGEM,
+	SN4.N4_CCUSTO as CC_MOV,
+	SN4.N4_SUBCTA as ATIVIDADE_MOV,
 	
 	SN3.N3_CCUSTO as CC_DESPESA,
 	SN3.N3_SUBCTA as ATIV_DESPESA,
@@ -21,10 +25,12 @@ select
 	SN3.N3_CCCDEP as CC_DEPR_ACUM,
 	SN3.N3_SUBCCDE as ATIV_DEPR_ACUM,
 	trim(SN3.N3_CCDEPR) as CONTA_DEPR_ACUM,
+	(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SN3.N3_CCDEPR) as CONTA_DEPR_ACUM,
 
 	SN3.N3_CCDESP as CC_DESP_DEPR,
 	SN3.N3_SUBCDEP as ATIV_DESP_DEPR,
 	trim(SN3.N3_CDEPREC) as CONTA_DESP_DEPR,
+	(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SN3.N3_CDEPREC) as CONTA_DESP_DEPR,
 
 	SN1.N1_QUANTD,
 	SN3.N3_VORIG1 as VALOR_ORIGINAL,
@@ -41,31 +47,71 @@ select
 	SN3.N3_TXDEPR4,
 	SN3.N3_TXDEPR5,
 	
-	trim(SN4.N4_CONTA) as CONTA_DEPREC,
-	case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO,
-	SN4.N4_DATA,
+	trim(SN4.N4_CONTA) as N4_CONTA,
+	(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SN4.N4_CONTA) as CONTA_MOV,
+	case when SN4.N4_CONTA like '1%' then 'ATIVO' else case when SN4.N4_CONTA like '3%' then 'RESULTADO' else 'OUTROS' end end as TIPO_CONTA_MOV,
+	convert(datetime, concat(SN4.N4_DATA, ' ', SN4.N4_HORA), 113) as DATA_MOV,
 	substring(SN4.N4_DATA, 1, 6) as PERIODO,
 	SN4.N4_LA,
-	SN4.N4_VLROC1 as VALOR_DEPREC,
+	SN4.N4_VLROC1 as VALOR_MOV,
 	SN4.N4_VLROC2,
 	SN4.N4_VLROC3,
-	SN4.N4_ORIGEM
+	SN4.N4_ORIGEM as ROTINA,
+	SN4.N4_TIPO,
+	SN4.N4_LP,
 
-from SN1010 SN1 (nolock)
-    left join ST9010 ST9 (nolock)
-        on ST9.D_E_L_E_T_ = ''
-        and ST9.T9_CODBEM = SN1.N1_CODBEM
-	left join SNG010 SNG (nolock)
-		on SNG.D_E_L_E_T_ = ''
-		and SNG.NG_GRUPO = SN1.N1_GRUPO
+	SN4.N4_OCORR,
+	case SN4.N4_OCORR
+		when 1 then 'BAIXA'
+		when 3 then 'ENT TRANSFERENCIA'
+		when 4 then 'SAI TRANSFERENCIA'
+		when 5 then 'CLASSIFICACAO'
+		when 6 then 'DEPRECIACAO'
+		else 'OUTROS'
+	end as TIPO_MOVIMENTO,
+	
+	SN4.N4_MOTIVO,
+	(select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '16' and SX5010.X5_CHAVE = SN4.N4_MOTIVO) as MOTIVO_MOV
+
+from SN4010 SN4 (nolock)
 	inner join SN3010 SN3 (nolock)
 		on SN3.D_E_L_E_T_ = ''
-		and cast(SN3.N3_TIPO as int) = 1
-		and cast(SN3.N3_TXDEPR1 as decimal) > 0
-		and SN3.N3_CBASE = SN1.N1_CBASE
+		and SN3.N3_CBASE = SN4.N4_CBASE
+		and SN3.N3_ITEM = SN4.N4_ITEM
 
-		left join SN4010 SN4 (nolock)
-			on SN4.D_E_L_E_T_ = ''
-			and SN4.N4_CBASE = SN3.N3_CBASE
+		left join SN1010 SN1 (nolock)
+			on SN1.D_E_L_E_T_ = ''
+			and SN1.N1_CBASE = SN3.N3_CBASE
+			and SN1.N1_ITEM = SN3.N3_ITEM
+
+			left join ST9010 ST9 (nolock)
+				on ST9.D_E_L_E_T_ = ''
+				and ST9.T9_CODBEM = SN1.N1_CODBEM
+				
+				left join SNG010 SNG (nolock)
+					on SNG.D_E_L_E_T_ = ''
+					and SNG.NG_GRUPO = SN1.N1_GRUPO
+	(
+		select
+			CT2.CT2_LOTE,
+			CT2.CT2_SBLOTE,
+			CT2.CT2_DOC,
+			CT2.CT2_LINHA,
+			CT2.CT2_DEBITO,
+			CT2.CT2_CREDIT,
+			CT2.CT2_VALOR,
+			CT2.CT2_HIST,
+			CT2.CT2_ORIGEM,
+			CT2.CT2_CCD
+			CT2.CT2_ITEMD,
+			CT2.CT2_SEQHIS,
+			CT2.CT2_LP,
+			CT2.CT2_ROTINA
+		from CT2010 CT2
+		where
+				CT2.D_E_L_E_T_ = ''
+			and CT2.CT2_ROTINA in ('ATFA050', 'ATFA012', 'ATFA036')
+	) CT2
+		on CT2.
 where
-        SN1.D_E_L_E_T_ = ''
+        SN4.D_E_L_E_T_ = ''

@@ -1,103 +1,98 @@
-SELECT 'P |01|01' AS BK_EMPRESA,
-       CASE
-           WHEN C7_FILIAL IS NULL THEN 'P |01||'
-           ELSE 'P |01|01'+ CAST(C7_FILIAL AS CHAR (6))
-       END AS BK_FILIAL,
-       'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_FORNECE, ' '))+RTRIM(COALESCE(C7_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
-       'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
-       'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_COND, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
-       'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
-       'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
-       'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_COD, ' ')), ' '), '|') AS BK_COMPRADOR,
-       'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_TES, ' ')), ' '), '|') AS BK_TES,
-       'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
-       CASE
-           WHEN A2_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A2_EST, ' ')), ' '), '|')
-           ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A2_EST, ' '))+RTRIM(COALESCE(A2_COD_MUN, ' ')), ' '), '|')
-       END AS BK_REGIAO,
-       CASE
-           WHEN (C7_QUJE > 0)
-                AND (C7_QUJE < C7_QUANT) THEN 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
-           WHEN (C7_QUJE >= C7_QUANT) THEN 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
-           ELSE 'P |'+'|'
-       END AS BK_SITUACAO_COMPRA,
-	   'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(C7_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
-	   'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(B1_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
-       C7_NUMSC ORDEM,
-       C7_NUM PEDIDO,
-       COALESCE(C7_EMISSAO, ' ') AS DATA,
-       COALESCE(C7_DATPRF, ' ') AS DTENTR,
-       COALESCE(C1_EMISSAO, ' ') AS DTEORD,
-       1 QORDCP,
-       C7_VALIPI VIPICP,
-       C7_VALICM VICMCP,
-       0 VIPINC,
-       0 VIPNIN,
-       CASE
-           WHEN (C7_RESIDUO = 'S') THEN C7_QUJE
-           ELSE C7_QUANT
-       END AS QCOMPR,
-       CASE
-           WHEN (C7_RESIDUO = 'S') THEN (C7_QUJE * C7_PRECO)
-           ELSE C7_TOTAL
-       END AS VCOMPR,
-	   'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(C7_CONAPRO, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
+SELECT
+    'P |01|01' AS BK_EMPRESA,
+    case when SC7.C7_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SC7.C7_FILIAL as char (6)) end as BK_FILIAL,
+    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_FORNECE, ' '))+RTRIM(COALESCE(SC7.C7_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
+    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
+    'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_COND, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
+    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+    'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SY1.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SY1.Y1_COD, ' ')), ' '), '|') AS BK_COMPRADOR,
+    'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_TES, ' ')), ' '), '|') AS BK_TES,
+    'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU.ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU.ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
+    case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    
+    case
+        when (SC7.C7_QUJE > 0) and (SC7.C7_QUJE < SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
+        when (SC7.C7_QUJE >= SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
+        else 'P |'+'|'
+    end as BK_SITUACAO_COMPRA,
+    
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
+    'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SBM.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
+    SC7.C7_NUMSC ORDEM,
+    SC7.C7_NUM PEDIDO,
+    COALESCE(SC7.C7_EMISSAO, ' ') AS DATA,
+    COALESCE(SC7.C7_DATPRF, ' ') AS DTENTR,
+    COALESCE(SC1.C1_EMISSAO, ' ') AS DTEORD,
+    1 QORDCP,
+    SC7.C7_VALIPI VIPICP,
+    SC7.C7_VALICM VICMCP,
+    0 VIPINC,
+    0 VIPNIN,
+    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE else SC7.C7_QUANT end as QCOMPR,
+    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE * SC7.C7_PRECO else SC7.C7_TOTAL end as VCOMPR,
+    SC7.C7_OBS as OBS,
+    SC7.C7_OBSM as MEMO,
+    'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC7.C7_CONAPRO, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
 		
 FROM SC7010 SC7
-    LEFT JOIN SB1010 SB1
-        ON B1_FILIAL = '      '
-        AND B1_COD = C7_PRODUTO
-        AND SB1.D_E_L_E_T_ = ' '
-    LEFT JOIN SA2010 SA2
-        ON A2_FILIAL = '      '
-        AND A2_COD = C7_FORNECE
-        AND A2_LOJA = C7_LOJA
-        AND SA2.D_E_L_E_T_ = ' '
-    LEFT JOIN SBM010 SBM
-        ON BM_FILIAL = B1_FILIAL
-        AND BM_GRUPO = B1_GRUPO
-        AND SBM.D_E_L_E_T_ = ' '
-    LEFT JOIN SE4010 SE4
-        ON E4_FILIAL = '      '
-        AND E4_CODIGO = C7_COND
-        AND SE4.D_E_L_E_T_ = ' '
-    LEFT JOIN SF4010 SF4
-        ON F4_FILIAL = '      '
-        AND F4_CODIGO = C7_TES
-        AND SF4.D_E_L_E_T_ = ' '
-    LEFT JOIN CTT010 CTT
-        ON CTT_FILIAL = SUBSTRING(C7_FILIAL, 1, 4)
-        AND CTT_CUSTO = C7_CC
-        AND CTT.D_E_L_E_T_ = ' '
-    LEFT JOIN SY1010 SY1
-        ON Y1_FILIAL = SUBSTRING(C7_FILIAL, 1, 2)
+    left join SB1010 SB1
+        on SB1.D_E_L_E_T_ = ' '
+        and SB1.B1_FILIAL = '      '
+        and SB1.B1_COD = SC7.C7_PRODUTO
+    left join SA2010 SA2
+        on SA2.D_E_L_E_T_ = ' '
+        and SA2.A2_FILIAL = '      '
+        and SA2.A2_COD = SC7.C7_FORNECE
+        and SA2.A2_LOJA = SC7.C7_LOJA
+    left join SBM010 SBM
+        on SBM.D_E_L_E_T_ = ' '
+        and SBM.BM_FILIAL = SB1.B1_FILIAL
+        and SBM.BM_GRUPO = SB1.B1_GRUPO
+    left join SE4010 SE4
+        on SE4.D_E_L_E_T_ = ' '
+        and SE4.E4_FILIAL = '      '
+        and SE4.E4_CODIGO = SC7.C7_COND
+    left join SF4010 SF4
+        on SF4.D_E_L_E_T_ = ' '
+        and SF4.F4_FILIAL = '      '
+        and SF4.F4_CODIGO = SC7.C7_TES
+    left join CTT010 CTT
+        on CTT.D_E_L_E_T_ = ' '
+        and CTT.CTT_FILIAL = SUBSTRING(SC7.C7_FILIAL, 1, 4)
+        and CTT.CTT_CUSTO = SC7.C7_CC
+    left join SY1010 SY1
+        on SY1.Y1_FILIAL = SUBSTRING(SC7.C7_FILIAL, 1, 2)
         and SY1.Y1_USER = SC7.C7_USER
         and SY1.Y1_COD not in (1, 6, 11)
-    LEFT JOIN ACV010 ACV
-        ON ACV_FILIAL = SUBSTRING(C7_FILIAL, 1, 4)
-        AND ACV_CODPRO = C7_PRODUTO
-        AND ACV.D_E_L_E_T_ = ' '
-    LEFT JOIN CTD010 CTD
-        ON CTD_FILIAL = '      '
-        AND CTD_ITEM = C7_ITEMCTA
-        AND CTD.D_E_L_E_T_ = ' '
-    LEFT JOIN ACU010 ACU
-        ON ACU_FILIAL = ACV_FILIAL
-        AND ACU_COD = ACV.ACV_CATEGO
-        AND ACU.D_E_L_E_T_ = ' '
-    LEFT JOIN SC1010 SC1
-        ON C1_FILIAL = C7_FILIAL
-        AND C1_NUM = C7_NUMSC
-        AND C1_ITEM = C7_ITEMSC
-        AND SC1.D_E_L_E_T_ = ' '
-    LEFT JOIN SAH010 SAH
-        ON AH_FILIAL = '      '
-        AND AH_UNIMED = C7_UM
-        AND SAH.D_E_L_E_T_ = ' '
-    LEFT JOIN SM2010 SM2
-        ON M2_DATA = C7_EMISSAO
-        AND SM2.D_E_L_E_T_ = ' '
+    
+    left join ACV010 ACV
+        on ACV.D_E_L_E_T_ = ' '
+        and ACV.ACV_FILIAL = SUBSTRING(SC7.C7_FILIAL, 1, 4)
+        and ACV.ACV_CODPRO = SC7.C7_PRODUTO
+
+        left join ACU010 ACU
+            on ACU.D_E_L_E_T_ = ' '
+            and ACU.ACU_FILIAL = ACV.ACV_FILIAL
+            and ACU.ACU_COD = ACV.ACV_CATEGO
+    
+    left join CTD010 CTD
+        on CTD.D_E_L_E_T_ = ' '
+        and CTD.CTD_FILIAL = '      '
+        and CTD.CTD_ITEM = SC7.C7_ITEMCTA
+    left join SC1010 SC1
+        on SC1.D_E_L_E_T_ = ' '
+        and SC1.C1_FILIAL = SC7.C7_FILIAL
+        and SC1.C1_NUM = SC7.C7_NUMSC
+        and SC1.C1_ITEM = SC7.C7_ITEMSC
+    left join SAH010 SAH
+        on SAH.D_E_L_E_T_ = ' '
+        and SAH.AH_FILIAL = '      '
+        and SAH.AH_UNIMED = SC7.C7_UM
+    left join SM2010 SM2
+        on SM2.D_E_L_E_T_ = ' '
+        and SM2.M2_DATA = SC7.C7_EMISSAO
 WHERE
-        C7_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-    AND (C7_RESIDUO <> 'S' OR C7_QUJE > 0)
+        SC7.C7_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+    AND (SC7.C7_RESIDUO <> 'S' OR SC7.C7_QUJE > 0)
     AND SC7.D_E_L_E_T_ = ' '

@@ -14,21 +14,22 @@ select
     convert(date, DYX.DYX_DATAPR, 103) as DYX_DATAPR,
     SE2.E2_NUM,
     SE2.E2_VALOR as VALOR_DIARIA,
-    
+    substring(DYX.DYX_DATDIA, 1, 6) as PERIODO,
     year(DYX.DYX_DATDIA) as ano_DIARIA,
     month(DYX.DYX_DATDIA) as mes_DIARIA
+
 from DYV010 DYV (nolock)
     inner join DYX010 DYX (nolock)
         on DYX.D_E_L_E_T_ = ''
         and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-        and year(DYX.DYX_DATDIA) = 2022
+        and year(DYX.DYX_DATDIA) > 2021
 
             inner join SX5010 SX5 (nolock)
                 on SX5.D_E_L_E_T_ = ''
                 and SX5.X5_TABELA = 'MS'
                 and SX5.X5_CHAVE = DYX.DYX_TIPVAL
         
-        left join SE2010 SE2
+        left join SE2010 SE2 (nolock)
             on SE2.D_E_L_E_T_ = ''
             and SE2.E2_PREFIXO = DYX.DYX_PRETIT
             and SE2.E2_NUM = DYX.DYX_NUMTIT

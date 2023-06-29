@@ -1,62 +1,20 @@
 select
     'P |01|01' AS BK_EMPRESA,
-    VIAGEM.DTQ_FILORI,
+    VIAGEM.ID_VIAGEM,
     VIAGEM.DTQ_VIAGEM,
     
     VIAGEM.CHE_CLIDEV,
     VIAGEM.SAI_CLIDEV,
     VIAGEM.CHE_VIAGEM,
     VIAGEM.SAI_VIAGEM,
-    VIAGEM.DTQ_STATUS,
-    convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI, /* CONVERT TEMPORÁRIO ATÉ CRIAÇÃO DO ETL*/
-
-    (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-        from DTW010
-            inner join ZB1010
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
-            and DTW010.DTW_ATIVID = 50
-    ) as km_fim,
-    (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
-        from DTW010
-            inner join ZB1010
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = VIAGEM.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = VIAGEM.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
-            and DTW010.DTW_ATIVID = 49
-    ) as km_ini,
+    VIAGEM.km_fim,
+    VIAGEM.km_ini,
     
+    DT6.DT6_DOC,
+    DT6.DT6_SERIE,
+    DT6.DT6_DATEMI,
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
-
-    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
-
-    DT5.DT5_NUMSOL,
-    DT5.DT5_DOC,
-    DT5.DT5_SERIE,
-    DT5.DT5_STATUS,
-    DT5.DT5_TIPCOL,
-    DT5.DT5_CODSOL,
-    DT5.DT5_CODOBC,
 
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6.DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6.DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6.DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -75,14 +33,14 @@ select
     CASE WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DES,
     CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
     CASE WHEN DT6.DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6.DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
-    DTC.DTC_CODPRO as PRODUTO,
-    DT6.DT6_DOC,
-    DT6.DT6_SERIE,
+    trim(DTC.DTC_CODPRO) as PRODUTO,
 
-    DIARIAS.DYV_IDCDIA,
+    DIARIAS.ID_DIARIA,
     DIARIAS.DYX_DATDIA,
+    DIARIAS.DYX_QTDE,
     DIARIAS.DYX_VLRUNI,
-    VIAGEM.ID_VIAGEM,
+    DIARIAS.E2_BAIXA,
+    
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
@@ -90,8 +48,8 @@ select
     VIAGEM.ID_MOTORISTA,
     
     null as INSTANCIA,
-    null as SEGURO_CARGA, /* PLANILHA DE SEGURO */
-    null as OUTROS_CUSTOS
+    0.0 as SEGURO_CARGA, /* PLANILHA DE SEGURO */
+    0.0 as OUTROS_CUSTOS
 
 from
     (
@@ -102,44 +60,120 @@ from
             DTQ.DTQ_DATGER,
             DTQ.DTQ_DATFEC,
             DTQ.DTQ_DATENC,
+
+            (
+                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                from DTW010
+                    inner join ZB1010
+                        on ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    and ZB1010.ZB1_MACRON = 7
+                    and DTW010.DTW_ATIVID = 50
+            ) as km_fim,
+            (
+                select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+                from DTW010
+                    inner join ZB1010
+                        on ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    and ZB1010.ZB1_MACRON = 1
+                    and DTW010.DTW_ATIVID = 49
+            ) as km_ini,
             
             DA4010.DA4_COD,
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-            concat(trim(DA4010.DA4_FILATU), trim(DA4010.DA4_COD)) as ID_MOTORISTA,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-            (select concat(trim(DA3010.DA3_FILATU), trim(DA3010.DA3_COD)) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_FILATU = DTR.DTR_FILORI and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
+            trim(DA4010.DA4_COD) as ID_MOTORISTA,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
 
-            (select first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761) as SAI_CLIDEV,
-            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 57 /*59 PONTO DE APOIO*/ and DTW010.DTW_CODCLI != 761) as CHE_CLIDEV,
-            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 49) as SAI_VIAGEM,
-            (select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) from DTW010 where DTW010.D_E_L_E_T_ = '' and DTW010.DTW_FILORI = DTQ.DTQ_FILORI and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM and DTW010.DTW_ATIVID = 50) as CHE_VIAGEM,
+            (
+                select
+                        top 1 concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
+                    and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
+                    and DTW010.DTW_CODCLI != 761
+                order by DTW010.DTW_SEQUEN
+            ) as CHE_CLIDEV,
+            (
+                select
+                        top 1 concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
+                    and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
+                    and DTW010.DTW_CODCLI != 761
+                order by DTW010.DTW_SEQUEN
+            ) as SAI_CLIDEV,
 
-            case DTQ.DTQ_STATUS
-                when '1' then 'EXCLUÍDA'
-                when '2' then 'EM TRANSITO'
-                when '3' then 'ENCERRADA'
-                when '4' then 'CHEGADA EM FILIAL'
-                when '5' then 'FECHADA'
-                when '9' then 'CANCELADA'
-                else 'OUTROS'
-            end as DTQ_STATUS
+            (
+                select
+                        concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
+                    and DTW010.DTW_ATIVID = 49
+            ) as SAI_VIAGEM,
+            (
+                select
+                        concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                from DTW010
+                where
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_HORREA != ''
+                    and DTW010.DTW_DATREA != ''
+                    and DTW010.DTW_ATIVID = 50
+            ) as CHE_VIAGEM
 
         from DTQ010 DTQ
-            inner join DTR010 DTR
+            left join DTR010 DTR
                 on DTR.D_E_L_E_T_ = ''
                 and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                 and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                 
-                inner join DUP010
+                left join DUP010
                     on DUP010.D_E_L_E_T_ = ''
                     and DUP010.DUP_FILORI = DTR.DTR_FILORI
                     and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                     and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                     and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                    inner join DA4010
+                    left join DA4010
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
 
@@ -149,6 +183,7 @@ from
     left join
     (
         select
+            concat(trim(DYV010.DYV_FILORI), trim(DYV010.DYV_VIAGEM), trim(DYV010.DYV_CODMOT), trim(DYV010.DYV_IDCDIA)) as ID_DIARIA,
             DYV010.DYV_FILORI,
             DYV010.DYV_VIAGEM,
             DYV010.DYV_CODMOT,
@@ -156,11 +191,19 @@ from
             DYX010.DYX_ITEM,
             DYX010.DYX_DATDIA,
             DYX010.DYX_QTDE,
-            DYX010.DYX_VLRUNI
+            DYX010.DYX_VLRUNI,
+            SE2010.E2_NUM,
+            SE2010.E2_BAIXA
         from DYV010
             inner join DYX010
                 on DYX010.D_E_L_E_T_ = ''
                 and DYX010.DYX_IDCDIA = DYV010.DYV_IDCDIA
+
+                left join SE2010
+                    on SE2010.D_E_L_E_T_ = ''
+                    and SE2010.E2_PREFIXO = DYX010.DYX_PRETIT
+                    and SE2010.E2_NUM = DYX010.DYX_NUMTIT
+        
         where DYV010.D_E_L_E_T_ = ''
     ) DIARIAS
         on DIARIAS.DYV_FILORI = VIAGEM.DTQ_FILORI
@@ -172,11 +215,6 @@ from
         and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
         and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
         
-        left join DT5010 DT5
-            on DT5.D_E_L_E_T_ = ''
-            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-            and DT5.DT5_NUMSOL = DUD.DUD_DOC
-            and DT5.DT5_SERIE = DUD.DUD_SERIE
         left join DT6010 DT6
             on DT6.D_E_L_E_T_ = ''
             and DT6.DT6_FILDOC = DUD.DUD_FILDOC
@@ -220,7 +258,9 @@ from
                 and DDB.DDB_CODNEG = DT6.DT6_CODNEG
                 and DDB.D_E_L_E_T_ = ' '
             inner join SX5010 SX5
-                on SX5.X5_FILIAL = '      ' /*SUBSTRING(DT6_FILIAL, 1, 5) + SUBSTRING(X5_FILIAL, 6, 8)*/
+                on SX5.X5_FILIAL = '      '
                 and SX5.X5_TABELA = 'L4'
                 and SX5.X5_CHAVE = DT6.DT6_SERVIC
                 and SX5.D_E_L_E_T_ = ' '
+
+where VIAGEM.CHE_VIAGEM BETWEEN <<START_DATE>> AND <<FINAL_DATE>>

@@ -19,34 +19,55 @@ select
 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
 	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
-	trim(isnull(ZD3.TQN_YITMCT, '-')) as TQN_YITMCT
+	isnull(ZD3.TQN_YITMCT, '-') as TQN_YITMCT
 from
 	(
 		select
-			case cast(ZD3010.ZD3_TANQUE as int)
+			case cast(ZD30.ZD3_TANQUE as int)
 				when 12 then '010102'
-				else trim(isnull(ZD3010.ZD3_FILIAL, '-'))
+				else trim(isnull(ZD30.ZD3_FILIAL, '-'))
 			end as ZD3_FILIAL,
-			ZD3010.ZD3_KM as ZD3_HODOM,
+			ZD30.ZD3_KM as ZD3_HODOM,
+			ZD30.ZD3_VEICUL,
+			ZD30.ZD3_LITROS,
+			ZD30.ZD3_TOTAL,
+			ZD30.ZD3_TANQUE,
+			ZD30.ZD3_COMB,
+			substring(ZD30.ZD3_DATA, 1, 8) as ZD3_DATA,
+			ZD30.ZD3_KML,
+			ZD30.ZD3_KMRD,
 
-			ZD3010.ZD3_VEICUL,
-			ZD3010.ZD3_LITROS,
-
-			ZD3010.ZD3_TOTAL,
-			
-			ZD3010.ZD3_TANQUE,
-			ZD3010.ZD3_COMB,
-			substring(ZD3010.ZD3_DATA, 1, 8) as ZD3_DATA,
-			ZD3010.ZD3_KML,
-			ZD3010.ZD3_KMRD,
-			TQN010.TQN_CCUSTO,
-			TQN010.TQN_YITMCT
-		from ZD3010 (nolock)
-			inner join TQN010 (nolock)
-				on TQN010.D_E_L_E_T_ = ''
-				and TQN010.TQN_FROTA = ZD3010.ZD3_VEICUL
-				and TQN010.TQN_DTABAS + TQN010.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 1, 8) + substring(ZD3010.ZD3_DATA, 10, 14)
-		where ZD3010.D_E_L_E_T_ = ''
+			(
+				select TQN010.TQN_CCUSTO
+				from TQN010
+				where
+						TQN010.D_E_L_E_T_ = ''
+					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
+					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
+					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
+			) as TQN_CCUSTO,
+			(
+				select
+					case when TQN010.TQN_YITMCT is not null and TQN010.TQN_YITMCT != '' then TQN010.TQN_YITMCT
+					else
+						case TQN010.TQN_CCUSTO
+							when 302 then 11
+							when 304 then 11
+							when 303 then 21
+							when 305 then 21
+							when 306 then 21
+							else 90
+						end
+					end
+				from TQN010
+				where
+						TQN010.D_E_L_E_T_ = ''
+					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
+					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
+					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
+			) as TQN_YITMCT		
+		from ZD3010 ZD30
+		where ZD30.D_E_L_E_T_ = ''
 	) as ZD3
 
 	left join

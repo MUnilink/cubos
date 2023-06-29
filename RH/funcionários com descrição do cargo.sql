@@ -21,6 +21,8 @@ select
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
+	trim(SQB.QB_DEPTO) as DEPTO,
+    trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 
 	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
 	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
@@ -40,4 +42,8 @@ from SRA010 SRA (nolock)
 		on SX5.D_E_L_E_T_ = ''
 		and SX5.X5_CHAVE = SRA.RA_GRINRAI
 		and SX5.X5_TABELA = '26'
+	inner join SQB010 SQB (nolock)
+		on SQB.D_E_L_E_T_ = ''
+		and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+		and SQB.QB_DEPTO = SRA.RA_DEPTO
 where SRA.D_E_L_E_T_ = ''

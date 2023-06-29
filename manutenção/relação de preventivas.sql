@@ -9,8 +9,10 @@ select
     trim(STJ.TJ_PLANO) as PLANO,
     trim(STJ.TJ_SERVICO) as SERVICO,
     trim(STJ.TJ_TERMINO) as ENCERRADA,
-    convert(date, STJ.TJ_DTMRINI, 103) as DT_INI_OS,
-    convert(date, STJ.TJ_DTMRFIM, 103) as DT_FIM_OS,
+    convert(date, STJ.TJ_DTMRINI, 103) as DT_REAL_INI,
+    convert(date, STJ.TJ_DTMRFIM, 103) as DT_REAL_FIM,
+    convert(date, STJ.TJ_DTMPINI, 103) as DT_PREV_INI,
+    convert(date, STJ.TJ_DTMPFIM, 103) as DT_PREV_FIM,
     trim(isnull(ST4.T4_NOME, '-')) as DESC_SERVICO,
 
     STJ.TJ_SEQRELA as SEQ_OS,
@@ -63,12 +65,10 @@ select
     case SB1.B1_MSBLQL when 1 then 'SIM' else 'NAO' end as BLOQUEADO,
     STG.TG_QUANTID as QTD,
     STG.TG_UNIDADE as UN,
-    STG.TG_LOCAL as ARMAZEM,
-    
-    SBF.BF_FILIAL as FILIAL_PROD,
-    SBF.BF_LOCAL as ARMAZEM_PROD,
-    SBF.BF_LOCALIZ as ENDER_PROD,
-    SBF.BF_QUANT as SALDO_ENDERECO
+    STG.TG_LOCAL as ARMAZEM,  
+    SB2.B2_FILIAL as FILIAL_PROD,
+    SB2.B2_LOCAL as ARMAZEM_PROD,
+    SB2.B2_QATU as QTD_PROD
 
 from STJ010 STJ (nolock)
     inner join STI010 STI (nolock)
@@ -81,7 +81,7 @@ from STJ010 STJ (nolock)
         and STF.TF_SERVICO = STJ.TJ_SERVICO
         and STF.TF_SEQRELA = STJ.TJ_SEQRELA
 
-        inner join STG010 STG (nolock)
+        left join STG010 STG (nolock)
             on STG.D_E_L_E_T_ = ''
             and STG.TG_CODBEM = STF.TF_CODBEM
             and STG.TG_SERVICO = STF.TF_SERVICO
@@ -93,10 +93,9 @@ from STJ010 STJ (nolock)
             left join SB1010 SB1 (nolock)
                 on SB1.D_E_L_E_T_ = ''
                 and SB1.B1_COD = STG.TG_CODIGO
-
-                left join SBF010 SBF (nolock)
-                    on SBF.D_E_L_E_T_ = ''
-                    and SBF.BF_PRODUTO = SB1.B1_COD
+            left join SB2010 SB2 (nolock)
+                on SB2.D_E_L_E_T_ = ''
+                and SB2.B2_COD = STG.TG_CODIGO
     
     inner join ST4010 ST4 (nolock)
 		on ST4.D_E_L_E_T_ = ''
