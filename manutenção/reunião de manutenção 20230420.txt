@@ -1,0 +1,22 @@
+Pendências:
+1 - Gancho entregue e recebido pela manutenção, a ter testes realizados na semana do dia 23/04.
+2 - Eduardo informa que o Adilson foi cobrado pela CIPP pelo contêiner guarda-volumes da operação, e que o contrato de aquisição estaria para avaliação do jurídico.
+3 - Contêineres de apoio para a operação não foram autorizados até o dia, e Ricardo Abeal disse que trataria o assunto com o Silvio.
+4 - Cabo reel do LHM já recebido.
+5 - Aguardando assinatura do jurídico, ao mesmo tempo em que o Silvio cobra a aquisição do sistema para o restante da frota.
+6 - Tratamento das reformas já realizado em reunião.
+7 - Wellington julgou alto o orçamento do aríete para as HYSTER (POLIMATEC), e que a 3G ou outro fornecedor possivelmente faria o serviço, a depender do orçamento a ser feito, além de lembrar que a real necessidade e a utilização corriqueira do componente pode justificar o custo do serviço.
+8 - Medição de indicadores pelo FCA e indicador de reforma estão sendo tratados.
+9 - Lucas relata a RS17 funcionando "sem motorista" conforme relatório SASCAR, de forma que qualquer cartão pode ativar o veículo, ou mesmo nenhum cartão. Wellington pergunta se é possível analisar o problema pelos relatórios SASCAR, ao que o Lucas informa que sim, embora o motorista não possa ser identificado de forma imediata. Cristianne pede mais informações sobre o problema, ao que o Wellintgon diz que foi tardiamente observado, de forma que vários equipamentos passaram a apresentar o problema antes da resolução dos primeiros casos.
+10 (nova) - Eduardo diz que foi cobrado pelo Lucas (consultor de segurança) sobre o pórtico do CFS e informou que foi realizada visita de fornecedor para avaliação do problema e o orçamento do serviço já foi recebido para avaliação e posterior execução.
+11 (nova) - Cristianne cita que, em visita ao Pecém, haveria com certa frequência baixo atendimento de equipamentos durante as operações, por baixa capacidade de trabalho. Eduardo diz que os conferentes de fato relatam problema após um tempo de operação, indo para a manutenção, retornando e depois novamente apresentando problemas durante a operação. Wellington e Leandro relatam uma informação nova, e ao perguntar ao Eduardo, este diz que verificará melhor com os conferentes e repassará à manutenção detalhes de máquinas e dos problemas.
+
+Indicadores:
+Leandro diz que dificilmente alcançará a disponibilidade de máquinas e CMs, devido às preventivas e à necessidade da operação no início do mês.
+Atendimento de preventivas CM e máquinas a ter meta alcançada.
+Indicadores SASCAR refletem o problema do sistema, a ser avaliado por visita técnica do pessoal da SASCAR. Wellington pergunta sobre a cerca geográfica, e o Lucas explica que a configuração das cercas que identifica o local e, indiretamente, atividade dos veículos no momento. Leandro sugere a reavaliação interna das cercas e de demais dificuldades e soluções do sistema SASCAR, durante e após a visita técnica.
+
+FCA: ver planilha
+
+Outros assuntos:
+Wellington informa a Cristianne sobre a inclusão de indicadores de logística na reunião mensal, e solicita ao Eduardo indicadores operacionais e do CFS. Eduardo diz que avaliará sobre o CFS e pedirá ao Jonas e ao Ricardo qual a melhor forma de avaliar as operações num indicador.

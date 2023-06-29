@@ -28,6 +28,8 @@ select
     convert(date, TM5.TM5_DTPROG, 103) as DATA,
     case TM5.TM5_ORIGEX when 1 then 'ASSISTENCIAL' when 2 then 'OCUPACIONAL' else 'OUTROS' end as ORIGEM_EXAME,
     TM5.TM5_NATEXA as NATUREZA_EXAME,
+    convert(date, TM5.TM5_DTRESU, 103) as DT_RESULTADO,
+    case TM5.TM5_DTRESU when '' then 'NÃO REALIZADO' else 'REALIZADO' end as STATUS,
     trim(TM4.TM4_NOMEXA) as NOME_EXAME,
     trim(TM4.TM4_DESEXA) as DESC_EXAME,
     TMD.TMD_VALEXA as VALOR_EXAME,
@@ -71,4 +73,6 @@ from TM5010 TM5 (nolock)
         and TMD.TMD_EXAME = TM5.TM5_EXAME
         and TMD.TMD_FORNEC = TM5.TM5_FORNEC
         and TMD.TMD_LOJA = TM5.TM5_LOJA
-where TM5.D_E_L_E_T_ = ''
+where
+        TM5.D_E_L_E_T_ = ''
+    and year(TM5.TM5_DTPROG) > 2019

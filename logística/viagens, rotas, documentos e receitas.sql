@@ -19,7 +19,7 @@ select
     trim(DEV.A1_NOME) as CLIENTE,
 
     (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -33,10 +33,10 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID in ('050')
+            and DTW010.DTW_ATIVID = 50
     ) as km_fim,
     (
-        select top 1 substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+        select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -50,7 +50,7 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID in ('049')
+            and DTW010.DTW_ATIVID = 49
     ) as km_ini,
 
     DTR.DTR_ITEM,
@@ -82,6 +82,14 @@ select
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
 
+    DT6.DT6_PRZENT AS PRAZO_ENTREGA,
+    DT6.DT6_DATENT AS DATA_ENTREGA,
+    
+    CASE
+        WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'
+        ELSE 'DENTRO DO PRAZO'
+    END AS STATUS_ATENDIMENTO,
+
     DTC.DTC_FILORI,
     DTC.DTC_DOC,
     DTC.DTC_SERIE,
@@ -89,6 +97,8 @@ select
     DTC.DTC_SERNFC,
     DTC.DTC_CODPRO,
     DTC.DTC_VALOR,
+    DTC.DTC_PESO,
+    DTC.DTC_PESLIQ,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
@@ -138,7 +148,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
+            and DTW010.DTW_ATIVID = 49
     ) as DATAINI,
     (
         select DTW010.DTW_HORREA
@@ -147,7 +157,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '049'
+            and DTW010.DTW_ATIVID = 49
     ) as HORAINI,
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -156,7 +166,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as DATAFIM,
     (
         select DTW010.DTW_HORREA
@@ -165,7 +175,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as HORAFIM,
     (
         select distinct first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
@@ -210,7 +220,7 @@ select
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_ATIVID = 50
     ) as COMPETENCIA,
 
     case DTQ.DTQ_STATUS
@@ -260,6 +270,7 @@ from DTQ010 DTQ (nolock)
 
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILORI = DTQ.DTQ_FILORI
         and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
 
         left join DT5010 DT5 (nolock)
@@ -268,11 +279,11 @@ from DTQ010 DTQ (nolock)
             and DT5.DT5_NUMSOL = DUD.DUD_DOC
             and DUD.DUD_SERIE = 'COL'
 
-                left join DF1010 DF1 (nolock)
-                    on DF1.D_E_L_E_T_ = ''
-                    and DF1.DF1_FILDOC = DT5.DT5_FILORI
-                    and DF1.DF1_DOC = DT5.DT5_DOC
-                    and DF1.DF1_SERIE = DT5.DT5_SERIE
+            left join DF1010 DF1 (nolock)
+                on DF1.D_E_L_E_T_ = ''
+                and DF1.DF1_FILDOC = DT5.DT5_FILORI
+                and DF1.DF1_DOC = DT5.DT5_DOC
+                and DF1.DF1_SERIE = DT5.DT5_SERIE
 
 		left join DT6010 DT6 (nolock)
 			on DT6.D_E_L_E_T_ = ''
@@ -307,11 +318,11 @@ from DTQ010 DTQ (nolock)
             AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
             AND DUYDEV.D_E_L_E_T_ = ' '
 
-            left join DTC010 DTC (nolock)
-                on DTC.D_E_L_E_T_ = ''
-                and DTC.DTC_FILORI = DT6.DT6_FILDOC
-                and DTC.DTC_DOC = DT6.DT6_DOC
-                and DTC.DTC_SERIE = DT6.DT6_SERIE
+        left join DTC010 DTC (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_DOC = DT6.DT6_DOC
+            and DTC.DTC_SERIE = DT6.DT6_SERIE
     
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
@@ -327,9 +338,3 @@ from DTQ010 DTQ (nolock)
 
 where
         DTQ.D_E_L_E_T_ = ''
-    and
-    (
-        DT6.DT6_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990)
-    or  RPS.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990)
-    or  COMP.D2_DOC in (2763, 2784, 2805, 2811, 54878, 2819, 2820, 54971, 54972, 2871, 2876, 2878, 2879, 54985, 54986, 54987, 54988, 54989, 54990)
-    )

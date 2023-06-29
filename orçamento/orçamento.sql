@@ -1,12 +1,12 @@
-select
+select distinct
     AK1.AK1_CODIGO as ORCAMENTO,
     AK2.AK2_VERSAO as VERSAO,
     AK1.AK1_DESCRI as DESC_ORC,
     AK2.AK2_ID as ID,
     AK2.AK2_CO as CONTA_ORC,
     AK2.AK2_PERIOD as PERIODO,
-    AK2.AK2_CLASSE as CC_ORC,
-    AK2.AK2_OPER as ATIV_ORC,
+    AK2.AK2_CLASSE as CC,
+    AK2.AK2_OPER as ATIV,
     
     convert(date, AK2.AK2_DATAI, 103) as DTINI_ITEM,
     convert(date, AK2.AK2_DATAF, 103) as DTFIM_ITEM,
@@ -22,10 +22,7 @@ select
     
     convert(date, AKD.AKD_DATA, 103) as DATA_LANCAMENTO,
     AKD.AKD_DATA as PERIODO_ORCAMENTO,
-    
-    AKD.AKD_CLASSE as CC,
-    AKD.AKD_OPER as ATIV,
-    
+        
     case AKD.AKD_TIPO
         when 1 then 'CREDITO'
         when 2 then 'DEBITO'
@@ -39,7 +36,7 @@ select
     case when AKD.AKD_CHAVE like 'SD2%' then concat(substring(AKD.AKD_CHAVE, 1, 9), substring(AKD.AKD_HIST, 10, 9))
     else
         case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 1, 19)
-        else AKD.AKD_CHAVE
+        else trim(AKD.AKD_CHAVE)
         end
     end as REF_LANCAMENTO,
 
@@ -55,7 +52,7 @@ select
         end
     end as VALOR_EMPENHADO,
     
-    case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0R' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
+    case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0I' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
     
     AKD.AKD_USER as USUARIO,
     trim(AKD.AKD_HIST) as HISTORICO,

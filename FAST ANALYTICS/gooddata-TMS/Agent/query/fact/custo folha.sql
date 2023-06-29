@@ -6,8 +6,6 @@ select
 
     substring(VERBAS.CONTA, 4, len(VERBAS.CONTA)) as CONTA,
 
-    trim(CTD.CTD_DESC01) as ATIVIDADE,
-    trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
     trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
     sum(VERBAS.VALOR) as VALOR,
@@ -38,12 +36,6 @@ from SRA010 SRA (nolock)
         on SRJ.D_E_L_E_T_ = ''
         and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
         and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-    inner join CTT010 CTT (nolock)
-        on CTT.D_E_L_E_T_ = ''
-        and CTT.CTT_CUSTO = SRA.RA_CC
-    inner join CTD010 CTD (nolock)
-        on CTD.D_E_L_E_T_ = ''
-        and CTD.CTD_ITEM = SRA.RA_ITEM
     inner join
     (
         select
@@ -52,7 +44,7 @@ from SRA010 SRA (nolock)
             isnull(SRD010.RD_MAT, SRT010.RT_MAT) as MATRICULA,
             SRV010.RV_COD, /* VER ELIMINAÇÃO DE VERBAS INDIVIDUAIS, OQ PERMITIRIA USAR DISTINCT NESTA TABELA E VINCULAR AO EMPREGADO SEM DUPLICATAS */
             isnull(SRD010.RD_PD, SRT010.RT_VERBA) as EVENTO,
-            case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
+            case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783', '451', '452') then '02 Salários e Ordenados'
             else
                 case when SRD010.RD_PD in ('029', '111', '113') then '03 Hora Extra'
                 else
@@ -80,11 +72,13 @@ from SRA010 SRA (nolock)
                 and SRV010.RV_FILIAL = substring(SRD010.RD_FILIAL, 1, 4)
                 and SRV010.RV_COD = SRD010.RD_PD
                 and SRD010.RD_PERIODO > '20211231'
+                and SRD010.RD_ITEM = 11
             left join SRT010 (nolock)
                 on SRT010.D_E_L_E_T_ = ''
                 and SRV010.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
                 and SRV010.RV_COD = SRT010.RT_VERBA
                 and SRT010.RT_DATACAL > '20211231'
+                and SRT010.RT_ITEM = 11
         where SRV010.D_E_L_E_T_ = ''
 
     ) VERBAS
@@ -116,17 +110,17 @@ from SRA010 SRA (nolock)
                 DT6.DT6_FILDOC,
                 DT6.DT6_DOC,
                 DT6.DT6_SERIE,
+                trim(DTC.DTC_CODPRO) as PRODUTO,
                 
                 (
-                    select substring(DTW010.DTW_DATREA, 1, 6)
-                    from DTW010 (nolock)
+                    select substring(DTW010.DTW_SYSDAT, 1, 6)
+                    from DTW010
                     where 
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_ATIVID = '050'
-                        and DTW010.DTW_DATREA > '20211231'
-                ) as PERIODO
+                        and DTW010.DTW_ATIVID = 50
+                ) as COMPETENCIA
 
             from DTQ010 DTQ (nolock)
                 inner join DUD010 DUD (nolock)
@@ -177,22 +171,24 @@ from SRA010 SRA (nolock)
                             and SX5.X5_TABELA = 'L4'
                             and SX5.X5_CHAVE = DT6.DT6_SERVIC
                             and SX5.D_E_L_E_T_ = ' '
+                        left join DTC010 DTC
+                            on DTC.D_E_L_E_T_ = ''
+                            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+                            and DTC.DTC_DOC = DT6.DT6_DOC
+                            and DTC.DTC_SERIE = DT6.DT6_SERIE
             where
                     DTQ.D_E_L_E_T_ = ''
-                and cast(DTQ.DTQ_STATUS as int) = 3
+                and year(DTQ.DTQ_DATENC) > 2021
         ) VIAGEM
             on VIAGEM.DTQ_FILORI = VERBAS.FILIAL
-            and VIAGEM.PERIODO = VERBAS.PERIODO
+            and VIAGEM.COMPETENCIA = VERBAS.PERIODO
 where
         SRA.D_E_L_E_T_ = ''
-    and (SRA.RA_CC = 302 or SRA.RA_CC = 206)
 group by
     SRA.RA_FILIAL,
     VERBAS.PERIODO,
     VERBAS.MATRICULA,
     VERBAS.CONTA,
-    CTD.CTD_DESC01,
-    CTT.CTT_DESC01,
     SRA.RA_NOME,
 	SRJ.RJ_DESC,
     VIAGEM.DTQ_VIAGEM,

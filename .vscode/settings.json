@@ -1,3 +1,6 @@
 {
-    "totvsLanguageServer.welcomePage": false
+    "totvsLanguageServer.welcomePage": false,
+    "totvsLanguageServer.editor.toggle.autocomplete": "Basic",
+    "githubPullRequests.pullPullRequestBranchBeforeCheckout": false,
+    "githubPullRequests.notifications": "pullRequests"
 }

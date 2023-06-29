@@ -1,0 +1,6 @@
+select
+    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA3.A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA3.A3_COD, ' ')), ' '), '|') as ID_TIMEVENDAS,
+    SA3.A3_COD,
+    trim(SA3.A3_NREDUZ) as A3_NREDUZ
+from SA3010 SA3
+where SA3.D_E_L_E_T_ = ''
