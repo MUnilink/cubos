@@ -120,7 +120,6 @@ from SC1010 SC1 (nolock)
 	inner join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC1.C1_PRODUTO
-		and SB1.B1_COD like '11%'
 	left join SC8010 SC8 (nolock)
 		on SC8.D_E_L_E_T_ = ''
 		and SC8.C8_FILIAL = SC1.C1_FILIAL
@@ -162,3 +161,4 @@ from SC1010 SC1 (nolock)
 		and CTD.CTD_ITEM = SC1.C1_ITEMCTA
 where 
 		SC1.D_E_L_E_T_ = ''
+	and year(SC1.C1_EMISSAO) > 2021
