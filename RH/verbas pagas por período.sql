@@ -20,6 +20,8 @@
 
 		trim(isnull(SRC.RC_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRC.RC_PD, '-')) as VERBA,
+		trim(isnull(SRC.RC_SEQ, '-')) as SEQ,
+		
 		case when SRC.RC_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
 			case when SRC.RC_PD in ('029', '111', '113') then '03 Hora Extra'
@@ -111,6 +113,7 @@ union
 
 		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRD.RD_PD, '-')) as VERBA,
+		trim(isnull(SRD.RD_SEQ, '-')) as SEQ,
 		
 		case when SRD.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
