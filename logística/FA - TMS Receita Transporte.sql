@@ -171,10 +171,12 @@ FROM DT8010 DT8
             and VIAGEM.DUD_DOC = DT6.DT6_DOC
             and VIAGEM.DUD_SERIE = DT6.DT6_SERIE
 
-        left join SD2010 SD2
+        left join SD2010 SD2 (nolock)
             on SD2.D_E_L_E_T_ = ''
             and SD2.D2_NFORI = DT6.DT6_DOC
             and SD2.D2_SERIORI = DT6.DT6_SERIE
             and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
-WHERE DT8.D_E_L_E_T_ = ' '
+WHERE
+        DT8.D_E_L_E_T_ = ' '
+    and year(VIAGEM.DATAFIM) > 2021
