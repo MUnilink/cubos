@@ -75,7 +75,7 @@
 			and SRA.RA_MAT = SRC.RC_MAT
 		inner join SQB010 SQB (nolock)
 			on SQB.D_E_L_E_T_ = ''
-			and SRC.RC_DEPTO = SQB.QB_DEPTO
+			and SQB.QB_DEPTO = SRC.RC_DEPTO
 
 			inner join SRJ010 SRJ (nolock)
 				on SRJ.D_E_L_E_T_ = ''
