@@ -4,7 +4,7 @@ select
     ZD3.ZD3_KMRD,
     ZD3.ZD3_KML,
     ZD3.ZD3_TOTAL as CUSTO,
-    trim(ZD3.ZD3_DATA) as ZD3_DATA,
+    convert(date, ZD3.ZD3_DATA, 103) as ZD3_DATA,
     substring(ZD3.ZD3_DATA, 1, 6) as PERIODO,
     year(ZD3.ZD3_DATA) as ano_ABA,
     month(ZD3.ZD3_DATA) as mes_ABA,
