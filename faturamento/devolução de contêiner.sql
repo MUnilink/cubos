@@ -10,7 +10,8 @@ select
     ZC1.ZC1_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as ZC1_VIAGEM,
     
-    ZC2.ZC2_ITEM,
+    ZC2.ZC2_ITEM as ITEM,
+    SB1.B1_GRUPO as GRUPO,
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_DESC) as DESC_INSUMO,
     
@@ -32,19 +33,24 @@ select
     ZC2.ZC2_QTDREA,
     ZC2.ZC2_VLUPRV,
     ZC2.ZC2_VLUREA,
-    trim(ZC2.ZC2_CONTEI) as ZC2_CONTEI,
-    trim(ZC2.ZC2_LACRE) as ZC2_LACRE,
+    trim(ZC2.ZC2_CONTEI) as CONTEINER,
+    trim(ZC2.ZC2_LACRE) as LACRE,
     
     substring(ZC2.ZC2_DTINI, 1, 6) as PERIODO_APONT,
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
-    trim(ZC2.ZC2_NMUSU) as ZC2_NMUSU
+    trim(ZC2.ZC2_NMUSU) as USUARIO
 
 from ZC1010 ZC1 (nolock)
     left join ZC2010 ZC2 (nolock)
         on ZC2.D_E_L_E_T_ = ''
         and ZC2.ZC2_FILIAL = ZC1.ZC1_FILIAL
         and ZC2.ZC2_NUM = ZC1.ZC1_NUM
+        
+        left join SB1010 SB1 (nolock)
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_COD = ZC2.ZC2_COD
+    
     left join SA1010 DEV (nolock)
         on DEV.D_E_L_E_T_ = ''
         and DEV.A1_COD = ZC1.ZC1_CODSA1
