@@ -1,25 +1,26 @@
 select
-	trim(isnull(ST9.T9_CODBEM, '-')) as ST9,
+	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
     TQZ.TQZ_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS_ST9,
-	convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) as TQZ_DATAMOV,
+	convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) as DATA_STATUS,
 	substring(TQZ.TQZ_DTSTAT, 1, 6) as PERIODO,
 
-    case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then 'ENTRADA APOS REFORMA' else null end as ENTRADA_REFORP,
-    case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51 then 'SAIDA ANTES DA REFORMA' else null end as SAIDA_REFORP,
+    case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) else null end as ENTRADA_REFORP,
+    case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) else null end as SAIDA_REFORP,
 
-    case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51
-        then datediff(minute, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), lead(concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_))/(60*24)
-        else null
-    end,
-    
-    case when TQZ.TQZ_STATUS = 53 and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 50
-        then datediff(minute, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), lag(concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 1, null) over(partition by ST9.T9_CODBEM order by ST9.T9_CODBEM))/(60*24)
-        else null
-    end as DIFF_VIDA,
+    case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103)
+        else
+        case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103)
+            else null
+        end
+    end as DATAS_RODADO,
 
-    lag(convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103), 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) as DATA_ANTERIOR,
-    lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) as STAT_ANTERIOR
+    case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then null
+        else
+        case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51 then datediff(minute, lag(concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_), concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT))/(60*24.0)
+            else null
+        end
+    end as TEMPO_RODADO
 
 from TQZ010 TQZ (nolock)
 	left join TQS010 TQS (nolock)
