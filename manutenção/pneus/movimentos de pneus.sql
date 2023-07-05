@@ -4,12 +4,13 @@ select
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
 
-    case when STZ.TZ_CONTSAI = 0 or STZ.TZ_POSCONT = 0 then -999999 else STZ.TZ_CONTSAI - STZ.TZ_POSCONT end as km,
+    STZ.TZ_CONTSAI - STZ.TZ_POSCONT as km,
 
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
 	convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103) as TZ_DATAMOV,
 	convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 103) as TZ_DATASAI,
+	datediff(minute, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI))/(60*24) as TEMPO_RODADO,
 	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
 	trim(isnull(STZ.TZ_HORAENT, '-')) as TZ_HORAENT,
 	trim(isnull(STZ.TZ_HORASAI, '-')) as TZ_HORASAI,
