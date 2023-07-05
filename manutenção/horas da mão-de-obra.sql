@@ -1,59 +1,59 @@
 select
-	trim(STL010.TL_FILIAL) as TL_FILIAL,
-	trim(STL010.TL_ORDEM) as TL_ORDEM,
-	trim(STL010.TL_CODBEM) as TL_CODBEM,
-	trim(STL010.TL_PLANO) as TL_PLANO,
+	trim(STL.TL_FILIAL) as FILIAL,
+	trim(STL.TL_ORDEM) as OS,
+	trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+	trim(STL.TL_PLANO) as PLANO,
+	trim(STL.TL_TAREFA) as COD_TAREFA,
 
-	trim(STL010.TL_TAREFA) as COD_TAREFA,
-	trim(STL010.TL_CODIGO) as COD_PRODUTO_SERVIÇO,
-	trim(SRA010.RA_MAT) as MATRICULA,
-	trim(SRA010.RA_NOME) as FUNCIONARIO,
-	isnull(trim(ST1010.T1_NOME), '-') as T1_NOME,
-	ST1010.T1_SALARIO,
-	SRA010.RA_HRSMES,
-
-	case STL010.TL_SEQRELA
+	case STL.TL_SEQRELA
 		when 0 then 'PREVISTO'
 		else 'REALIZADO'
-	end as STATUS,
+	end as STATUS_INSUMO,
 
-	STL010.TL_QUANTID,
-	STL010.TL_CUSTO,
+	case STL.TL_TIPOREG
+		when 'M' then trim(ST1.T1_NOME)
+		when 'E' then trim(ST0.T0_NOME)
+		else 'OUTROS'
+	end as DESC_INSUMO,
 
-	case STL010.TL_DTINICI
-		when null then '-'
-		when '' then '-'
-		when '        ' then '-'
-		else cast(convert(date, substring(STL010.TL_DTINICI, 1 ,8), 103) as varchar)
-	end as TL_DTINICI,
+	STL.TL_QUANTID,
+	STL.TL_CUSTO,
 
-	case STL010.TL_DTFIM
-		when null then '-'
-		when '' then '-'
-		when '        ' then '-'
-		else cast(convert(date, substring(STL010.TL_DTFIM, 1 ,8), 103) as varchar)
-	end as TL_DTFIM,
+	/*convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) as INI_APONT,*/
+	/*datediff(minute, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM))/60.0 as HORAS_APONT,*/
 
-	trim(STL010.TL_HOINICI) as TL_HOINICI,
-	trim(STL010.TL_HOFIM) as TL_HOFIM,
+	convert(date, STL.TL_DTINICI, 103) as DT_INI,
+	convert(date, STL.TL_DTFIM, 103) as DT_FIM,
 
-	year(STL010.TL_DTINICI) as ANO_INICIO,
-	year(STL010.TL_DTFIM) as ANO_FIM,
+	trim(STL.TL_HOINICI) as HORA_INI,
+	trim(STL.TL_HOFIM) as HORA_FIM,
 
-	month(STL010.TL_DTINICI) as MES_INICIO,
-	month(STL010.TL_DTFIM) as MES_FIM
+	substring(STL.TL_DTINICI, 1, 6) as PERIODO_INI,
+	substring(STL.TL_DTFIM, 1, 6) as PERIODO_FIM,
 
-from STL010 (nolock)
-	inner join ST1010 (nolock)
-		on ST1010.D_E_L_E_T_ = ''
-		and ST1010.T1_FILIAL = STL010.TL_FILIAL
-		and ST1010.T1_CODFUNC = STL010.TL_CODIGO
+	SRA.RA_MAT as MATRICULA,
+	SRA.RA_HRSMES HORAS_MES
 
-		left join SRA010 (nolock)
-			on  ST1010.D_E_L_E_T_ = ''
-			and ST1010.T1_FILIAL =  SRA010.RA_FILIAL
-			and ST1010.T1_CODFUNC = SRA010.RA_MAT
+from STL010 STL (nolock)
+	left join ST0010 ST0 (nolock)
+		on ST0.D_E_L_E_T_ = ''
+		and ST0.T0_ESPECIA = STL.TL_CODIGO
+	left join ST1010 ST1 (nolock)
+		on ST1.D_E_L_E_T_ = ''
+		and ST1.T1_FILIAL = STL.TL_FILIAL
+		and ST1.T1_CODFUNC = STL.TL_CODIGO
 
-
+		left join SRA010 SRA (nolock)
+			on ST1.D_E_L_E_T_ = ''
+			and ST1.T1_FILIAL = SRA.RA_FILIAL
+			and ST1.T1_CODFUNC = SRA.RA_MAT
+	
+	inner join STJ010 STJ (nolock)
+		on STJ.D_E_L_E_T_ = ''
+		and STJ.TJ_ORDEM = STL.TL_ORDEM
+		and STJ.TJ_PLANO = STL.TL_PLANO
+		and STJ.TJ_FILIAL = STL.TL_FILIAL
 where
-		STL010.D_E_L_E_T_ = ''
+		STL.D_E_L_E_T_ = ''
+	and STL.TL_TIPOREG in ('E', 'M')
+	and STL.TL_HOINICI != '  :  '
