@@ -13,11 +13,29 @@ select
     case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) else null end as ENTRADA_REFORP,
     case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) else null end as SAIDA_REFORP,
 
-    case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103)
+    case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61)
+        and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57
+        and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 53
+        then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103)
         else
-        case when TQZ.TQZ_STATUS = 53 and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51 then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103)
-            else null
-        end
+            case when TQZ.TQZ_STATUS = 53
+                and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 51
+                and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 50
+                then convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103)
+                else
+                    case when TQZ.TQZ_STATUS = 53
+                        and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 50
+                        and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 50
+                        then lag(concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_)
+                        else
+                            case when TQZ.TQZ_STATUS = 50
+                                and lead(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 53
+                                and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 53
+                                then lag(concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 2, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_)
+                                else null
+                            end
+                    end
+            end
     end as DATAS_RODADO,
 
     case when (TQZ.TQZ_STATUS = 50 or TQZ.TQZ_STATUS = 61) and lag(TQZ.TQZ_STATUS, 1, null) over(partition by ST9.T9_CODBEM order by TQZ.R_E_C_N_O_) = 57 then null
