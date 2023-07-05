@@ -1,5 +1,10 @@
 select
-	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
+	trim(ST9.T9_CODBEM) as T9_CODBEM,
+    year(ST9.T9_DTCOMPR) as ANO_PNEU,
+    convert(date, ST9.T9_DTCOMPR, 103) as T9_DTCOMPR,
+    ST9.T9_SITBEM,
+    trim(TQT.TQT_DESMED) as MEDIDA,
+
     TQZ.TQZ_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS_ST9,
 	convert(datetime, concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT), 103) as DATA_STATUS,
@@ -31,7 +36,10 @@ from TQZ010 TQZ (nolock)
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
 			and trim(ST9.T9_CODBEM) like '[0-9]%'
-    
+
+    left join TQT010 as TQT (nolock)
+		on TQT.D_E_L_E_T_ = ''
+		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
     inner join TQY010 TQY (nolock)
         on TQY.D_E_L_E_T_ = ''
         and TQY.TQY_STATUS = TQZ.TQZ_STATUS
