@@ -121,63 +121,62 @@ FROM DT8010 DT8
             AND SX5.X5_CHAVE = DT6.DT6_SERVIC
             AND SX5.D_E_L_E_T_ = ' '
 
-        inner join DUD010 DUD
-            on DUD.D_E_L_E_T_ = ''
-            and DUD.DUD_FILDOC = DT6.DT6_FILDOC
-            and DUD.DUD_DOC = DT6.DT6_DOC
-            and DUD.DUD_SERIE = DT6.DT6_SERIE
+        left join
+        (
+            select
+                (select DTQ010.DTQ_DATGER from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATGER,
+                (select DTQ010.DTQ_DATFEC from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATFEC,
+                (select DTQ010.DTQ_DATENC from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATENC,
+                DUD.DUD_FILORI,
+                DUD.DUD_FILDOC,
+                DUD.DUD_DOC,
+                DUD.DUD_SERIE,
+                DUD.DUD_VIAGEM,
+                (
+                    select DTW010.DTW_DATREA
+                    from DTW010 (nolock)
+                    where 
+                            DTW010.D_E_L_E_T_ = ''
+                        and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                        and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                        and DTW010.DTW_ATIVID = 50
+                ) as DATAFIM,
 
-            left join /* ver modelo para adição de dimensão motorista */
-            (
-                select
-                    DTQ.DTQ_FILIAL,
-                    DTQ.DTQ_FILORI,
-                    DTQ.DTQ_VIAGEM,
-                    DTQ.DTQ_DATGER,
-                    DTQ.DTQ_DATFEC,
-                    DTQ.DTQ_DATENC,
-                    (
-                        select DTW010.DTW_DATREA
-                        from DTW010 (nolock)
-                        where 
-                                DTW010.D_E_L_E_T_ = ''
-                            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                            and DTW010.DTW_ATIVID = 50
-                    ) as DATAFIM,
+                concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) as ID_VIAGEM,
+                trim(DA4010.DA4_COD) as ID_MOTORISTA,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
+            from DUD010 DUD (nolock)
+                left join DTR010 DTR (nolock)
+                    on DTR.D_E_L_E_T_ = ''
+                    and DTR.DTR_FILORI = DUD.DUD_FILORI
+                    and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+                    
+                    left join DUP010 (nolock)
+                        on DUP010.D_E_L_E_T_ = ''
+                        and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                        and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                        and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                        and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                    concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-                    trim(DA4010.DA4_COD) as ID_MOTORISTA,
-                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
-                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
-                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-                from DTQ010 DTQ (nolock)
-                    left join DTR010 DTR (nolock)
-                        on DTR.D_E_L_E_T_ = ''
-                        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-                        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
-                        
-                        left join DUP010 (nolock)
-                            on DUP010.D_E_L_E_T_ = ''
-                            and DUP010.DUP_FILORI = DTR.DTR_FILORI
-                            and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
-                            and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
-                            and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+                        left join DA4010 (nolock)
+                            on DA4010.D_E_L_E_T_ = ''
+                            and DA4010.DA4_COD = DUP010.DUP_CODMOT
+            where DUD.D_E_L_E_T_ = ''
+        ) VIAGEM
+            on VIAGEM.DUD_FILORI = DT6.DT6_FILORI
+            and VIAGEM.DUD_FILDOC = DT6.DT6_FILDOC
+            and VIAGEM.DUD_DOC = DT6.DT6_DOC
+            and VIAGEM.DUD_SERIE = DT6.DT6_SERIE
 
-                            left join DA4010 (nolock)
-                                on DA4010.D_E_L_E_T_ = ''
-                                and DA4010.DA4_COD = DUP010.DUP_CODMOT
-                where DTQ.D_E_L_E_T_ = ''
-            ) VIAGEM
-                on substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
-                and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
-                and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
-
-        inner join SD2010 SD2
+        left join SD2010 SD2 (nolock)
             on SD2.D_E_L_E_T_ = ''
             and SD2.D2_NFORI = DT6.DT6_DOC
             and SD2.D2_SERIORI = DT6.DT6_SERIE
             and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
-WHERE DT8.D_E_L_E_T_ = ' '
+WHERE
+        DT8.D_E_L_E_T_ = ' '
+    and year(VIAGEM.DATAFIM) > 2021

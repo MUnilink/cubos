@@ -20,6 +20,8 @@
 
 		trim(isnull(SRC.RC_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRC.RC_PD, '-')) as VERBA,
+		trim(isnull(SRC.RC_SEQ, '-')) as SEQ,
+		
 		case when SRC.RC_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
 			case when SRC.RC_PD in ('029', '111', '113') then '03 Hora Extra'
@@ -71,11 +73,10 @@
 			on SRA.D_E_L_E_T_ = ''
 			and SRA.RA_FILIAL = SRC.RC_FILIAL
 			and SRA.RA_MAT = SRC.RC_MAT
+		inner join SQB010 SQB (nolock)
+			on SQB.D_E_L_E_T_ = ''
+			and SQB.QB_DEPTO = SRC.RC_DEPTO
 
-			inner join SQB010 SQB (nolock)
-				on SQB.D_E_L_E_T_ = ''
-				and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-				and SQB.QB_DEPTO = SRA.RA_DEPTO
 			inner join SRJ010 SRJ (nolock)
 				on SRJ.D_E_L_E_T_ = ''
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
@@ -111,6 +112,7 @@ union
 
 		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRD.RD_PD, '-')) as VERBA,
+		trim(isnull(SRD.RD_SEQ, '-')) as SEQ,
 		
 		case when SRD.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
@@ -162,11 +164,10 @@ union
 			on SRA.D_E_L_E_T_ = ''
 			and SRA.RA_FILIAL = SRD.RD_FILIAL
 			and SRA.RA_MAT = SRD.RD_MAT
+		inner join SQB010 SQB (nolock)
+			on SQB.D_E_L_E_T_ = ''
+			and SQB.QB_DEPTO = SRD.RD_DEPTO
 
-			inner join SQB010 SQB (nolock)
-				on SQB.D_E_L_E_T_ = ''
-				and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-				and SQB.QB_DEPTO = SRA.RA_DEPTO
 			inner join SRJ010 SRJ (nolock)
 				on SRJ.D_E_L_E_T_ = ''
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
