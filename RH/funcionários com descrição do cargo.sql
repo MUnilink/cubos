@@ -12,12 +12,14 @@ select
 	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
 
+	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
+	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(CTT.CTT_CUSTO) as COD_CC,
 	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
 	trim(CTD.CTD_ITEM) as COD_ITEM,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
 
-	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	case SRA.RA_SITFOLH when 'D' then 'N' else 'S' end as ATIVO,
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
