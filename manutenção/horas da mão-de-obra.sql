@@ -11,6 +11,12 @@ select
 	end as STATUS_INSUMO,
 
 	case STL.TL_TIPOREG
+		when 'M' then 'MÃO-DE-OBRA'
+		when 'E' then 'ESPECIALIDADE'
+		else 'OUTROS'
+	end as TIPO_CUSTO,
+
+	case STL.TL_TIPOREG
 		when 'M' then trim(ST1.T1_NOME)
 		when 'E' then trim(ST0.T0_NOME)
 		else 'OUTROS'
@@ -19,8 +25,9 @@ select
 	STL.TL_QUANTID,
 	STL.TL_CUSTO,
 
-	/*convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) as INI_APONT,*/
-	/*datediff(minute, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM))/60.0 as HORAS_APONT,*/
+	convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) as INI_APONT,
+	convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) as FIM_APONT,
+	datediff(minute, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM))/60.0 as HORAS_APONT,
 
 	convert(date, STL.TL_DTINICI, 103) as DT_INI,
 	convert(date, STL.TL_DTFIM, 103) as DT_FIM,
@@ -56,4 +63,5 @@ from STL010 STL (nolock)
 where
 		STL.D_E_L_E_T_ = ''
 	and STL.TL_TIPOREG in ('E', 'M')
-	and STL.TL_HOINICI != '  :  '
+	and trim(STL.TL_HOINICI) != ':'
+	and trim(STL.TL_HOFIM) != ':'
