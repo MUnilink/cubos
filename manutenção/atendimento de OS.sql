@@ -15,20 +15,18 @@ select
 	STL.TL_LOCAL as ARMAZEM,
 	STJ.TJ_POSCONT as CONTADOR,
     STL.TL_QUANTID as QTD_INSUMO,
-    STJ.TJ_CCUSTO,
-    STJ.TJ_YITMCT,
+    STJ.TJ_CCUSTO as CC,
+    STJ.TJ_YITMCT as ATIVIDADE,
     
-    case when STL.TL_QUANTID = SCP.CP_QUJE then 'TOT. ATENDIDA'
+    case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
     else
         case when SCP.CP_QUJE = 0.0 then 'PENDENTE'
         else
-            case when STL.TL_QUANTID > SCP.CP_QUJE then 'PAR. ATENDIDA'
+            case when SCP.CP_QUANT > SCP.CP_QUJE then 'PARC. ATENDIDA'
             else 'OUTROS'
             end
         end
     end as APP_INSUMO,
-	
-	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
 
     SCP.CP_NUM as NUM_SA,
     SCP.CP_ITEM as ITEM_SA,
@@ -55,29 +53,35 @@ select
 
     last_value(STL.TL_SEQRELA) over(partition by STJ.TJ_FILIAL, STJ.TJ_ORDEM, STL.TL_CODIGO order by STJ.TJ_FILIAL, STJ.TJ_ORDEM, STL.TL_CODIGO, STL.TL_SEQRELA) as SEQ_INSUMO,
 
-    STL.TL_TIPOREG,
-	case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then trim(isnull(ST1.T1_NOME, isnull(ST0.T0_NOME, '-')))
-	else
-		case when STL.TL_CODIGO = SB1.B1_COD and SB1.B1_COD like '1%' then trim(SB1.B1_DESC)
-		else
-			case when SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA then trim(SA2.A2_NOME)
-			else
-				case when STL.TL_CODIGO = SH4.H4_CODIGO then trim(SH4.H4_DESCRI)
-				else 'OUTROS'
-				end
-			end
-		end
-	end as DESC_INSUMO,
+	case STL.TL_TIPOREG
+		when 'M' then 'MÃO-DE-OBRA'
+		when 'E' then 'ESPECIALIDADE'
+		when 'P' then 'PEÇAS'
+		when 'T' then 'TERCEIROS'
+		else 'OUTROS'
+	end as TIPO_CUSTO,
 
-	trim(isnull(STL.TL_TAREFA, '-')) as TL_TAREFA,
-	trim(isnull(TT9.TT9_DESCRI, '-')) as T5_TAREFA,
-	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
+    trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
+	case STL.TL_TIPOREG
+		when 'M' then trim(ST1.T1_NOME)
+		when 'E' then trim(ST0.T0_NOME)
+		when 'P' then trim(SB1.B1_DESC)
+		when 'T' then trim(SA2.A2_NOME)
+		else 'OUTROS'
+	end as DESC_INSUMO,
+    
+    trim(isnull(ST4.T4_SERVICO, '-')) as COD_SERVICO,
+	trim(isnull(ST4.T4_NOME, '-')) as SERVICO,
+    trim(isnull(STL.TL_TAREFA, '-')) as COD_TAREFA,
+	trim(isnull(TT9.TT9_DESCRI, '-')) as TAREFA,
+	
+    trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
 	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
 	trim(isnull(ST1.T1_CODFUNC, '-')) as T1_CODFUNC,
-	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
-	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
-	trim(isnull(SA2.A2_COD, '-')) as A2_COD,
-	trim(isnull(SA2.A2_NOME, '-')) as A2_NOME
+	trim(isnull(SB1.B1_COD, '-')) as COD_PRODUTO,
+	trim(isnull(SB1.B1_DESC, '-')) as PRODUTO,
+	trim(isnull(SA2.A2_COD, '-')) as COD_FORNECEDOR,
+	trim(isnull(SA2.A2_NOME, '-')) as FORNECEDOR
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
@@ -87,11 +91,16 @@ from STL010 STL (nolock)
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
         and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP', 'PNEMOV')
         and year(STJ.TJ_DTORIGI) > 2021
+
+        inner join ST4010 ST4 (nolock)
+            on ST4.D_E_L_E_T_ = ''
+            and ST4.T4_SERVICO = STJ.TJ_SERVICO
+    
     left join SCP010 SCP (nolock)
         on SCP.D_E_L_E_T_ = ''
-        and STL.TL_FILIAL = SCP.CP_FILIAL
-        and STL.TL_NUMSA = SCP.CP_NUM
-        and STL.TL_ITEMSA = SCP.CP_ITEM
+        and SCP.CP_FILIAL = STL.TL_FILIAL
+        and SCP.CP_NUM = STL.TL_NUMSA
+        and SCP.CP_ITEM = STL.TL_ITEMSA
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = STL.TL_CODIGO            
