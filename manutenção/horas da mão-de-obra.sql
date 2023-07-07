@@ -25,8 +25,8 @@ select
 	STL.TL_QUANTID,
 	STL.TL_CUSTO,
 
-	convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) as INI_APONT,
-	convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) as FIM_APONT,
+	convert(datetime, datetimefromparts(year(STL.TL_DTINICI), month(STL.TL_DTINICI), day(STL.TL_DTINICI), substring(STL.TL_HOINICI, 1, 2), substring(STL.TL_HOINICI, 4, 5), 0, 0), 113) as INI_APONT,
+	convert(datetime, datetimefromparts(year(STL.TL_DTFIM), month(STL.TL_DTFIM), day(STL.TL_DTFIM), substring(STL.TL_HOFIM, 1, 2), substring(STL.TL_HOFIM, 4, 5), 0, 0), 113) as FIM_APONT,
 	datediff(minute, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM))/60.0 as HORAS_APONT,
 
 	convert(date, STL.TL_DTINICI, 103) as DT_INI,
@@ -60,8 +60,8 @@ from STL010 STL (nolock)
 		and STJ.TJ_ORDEM = STL.TL_ORDEM
 		and STJ.TJ_PLANO = STL.TL_PLANO
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
+		and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP')
+		and year(STJ.TJ_DTORIGI) > 2021
 where
 		STL.D_E_L_E_T_ = ''
 	and STL.TL_TIPOREG in ('E', 'M')
-	and trim(STL.TL_HOINICI) != ':'
-	and trim(STL.TL_HOFIM) != ':'
