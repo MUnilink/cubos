@@ -1,14 +1,17 @@
 select
-    trim(CTT.CTT_DESC01) as CTT_DESC01,
-    isnull(STC.TC_CODBEM, 'PNEU OU SR DESATRELADO') as TC_CODBEM,
-    STC.TC_COMPONE,
-    case when STC.TC_COMPONE like 'SR%' then 1000 else 1 end as qtd_compone,
+    ST9.T9_CODBEM as ESTRUTURA,
+    STC.TC_COMPONE as COMPONENTE,
+    ST9.T9_CCUSTO as CC,
+    ST9.T9_ITEMCTA as ATIVIDADE,
+    case when ST9.T9_CODFAMI != 'PN' and (STC.TC_COMPONE is null or STC.TC_COMPONE = '') then 'BEM DESATRELADO' else 
+    case when STC.TC_COMPONE = ST9.T9_CODBEM then 'COMPONENTE ATRELADO' else case when STC.TC_CODBEM = ST9.T9_CODBEM then 'ESTRUTURA' else 'BEM DESATRELADO' end end as STATUS,
     isnull(TQT.TQT_DESMED, 'SR') as TQT_DESMED,
-    ST9.T9_CODFAMI
-from ST9010 ST9 (nolock)
-    left join STC010 STC (nolock)
-        on STC.D_E_L_E_T_ = ''
-        and STC.TC_CODBEM = ST9.T9_CODBEM
+    ST9.T9_CODFAMI as FAMILIA,
+    case when STC.TC_COMPONE like 'SR%' then 1000 else 1 end as qtd_compone
+from STC010 STC (nolock)
+    left join ST9010 ST9 (nolock)
+        on ST9.D_E_L_E_T_ = ''
+        and ST9.T9_CODBEM = STC.TC_CODBEM
 
         left join TQS010 TQS (nolock)
             on TQS.D_E_L_E_T_ = ''
@@ -17,8 +20,4 @@ from ST9010 ST9 (nolock)
             left join TQT010 TQT (nolock)
                 on TQT.D_E_L_E_T_ = ''
                 and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-
-    inner join CTT010 CTT (nolock)
-        on CTT.D_E_L_E_T_ = ''
-        and CTT.CTT_CUSTO = ST9.T9_CCUSTO
-where ST9.D_E_L_E_T_ = ''
+where STC.D_E_L_E_T_ = ''
