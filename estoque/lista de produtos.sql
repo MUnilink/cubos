@@ -8,5 +8,3 @@ select
     convert(date, SB1.B1_DATREF, 103) as DATA_CRIADO,
     trim(SB1.B1_YPARTNU) as PARTNUMBER
 from SB1010 SB1 (nolock)
-where
-        SB1.B1_COD like '1%'
