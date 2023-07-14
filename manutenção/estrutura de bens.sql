@@ -9,9 +9,9 @@ select
     ST9.T9_CODFAMI as FAMILIA,
     case when STC.TC_COMPONE like 'SR%' then 1000 else 1 end as qtd_compone
 from STC010 STC (nolock)
-    left join ST9010 ST9 (nolock)
-        on ST9.D_E_L_E_T_ = ''
-        and ST9.T9_CODBEM = STC.TC_CODBEM
+    left join ST9010 EST (nolock)
+        on EST.D_E_L_E_T_ = ''
+        and EST.T9_CODBEM = STC.TC_CODBEM
 
         left join TQS010 TQS (nolock)
             on TQS.D_E_L_E_T_ = ''
@@ -20,4 +20,8 @@ from STC010 STC (nolock)
             left join TQT010 TQT (nolock)
                 on TQT.D_E_L_E_T_ = ''
                 and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+
+    left join ST9010 COM (nolock)
+        on COM.D_E_L_E_T_ = ''
+        and COM.T9_CODBEM = STC.TC_COMPONE
 where STC.D_E_L_E_T_ = ''
