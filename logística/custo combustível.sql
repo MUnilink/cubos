@@ -105,3 +105,6 @@ from
 	left join TQM010 as TQM
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
+where
+        ST9.T9_CODFAMI in ('VP', 'VM')
+    and ST9.T9_CCUSTO != 211
