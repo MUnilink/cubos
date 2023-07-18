@@ -8,7 +8,7 @@ select
     
     ZC1.ZC1_PORTO,
     ZC1.ZC1_NAVIO,
-    trim(ZC1.ZC1_VIAGEM) as ZC1_VIAGEM,
+    trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
     
     ZC2.ZC2_ITEM as ITEM,
     SB1.B1_GRUPO as GRUPO,
@@ -29,10 +29,11 @@ select
         else 'OUTROS'
     end as STATUS_OS,
     
-    ZC2.ZC2_QTDPRV,
-    ZC2.ZC2_QTDREA,
-    ZC2.ZC2_VLUPRV,
-    ZC2.ZC2_VLUREA,
+    ZC2.ZC2_QTDPRV as QTD_PREV,
+    ZC2.ZC2_QTDREA as QTD_REAL,
+    ZC2.ZC2_VLUPRV as VAL_PREV,
+    ZC2.ZC2_VLUREA as VAL_REAL,
+    
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
     ZC2.ZC2_MOTORI as COD_MOT,
