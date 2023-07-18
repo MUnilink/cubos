@@ -91,27 +91,5 @@ from SN4010 SN4 (nolock)
 				left join SNG010 SNG (nolock)
 					on SNG.D_E_L_E_T_ = ''
 					and SNG.NG_GRUPO = SN1.N1_GRUPO
-	(
-		select
-			CT2.CT2_LOTE,
-			CT2.CT2_SBLOTE,
-			CT2.CT2_DOC,
-			CT2.CT2_LINHA,
-			CT2.CT2_DEBITO,
-			CT2.CT2_CREDIT,
-			CT2.CT2_VALOR,
-			CT2.CT2_HIST,
-			CT2.CT2_ORIGEM,
-			CT2.CT2_CCD
-			CT2.CT2_ITEMD,
-			CT2.CT2_SEQHIS,
-			CT2.CT2_LP,
-			CT2.CT2_ROTINA
-		from CT2010 CT2
-		where
-				CT2.D_E_L_E_T_ = ''
-			and CT2.CT2_ROTINA in ('ATFA050', 'ATFA012', 'ATFA036')
-	) CT2
-		on CT2.
 where
         SN4.D_E_L_E_T_ = ''
