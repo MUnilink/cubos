@@ -7,6 +7,7 @@ select distinct
     STL.TL_QUANTID,
     STL.TL_LOCAL,
     STL.TL_SEQRELA,
+    STJ.TJ_CCUSTO,
 
     case when STL.TL_CODIGO = ST0.T0_ESPECIA or STL.TL_CODIGO = ST1.T1_CODFUNC then 'MÃO-DE-OBRA'
 	else
@@ -143,5 +144,4 @@ where
         STJ.D_E_L_E_T_ = ''
     and STL.TL_SEQRELA > 0
     and STL.TL_DTINICI > 20211231
-    and STJ.TJ_CCUSTO = 304
-    and ST9.T9_CODFAMI != 'PN'
+    and ST9.T9_CODFAMI in ('VP', 'VM')
