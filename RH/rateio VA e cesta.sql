@@ -48,7 +48,8 @@
         SR0.R0_QDIADIF as DIAS_DIFERENCA,
         SR0.R0_VLRVALE as VALOR_UNIT,
         SR0.R0_VLREMP as VALOR_EMPR,
-        SR0.R0_FERIAS as FERIAS
+        SR0.R0_FERIAS as FERIAS,
+        SRA.RA_MAT as contador
 
     from SR0010 SR0 (nolock)
         inner join SRA010 SRA (nolock)
@@ -133,7 +134,8 @@ union
         null as DIAS_DIFERENCA,
         null as VALOR_UNIT,
         null as VALOR_EMPR,
-        null as FERIAS
+        null as FERIAS,
+        SRA.RA_MAT as contador
 
     from RIQ010 RIQ (nolock)
         inner join SRA010 SRA (nolock)
