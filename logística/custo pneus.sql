@@ -5,14 +5,12 @@ select distinct
     SB1.B1_DESC,
     PNEU_CUSTO.B9_CM,
 
-    case when SB1.B1_COD = '11300003' then 120000
-    else
-        case when SB1.B1_COD in ('11300001', '11300002') then 180000
-        else
-            case when SB1.B1_COD = '11300004' then 80000
-                else 0
-            end
-        end
+    case SB1.B1_COD
+        when '11300001' then 180000
+        when '11300002' then 180000
+        when '11300003' then 120000
+        when '11300004' then 80000
+        else 0
     end as km
 
 from STC010 STC (nolock)
@@ -32,16 +30,22 @@ from STC010 STC (nolock)
                 (
                     select
                         SB9010.B9_COD,
-                        min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM,
-                        min(SB9010.B9_DATA) as B9_DATA
+                        avg(SB9010.B9_CM1) as B9_CM
                     from SB9010 (nolock)
                     where
                             SB9010.D_E_L_E_T_ = ''
                         and SB9010.B9_LOCAL = '20'
                         and SB9010.B9_COD like '1130%'
-                        and SB9010.B9_QINI != 0
+                        and SB9010.B9_DATA like '2022%'
                     group by
                         SB9010.B9_COD
                 ) PNEU_CUSTO
                     on PNEU_CUSTO.B9_COD = SB1.B1_COD
-where STC.D_E_L_E_T_ = ''
+where
+        STC.D_E_L_E_T_ = ''
+    and
+        (
+                STC.TC_CODBEM like 'CM%'
+            or STC.TC_CODBEM like 'SR%'
+            or STC.TC_CODBEM like 'VM%'
+        )
