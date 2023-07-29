@@ -67,9 +67,7 @@ SELECT
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
-    DF1.DF1_YOSCLI,
-    DF1.DF1_NUMAGE,
-    DF1.DF1_ITEAGE,
+    DF1.*,
     1 as FATO1
 
 FROM DT6010 DT6
@@ -214,28 +212,36 @@ FROM DT6010 DT6
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
                 DF1010.DF1_YOSCLI,
-                DTC010.DTC_FILDOC,
-                DTC010.DTC_DOC,
-                DTC010.DTC_SERIE,
+                
+                DT5010.DT5_NUMSOL,
+                DT5010.DT5_FILDOC,
+                DT5010.DT5_DOC,
+                DT5010.DT5_SERIE,
+                DT5010.DT5_STATUS,
+                DT5010.DT5_TIPCOL,
+                DT5010.DT5_CODSOL,
+                DT5010.DT5_CODOBC,
+                
                 isnull
                 (
                     concat(DF1010.DF1_DATPRC, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00')),
                     concat(DF1010.DF1_DATPRE, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00'))
                 ) as CHE_CLIDEV_PREV
 
-            from DF1010
-                inner join DTC010
-                    on DTC010.D_E_L_E_T_ = ''
-                    and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
-                    and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
+            from DT5010
+                left join DF1010
+                    on DF1010.D_E_L_E_T_ = ''
+                    and DF1010.DF1_FILIAL = substring(DT5010.DT5_FILIAL, 1, 4)
+                    and DF1010.DF1_DOC = DT5010.DT5_NUMSOL
+                    and (DF1010.DF1_HORPRC != '' or DF1010.DF1_HORPRE != '')
+                    and (DF1010.DF1_DATPRC != '' or DF1010.DF1_DATPRE != '')
             where
-                    DF1010.D_E_L_E_T_ = ''
-                and (DF1010.DF1_HORPRC != '' or DF1010.DF1_HORPRE != '')
-                and (DF1010.DF1_DATPRC != '' or DF1010.DF1_DATPRE != '')
+                    DT5010.D_E_L_E_T_ = ''
+                and DT5010.DT5_SERIE = 'COL'
         ) DF1
-            on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
-            and DF1.DTC_DOC = VIAGEM.DUD_DOC
-            and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
+            on DF1.DT5_FILDOC = VIAGEM.DUD_FILDOC
+            and DF1.DT5_DOC = VIAGEM.DUD_DOC
+            and DF1.DT5_SERIE = VIAGEM.DUD_SERIE
 where
         DT6.D_E_L_E_T_ = ' '
     AND DT6.DT6_DATENT <> ' '
