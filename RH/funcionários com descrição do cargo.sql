@@ -26,6 +26,41 @@ select
 	trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 
+	case SRA.RA_TPDEFFI 
+		when '0' then '0 - NENHUMA'
+		when '1' then '1 - FISICA'
+		when '2' then '2 - AUDITIVA'
+		when '3' then '3 - VISUAL'
+		when '4' then '4 - INTELECTUAL'
+		when '5' then '5 - MULTIPLA'
+		when '6' then '6 - REABILITADO'
+	else 'ANONIMIZADO' end as TPDEFFI,
+
+	case SRA.RA_DEFIFIS
+		when '1' then '1 - SIM'
+		when '2' then '2 - NAO'
+	else SRA.RA_DEFIFIS end as DEFIFIS,
+
+	case SRA.RA_PORTDEF 
+		when '1*****' then '1 - FISICA'
+		when '*2****' then '2 - AUDITIVA'
+		when '**3***' then '3 - VISUAL'
+		when '***4**' then '4 - MENTAL'
+		when '****5*' then '5 - INTELECTUAL'
+		when '*****6' then '6 - REABILITADO'
+	else 'ANONIMIZADO' end as PORTDEF,
+
+	case SRA.RA_CTPCD
+		when '1' then '1 - SIM'
+		when '2' then '2 - NAO'
+	else trim(SRA.RA_CTPCD) end as CTPCD,
+
+	case SRA.RA_BRPDH
+		when '1' then '1 - REABILITADO'
+		when '2' then '2 - PORT. DEFI. HABILITADO'
+		when '3' then '3 - NAO APLICAVEL'
+	else 'ANONIMIZADO' end as BRPDH,
+
 	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
 	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
 	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE
