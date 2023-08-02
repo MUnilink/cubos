@@ -97,6 +97,7 @@ select
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
 	trim(isnull(TT9.TT9_DESCRI, '-')) as T5_TAREFA,
+	trim(isnull(STJ.TJ_USUARIO, '-')) as TJ_USUAINI,
 	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
 	STJ.TJ_SERVICO,
 	STJ.TJ_POSCONT as CONTADOR_ATUAL,
@@ -107,6 +108,7 @@ select
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
 	substring(STL.TL_DTINICI, 1, 6) as PERIODO,
+	substring(STL.TL_DTINICI, 1, 6) as PERIODO_OS,
 	SCP.CP_NUM as SA,
 	SCP.CP_QUANT as SA_QTD_SOLICTADA,
     SCP.CP_QUJE as SA_QTD_ATENDIDA,
@@ -119,7 +121,12 @@ select
             else 'OUTROS'
             end
         end
-    end as SA_ATENDIDA
+    end as SA_ATENDIDA,
+
+	STL.TL_DOC as DOC,
+	STL.TL_SDOC as SERIE,
+	STL.TL_ORIGNFE as TIPO_DOC,
+	STJ.TJ_TERMINO as OS_ENCERRADA
 
 from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
