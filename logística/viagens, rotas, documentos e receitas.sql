@@ -6,6 +6,11 @@ select
     convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI,
     DA8.DA8_DESC,
     DTQ.DTQ_KMVGE,
+
+    REG_COL.EST_COL as UF_COLETA,
+	REG_COL.MUN_COL as MUN_COLETA,
+	REG_ENT.EST_ENT as UF_ENTREGA,
+	REG_ENT.MUN_ENT as MUN_ENTREGA,
     
     DTQ.DTQ_DATGER,
     DTQ.DTQ_DATFEC,
@@ -317,6 +322,28 @@ from DTQ010 DTQ (nolock)
             ON DUYDEV.DUY_FILIAL = DT6_FILIAL
             AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
             AND DUYDEV.D_E_L_E_T_ = ' '
+        
+        left join
+        (
+            select
+                trim(DUY010.DUY_GRPVEN) as GRP_COL,
+                trim(DUY010.DUY_EST) as EST_COL,
+                trim(DUY010.DUY_DESCRI) as MUN_COL
+            from DUY010 (nolock)
+            where DUY010.D_E_L_E_T_ = ''
+        ) AS REG_COL
+        on REG_COL.GRP_COL = DT6.DT6_CDRORI
+        
+        left join
+        (
+            select
+                trim(DUY010.DUY_GRPVEN) as GRP_ENT,
+                trim(DUY010.DUY_EST) as EST_ENT,
+                trim(DUY010.DUY_DESCRI) as MUN_ENT
+            from DUY010 (nolock)
+            where DUY010.D_E_L_E_T_ = ''
+        ) AS REG_ENT
+        on REG_ENT.GRP_ENT = DT6.DT6_CDRCAL
 
         left join DTC010 DTC (nolock)
             on DTC.D_E_L_E_T_ = ''
