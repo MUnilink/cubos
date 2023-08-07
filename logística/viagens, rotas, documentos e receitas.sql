@@ -65,12 +65,6 @@ select
     DA4.DA4_FORNEC,
     DA4.DA4_LOJA,
 
-    DYX.DYX_IDCDIA,
-    DYX.DYX_VLRUNI,
-    DYX.DYX_QTDE,
-    DYX.DYX_DATDIA,
-    DYX.DYX_HORDIA,
-
     DTR.DTR_CODVEI,
     (select DA3010.DA3_PLACA from DA3010 where DA3010.DA3_COD = DTR.DTR_CODVEI) as PLACA_VEI,
     DTR.DTR_CODRB1,
@@ -256,23 +250,7 @@ from DTQ010 DTQ (nolock)
 
             inner join DA4010 DA4 (nolock)
                 on DA4.DA4_COD = DUP.DUP_CODMOT
-            left join DYV010 DYV (nolock)
-                on DYV.D_E_L_E_T_ = ''
-                and DYV.DYV_FILORI = DUP.DUP_FILORI
-                and DYV.DYV_VIAGEM = DUP.DUP_VIAGEM
-                and DYV.DYV_CODMOT = DUP.DUP_CODMOT
-                
-                left join DYX010 DYX (nolock)
-                    on DYX.D_E_L_E_T_ = ''
-                    and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-                    
-                    left join SE2010 SE2
-                        on SE2.D_E_L_E_T_ = ''
-                        and SE2.E2_PREFIXO = DYX.DYX_PRETIT
-                        and SE2.E2_NUM = DYX.DYX_NUMTIT
-                        and SE2.E2_FORNECE = DYX.DYX_FORNEC
-                        and SE2.E2_LOJA = DYX.DYX_LOJA
-
+    
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_FILORI = DTQ.DTQ_FILORI
