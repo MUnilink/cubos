@@ -3,6 +3,8 @@ select
 	SR8.R8_PER as PERIODO,
 	SRA.RA_MAT,
 	SRA.RA_NOME,
+	SRA.RA_MUNICIP as MUNICIPIO,
+	SRA.RA_ESTADO as UF,
 	SR8.R8_CID,
 	TMR.TMR_DOENCA,
 	SRA.RA_CC,
@@ -10,6 +12,9 @@ select
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+
+	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
 	CTT.CTT_DESC01 as CCUSTO,
 	CTD.CTD_DESC01 as ATIVIDADE,
