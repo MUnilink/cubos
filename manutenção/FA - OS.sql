@@ -126,7 +126,12 @@ select
 	STL.TL_DOC as DOC,
 	STL.TL_SDOC as SERIE,
 	STL.TL_ORIGNFE as TIPO_DOC,
-	STJ.TJ_TERMINO as OS_ENCERRADA
+	STJ.TJ_TERMINO as OS_ENCERRADA,
+
+	SD3.D3_TM as TM,
+	SD3.D3_CF as CF,
+	SD3.D3_DOC as DOC,
+	SD3.D3_CUSTO1 as CUSTO_MOV
 
 from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
@@ -148,9 +153,14 @@ from STJ010 STJ (nolock)
 
 		left join SCP010 SCP (nolock)
 			on SCP.D_E_L_E_T_ = ''
-			and STL.TL_FILIAL = SCP.CP_FILIAL
-			and STL.TL_ORDEM = substring(SCP.CP_OP, 1, 6)
-			and STL.TL_CODIGO = SCP.CP_PRODUTO
+			and SCP.CP_FILIAL = STL.TL_FILIAL
+			and SCP.CP_NUM = STL.TL_NUMSA
+			and SCP.CP_ITEM = STL.TL_ITEMSA
+
+			left join SD3010 SD3 (nolock)
+				on SD3.D3_FILIAL = SCP.CP_FILIAL
+				and SD3.D3_NUMSA = SCP.CP_NUM
+				and SD3.D3_ITEM = SCP.CP_ITEM
 
 		left join TT9010 TT9 (nolock)
 			on TT9.D_E_L_E_T_ = ''
