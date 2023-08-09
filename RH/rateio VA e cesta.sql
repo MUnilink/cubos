@@ -3,6 +3,8 @@
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
+        trim(SRA.RA_MUNICIP) as MUNICIPIO,
+	    trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
@@ -89,6 +91,8 @@ union
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
+        trim(SRA.RA_MUNICIP) as MUNICIPIO,
+	    trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 

@@ -4,6 +4,8 @@ select
 	trim(SRA.RA_MAT) as CONTADOR,
 	trim(SRA.RA_NOME) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
+	trim(SRA.RA_MUNICIP) as MUNICIPIO,
+	trim(SRA.RA_ESTADO) as UF,
 	SX5.X5_DESCRI as ESCOLARIDADE,
 
 	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
@@ -11,6 +13,7 @@ select
 	day(SRA.RA_NASC) as dia_ANIVERSARIO,
 	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
 	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
 	trim(SRJ.RJ_DESC) as FUNCAO,
