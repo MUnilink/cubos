@@ -1,12 +1,10 @@
 select
-	trim(isnull(STJ.TJ_FILIAL, '-')) as TJ_FILIAL,
-	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
-	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
-	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-	trim(isnull(STZ.TZ_BEMPAI, '-')) as TZ_BEMPAI,
-	
-	trim(isnull(TR8.TR8_LOTE, '-')) as TR8_LOTE,
-	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
+	STJ.TJ_FILIAL as TJ_FILIAL,
+	STJ.TJ_ORDEM as TJ_ORDEM,
+	cast(ST9.T9_CODBEM as int) as T9_CODBEM,
+	TR8.TR8_LOTE as TR8_LOTE,
+	STJ.TJ_CCUSTO as CCUSTO,
+	STJ.TJ_YITMCT as ATIVIDADE,
 
 	STJ.TJ_CUSTTER,
 	TQS.TQS_KMR1,
@@ -18,61 +16,41 @@ select
 	TQS.TQS_KMR7,
 	TQS.TQS_KMOR,
 	ST9.T9_VALCPA,
-	STZ.TZ_CONTSAI,
-	STZ.TZ_POSCONT,
 	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
-	trim(isnull(STZ.TZ_DATAMOV, '-')) as TZ_DATAMOV,
-	trim(isnull(STZ.TZ_DATASAI, '-')) as TZ_DATASAI,
-	ST9.T9_DTCOMPR,
 
 	(
-        select top 1 first_value(STZ.TZ_DATAMOV) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)
+        select top 1 first_value(STZ010.TZ_DATAMOV) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)
         from STZ010 (nolock)
         where
                 STZ010.D_E_L_E_T_ = ''
-            and STZ010.TZ_CODBEM = STZ.TZ_CODBEM
-    ) as DATA
+            and STZ010.TZ_CODBEM = ST9.T9_CODBEM
+    ) as DATA,
 
-from TQS010 TQS
-	left join TR8010 as TR8 /* movimentação em lote do pneu */
+	TR4.TR4_NUMANA,
+	TR4.TR4_ORDEM,
+	TR4.TR4_DESTIN,
+	TR4.TR4_MOTIVO,
+	convert(datetime, concat(TR4.TR4_DTANAL, ' ', TR4.TR4_HRANAL), 103) as DATA_ANALISE
+
+from STJ010 STJ
+	left join TR8010 TR8
 		on TR8.D_E_L_E_T_ = ''
 		and TR8.TR8_FILIAL = STJ.TJ_FILIAL
 		and TR8.TR8_ORDEM = STJ.TJ_ORDEM
 		and TR8.TR8_PLANO = STJ.TJ_PLANO
 
-		inner join TR7010 as TR7
-			on TR7.D_E_L_E_T_ = ''
-			and TR7.TR7_FILIAL = TR8.TR8_FILIAL
-			and TR7.TR7_LOTE = TR8.TR8_LOTE
+		left join TR4010 TR4
+			on TR4.D_E_L_E_T_ = ''
+			and TR4.TR4_CODBEM = TR8.TR8_CODBEM
+			and TR4.TR4_ORDEM = TR8.TR8_ORDEM
 			
-	inner join STJ010 STJ
+	inner join TQS010 TQS
 		on TQS.D_E_L_E_T_ = ''
 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
 
-		inner join TQT010 as TQT /* medida do pneu */
-			on TQT.D_E_L_E_T_ = ''
-			and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-
-		inner join ST9010 as ST9 /* bens da manutenção*/
+		inner join ST9010 as ST9
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
 
-			inner join STZ010 as STZ /* movimentação de bens*/
-				on STZ.D_E_L_E_T_ = ''
-				and trim(STZ.TZ_CODBEM) like '[0-9]%'
-				and ST9.T9_CODBEM = STZ.TZ_CODBEM
-
-	left join ST4010 as ST4 /* serviços da manutenção*/
-		on ST4.D_E_L_E_T_ = ''
-		and ST4.T4_SERVICO = STJ.TJ_SERVICO
-	left join STL010 as STL /* detalhes das OS */
-		on STL.D_E_L_E_T_ = ''
-		and STL.TL_ORDEM = STJ.TJ_ORDEM
-		and STL.TL_PLANO = STJ.TJ_PLANO
-		and STL.TL_FILIAL = STJ.TJ_FILIAL
-
-		left join SB1010 as SB1 /* produtos */
-			on SB1.D_E_L_E_T_ = ''
-			and SB1.B1_COD = STL.TL_CODIGO
 where
-	STJ.D_E_L_E_T_ = ''
+		STJ.D_E_L_E_T_ = ''
