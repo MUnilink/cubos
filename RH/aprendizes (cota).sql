@@ -2,9 +2,15 @@ select
 	trim(isnull(FUNCIONARIO.RA_FILIAL, '-')) as FILIAL,
 	trim(isnull(FUNCIONARIO.RA_MAT, '-')) as MATRICULA,
 	trim(isnull(FUNCIONARIO.RA_NOME, '-')) as FUNCIONARIO,
+	trim(isnull(FUNCIONARIO.RA_MUNICIP, '-')) as MUNICIPIO,
+	trim(isnull(FUNCIONARIO.RA_ESTADO, '-')) as UF,
 	trim(isnull(FUNCIONARIO.RA_CC, '-')) as COD_CC,
 	trim(isnull(FUNCIONARIO.RA_SITFOLH, '-')) as STATUS,
 	trim(isnull(CC.CTT_DESC01, '-')) as CENTRO_CUSTO,
+
+	convert(date, FUNCIONARIO.RA_ADMISSA, 103) as ADMISSAO,
+    case when trim(FUNCIONARIO.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+
 	(
 		select cast(count(distinct SRA010.RA_MAT) as decimal)
 		from SRA010 (nolock)
