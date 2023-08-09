@@ -51,6 +51,6 @@ from STJ010 STJ (nolock)
 		inner join ST9010 ST9 (nolock)
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
-
 where
-		STJ.D_E_L_E_T_ = ''
+		STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>
+	and STJ.D_E_L_E_T_ = ''
