@@ -47,6 +47,12 @@ select
     SD1.D1_CUSTO as CUSTO_SERVICO,
     convert(date, SD1.D1_DTDIGIT, 103) as DT_NFS,
 
+    TR4.TR4_NUMANA,
+	TR4.TR4_ORDEM,
+	TR4.TR4_DESTIN,
+	TR4.TR4_MOTIVO,
+	convert(datetime, concat(TR4.TR4_DTANAL, ' ', TR4.TR4_HRANAL), 103) as DATA_ANALISE,
+
     (
         select top 1 last_value(STZ010.TZ_BEMPAI) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)
         from STZ010 (nolock)
@@ -89,6 +95,10 @@ from TQS010 TQS (nolock)
             on SD1.D_E_L_E_T_ = ''
             and SD1.D1_FILIAL = TR8.TR8_FILIAL
             and substring(SD1.D1_OP, 1, 6) = TR8.TR8_ORDEM
+        left join TR4010 TR4 (nolock)
+            on TR4.D_E_L_E_T_ = ''
+            and TR4.TR4_CODBEM = TR8.TR8_CODBEM
+            and TR4.TR4_ORDEM = TR8.TR8_ORDEM
     
     inner join TQY010 TQY (nolock)
         on TQY.D_E_L_E_T_ = ''
@@ -100,6 +110,7 @@ from TQS010 TQS (nolock)
 		left join SB1010 SB1 (nolock)
 			on SB1.D_E_L_E_T_ = ''
 			and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
+            and SB1.B1_COD != '11300096'
 
 where
         TQS.D_E_L_E_T_ = ''
