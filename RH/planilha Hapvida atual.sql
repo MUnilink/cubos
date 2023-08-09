@@ -3,9 +3,14 @@ select
 	trim(SRC.RC_CC) + ' - ' + trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
 	SRC.RC_MAT as MATRICULA,
 	SRA.RA_NOME as NOME,
+	trim(SRA.RA_MUNICIP) as MUNICIPIO,
+	trim(SRA.RA_ESTADO) as UF,
 	SRB.RB_COD as DEPENDENTE,
 	SRA.RA_SEXO as SEXO_FUN,
 	SRB.RB_SEXO as SEXO_DEP,
+
+	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
 	count(distinct SRC.RC_MAT) as CONTADOR_FUN,
 	count(distinct SRB.RB_COD) as CONTADOR_DEP,
@@ -46,5 +51,9 @@ group by
 	SRC.RC_PERIODO,
 	SRA.RA_SEXO,
 	SRA.RA_NOME,
+	SRA.RA_MUNICIP,
+	SRA.RA_ESTADO,
+	SRA.RA_ADMISSA,
+	SRA.RA_SITFOLH,
 	SRB.RB_COD,
 	SRB.RB_SEXO
