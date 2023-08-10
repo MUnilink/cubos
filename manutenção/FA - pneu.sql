@@ -1,6 +1,7 @@
 select
 	STJ.TJ_FILIAL as FILIAL,
 	STJ.TJ_ORDEM as OS,
+	cast(TQS.TQS_CODBEM as int) as TQS_CODBEM,
 	cast(ST9.T9_CODBEM as int) as T9_CODBEM,
 	TR8.TR8_LOTE as LOTE,
 	STJ.TJ_CCUSTO as CCUSTO,
