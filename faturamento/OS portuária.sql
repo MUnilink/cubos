@@ -43,11 +43,11 @@ select
     DA4.DA4_NOME as MOTORISTA,
     ZC2.ZC2_VEICUL as CM,
     ZC2.ZC2_CARRET as SR,
-    
+
     substring(ZC2.ZC2_DTINI, 1, 6) as PERIODO_APONT,
-    convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
-    convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
-    datediff(minute, convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103), convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103))/60.0 as HORAS_APONT,
+    concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) as DTINI_APONT,
+    concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) as DTFIM_APONT,
+    /*datediff(minute, convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103), convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103))/60.0 */ null as HORAS_APONT,
     trim(ZC2.ZC2_NMUSU) as ZC2_NMUSU
 
 from ZC2010 ZC2 (nolock)
