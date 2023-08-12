@@ -184,3 +184,188 @@ Conversion failed when converting the varchar value 'CM5027          ' to data t
 
 12/08/23 08:04:18:322  INFO [main] (Main.java:600) - Tempo de execução total: 04min 12s 
 
+12/08/23 10:00:06:336  INFO [main] (Main.java:133) - Início do processo do agent...
+
+12/08/23 10:00:06:338  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+12/08/23 10:00:08:154  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config_custom.properties): 
+
+12/08/23 10:00:08:156  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20230812'
+
+12/08/23 10:00:08:156  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20200812'
+
+12/08/23 10:00:08:156  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20230812'
+
+12/08/23 10:00:08:157  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+12/08/23 10:00:08:159  INFO [main] (JdbcExtractor.java:187) - Início da conexão com GoodData 
+
+12/08/23 10:00:08:174  INFO [main] (GdcRESTApiWrapper.java:194) - Efetuando login no GoodData...
+12/08/23 10:00:08:937  INFO [main] (GdcRESTApiWrapper.java:211) - Login no GoodData efetuado com sucesso
+12/08/23 10:00:09:202 DEBUG [main] (GdcRESTApiWrapper.java:272) - Efetuando logout no GoodData.
+12/08/23 10:00:09:321 DEBUG [main] (GdcRESTApiWrapper.java:278) - Logout no GoodData efetuado com sucesso.
+12/08/23 10:00:09:322  INFO [main] (JdbcExtractor.java:190) - Fim da conexão com GoodData 
+
+12/08/23 10:00:09:323  INFO [main] (JdbcExtractor.java:219) - Início da geração dos arquivos de dados (Via pasta query) 
+
+12/08/23 10:00:09:324  INFO [main] (JdbcExtractor.java:454) - Conectado ao banco de dados 
+
+12/08/23 10:00:09:327 DEBUG [main] (JdbcExtractor.java:1041) - consumogerencial.sql | Query a ser executada: select 	ZD3.ZD3_LITROS, 	( 		select avg(SD1010.D1_VUNIT) 		from SD1010 		where 				SD1010.D_E_L_E_T_ = '' 			and SD1010.D1_COD = '11100008' 			and SD1010.D1_TES = 42 			and substring(SD1010.D1_DTDIGIT, 1, 6) = substring(ZD3.ZD3_DATA, 1, 6) 	) as ZD3_VLUNI, 	ZD3.ZD3_HODOM, 	ZD3.ZD3_KMRD, 	ZD3.ZD3_KML, 	ZD3.ZD3_TOTAL, 	trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,  	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE, 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM, 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM, 	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO, 	isnull(ZD3.TQN_YITMCT, '-') as TQN_YITMCT from 	( 		select 			case cast(ZD30.ZD3_TANQUE as int) 				when 12 then '010102' 				else trim(isnull(ZD30.ZD3_FILIAL, '-')) 			end as ZD3_FILIAL, 			ZD30.ZD3_KM as ZD3_HODOM, 			ZD30.ZD3_VEICUL, 			ZD30.ZD3_LITROS, 			ZD30.ZD3_TOTAL, 			ZD30.ZD3_TANQUE, 			ZD30.ZD3_COMB, 			substring(ZD30.ZD3_DATA, 1, 8) as ZD3_DATA, 			ZD30.ZD3_KML, 			ZD30.ZD3_KMRD,  			( 				select TQN010.TQN_CCUSTO 				from TQN010 				where 						TQN010.D_E_L_E_T_ = '' 					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL 					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8) 					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5) 			) as TQN_CCUSTO, 			( 				select 					case when TQN010.TQN_YITMCT is not null and TQN010.TQN_YITMCT != '' then TQN010.TQN_YITMCT 					else 						case TQN010.TQN_CCUSTO 							when 302 then 11 							when 304 then 11 							when 303 then 21 							when 305 then 21 							when 306 then 21 							else 90 						end 					end 				from TQN010 				where 						TQN010.D_E_L_E_T_ = '' 					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL 					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8) 					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5) 			) as TQN_YITMCT		 		from ZD3010 ZD30 		where ZD30.D_E_L_E_T_ = '' 	) as ZD3  	left join 	( 		select 			case cast(TQI010.TQI_CODPOS as int) 				when 59 then '010102' 				else trim(isnull(TQI010.TQI_FILIAL, '-')) 			end as TQI_FILIAL,  			TQI010.TQI_CODPOS, 			TQI010.TQI_LOJA, 			TQI010.TQI_TANQUE, 			TQI010.TQI_YDETAN, 			TQI010.TQI_CODCOM, 			TQI010.TQI_PRODUT, 			TQI010.TQI_FABRIC 		from TQI010 		where TQI010.D_E_L_E_T_ = '' 	) as TQI 		on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL 		and TQI.TQI_TANQUE = ZD3.ZD3_TANQUE  		left join 		( 			select 				case cast(TQF010.TQF_CODIGO as int) 					when 59 then '010102' 					else trim(isnull(TQF010.TQF_CODFIL, '-')) 				end as TQF_FILIAL, 				TQF010.TQF_CODIGO, 				TQF010.TQF_LOJA 			from TQF010 			where TQF010.D_E_L_E_T_ = '' 		) as TQF 			on TQF.TQF_FILIAL = TQI.TQI_FILIAL 			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA  	left join ST9010 as ST9 		on ST9.D_E_L_E_T_ = '' 		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL 	left join TQM010 as TQM 		on TQM.D_E_L_E_T_ = '' 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB where ZD3.ZD3_DATA between '20200812' AND '20230812' 
+
+12/08/23 10:00:29:877  INFO [main] (JdbcExtractor.java:1069) - consumogerencial.sql | Tempo de execução: 00h 00min 20s 550ms 
+
+12/08/23 10:00:30:578 DEBUG [main] (JdbcExtractor.java:1041) - serviços pneus.sql | Query a ser executada: select 	STJ.TJ_FILIAL as FILIAL, 	STJ.TJ_ORDEM as OS, 	TQS.TQS_CODBEM as TQS_CODBEM, 	ST9.T9_CODBEM as T9_CODBEM, 	TR8.TR8_LOTE as LOTE, 	STJ.TJ_CCUSTO as CCUSTO, 	STJ.TJ_SERVICO as SERVICO,  	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then STJ.TJ_YITMCT 	else 		case STJ.TJ_CCUSTO 			when 302 then 11 			when 304 then 11 			when 303 then 21 			when 305 then 21 			when 306 then 21 			else 90 		end 	end as ATIVIDADE,  	STJ.TJ_CUSTTER, 	TQS.TQS_KMR1, 	TQS.TQS_KMR2, 	TQS.TQS_KMR3, 	TQS.TQS_KMR4, 	TQS.TQS_KMR5, 	TQS.TQS_KMR6, 	TQS.TQS_KMR7, 	TQS.TQS_KMOR, 	ST9.T9_VALCPA, 	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,  	(         select top 1 first_value(STZ010.TZ_DATAMOV) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)         from STZ010 (nolock)         where                 STZ010.D_E_L_E_T_ = ''             and STZ010.TZ_CODBEM = ST9.T9_CODBEM     ) as DATA  from STJ010 STJ (nolock) 	left join TR8010 TR8 (nolock) 		on TR8.D_E_L_E_T_ = '' 		and TR8.TR8_FILIAL = STJ.TJ_FILIAL 		and TR8.TR8_ORDEM = STJ.TJ_ORDEM 		and TR8.TR8_PLANO = STJ.TJ_PLANO 	inner join TQS010 TQS (nolock) 		on TQS.D_E_L_E_T_ = '' 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM  		inner join ST9010 ST9 (nolock) 			on ST9.D_E_L_E_T_ = '' 			and ST9.T9_CODBEM = TQS.TQS_CODBEM where 		STJ.TJ_DTORIGI between '20200812' AND '20230812' 	and STJ.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:30:993  INFO [main] (JdbcExtractor.java:1069) - serviços pneus.sql | Tempo de execução: 00h 00min 00s 416ms 
+
+12/08/23 10:00:34:556 DEBUG [main] (JdbcExtractor.java:1041) - mntativos.sql | Query a ser executada: select 	trim(isnull(STL.TL_SEQRELA, '-')) as TL_SEQRELA, 	STL.TL_QUANTID,  	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID 	else 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18', 'T19', 'T20', 'T21') then ST1.T1_SALARIO * STL.TL_QUANTID 		else 			case when STL.TL_TIPOREG = 'M' and substring(STL.TL_DTINICI, 1, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') 				then 				( 					select avg(STL010.TL_CUSTO) 					from STL010 					where 							STL010.D_E_L_E_T_ = '' 						and STL010.TL_CODIGO = STL.TL_CODIGO 						and substring(STL010.TL_DTINICI, 1, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') 				) 			else STL.TL_CUSTO 			end 		end 	end as TL_CUSTO,  	trim(isnull(STL.TL_DTINICI, '-')) as TL_DTINICI, 	trim(isnull(STL.TL_DTFIM, '-')) as TL_DTFIM, 	trim(isnull(STJ.TJ_DTORIGI, '-')) as TJ_DTORIGI,  	STJ.TJ_POSCONT, 	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA, 	STJ.TJ_CUSTMDO, 	STJ.TJ_CUSTMAT, 	STJ.TJ_CUSTMAA, 	STJ.TJ_CUSTMAS, 	STJ.TJ_CUSTTER,  	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO, 	trim(isnull(STL.TL_LOCAL, '-')) as ARMAZEM,  	case STL.TL_TIPOREG 		when 'M' then 'MÃO-DE-OBRA' 		when 'E' then 'MÃO-DE-OBRA' 		when 'P' then 'PEÇAS' 		when 'T' then 'TERCEIROS' 		else 'OUTROS' 	end as TIPO_CUSTO,  	case STL.TL_TIPOREG 		when 'M' then trim(ST1.T1_NOME) 		when 'E' then trim(ST0.T0_NOME) 		when 'P' then trim(SB1.B1_DESC) 		when 'T' then trim(SA2.A2_NOME) 		else 'OUTROS' 	end as DESC_INSUMO,  	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM, 	trim(isnull(STL.TL_TAREFA, '-')) as T5_TAREFA, 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM, 	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO, 	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA, 	trim(isnull(ST1.T1_CODFUNC, '-')) as T1_CODFUNC,  	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO, 	trim(isnull(SB1.B1_COD, '-')) as B1_COD, 	trim(isnull(SA2.A2_COD + SA2.A2_LOJA, '-')) as ID_FORNECEDOR, 	trim(isnull(STI.TI_PLANO, '-')) as TI_PLANO, 	trim(isnull(STJ.TJ_FILIAL, '-')) as COD_FILIAL, 	trim(isnull(ST4.T4_SERVICO, '-')) as T4_SERVICO, 	trim(isnull(STJ.TJ_CCUSTO, '-')) as CC, 	trim(isnull(STJ.TJ_YITMCT, '-')) as ATIVIDADE, 	null as B1_UPRC, 	null as T1_SALARIO  from STJ010 as STJ /**/ 	inner join ST9010 as ST9 		on ST9.D_E_L_E_T_ = '' 		and ST9.T9_CODBEM = STJ.TJ_CODBEM  		left join TQR010 as TQR 			on 	TQR.D_E_L_E_T_ = '' 			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD  	inner join ST4010 as ST4 		on ST4.D_E_L_E_T_ = '' 		and ST4.T4_SERVICO = STJ.TJ_SERVICO 	inner join STL010 as STL 		on STL.D_E_L_E_T_ = '' 		and STL.TL_ORDEM = STJ.TJ_ORDEM 		and STL.TL_PLANO = STJ.TJ_PLANO 		and STL.TL_FILIAL = STJ.TJ_FILIAL  		left join TT9010 TT9 			on TT9.D_E_L_E_T_ = '' 			and TT9.TT9_TAREFA = STL.TL_TAREFA 				 		left join 		( 			select 				SB9010.B9_COD, 				min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM, 				min(SB9010.B9_DATA) as B9_DATA 			from SB9010 			where 					SB9010.D_E_L_E_T_ = '' 				and SB9010.B9_LOCAL = '01' 				and SB9010.B9_COD in ('11380003', '11380004', '11380005') 				and SB9010.B9_QINI != 0 			group by 				SB9010.B9_COD 		) ADESIVO_CUSTO 			on ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO  		left join SA2010 as SA2 			on SA2.D_E_L_E_T_ = '' 			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA 		left join SB1010 as SB1 			on SB1.D_E_L_E_T_ = '' 			and SB1.B1_COD = STL.TL_CODIGO 		left join SH4010 as SH4 			on SH4.D_E_L_E_T_ = '' 			and SH4.H4_CODIGO = STL.TL_CODIGO 		left join ST0010 as ST0 			on ST0.D_E_L_E_T_ = '' 			and ST0.T0_ESPECIA = STL.TL_CODIGO 		left join ST1010 as ST1 			on ST1.D_E_L_E_T_ = '' 			and ST1.T1_FILIAL = STL.TL_FILIAL 			and ST1.T1_CODFUNC = STL.TL_CODIGO 		left join STI010 as STI 			on STI.D_E_L_E_T_ = '' 			and STI.TI_FILIAL = STL.TL_FILIAL 			and STI.TI_PLANO = STL.TL_PLANO where 		STL.TL_DTINICI between '20200812' AND '20230812' 	and STL.D_E_L_E_T_ = '' 	/*and trim(ST9.T9_CODBEM) not like '[0-9]%'*/ 	and year(STJ.TJ_DTORIGI) between 2019 and 2029 
+
+12/08/23 10:00:40:257  INFO [main] (JdbcExtractor.java:1069) - mntativos.sql | Tempo de execução: 00h 00min 05s 701ms 
+
+12/08/23 10:00:41:860 DEBUG [main] (JdbcExtractor.java:1041) - fabricante.sql | Query a ser executada: select 	trim(ST7.T7_FABRICA) as T7_FABRICA, 	trim(ST7.T7_NOME) as T7_NOME from ST7010 as ST7 where ST7.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:41:864  INFO [main] (JdbcExtractor.java:1069) - fabricante.sql | Tempo de execução: 00h 00min 00s 04ms 
+
+12/08/23 10:00:42:104 DEBUG [main] (JdbcExtractor.java:1041) - produto.sql | Query a ser executada: select 	trim(isnull(SB1010.B1_COD, '-')) as B1_COD, 	trim(isnull(SB1010.B1_DESC, '-')) as B1_DESC, 	SB1010.B1_GRUPO as B1_GRUPO from SB1010 where SB1010.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:42:168  INFO [main] (JdbcExtractor.java:1069) - produto.sql | Tempo de execução: 00h 00min 00s 63ms 
+
+12/08/23 10:00:43:973 DEBUG [main] (JdbcExtractor.java:1041) - ativo.sql | Query a ser executada: select 	trim(isnull(SN1.N1_CBASE, '-')) as N1_CBASE, 	trim(isnull(SN1.N1_DESCRIC, '-')) as N1_DESCRIC, 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,  	/*isnull(trim(SN1.N1_FILIAL) + trim(SN1.N1_NFISCAL) + trim(SN1.N1_NSERIE) + trim(SN1.N1_FORNEC) + trim(SN1.N1_LOJA), '-') as ID_NF_ATIVO,*/  	trim(isnull(SNG.NG_DESCRIC, '-')) as NG_DESCRIC, 	trim(isnull(SNG.NG_CCONTAB, '-')) as CONTABEM, 	trim(isnull(SNG.NG_CCDEPR, '-')) as CTDEPRACC, 	trim(isnull(SNG.NG_CDEPREC, '-')) as CTDESPDEPR  from SN1010 as SN1 (nolock) 	inner join SNG010 as SNG (nolock) 		on SNG.D_E_L_E_T_ = '' 		and SNG.NG_GRUPO = SN1.N1_GRUPO/* 	left join SD1010 as SD1 (nolock) 		on SD1.D_E_L_E_T_ = '' 		and SD1.D1_FILIAL = SN1.N1_FILIAL 		and SD1.D1_DOC = SN1.N1_NFISCAL 		and SD1.D1_SDOC = SN1.N1_NSERIE 		and SD1.D1_FORNECE = SN1.N1_FORNEC 		and SD1.D1_LOJA = SN1.N1_LOJA 		and SD1.D1_ITEM = SN1.N1_NFITEM*/ 	left join ST9010 as ST9 (nolock) 		on ST9.D_E_L_E_T_ = '' 		and ST9.T9_CODBEM = SN1.N1_CODBEM where SN1.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:44:006  INFO [main] (JdbcExtractor.java:1069) - ativo.sql | Tempo de execução: 00h 00min 00s 33ms 
+
+12/08/23 10:00:45:151 DEBUG [main] (JdbcExtractor.java:1041) - filial.sql | Query a ser executada: 	SELECT 'P |01|01010101' AS BK_FILIAL,'010101' AS COD_FILIAL,'Matriz' AS DESC_FILIAL,'01' AS COD_UNINEG,'Unilink' AS DESC_UNINEG from SRC010 UNION  	SELECT 'P |01|01010102' AS BK_FILIAL,'010102' AS COD_FILIAL,'Pecem' AS DESC_FILIAL,'01' AS COD_UNINEG,'Unilink' AS DESC_UNINEG from SRC010 UNION  	SELECT 'P |01|01      ' AS BK_FILIAL,'01      ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG from SRC010 UNION  	SELECT 'P |01|0101    ' AS BK_FILIAL,'0101    ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG from SRC010 UNION  	SELECT 'P |01|010101  ' AS BK_FILIAL,'010101  ' AS COD_FILIAL,'Unilink - COMPARTILHADA' AS DESC_FILIAL,'' AS COD_UNINEG,'' AS DESC_UNINEG from SRC010 UNION 	SELECT 'P |01||' as BK_FILIAL,'01 - INDEFINIDO' as COD_FILIAL,'01 - INDEFINIDO' as DESC_FILIAL,'01 - INDEFINIDO' as COD_UNINEG,'01 - INDEFINIDO' as DESC_UNINEG from SRC010                
+
+12/08/23 10:00:45:167  INFO [main] (JdbcExtractor.java:1069) - filial.sql | Tempo de execução: 00h 00min 00s 16ms 
+
+12/08/23 10:00:45:466 DEBUG [main] (JdbcExtractor.java:1041) - OBS-grupodebens.sql | Query a ser executada: select 	trim(SNG.NG_GRUPO) as NG_GRUPO, 	trim(SNG.NG_DESCRIC) as NG_DESCRIC, 	trim(SNG.NG_CCONTAB) as CONTABEM, 	trim(SNG.NG_CCDEPR) as DEPRECACC, 	trim(SNG.NG_CDEPREC) as DEBDEPREC from SNG010 as SNG where SNG.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:45:471  INFO [main] (JdbcExtractor.java:1069) - OBS-grupodebens.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+12/08/23 10:00:45:874 DEBUG [main] (JdbcExtractor.java:1041) - ccusto.sql | Query a ser executada: select 	trim(CTT.CTT_CUSTO) as CTT_CUSTO, 	trim(CTT.CTT_DESC01) as CTT_DESC01 from CTT010 as CTT where CTT.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:45:880  INFO [main] (JdbcExtractor.java:1069) - ccusto.sql | Tempo de execução: 00h 00min 00s 06ms 
+
+12/08/23 10:00:46:280 DEBUG [main] (JdbcExtractor.java:1041) - OBS-medida.sql | Query a ser executada: select 	trim(TQT.TQT_MEDIDA) as TQT_MEDIDA, 	trim(TQT.TQT_DESMED) as TQT_DESMED from TQT010 as TQT where TQT.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:46:285  INFO [main] (JdbcExtractor.java:1069) - OBS-medida.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+12/08/23 10:00:47:961 DEBUG [main] (JdbcExtractor.java:1041) - tipocombustivel.sql | Query a ser executada: select 	trim(TQM.TQM_CODCOM) as TQM_CODCOM, 	trim(TQM.TQM_NOMCOM) as TQM_NOMCOM from TQM010 as TQM where TQM.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:47:966  INFO [main] (JdbcExtractor.java:1069) - tipocombustivel.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+12/08/23 10:00:48:974 DEBUG [main] (JdbcExtractor.java:1041) - bem.sql | Query a ser executada: select 	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM, 	trim(isnull(ST9.T9_NOME, '-')) as T9_NOME, 	trim(isnull(ST9.T9_DTCOMPR, '-')) as T9_DTCOMPR, 	trim(isnull(ST9.T9_PLACA, '-')) as T9_PLACA, 	trim(isnull(ST9.T9_NFCOMPR, '-')) as T9_NFCOMPR, 	trim(isnull(ST9.T9_TIPMOD, '-')) as T9_TIPMOD, 	trim(isnull(ST9.T9_CODFAMI, '-')) as T9_CODFAMI, 	trim(isnull(STZ.TZ_BEMPAI, '-')) as TZ_BEMPAI, 	 	trim(isnull(CTT.CTT_CUSTO, '-')) as CCUSTO,  	trim(isnull(CTD.CTD_ITEM, '-')) as ATIVIDADE  from ST9010 ST9 	left join CTD010 CTD 		on CTD.D_E_L_E_T_ = '' 		and ST9.T9_ITEMCTA = CTD.CTD_ITEM 	left join CTT010 CTT 		on CTT.D_E_L_E_T_ = '' 		and CTT.CTT_CUSTO = ST9.T9_CCUSTO 	left join STZ010 STZ 		on STZ.D_E_L_E_T_ = '' 		and STZ.TZ_CODBEM = ST9.T9_CODBEM where ST9.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:49:046  INFO [main] (JdbcExtractor.java:1069) - bem.sql | Tempo de execução: 00h 00min 00s 72ms 
+
+12/08/23 10:00:50:064 DEBUG [main] (JdbcExtractor.java:1041) - grupodeestoque.sql | Query a ser executada: select 	trim(SBM.BM_GRUPO) as BM_GRUPO, 	trim(SBM.BM_DESC) as BM_DESC, 	trim(SBM.BM_YGRUPO) as BM_YGRUPO, 	trim(SBM.BM_YDEGRUP) as BM_YDEGRUP, 	trim(SBM.BM_YSUBGRU) as BM_YSUBGRU, 	trim(SBM.BM_YDESUBG) as BM_YDESUBG from SBM010 as SBM where SBM.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:50:069  INFO [main] (JdbcExtractor.java:1069) - grupodeestoque.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+12/08/23 10:00:51:267 DEBUG [main] (JdbcExtractor.java:1041) - OBS-analise.sql | Query a ser executada: select 	trim(isnull(TR4.TR4_PAREC, '-')) as TR4_PAREC, 	trim(isnull(TR4.TR4_NUMANA, '-')) as TR4_NUMANA, 	trim(isnull(TR4.TR4_DTANAL, '-')) as TR4_DTANAL, 	trim(isnull(TR4.TR4_HRANAL, '-')) as TR4_HRANAL from TR4010 as TR4 where TR4.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:51:288  INFO [main] (JdbcExtractor.java:1069) - OBS-analise.sql | Tempo de execução: 00h 00min 00s 21ms 
+
+12/08/23 10:00:51:688 DEBUG [main] (JdbcExtractor.java:1041) - ferramenta.sql | Query a ser executada: select 	trim(SH4.H4_CODIGO) as H4_CODIGO, 	trim(SH4.H4_DESCRI) as H4_DESCRI from SH4010 SH4 where SH4.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:51:698  INFO [main] (JdbcExtractor.java:1069) - ferramenta.sql | Tempo de execução: 00h 00min 00s 10ms 
+
+12/08/23 10:00:51:982 DEBUG [main] (JdbcExtractor.java:1041) - servicomnt.sql | Query a ser executada: select 	trim(ST4.T4_SERVICO) as T4_SERVICO, 	trim(ST4.T4_NOME) as T4_NOME from ST4010 as ST4 where ST4.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:51:990  INFO [main] (JdbcExtractor.java:1069) - servicomnt.sql | Tempo de execução: 00h 00min 00s 08ms 
+
+12/08/23 10:00:52:270 DEBUG [main] (JdbcExtractor.java:1041) - tanquescombustivel.sql | Query a ser executada: select 	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE, 	trim(isnull(TQI.TQI_YDETAN, '-')) as TQI_YDETAN,  	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM, 	trim(isnull(SB1.B1_COD, '-')) as B1_COD, 	isnull(trim(TQF.TQF_CODIGO) + trim(TQF.TQF_LOJA), '-') as ID_POSTO from 	( 		select 			case cast(TQI010.TQI_CODPOS as int) 				when 59 then '010102' 				else trim(isnull(TQI010.TQI_FILIAL, '-')) 			end as TQI_FILIAL,  			TQI010.TQI_CODPOS, 			TQI010.TQI_LOJA, 			TQI010.TQI_TANQUE, 			TQI010.TQI_YDETAN, 			TQI010.TQI_CODCOM, 			TQI010.TQI_PRODUT, 			TQI010.TQI_FABRIC 		from TQI010 		where TQI010.D_E_L_E_T_ = '' 	) as TQI  	left join 	( 		select 			case cast(TQF010.TQF_CODIGO as int) 				when 59 then '010102' 				else trim(isnull(TQF010.TQF_CODFIL, '-')) 			end as TQF_FILIAL, 			TQF010.TQF_CODIGO, 			TQF010.TQF_LOJA 		from TQF010 		where TQF010.D_E_L_E_T_ = '' 	) as TQF 		on TQF.TQF_FILIAL = TQI.TQI_FILIAL 		and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA  	left join TQM010 as TQM 		on TQM.D_E_L_E_T_ = '' 		and TQM.TQM_CODCOM = TQI.TQI_CODCOM 	left join SB1010 as SB1 		on SB1.D_E_L_E_T_ = '' 		and SB1.B1_COD = TQI.TQI_PRODUT 
+
+12/08/23 10:00:52:307  INFO [main] (JdbcExtractor.java:1069) - tanquescombustivel.sql | Tempo de execução: 00h 00min 00s 37ms 
+
+12/08/23 10:00:52:522 DEBUG [main] (JdbcExtractor.java:1041) - familia.sql | Query a ser executada: select 	trim(ST6.T6_CODFAMI) as T6_CODFAMI, 	trim(ST6.T6_NOME) as T6_NOME from ST6010 as ST6 where ST6.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:52:526  INFO [main] (JdbcExtractor.java:1069) - familia.sql | Tempo de execução: 00h 00min 00s 04ms 
+
+12/08/23 10:00:53:766 DEBUG [main] (JdbcExtractor.java:1041) - postoscombustivel.sql | Query a ser executada: select 	FILIAIS.CODFILIAL, 	trim(isnull(TQF.TQF_COMBOI, '-')) as TQF_COMBOI, 	isnull(trim(TQF.TQF_CODIGO) + trim(TQF.TQF_LOJA), '-') as ID_POSTO, 	isnull(trim(SA2.A2_COD) + trim(SA2.A2_LOJA), '-') as ID_FORNECE  from 	( 		select 			case cast(TQF010.TQF_CODIGO as int) 				when 59 then '010102' 				else trim(isnull(TQF010.TQF_CODFIL, '-')) 			end as TQF_FILIAL,  			case TQF010.TQF_COMBOI 				when 1 then 'SIM' 				when 2 then	'NÃO' 				else '-' 			end as TQF_COMBOI,  			TQF010.TQF_CODIGO, 			TQF010.TQF_LOJA, 			isnull(trim(TQF010.TQF_CODIGO) + trim(TQF010.TQF_LOJA), '-') as ID_POSTO 		from TQF010 		where TQF010.D_E_L_E_T_ = '' 	) as TQF 	 	left join 	( 		select distinct 			case cast(TQF010.TQF_CODIGO as int) 				when 59 then '010102' 				else trim(isnull(TQF010.TQF_CODFIL, '-')) 			end as CODFILIAL,			 			isnull(trim(TQF010.TQF_CODIGO) + trim(TQF010.TQF_LOJA), '-') as ID_POSTO 		from TQF010 		where TQF010.D_E_L_E_T_ = '' 	) as FILIAIS 		on FILIAIS.CODFILIAL = TQF.TQF_FILIAL 		and FILIAIS.ID_POSTO = isnull(trim(TQF.TQF_CODIGO) + trim(TQF.TQF_LOJA), '-') 	left join SA2010 as SA2 		on SA2.D_E_L_E_T_ = '' 		and SA2.A2_COD = TQF.TQF_CODIGO 		and SA2.A2_LOJA = TQF.TQF_LOJA 
+
+12/08/23 10:00:53:801  INFO [main] (JdbcExtractor.java:1069) - postoscombustivel.sql | Tempo de execução: 00h 00min 00s 34ms 
+
+12/08/23 10:00:55:354 DEBUG [main] (JdbcExtractor.java:1041) - OBS-naturezafinanceira.sql | Query a ser executada: select 	trim(SED.ED_CODIGO) as ED_CODIGO, 	trim(SED.ED_DESCRIC) as ED_DESCRIC from SED010 as SED where SED.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:55:363  INFO [main] (JdbcExtractor.java:1069) - OBS-naturezafinanceira.sql | Tempo de execução: 00h 00min 00s 08ms 
+
+12/08/23 10:00:55:577 DEBUG [main] (JdbcExtractor.java:1041) - atividade.sql | Query a ser executada: select 	trim(isnull(CTD.CTD_ITEM, '-')) as ITEM_CTA, 	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE from CTD010 as CTD (nolock) where CTD.D_E_L_E_T_ = '' and cast(CTD.CTD_ITEM as int) > 9 
+
+12/08/23 10:00:55:582  INFO [main] (JdbcExtractor.java:1069) - atividade.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+12/08/23 10:00:57:360 DEBUG [main] (JdbcExtractor.java:1041) - fornecedor.sql | Query a ser executada: select 	isnull(trim(SA2.A2_COD) + trim(SA2.A2_LOJA), '-') as ID_FORNECE, 	trim(SA2.A2_COD) as A2_COD, 	trim(SA2.A2_LOJA) as A2_LOJA, 	trim(SA2.A2_NOME) as A2_NOME, 	trim(SA2.A2_NREDUZ) as A2_NREDUZ from SA2010 as SA2 where SA2.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:57:372  INFO [main] (JdbcExtractor.java:1069) - fornecedor.sql | Tempo de execução: 00h 00min 00s 12ms 
+
+12/08/23 10:00:57:981 DEBUG [main] (JdbcExtractor.java:1041) - os.sql | Query a ser executada: select 	trim(STJ.TJ_ORDEM) as TJ_ORDEM, 	trim(STJ.TJ_DTORIGI) as TJ_DTORIGI from STJ010 as STJ where 		STJ.D_E_L_E_T_ = '' 	and (year(STJ.TJ_DTORIGI) = 2021 or year(STJ.TJ_DTORIGI) = 2020) 
+
+12/08/23 10:00:58:035  INFO [main] (JdbcExtractor.java:1069) - os.sql | Tempo de execução: 00h 00min 00s 53ms 
+
+12/08/23 10:00:59:065 DEBUG [main] (JdbcExtractor.java:1041) - modelo.sql | Query a ser executada: select 	trim(TQR.TQR_TIPMOD) as TQR_TIPMOD,  	case when cast(TQR.TQR_TIPMOD as int) in ('61', '82') then trim(TQR.TQR_DESMOD) + ' - REACH STACKER' 		else 		case when cast(TQR.TQR_TIPMOD as int) in ('10', '37', '63', '64', '65', '68', '69', '70', '71', '72', '73', '89', '117') then trim(TQR.TQR_DESMOD) + ' - FORKLIFT' 			else trim(TQR.TQR_DESMOD) 		end 	end as TQR_DESMOD,  	trim(TQR.TQR_FABRIC) as TQR_FABRIC from TQR010 as TQR where TQR.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:59:071  INFO [main] (JdbcExtractor.java:1069) - modelo.sql | Tempo de execução: 00h 00min 00s 06ms 
+
+12/08/23 10:00:59:276 DEBUG [main] (JdbcExtractor.java:1041) - especialidade.sql | Query a ser executada: select 	trim(ST0.T0_ESPECIA) as T0_ESPECIA, 	trim(ST0.T0_NOME) as T0_NOME from ST0010 as ST0 where ST0.D_E_L_E_T_ = '' 
+
+12/08/23 10:00:59:280  INFO [main] (JdbcExtractor.java:1069) - especialidade.sql | Tempo de execução: 00h 00min 00s 03ms 
+
+12/08/23 10:01:00:362 DEBUG [main] (JdbcExtractor.java:1041) - tarefa.sql | Query a ser executada: select 	trim(ST5.T5_TAREFA) as T5_TAREFA, 	trim(ST5.T5_DESCRIC) as T5_DESCRIC, 	trim(ST5.T5_SERVICO) as T5_SERVICO from ST5010 as ST5 where ST5.D_E_L_E_T_ = '' 
+
+12/08/23 10:01:00:408  INFO [main] (JdbcExtractor.java:1069) - tarefa.sql | Tempo de execução: 00h 00min 00s 46ms 
+
+12/08/23 10:01:01:167 DEBUG [main] (JdbcExtractor.java:1041) - funcionariomnt.sql | Query a ser executada: select 	trim(ST1.T1_CODFUNC) as T1_CODFUNC, 	trim(ST1.T1_NOME) as T1_NOME from ST1010 as ST1 where ST1.D_E_L_E_T_ = '' 
+
+12/08/23 10:01:01:174  INFO [main] (JdbcExtractor.java:1069) - funcionariomnt.sql | Tempo de execução: 00h 00min 00s 06ms 
+
+12/08/23 10:01:01:403 DEBUG [main] (JdbcExtractor.java:1041) - taxas.sql | Query a ser executada: select 	trim(TS0.TS0_DOCTO) as TS0_DOCTO, 	trim(TS0.TS0_NOMDOC) as TS0_NOMDOC, 	trim(TS0.TS0_PREFIX) as TS0_PREFIX, 	trim(TS0.TS0_CONPAG) as TS0_CONPAG, 	 	isnull(trim(SA2.A2_COD) + trim(SA2.A2_LOJA), '-') as ID_FORNECE, 	trim(isnull(SED.ED_CODIGO + ' - ' + SED.ED_DESCRIC, '-')) as NATUREZAFINANC  from TS0010 TS0 	left join SA2010 SA2  		on SA2.D_E_L_E_T_ = '' 		and SA2.A2_COD = TS0.TS0_FORNEC 		and SA2.A2_LOJA = TS0.TS0_LOJA 	left join SED010 SED 		on SED.D_E_L_E_T_ = '' 		and SED.ED_CODIGO = TS0.TS0_NATURE 	left join TS1010 TS1 		on TS1.D_E_L_E_T_ = '' 		and TS1.TS1_DOCTO = TS0.TS0_DOCTO where TS0.D_E_L_E_T_ = '' 
+
+12/08/23 10:01:01:461  INFO [main] (JdbcExtractor.java:1069) - taxas.sql | Tempo de execução: 00h 00min 00s 57ms 
+
+12/08/23 10:01:02:961 DEBUG [main] (JdbcExtractor.java:1041) - filiais.sql | Query a ser executada: 	select '010101' as CODFILIAL, 'MATRIZ' as DESFILIAL union 	select '010102' as CODFILIAL, 'PECÉM' as DESFILIAL 
+
+12/08/23 10:01:02:965  INFO [main] (JdbcExtractor.java:1069) - filiais.sql | Tempo de execução: 00h 00min 00s 04ms 
+
+12/08/23 10:01:03:265 DEBUG [main] (JdbcExtractor.java:1041) - plano.sql | Query a ser executada: select 	trim(STI.TI_PLANO) as TI_PLANO, 	trim(STI.TI_DESCRIC) as TI_DESCRIC, 	case when cast(STI.TI_PLANO as int) = 0 then 'CORRETIVA' else 'PREVENTIVA' end as TIPO_PLANO from STI010 as STI where STI.D_E_L_E_T_ = '' 
+
+12/08/23 10:01:03:270  INFO [main] (JdbcExtractor.java:1069) - plano.sql | Tempo de execução: 00h 00min 00s 05ms 
+
+12/08/23 10:01:03:498  INFO [main] (JdbcExtractor.java:481) - Desconectado do banco de dados 
+
+12/08/23 10:01:03:498  INFO [main] (JdbcExtractor.java:221) - Fim da geração dos arquivos de dados (Via pasta query) 
+
+12/08/23 10:01:03:777  INFO [main] (Main.java:489) - Não foi possível ler o arquivo ./files/log
+
+12/08/23 10:01:03:778  INFO [main] (Main.java:294) - Início da geração do arquivo .zip
+
+12/08/23 10:01:05:284  INFO [main] (Main.java:296) - Fim da geração do arquivo .zip
+
+12/08/23 10:01:05:285  INFO [main] (Main.java:311) - Início do upload do arquivo .zip
+
+12/08/23 10:01:12:886 DEBUG [main] (Uploader.java:160) - Movendo os arquivos de dados: 
+ De: https://secure-di.gooddata.com/project-uploads/kkchrzn0v7wdioourl7k8pvziyn4si8k/today/gooddataMNT.zip.1691845265286 
+ Para: https://secure-di.gooddata.com/project-uploads/kkchrzn0v7wdioourl7k8pvziyn4si8k/today/gooddataMNT.zip 
+
+12/08/23 10:01:14:128  INFO [main] (Main.java:314) - Arquivos de dados enviados para o GoodData: Para: https://secure-di.gooddata.com/project-uploads/kkchrzn0v7wdioourl7k8pvziyn4si8k/today/ 
+
+12/08/23 10:01:14:129  INFO [main] (Main.java:315) - Fim do upload do arquivo .zip
+
+12/08/23 10:01:14:183 DEBUG [main] (FileUtil.java:200) - Removendo arquivos de dados antigos... 
+ De: /tmp 
+
+12/08/23 10:01:14:184  INFO [main] (Main.java:365) - Início do processo de ETL
+
+12/08/23 10:01:14:184  INFO [main] (GdcRESTApiWrapper.java:194) - Efetuando login no GoodData...
+12/08/23 10:01:14:840  INFO [main] (GdcRESTApiWrapper.java:211) - Login no GoodData efetuado com sucesso
+12/08/23 10:01:14:955  INFO [main] (GdcRESTApiWrapper.java:305) - Executando o graph Unilink/graph/executa_todos.grf
+
+12/08/23 10:03:30:292  INFO [main] (Main.java:411) - Log de execução: URL: https://analytics.totvs.com.br/gdc/projects/kkchrzn0v7wdioourl7k8pvziyn4si8k/dataload/processes/86423aa8-d51b-446f-a2fd-cc78f3533227/executions/64d7829c4370fa16db270a11/log 
+
+12/08/23 10:03:30:293  INFO [main] (Main.java:414) - Status de execução: OK 
+
+12/08/23 10:03:31:474  INFO [main] (Main.java:421) - Fim do processo de ETL
+
+12/08/23 10:03:31:475  INFO [main] (Main.java:585) - Fim do processo do agent
+
+12/08/23 10:03:31:475  INFO [main] (Main.java:600) - Tempo de execução total: 03min 26s 
+
