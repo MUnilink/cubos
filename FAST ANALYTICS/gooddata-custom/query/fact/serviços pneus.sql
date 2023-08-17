@@ -37,19 +37,21 @@ select
         where
                 STZ010.D_E_L_E_T_ = ''
             and STZ010.TZ_CODBEM = ST9.T9_CODBEM
-    ) as DATA
+    ) as DATA,
 
-from STJ010 STJ (nolock)
-	left join TR8010 TR8 (nolock)
+	TQS.TQS_MEDIDA as MEDIDA
+
+from STJ010 STJ
+	left join TR8010 TR8
 		on TR8.D_E_L_E_T_ = ''
 		and TR8.TR8_FILIAL = STJ.TJ_FILIAL
 		and TR8.TR8_ORDEM = STJ.TJ_ORDEM
 		and TR8.TR8_PLANO = STJ.TJ_PLANO
-	inner join TQS010 TQS (nolock)
+	inner join TQS010 TQS
 		on TQS.D_E_L_E_T_ = ''
 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
 
-		inner join ST9010 ST9 (nolock)
+		inner join ST9010 ST9
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
 where
