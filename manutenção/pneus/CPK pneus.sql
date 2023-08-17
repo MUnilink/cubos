@@ -55,8 +55,8 @@ select
 
 from TQS010 TQS (nolock) 
 	left join STJ010 STJ (nolock)
-		on TQS.D_E_L_E_T_ = ''
-		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
+		on STJ.D_E_L_E_T_ = ''
+		and STJ.TJ_CODBEM = TQS.TQS_CODBEM
 
         left join TR8010 TR8 (nolock)
             on TR8.D_E_L_E_T_ = ''
@@ -69,4 +69,4 @@ from TQS010 TQS (nolock)
         and ST9.T9_CODBEM = TQS.TQS_CODBEM
 
 where
-		STJ.D_E_L_E_T_ = ''
+		TQS.D_E_L_E_T_ = ''
