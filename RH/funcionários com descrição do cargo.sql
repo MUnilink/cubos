@@ -1,33 +1,32 @@
 select
 	trim(SRA.RA_FILIAL) as FILIAL,
 	trim(SRA.RA_MAT) as MATRICULA,
-	trim(SRA.RA_MAT) as CONTADOR,
+	trim(SRA.RA_MAT) as contador,
 	trim(SRA.RA_NOME) as NOME,
-	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
-	SX5.X5_DESCRI as ESCOLARIDADE,
-
-	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
-	month(SRA.RA_NASC) as mes_ANIVERSARIO,
-	day(SRA.RA_NASC) as dia_ANIVERSARIO,
-	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
+	trim(SRJ.RJ_CODCBO) as CBO,
+	trim(SRA.RA_SEXO) as SEXO,
+	trim(SRA.RA_CIC) as CPF,
 	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(CTT.CTT_CUSTO) as COD_CC,
 	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
 	trim(CTD.CTD_ITEM) as COD_ITEM,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
-
-	case SRA.RA_SITFOLH when 'D' then 'N' else 'S' end as ATIVO,
-	trim(SRJ.RJ_CODCBO) as CBO,
-	trim(SRA.RA_SEXO) as SEXO,
-	trim(SRA.RA_CIC) as CPF,
 	trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
+	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	
+	SX5.X5_DESCRI as ESCOLARIDADE,
+	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
+	month(SRA.RA_NASC) as mes_ANIVERSARIO,
+	day(SRA.RA_NASC) as dia_ANIVERSARIO,
+
+	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
+	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE
 
 	case SRA.RA_TPDEFFI 
 		when '0' then '0 - NENHUMA'
@@ -64,9 +63,7 @@ select
 		when '3' then '3 - NAO APLICAVEL'
 	else 'ANONIMIZADO' end as BRPDH,
 
-	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
-	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
-	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE
+	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO
 from SRA010 SRA (nolock)
 	inner join SRJ010 SRJ (nolock)
 		on SRJ.D_E_L_E_T_ = ''
