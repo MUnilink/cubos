@@ -4,9 +4,10 @@ select
 	TQS.TQS_CODBEM as TQS_CODBEM,
 	ST9.T9_CODBEM as T9_CODBEM,
 	TR8.TR8_LOTE as LOTE,
-	STJ.TJ_CCUSTO as CCUSTO,
 	STJ.TJ_SERVICO as SERVICO,
-
+	ST9.T9_STATUS as STATUS,
+	TQS.TQS_MEDIDA as MEDIDA,
+	STJ.TJ_CCUSTO as CCUSTO,
 	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then STJ.TJ_YITMCT
 	else
 		case STJ.TJ_CCUSTO
@@ -39,17 +40,17 @@ select
             and STZ010.TZ_CODBEM = ST9.T9_CODBEM
     ) as DATA
 
-from STJ010 STJ (nolock)
-	left join TR8010 TR8 (nolock)
+from STJ010 STJ
+	left join TR8010 TR8
 		on TR8.D_E_L_E_T_ = ''
 		and TR8.TR8_FILIAL = STJ.TJ_FILIAL
 		and TR8.TR8_ORDEM = STJ.TJ_ORDEM
 		and TR8.TR8_PLANO = STJ.TJ_PLANO
-	inner join TQS010 TQS (nolock)
+	inner join TQS010 TQS
 		on TQS.D_E_L_E_T_ = ''
 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
 
-		inner join ST9010 ST9 (nolock)
+		inner join ST9010 ST9
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
 where
