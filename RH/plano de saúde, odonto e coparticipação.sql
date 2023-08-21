@@ -194,7 +194,6 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
-        convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
         datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR) as IDADE,
 
         RHO.RHO_COMPPG as PERIODO,
@@ -237,6 +236,13 @@ union
             when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
+
+        case RHO.RHO_ORIGEM
+            when 1 then convert(date, SRA.RA_NASC, 103)
+            when 2 then convert(date, DEP.RB_DTNASC, 103)
+            when 3 then convert(date, RHM.RHM_DTNASC, 103)
+            else null
+        end as NASCIMENTO,
 
         case RHO.RHO_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR)
@@ -355,7 +361,6 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
-        convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
         datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
         
         RHR.RHR_COMPPG as PERIODO,
@@ -398,6 +403,13 @@ union
             when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
+
+        case RHR.RHR_ORIGEM
+            when 1 then convert(date, SRA.RA_NASC, 103)
+            when 2 then convert(date, DEP.RB_DTNASC, 103)
+            when 3 then convert(date, RHM.RHM_DTNASC, 103)
+            else null
+        end as NASCIMENTO,
 
         case RHR.RHR_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHR.RHR_DATA)
@@ -515,7 +527,6 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
-        convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
         datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
         RHS.RHS_COMPPG as PERIODO,        
@@ -558,6 +569,13 @@ union
             when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
+
+        case RHS.RHS_ORIGEM
+            when 1 then convert(date, SRA.RA_NASC, 103)
+            when 2 then convert(date, DEP.RB_DTNASC, 103)
+            when 3 then convert(date, RHM.RHM_DTNASC, 103)
+            else null
+        end as NASCIMENTO,
 
         case RHS.RHS_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHS.RHS_DATA)
