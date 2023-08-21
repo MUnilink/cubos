@@ -1,5 +1,11 @@
     select /*HISTÓRICO COPARTICIPAÇÃO*/
         trim(SRA.RA_FILIAL) as FILIAL,
+
+        case SRA.RA_FILIAL
+            when '010101' then 'MATRIZ'
+            when '010102' then 'FILIAL'
+        end as NOME_FILIAL,
+
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
@@ -156,6 +162,12 @@
 union
     select /* COPARTICIPAÇÃO */
         trim(SRA.RA_FILIAL) as FILIAL,
+
+        case SRA.RA_FILIAL
+            when '010101' then 'MATRIZ'
+            when '010102' then 'FILIAL'
+        end as NOME_FILIAL,
+
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
@@ -311,6 +323,12 @@ union
 union
     select /* PLANO DE SAÚDE E ODONTO */
         trim(SRA.RA_FILIAL) as FILIAL,
+
+        case SRA.RA_FILIAL
+            when '010101' then 'MATRIZ'
+            when '010102' then 'FILIAL'
+        end as NOME_FILIAL,
+
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
@@ -465,6 +483,12 @@ union
 union
     select /* HISTÓRICO PLANO DE SAÚDE E ODONTO */
         trim(SRA.RA_FILIAL) as FILIAL,
+
+        case SRA.RA_FILIAL
+            when '010101' then 'MATRIZ'
+            when '010102' then 'FILIAL'
+        end as NOME_FILIAL,
+
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOME) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
