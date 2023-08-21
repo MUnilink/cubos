@@ -25,7 +25,7 @@
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
-        convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
+
         datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR) as IDADE,
 
         RHP.RHP_COMPPG as PERIODO,
@@ -68,6 +68,13 @@
             when 3 then trim(RHM.RHM_YSEXO)
             else 'OUTROS'
         end as SEXO_USUARIO,
+
+        case RHP.RHP_ORIGEM
+            when 1 then convert(date, SRA.RA_NASC, 103)
+            when 2 then convert(date, DEP.RB_DTNASC, 103)
+            when 3 then convert(date, RHM.RHM_DTNASC, 103)
+            else null
+        end as NASCIMENTO,
 
         case RHP.RHP_ORIGEM
             when 1 then datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR)
