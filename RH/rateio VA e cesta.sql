@@ -51,7 +51,9 @@
         SR0.R0_VLRVALE as VALOR_UNIT,
         SR0.R0_VLREMP as VALOR_EMPR,
         SR0.R0_FERIAS as FERIAS,
-        SRA.RA_MAT as contador
+        
+        SRA.RA_MAT as contador_lanc,
+        case when lag(SR0.R0_MAT, 1, 0) over (partition by SR0.R0_FILIAL, SR0.R0_PERIOD, SR0.R0_MAT order by SR0.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
 
     from SR0010 SR0 (nolock)
         inner join SRA010 SRA (nolock)
@@ -139,7 +141,9 @@ union
         null as VALOR_UNIT,
         null as VALOR_EMPR,
         null as FERIAS,
-        SRA.RA_MAT as contador
+        
+        SRA.RA_MAT as contador_lanc,
+        case when lag(RIQ.RIQ_MAT, 1, 0) over (partition by RIQ.RIQ_FILIAL, RIQ.RIQ_PERIOD, RIQ.RIQ_MAT order by RIQ.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
 
     from RIQ010 RIQ (nolock)
         inner join SRA010 SRA (nolock)
