@@ -8,6 +8,4 @@ select
 	TQZ.TQZ_NUMSEQ,
 	TQZ.TQZ_ORIGEM
 from TQZ010 TQZ
-where
-        TQZ.D_E_L_E_T_ = ''
-    and year(TQZ.TQZ_DTSTAT) > 2022
+where TQZ.D_E_L_E_T_ = ''
