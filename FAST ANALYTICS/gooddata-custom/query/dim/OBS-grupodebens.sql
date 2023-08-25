@@ -1,8 +1,0 @@
-select
-	trim(SNG.NG_GRUPO) as NG_GRUPO,
-	trim(SNG.NG_DESCRIC) as NG_DESCRIC,
-	trim(SNG.NG_CCONTAB) as CONTABEM,
-	trim(SNG.NG_CCDEPR) as DEPRECACC,
-	trim(SNG.NG_CDEPREC) as DEBDEPREC
-from SNG010 as SNG
-where SNG.D_E_L_E_T_ = ''
