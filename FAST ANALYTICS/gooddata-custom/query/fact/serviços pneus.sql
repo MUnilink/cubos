@@ -59,5 +59,4 @@ from STJ010 STJ
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
 where
-		STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STJ.D_E_L_E_T_ = ''
+		STJ.D_E_L_E_T_ = ''
