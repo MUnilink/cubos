@@ -12,6 +12,11 @@ select
 	trim(isnull(upper(SC1.C1_SOLICIT), '-')) as SOLICITANTE_SC,
 	trim(isnull(SC1.C1_OBS, '-')) as OBS_SC,
 
+	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE,
+	trim(isnull(CTT.CTT_DESC01, '-')) as CCUSTO,
+	trim(isnull(SC7.C7_ITEMCTA, '-')) as AT,
+	trim(isnull(SC7.C7_CC, '-')) as CC,
+
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
 	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as C1_RESIDUO,
@@ -106,6 +111,8 @@ select
 	convert(date, SD1.D1_EMISSAO, 103) as NF_EMI,
 	convert(date, SD1.D1_DTDIGIT, 103) as NF_DATA,
 
+	case when SC1.C1_OP like '%OS001' then 'OS' else 'OP' end as TIPO_SC,
+
 	STJ.TJ_ORDEM as OS,
 	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
     STJ.TJ_DTMRINI,
@@ -113,9 +120,17 @@ select
 	convert(date, STJ.TJ_DTORIGI, 103) as DATA_OS,
 	STJ.TJ_USUAINI as USR_INI,
 	STJ.TJ_USUAFIM as USR_FIM,
-	STJ.TJ_TERMINO as OS_ENCERRADA
+	STJ.TJ_TERMINO as OS_ENCERRADA,
+
+	SC2.C2_NUM as OP
 
 from SC1010 SC1 (nolock)
+	left join CTT010 CTT (nolock)
+		on CTT.D_E_L_E_T_ = ''
+		and CTT.CTT_CUSTO = SC1.C1_CC
+	left join CTD010 CTD (nolock)
+		on CTD.D_E_L_E_T_ = ''
+		and CTD.CTD_ITEM = SC1.C1_ITEMCTA
 	inner join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC1.C1_PRODUTO
@@ -155,6 +170,11 @@ from SC1010 SC1 (nolock)
 	left join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''
 		and STJ.TJ_FILIAL = SC1.C1_FILIAL
-		and STJ.TJ_ORDEM = substring(SC1.C1_OP, 1, 6)
+		and concat(STJ.TJ_ORDEM, 'OS') = substring(SC1.C1_OP, 1, 8)
+		and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP')
+	left join SC2010 SC2 (nolock)
+		on SC2.D_E_L_E_T_ = ''
+		and SC2.C2_FILIAL = SC1.C1_FILIAL
+		and concat(SC2.C2_NUM, SC2.C2_ITEM, SC2.C2_SEQUEN) = SC1.C1_OP
 where 
 		SC1.D_E_L_E_T_ = ''

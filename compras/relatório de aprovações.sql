@@ -24,7 +24,16 @@ select
     trim(isnull(upper(SCP.CP_SOLICIT), '-')) as SOLICITANTE,
 
     case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
-    case SCR.CR_DATALIB when '' then 'NÃO APROVADA' else 'LIBERADA' end as STATUS,
+    
+    case SCR.CR_STATUS
+        when 2 then 'PENDENTE'
+        when 3 then 'APROVADA'
+        when 5 then 'APROVADA'
+        when 6 then 'REJEITADA'
+        when 7 then 'REJEITADA'
+        else 'LIBERADA'
+    end as STATUS,
+    
     upper(trim(SAK.AK_LOGIN)) as APROVADOR,
     SCR.CR_GRUPO,
     SCR.CR_ITGRP,
@@ -50,4 +59,7 @@ from SCP010 SCP (nolock)
         on STJ.D_E_L_E_T_ = ''
         and STJ.TJ_FILIAL = SCP.CP_FILIAL
         and STJ.TJ_ORDEM = substring(SCP.CP_OP, 1, 6)
-where SCP.D_E_L_E_T_ = ''
+where
+        SCP.D_E_L_E_T_ = ''
+    and year(SCP.CP_DATPRF) > 2022
+
