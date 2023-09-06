@@ -18,6 +18,7 @@
         SD3.D3_CF as CF,
         SD3.D3_DOC as DOC,
         SD3.D3_CUSTO1 as CUSTO_MOV,
+        SD3.D3_QUANT as QTD_MOV,
         'INT' as TIPO_MOV
         
     from SD3010 SD3 (nolock)
@@ -55,6 +56,7 @@ union
         SD1.D1_CF as CF,
         SD1.D1_DOC as DOC,
         SD1.D1_CUSTO as CUSTO_MOV,
+        SD1.D1_QUANT as QTD_MOV,
         'ENT' as TIPO_MOV
         
     from SD1010 SD1 (nolock)
@@ -92,6 +94,7 @@ union
         SD2.D2_CF as CF,
         SD2.D2_DOC as DOC,
         SD2.D2_CUSTO1 as CUSTO_MOV,
+        SD2.D2_QUANT as QTD_MOV,
         'SAI' as TIPO_MOV
         
     from SD2010 SD2 (nolock)
