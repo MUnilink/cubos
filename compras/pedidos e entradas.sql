@@ -106,6 +106,7 @@ select
 	SD1.D1_SERIE as NF_SERIE,
 	convert(datetime, SD1.D1_EMISSAO, 103) as NF_EMI,
 	convert(datetime, SD1.D1_DTDIGIT, 103) as NF_DATA,
+	substring(SD1.D1_DTDIGIT, 1, 6) as NF_PERIODO,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM), SD1.D1_DTDIGIT) as DIASAPROV_PC_NF,
 	SD1.D1_CC as NF_CC,
 	SD1.D1_ITEMCTA as NF_AT,
