@@ -51,6 +51,12 @@ from SCP010 SCP (nolock)
         left join SAK010 SAK (nolock)
             on SAK.D_E_L_E_T_ = ''
             and SAK.AK_USER = SCR.CR_USERLIB
+        left join DBM010 DBM (nolock)
+            on DBM.D_E_L_E_T_ = ''
+            and DBM.DBM_FILIAL = SCR.CR_FILIAL
+            and DBM.DBM_NUM = SCR.CR_NUM
+            and DBM.DBM_GRUPO = SCR.CR_GRUPO
+            and DBM.DBM_TIPO = 'SA'
     
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
@@ -62,4 +68,3 @@ from SCP010 SCP (nolock)
 where
         SCP.D_E_L_E_T_ = ''
     and year(SCP.CP_DATPRF) > 2022
-
