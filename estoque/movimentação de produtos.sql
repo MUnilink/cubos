@@ -5,6 +5,10 @@
         trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
         trim(isnull(SB1.B1_UM, '-')) as UN,
 
+        SB2.B2_CM1 as CM_ATUAL,
+        SB2.B2_VATU1 as VALOR_ATUAL,
+        SB2.B2_QATU as QTD_ATUAL,
+
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
         SB9.B9_QINI as QTD_INI,
@@ -27,6 +31,11 @@
             and SB1.B1_COD = SD3.D3_COD
             and SB1.B1_GRUPO like '1%'
             and SB1.B1_MSBLQL = 2
+        inner join SB2010 SB2 (nolock)
+            on SB2.D_E_L_E_T_ = ''
+            and SB2.B2_FILIAL = SD3.D3_FILIAL
+            and SB2.B2_LOCAL = SD3.D3_LOCAL
+            and SB2.B2_COD = SD3.D3_COD
         left join SB9010 SB9 (nolock)
             on SB9.D_E_L_E_T_ = ''
             and SB9.B9_FILIAL = SD3.D3_FILIAL
@@ -42,6 +51,10 @@ union
         trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
         trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
         trim(isnull(SB1.B1_UM, '-')) as UN,
+
+        SB2.B2_CM1 as CM_ATUAL,
+        SB2.B2_VATU1 as VALOR_ATUAL,
+        SB2.B2_QATU as QTD_ATUAL,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -65,6 +78,11 @@ union
             and SB1.B1_COD = SD1.D1_COD
             and SB1.B1_GRUPO like '1%'
             and SB1.B1_MSBLQL = 2
+        inner join SB2010 SB2 (nolock)
+            on SB2.D_E_L_E_T_ = ''
+            and SB2.B2_FILIAL = SD1.D1_FILIAL
+            and SB2.B2_LOCAL = SD1.D1_LOCAL
+            and SB2.B2_COD = SD1.D1_COD
         left join SB9010 SB9 (nolock)
             on SB9.D_E_L_E_T_ = ''
             and SB9.B9_FILIAL = SD1.D1_FILIAL
@@ -80,6 +98,10 @@ union
         trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
         trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
         trim(isnull(SB1.B1_UM, '-')) as UN,
+
+        SB2.B2_CM1 as CM_ATUAL,
+        SB2.B2_VATU1 as VALOR_ATUAL,
+        SB2.B2_QATU as QTD_ATUAL,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -103,6 +125,11 @@ union
             and SB1.B1_COD = SD2.D2_COD
             and SB1.B1_GRUPO like '1%'
             and SB1.B1_MSBLQL = 2
+        inner join SB2010 SB2 (nolock)
+            on SB2.D_E_L_E_T_ = ''
+            and SB2.B2_FILIAL = SD2.D2_FILIAL
+            and SB2.B2_LOCAL = SD2.D2_LOCAL
+            and SB2.B2_COD = SD2.D2_COD
         left join SB9010 SB9 (nolock)
             on SB9.D_E_L_E_T_ = ''
             and SB9.B9_FILIAL = SD2.D2_FILIAL
