@@ -3,6 +3,11 @@ select
 	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
+	PNEU.T9_CODESTO,
+    PNEU.T9_LOCPAD,
+
+	PNEU.T9_STATUS,
+    trim(TQY.TQY_DESTAT) as STATUS_PNEU,
 
     STZ.TZ_CONTSAI - STZ.TZ_POSCONT as km,
 
@@ -37,6 +42,10 @@ from STZ010 STZ (nolock)
 			on PNEU.D_E_L_E_T_ = ''
 			and PNEU.T9_CODBEM = TQS.TQS_CODBEM
 			and trim(PNEU.T9_CODBEM) like '[0-9]%'
+
+			inner join TQY010 TQY (nolock)
+				on TQY.D_E_L_E_T_ = ''
+				and TQY.TQY_STATUS = PNEU.T9_STATUS
 
 	inner join ST9010 CARRO (nolock)
 		on CARRO.D_E_L_E_T_ = ''
