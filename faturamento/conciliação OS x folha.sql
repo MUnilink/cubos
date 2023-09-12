@@ -3,6 +3,9 @@
         RJ_DESC RH,
         convert(date,ZC2_COMPET) as PERIODO,
         ZC2_CHVOS,
+
+        NULL as VERBA,
+
         ZC2_TOTAL as TOTAL_OS,
         0 TOTAL_FOLHA,
         ZC2.R_E_C_N_O_
@@ -21,6 +24,9 @@ union
         RV_DESC,
         convert(date,RD_DATARQ+'01'),
         RD_YCHVOS as ZC2_CHVOS,
+
+        RD_PD as VERBA,
+
         0 TOTAL_OS,
         RD_VALOR as TOTAL_FOLHA,
         SRD.R_E_C_N_O_

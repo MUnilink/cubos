@@ -109,6 +109,7 @@ select
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
 	convert(date, SD1.D1_EMISSAO, 103) as NF_EMI,
+	
 	convert(date, SD1.D1_DTDIGIT, 103) as NF_DATA,
 
 	case when SC1.C1_OP like '%OS001' then 'OS' else 'OP' end as TIPO_SC,
