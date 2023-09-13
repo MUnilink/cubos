@@ -170,10 +170,10 @@ union
 			on SRA.D_E_L_E_T_ = ''
 			and SRA.RA_FILIAL = SRD.RD_FILIAL
 			and SRA.RA_MAT = SRD.RD_MAT
-		inner join SQB010 SQB (nolock)
-			on SQB.D_E_L_E_T_ = ''
-			and SQB.QB_DEPTO = SRD.RD_DEPTO
-
+		
+			left join SQB010 SQB (nolock)
+				on SQB.D_E_L_E_T_ = ''
+				and SQB.QB_DEPTO = isnull(SRD.RD_DEPTO, SRA.RA_DEPTO)
 			inner join SRJ010 SRJ (nolock)
 				on SRJ.D_E_L_E_T_ = ''
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
