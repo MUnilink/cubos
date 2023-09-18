@@ -25,6 +25,7 @@
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+        cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
 
         datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR) as IDADE,
 
@@ -196,6 +197,8 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+        cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+        
         datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR) as IDADE,
 
         RHO.RHO_COMPPG as PERIODO,
@@ -365,6 +368,8 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+        cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+
         datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
         
         RHR.RHR_COMPPG as PERIODO,
@@ -450,16 +455,7 @@ union
         RHR.RHR_ORIGEM as ORIGEM,
         RHR.RHR_CODIGO as COD_DEPAGG,
 
-        case when RHR.RHR_PD in (87, 565, 571) then
-            (select top 1 SR8010.R8_CID
-            from SR8010 (nolock)
-            where SR8010.D_E_L_E_T_ = ''
-            and SR8010.R8_PD != 130
-            and SR8010.R8_FILIAL = RHR.RHR_FILIAL
-            and SR8010.R8_MAT = RHR.RHR_MAT
-            order by SR8010.R8_DATAINI desc)
-        else null end as ULTIMO_AFASTAMENTO
-
+        null as ULTIMO_AFASTAMENTO
 
     from RHR010 RHR (nolock)
         inner join SRV010 SRV (nolock)
@@ -542,6 +538,8 @@ union
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+        cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+        
         datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
         RHS.RHS_COMPPG as PERIODO,        
@@ -627,7 +625,7 @@ union
         RHS.RHS_ORIGEM as ORIGEM,
         RHS.RHS_CODIGO as COD_DEPAGG,
 
-        null as ULTIMO_AFASTAMENTO
+        case when RHS.RHS_PD in (87, 565, 571) then (select top 1 last_value(SR8010.R8_CID) over(partition by SR8010.R8_FILIAL, SR8010.R8_MAT order by SR8010.R8_MAT) from SR8010 (nolock) where SR8010.D_E_L_E_T_ = '' and SR8010.R8_PD != 130 and SR8010.R8_FILIAL = RHS.RHS_FILIAL and SR8010.R8_MAT = RHS.RHS_MAT) else null end as ULTIMO_AFASTAMENTO
 
     from RHS010 RHS (nolock)
         left join SRD010 BASE_ODONTO (nolock)
