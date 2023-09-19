@@ -1,0 +1,36 @@
+select
+	TQS.TQS_CODBEM as TQS_CODBEM,
+	TQS.TQS_MEDIDA as MEDIDA,
+	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
+    TQZ.TQZ_STATUS as STATUS,
+	TQZ.TQZ_PRODUT as PRODUTO,
+    TQZ.TQZ_ALMOX as ARMAZEM,
+
+	TQS.TQS_KMR1,
+	TQS.TQS_KMR2,
+	TQS.TQS_KMR3,
+	TQS.TQS_KMR4,
+	TQS.TQS_KMR5,
+	TQS.TQS_KMR6,
+	TQS.TQS_KMR7,
+	TQS.TQS_KMOR,
+	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
+
+    1 as QTD_ANALISE
+
+from TR4010 TR4 (nolock)
+	inner join TQS010 TQS (nolock)
+		on TQS.D_E_L_E_T_ = ''
+		and TQS.TQS_CODBEM = TR4.TR4_CODBEM
+
+		inner join ST9010 ST9 (nolock)
+			on ST9.D_E_L_E_T_ = ''
+			and ST9.T9_CODBEM = TQS.TQS_CODBEM
+    
+    inner join TQZ010 TQZ (nolock)
+        on TQZ.D_E_L_E_T_ = ''
+        and TQZ.TQZ_CODBEM = TR4.TR4_CODBEM
+        and TQZ.TQZ_DTSTAT = TR4.TR4_DTANAL
+        and TQZ.TQZ_HRSTAT = TR4.TR4_HRANAL
+where
+		TR4.D_E_L_E_T_ = ''
