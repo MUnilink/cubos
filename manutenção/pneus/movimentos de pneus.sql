@@ -5,6 +5,9 @@ select
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
 	PNEU.T9_CODESTO,
     PNEU.T9_LOCPAD,
+	TQS.TQS_MEDIDA,
+    trim(TQT.TQT_DESMED) as MEDIDA,
+	PNEU.T9_MOVIBEM as MOVIMENTA_BEM,
 
 	PNEU.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS_PNEU,
@@ -46,6 +49,10 @@ from STZ010 STZ (nolock)
 			inner join TQY010 TQY (nolock)
 				on TQY.D_E_L_E_T_ = ''
 				and TQY.TQY_STATUS = PNEU.T9_STATUS
+		
+		inner join TQT010 TQT (nolock)
+            on TQT.D_E_L_E_T_ = ''
+            and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
 
 	inner join ST9010 CARRO (nolock)
 		on CARRO.D_E_L_E_T_ = ''
