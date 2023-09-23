@@ -8,6 +8,15 @@ select
 
     TR4.TR4_NUMANA as NUMANA,
     TR4.TR4_DESTIN as DESTINO,
+    case TR4.TR4_DESTIN
+        when 1 then 'RESSOLAR'
+        when 2 then 'CONSERTAR' 
+        when 3 then 'ESTOQUE USADO'
+        when 5 then 'ANALISE DO FORNECEDOR'
+        when 6 then 'SUCATA'
+        when 7 then 'ESTOQUE NOVO'
+        else '-'                     
+    end as DESCRI_DESTIN,
     trim(ST8.T8_NOME) as MOTIVO,
     TR4.TR4_MOTIVO,
     TR4.TR4_SULCO as SULCO,
