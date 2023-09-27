@@ -22,7 +22,9 @@ select
         when 1 then 'RECEITA'
         when 2 then 'FUNÇÃO'
         when 3 then 'EQUIPAMENTO'
-        when 6 then 'APROPRIAÇÃO DE CUSTO'
+        when 4 then 'MATERIAIS'
+        when 6 then 'DEPRECIAÇÃO'
+        when 7 then 'CONTABILIDADE'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
