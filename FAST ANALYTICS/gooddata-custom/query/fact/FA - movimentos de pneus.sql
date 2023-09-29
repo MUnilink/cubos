@@ -1,20 +1,26 @@
 select
-	trim(isnull(STZ.TZ_FILIAL, '-')) as TJ_FILIAL,
-	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
+	trim(isnull(STJ.TJ_FILIAL, '-')) as TJ_FILIAL,
+	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
+	STJ.TJ_DTORIGI,
 	SB1.B1_COD as PRODUTO,
-    PNEU.T9_LOCPAD,
 	TQS.TQS_MEDIDA,
 	PNEU.T9_STATUS,
-	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
+	case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as TZ_TIPOMOV,
     
-	STZ.TZ_CONTSAI - STZ.TZ_POSCONT as km,
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
 	concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT) as TZ_DATAMOV,
 	concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) as TZ_DATASAI,
-	datediff(minute, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI))/(60*24) as TEMPO_RODADO
+
+	STZ.TZ_CONTSAI - STZ.TZ_POSCONT as RODADO,
+	datediff(minute, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI))/(60*24) as TEMPO_RODADO,
+
+	STL.TL_CODIGO,
+	STL.TL_LOCAL,
+	STL.TL_QUANTID,
+	STL.TL_CUSTO
 
 from STL010 STL (nolock)
 	left join STJ010 STJ (nolock)
