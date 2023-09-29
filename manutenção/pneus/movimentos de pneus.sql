@@ -3,6 +3,7 @@ select
 	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
+	SB1.B1_COD as PRODUTO,
     PNEU.T9_LOCPAD,
 	TQS.TQS_MEDIDA,
     trim(TQT.TQT_DESMED) as MEDIDA,
@@ -32,10 +33,8 @@ select
 	TQS.TQS_KMR7,
 
 	substring(STZ.TZ_DATAMOV, 1, 6) as PERIODO_ENT,
-	substring(STZ.TZ_DATASAI, 1, 6) as PERIODO_SAI,	
-	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
-
-	SB1.B1_COD as PRODUTO
+	substring(STZ.TZ_DATASAI, 1, 6) as PERIODO_SAI,
+	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT
 
 from STZ010 STZ (nolock)			
 	inner join TQS010 TQS (nolock)
