@@ -1,9 +1,10 @@
 select
 	STJ.TJ_FILIAL as FILIAL,
 	STJ.TJ_ORDEM as OS,
-	TQS.TQS_CODBEM as TQS_CODBEM,
-	ST9.T9_CODBEM as T9_CODBEM,
+	trim(TQS.TQS_CODBEM) as TQS_CODBEM,
+	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	TR8.TR8_LOTE as LOTE,
+	TR8.TR8_MOTIVO as MOTIVO,
 	STJ.TJ_SERVICO as SERVICO,
 	ST9.T9_STATUS as STATUS,
 	TQS.TQS_MEDIDA as MEDIDA,
@@ -25,8 +26,8 @@ select
 	ST9.T9_CONTACU as CONT_ACUMULADO,
 
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
-	ST9.T9_LOCPAD as ARMAZEM,	
-
+	ST9.T9_LOCPAD as ARMAZEM,
+	
 	TQS.TQS_KMR1,
 	TQS.TQS_KMR2,
 	TQS.TQS_KMR3,
@@ -39,19 +40,23 @@ select
 
 	TR7.TR7_DTRECI as DATA
 
-from STJ010 STJ (nolock)
-	left join TR8010 TR8 (nolock)
+from STJ010 STJ
+	left join TR8010 TR8
 		on TR8.D_E_L_E_T_ = ''
 		and TR8.TR8_FILIAL = STJ.TJ_FILIAL
 		and TR8.TR8_ORDEM = STJ.TJ_ORDEM
 		and TR8.TR8_PLANO = STJ.TJ_PLANO
-	inner join TQS010 TQS (nolock)
+		inner join TR7010 TR7 (nolock)
+            on TR7.D_E_L_E_T_ = ''
+            and TR7.TR7_FILIAL = TR8.TR8_FILIAL
+            and TR7.TR7_LOTE = TR8.TR8_LOTE
+			
+	inner join TQS010 TQS
 		on TQS.D_E_L_E_T_ = ''
 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
 
-		inner join ST9010 ST9 (nolock)
+		inner join ST9010 ST9
 			on ST9.D_E_L_E_T_ = ''
 			and ST9.T9_CODBEM = TQS.TQS_CODBEM
-
 where
 		STJ.D_E_L_E_T_ = ''
