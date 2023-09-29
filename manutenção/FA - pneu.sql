@@ -37,13 +37,7 @@ select
 	TQS.TQS_KMOR,
 	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
 
-	(
-        select top 1 first_value(STZ010.TZ_DATAMOV) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)
-        from STZ010 (nolock)
-        where
-                STZ010.D_E_L_E_T_ = ''
-            and STZ010.TZ_CODBEM = ST9.T9_CODBEM
-    ) as DATA
+	TR7.TR7_DTRECI as DATA
 
 from STJ010 STJ (nolock)
 	left join TR8010 TR8 (nolock)
