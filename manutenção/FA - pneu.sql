@@ -24,8 +24,6 @@ select
 	ST9.T9_VALCPA as CUSTO_COMPRA,
 	STJ.TJ_CUSTTER as CUSTO_SERVICOS,
 	ST9.T9_CONTACU as CONT_ACUMULADO,
-
-	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
 	ST9.T9_LOCPAD as ARMAZEM,
 	
 	TQS.TQS_KMR1,
@@ -50,7 +48,7 @@ from STJ010 STJ
             on TR7.D_E_L_E_T_ = ''
             and TR7.TR7_FILIAL = TR8.TR8_FILIAL
             and TR7.TR7_LOTE = TR8.TR8_LOTE
-			
+
 	inner join TQS010 TQS
 		on TQS.D_E_L_E_T_ = ''
 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
