@@ -1,14 +1,14 @@
 select
-	trim(TR4.TR4_CODBEM) as TR4_CODBEM,
-    trim(TR4.TR4_NUMANA) as TR4_NUMANA,
-    trim(TQS.TQS_MEDIDA) as TQS_MEDIDA,
-    trim(TR4.TR4_MOTIVO) as TR4_MOTIVO,
-    trim(TR4.TR4_SULCO) as TR4_SULCO,
-    trim(TR4.TR4_FILIAL) as TR4_FILIAL,
+	TR4.TR4_CODBEM,
+    TR4.TR4_NUMANA,
+    TQS.TQS_MEDIDA,
+    TR4.TR4_MOTIVO,
+    TR4.TR4_SULCO,
+    TR4.TR4_FILIAL,
     trim(TR4.TR4_PAREC) as TR4_PAREC,
-    trim(ST9.T9_STATUS) as T9_STATUS,
-    trim(ST9.T9_ITEMCTA) as T9_ITEMCTA,
-    trim(ST9.T9_CCUSTO) as T9_CCUSTO,
+    ST9.T9_STATUS,
+    ST9.T9_ITEMCTA,
+    ST9.T9_CCUSTO,
     
     case TR4.TR4_DESTIN
         when 1 then 'RESSOLAR'
@@ -21,7 +21,7 @@ select
         else 'OUTROS'
     end as DESTINO,
     
-    trim(concat(TR4.TR4_DTANAL, ' ', TR4.TR4_HRANAL)) as DATA,
+    concat(TR4.TR4_DTANAL, ' ', TR4.TR4_HRANAL) as DATA,
     1 as QTD_ANALISE
 
 from TR4010 TR4 (nolock)
