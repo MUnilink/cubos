@@ -4,6 +4,7 @@ select
 	trim(TQS.TQS_CODBEM) as TQS_CODBEM,
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	trim(TR8.TR8_LOTE) as LOTE,
+	trim(TR8.TR8_MOTIVO) as TR8_MOTIVO
 	trim(STJ.TJ_SERVICO) as SERVICO,
 	trim(ST9.T9_STATUS) as STATUS,
 	trim(TQS.TQS_MEDIDA) as MEDIDA,
