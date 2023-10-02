@@ -87,10 +87,10 @@
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 				and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 		
-		inner join CTT010 CTT (nolock)
+		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
 			and CTT.CTT_CUSTO = SRC.RC_CC
-		inner join CTD010 CTD (nolock)
+		left join CTD010 CTD (nolock)
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRC.RC_ITEM
 	where SRC.D_E_L_E_T_ = ''
@@ -184,10 +184,10 @@ union
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 				and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 
-		inner join CTT010 CTT (nolock)
+		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
 			and CTT.CTT_CUSTO = SRD.RD_CC
-		inner join CTD010 CTD (nolock)
+		left join CTD010 CTD (nolock)
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
