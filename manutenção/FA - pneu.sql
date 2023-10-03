@@ -8,6 +8,8 @@ select
 	STJ.TJ_SERVICO as SERVICO,
 	ST9.T9_STATUS as STATUS,
 	TQS.TQS_MEDIDA as MEDIDA,
+	ST9.T9_TIPMOD as MODELO,
+	
 	STJ.TJ_CCUSTO as CCUSTO,
 	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then STJ.TJ_YITMCT
 	else
@@ -44,7 +46,8 @@ from STJ010 STJ
 		and TR8.TR8_FILIAL = STJ.TJ_FILIAL
 		and TR8.TR8_ORDEM = STJ.TJ_ORDEM
 		and TR8.TR8_PLANO = STJ.TJ_PLANO
-		inner join TR7010 TR7 (nolock)
+		
+		inner join TR7010 TR7
             on TR7.D_E_L_E_T_ = ''
             and TR7.TR7_FILIAL = TR8.TR8_FILIAL
             and TR7.TR7_LOTE = TR8.TR8_LOTE
