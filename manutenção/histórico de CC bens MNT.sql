@@ -4,7 +4,7 @@ select
     TPN.TPN_CODBEM as BEM,
     convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113) as DATA_MOV,
     lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113)) over(partition by TPN.TPN_CODBEM order by TPN.R_E_C_N_O_) as DATA_ANT,
-    (datediff(minute, lag(concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.R_E_C_N_O_), concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC))/(60*24.0)) as TEMPO_MOV
+    cast(datediff(minute, lag(concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.R_E_C_N_O_), concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC))/(60*24.0) as numeric(15,2)) as TEMPO_MOV
     
 from TPN010 TPN (nolock)
     inner join ST9010 ST9 (nolock)
