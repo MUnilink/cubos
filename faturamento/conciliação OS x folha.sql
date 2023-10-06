@@ -1,9 +1,17 @@
     select
         ZC2.ZC2_NUM + '-' + ZC2.ZC2_ITEM as OS_ITEM,
         trim(SRJ.RJ_DESC) as RH,
-        convert(date, ZC2.ZC2_COMPET) as PERIODO,
+        substring(ZC2.ZC2_COMPET, 1, 6) as PERIODO,
         ZC2.ZC2_CHVOS,
-        SRJ.RJ_FUNCAO as VERBA,
+        
+        case SRJ.RJ_FUNCAO
+            when '726' then '725'
+            when '511' then '749'
+            when '334' then '725'
+            when '066' then '556'
+            else SRJ.RJ_FUNCAO
+        end as VERBA,
+        
         ZC2.ZC2_TOTAL as TOTAL_OS,
         0 TOTAL_FOLHA,
         ZC2.R_E_C_N_O_
@@ -23,7 +31,7 @@ union
     select
         'FOLHA',
         (SRV.RV_DESC) as RH,
-        convert(date, SRD.RD_DATARQ+'01'),
+        substring(SRD.RD_DATARQ, 1, 6) as PERIODO,
         SRD.RD_YCHVOS as ZC2_CHVOS,
         SRD.RD_PD as VERBA,
         0 TOTAL_OS,
