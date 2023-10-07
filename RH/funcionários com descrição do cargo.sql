@@ -18,6 +18,8 @@ select
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+	convert(date, SRA.RA_DEMISSA, 103) as DEMISSAO,
+	convert(date, SRA.RA_DTFIMCT, 103) as FIM_CONTRATO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	
 	SX5.X5_DESCRI as ESCOLARIDADE,
