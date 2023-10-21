@@ -40,24 +40,18 @@ select
 
 	TR7.TR7_DTRECI as DATA
 
-from STJ010 STJ
-	left join TR8010 TR8
-		on TR8.D_E_L_E_T_ = ''
-		and TR8.TR8_FILIAL = STJ.TJ_FILIAL
-		and TR8.TR8_ORDEM = STJ.TJ_ORDEM
-		and TR8.TR8_PLANO = STJ.TJ_PLANO
-		
-		inner join TR7010 TR7
+from ST9010 ST9
+    inner join TQS010 TQS
+        on TQS.D_E_L_E_T_ = ''
+        and TQS.TQS_CODBEM = ST9.T9_CODBEM
+        left join STJ010 STJ
+            on STJ.D_E_L_E_T_ = ''
+            and STJ.TJ_CODBEM = TQS.TQS_CODBEM
+    left join TR8010 TR8
+        on TR8.D_E_L_E_T_ = ''
+        and TR8.TR8_CODBEM = ST9.T9_CODBEM
+        left join TR7010 TR7
             on TR7.D_E_L_E_T_ = ''
             and TR7.TR7_FILIAL = TR8.TR8_FILIAL
             and TR7.TR7_LOTE = TR8.TR8_LOTE
-
-	inner join TQS010 TQS
-		on TQS.D_E_L_E_T_ = ''
-		and TQS.TQS_CODBEM = STJ.TJ_CODBEM
-
-		inner join ST9010 ST9
-			on ST9.D_E_L_E_T_ = ''
-			and ST9.T9_CODBEM = TQS.TQS_CODBEM
-where
-		STJ.D_E_L_E_T_ = ''
+where ST9.D_E_L_E_T_ = ''
