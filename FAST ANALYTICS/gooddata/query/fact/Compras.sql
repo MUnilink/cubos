@@ -33,8 +33,8 @@ SELECT
     0 VIPNIN,
     case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE else SC7.C7_QUANT end as QCOMPR,
     case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE * SC7.C7_PRECO else SC7.C7_TOTAL end as VCOMPR,
-    SC7.C7_OBS as OBS,
-    SC7.C7_OBSM as MEMO,
+    trim(replace(SC7.C7_OBS, Char(13) + Char(10), '')) as OBS,
+    trim(replace(SC7.C7_OBSM, Char(13) + Char(10), '')) as MEMO,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC7.C7_CONAPRO, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
 		
 FROM SC7010 SC7
