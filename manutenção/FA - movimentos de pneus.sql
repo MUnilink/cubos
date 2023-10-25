@@ -13,9 +13,11 @@ select
 	STZ.TZ_CONTSAI,
 	concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT) as TZ_DATAMOV,
 	concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) as TZ_DATASAI,
+	concat(TQZ.TQZ_DTSTAT, ' ', TQZ.TQZ_HRSTAT) as TQZ_DTSTAT,
 
 	STZ.TZ_CONTSAI - STZ.TZ_POSCONT as RODADO,
 	datediff(minute, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI))/(60*24) as TEMPO_RODADO,
+	PNEU.T9_VALCPA as CUSTO_COMPRA,
 
 	STL.TL_CODIGO,
 	STL.TL_LOCAL,
@@ -23,7 +25,7 @@ select
 	STL.TL_CUSTO
 
 from STL010 STL (nolock)
-	left join STJ010 STJ (nolock)
+	inner join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
 		and STJ.TJ_ORDEM = STL.TL_ORDEM
@@ -46,7 +48,6 @@ from STL010 STL (nolock)
 					inner join ST9010 PNEU (nolock)
 						on PNEU.D_E_L_E_T_ = ''
 						and PNEU.T9_CODBEM = TQS.TQS_CODBEM
-						and PNEU.T9_CATBEM = 3
 					inner join TQT010 TQT (nolock)
 						on TQT.D_E_L_E_T_ = ''
 						and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
@@ -58,7 +59,11 @@ from STL010 STL (nolock)
 				inner join ST9010 CARRO (nolock)
 					on CARRO.D_E_L_E_T_ = ''
 					and CARRO.T9_CODBEM = STZ.TZ_BEMPAI
-					and CARRO.T9_CATBEM in (1, 2, 4)
 
 where
 		STL.D_E_L_E_T_ = ''
+	and STL.TL_TIPOREG = 'P'
+	and STJ.TJ_SERVICO = 'PNEMOV'
+	and year(STZ.TZ_DATAMOV) = 2023	
+	and PNEU.T9_CATBEM = 3
+	and CARRO.T9_CATBEM in (1, 2, 4)
