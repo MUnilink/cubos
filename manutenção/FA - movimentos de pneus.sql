@@ -11,7 +11,7 @@ select
     
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
-	concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT) as TZ_DATAMOV,
+	concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')) as TZ_DATAMOV,
 	concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) as TZ_DATASAI,
 
 	STZ.TZ_CONTSAI - STZ.TZ_POSCONT as RODADO,
