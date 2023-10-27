@@ -7,6 +7,7 @@ select
 	TQS.TQS_MEDIDA,
 	PNEU.T9_STATUS,
 	case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as TZ_TIPOMOV,
+	STZ.TZ_CAUSA,
     
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,
