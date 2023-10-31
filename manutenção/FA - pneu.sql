@@ -6,12 +6,12 @@ select
 	TR8.TR8_LOTE as LOTE,
 	trim(TR8.TR8_MOTIVO) as MOTIVO,
 	STJ.TJ_SERVICO as SERVICO,
-	ST9.T9_STATUS as STATUS,
-	TQS.TQS_MEDIDA as MEDIDA,
+	trim(ST9.T9_STATUS) as STATUS,
+	trim(TQS.TQS_MEDIDA) as TQS_MEDIDA,
 	ST9.T9_TIPMOD as MODELO,
 	
 	trim(STJ.TJ_CCUSTO) as CCUSTO,
-	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then STJ.TJ_YITMCT
+	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then trim(STJ.TJ_YITMCT)
 	else
 		case STJ.TJ_CCUSTO
 			when 302 then 11
