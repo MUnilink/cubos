@@ -2,7 +2,7 @@ select
 	trim(TR4.TR4_CODBEM) as TR4_CODBEM,
     TR4.TR4_NUMANA,
     TQS.TQS_MEDIDA,
-    TR4.TR4_MOTIVO,
+    trim(TR4.TR4_MOTIVO),
     TR4.TR4_SULCO,
     TR4.TR4_FILIAL,
     trim(TR4.TR4_PAREC) as TR4_PAREC,
