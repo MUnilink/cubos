@@ -10,8 +10,8 @@ select
 	TQS.TQS_MEDIDA as MEDIDA,
 	ST9.T9_TIPMOD as MODELO,
 	
-	STJ.TJ_CCUSTO as CCUSTO,
-	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then STJ.TJ_YITMCT
+	trim(STJ.TJ_CCUSTO) as CCUSTO,
+	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then trim(STJ.TJ_YITMCT)
 	else
 		case STJ.TJ_CCUSTO
 			when 302 then 11
