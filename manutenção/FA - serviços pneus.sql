@@ -9,6 +9,7 @@ select
 	trim(ST9.T9_STATUS) as STATUS,
 	trim(TQS.TQS_MEDIDA) as TQS_MEDIDA,
 	ST9.T9_TIPMOD as MODELO,
+	trim(TR4.TR4_PAREC) as TR4_PAREC,
 	
 	trim(STJ.TJ_CCUSTO) as CCUSTO,
 	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then trim(STJ.TJ_YITMCT)
@@ -51,6 +52,9 @@ from STJ010 STJ
             on TR7.D_E_L_E_T_ = ''
             and TR7.TR7_FILIAL = TR8.TR8_FILIAL
             and TR7.TR7_LOTE = TR8.TR8_LOTE
+		left join TR4010 TR4
+			on TR4.D_E_L_E_T_ = ''
+			and TR4.TR4_ORDEM = TR8.TR8_ORDEM
 
 	inner join TQS010 TQS
 		on TQS.D_E_L_E_T_ = ''
