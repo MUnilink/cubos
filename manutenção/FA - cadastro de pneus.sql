@@ -7,18 +7,8 @@ select
 	ST9.T9_TIPMOD as MODELO,
 	trim(TR4.TR4_PAREC) as TR4_PAREC,
 	
-	trim(STJ.TJ_CCUSTO) as CCUSTO,
-	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then trim(STJ.TJ_YITMCT)
-	else
-		case STJ.TJ_CCUSTO
-			when 302 then 11
-			when 304 then 11
-			when 303 then 21
-			when 305 then 21
-			when 306 then 21
-			else 90
-		end
-	end as ATIVIDADE,
+    trim(ST9.T9_ITEMCTA) as T9_ITEMCTA,
+    trim(ST9.T9_CCUSTO) as T9_CCUSTO,
 
 	ST9.T9_VALCPA as CUSTO_COMPRA,
 	ST9.T9_CONTACU as CONT_ACUMULADO,
