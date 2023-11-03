@@ -7,6 +7,7 @@ select
     TR4.TR4_FILIAL,
     trim(TR4.TR4_PAREC) as TR4_PAREC,
     trim(ST9.T9_STATUS) as T9_STATUS,
+    
     trim(ST9.T9_ITEMCTA) as T9_ITEMCTA,
     trim(ST9.T9_CCUSTO) as T9_CCUSTO,
     
