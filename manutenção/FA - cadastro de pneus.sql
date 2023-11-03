@@ -1,0 +1,41 @@
+select
+	ST9.T9_FILIAL as FILIAL,
+	trim(TQS.TQS_CODBEM) as TQS_CODBEM,
+	trim(ST9.T9_CODBEM) as T9_CODBEM,
+	trim(ST9.T9_STATUS) as STATUS,
+	trim(TQS.TQS_MEDIDA) as TQS_MEDIDA,
+	ST9.T9_TIPMOD as MODELO,
+	trim(TR4.TR4_PAREC) as TR4_PAREC,
+	
+	trim(STJ.TJ_CCUSTO) as CCUSTO,
+	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then trim(STJ.TJ_YITMCT)
+	else
+		case STJ.TJ_CCUSTO
+			when 302 then 11
+			when 304 then 11
+			when 303 then 21
+			when 305 then 21
+			when 306 then 21
+			else 90
+		end
+	end as ATIVIDADE,
+
+	ST9.T9_VALCPA as CUSTO_COMPRA,
+	ST9.T9_CONTACU as CONT_ACUMULADO,
+	
+	TQS.TQS_KMR1,
+	TQS.TQS_KMR2,
+	TQS.TQS_KMR3,
+	TQS.TQS_KMR4,
+	TQS.TQS_KMR5,
+	TQS.TQS_KMR6,
+	TQS.TQS_KMR7,
+	TQS.TQS_KMOR,
+	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as TOTAL_VIDAS
+
+from TQS010 TQS
+	inner join ST9010 ST9
+		on ST9.D_E_L_E_T_ = ''
+		and ST9.T9_CODBEM = TQS.TQS_CODBEM
+where
+		TQS.D_E_L_E_T_ = ''
