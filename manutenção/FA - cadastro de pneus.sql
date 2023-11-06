@@ -4,6 +4,7 @@ select
 	trim(ST9.T9_STATUS) as STATUS,
 	trim(TQS.TQS_MEDIDA) as TQS_MEDIDA,
 	ST9.T9_TIPMOD as MODELO,
+	ST9.T9_DTCOMPR as DATA,
 	
     trim(ST9.T9_ITEMCTA) as T9_ITEMCTA,
     trim(ST9.T9_CCUSTO) as T9_CCUSTO,
