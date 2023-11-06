@@ -4,10 +4,10 @@ select
 	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
 	trim(isnull(STZ.TZ_BEMPAI, '-')) as ESTRUTURA,
 	SB1.B1_COD as PRODUTO,
-	TQS.TQS_MEDIDA,
+	trim(TQS.TQS_MEDIDA) as TQS_MEDIDA,
 	PNEU.T9_STATUS,
 	case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as TZ_TIPOMOV,
-	STZ.TZ_CAUSA as OCORRENCIA,
+	trim(STZ.TZ_CAUSA) as OCORRENCIA,
     
 	STZ.TZ_POSCONT,
 	STZ.TZ_CONTSAI,

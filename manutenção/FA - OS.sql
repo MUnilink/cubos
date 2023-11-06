@@ -70,7 +70,9 @@ select
 	ST1.T1_SALARIO,
 	SB1.B1_UPRC,
 
-	/* ABAIXO DADOS DE CONTROLE PELO RM*/
+	/*
+		**** ABAIXO DADOS DE CONTROLE PELO RM ****
+	*/
 
 	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
 	else
@@ -108,7 +110,7 @@ select
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
 	substring(STL.TL_DTINICI, 1, 6) as PERIODO,
-	substring(STL.TL_DTINICI, 1, 6) as PERIODO_OS,
+	substring(STJ.TJ_DTORIGI, 1, 6) as PERIODO_OS,
 	SCP.CP_NUM as SA,
 	SCP.CP_QUANT as SA_QTD_SOLICTADA,
     SCP.CP_QUJE as SA_QTD_ATENDIDA,
