@@ -7,7 +7,7 @@ select
 	trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
 	trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
 	trim(isnull(SRJ.RJ_DESC, '-')) as RJ_DESC,
-	trim(isnull(SRA.RA_CC, '-')) as RA_CC,
+	trim(isnull(SRD.RD_CC, '-')) as RA_CC,
 
 	case trim(SRV.RV_TIPOCOD)
 		when '1' then 'PROVENTO'
@@ -35,7 +35,7 @@ from SRD010 SRD (nolock)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 where
         SRD.D_E_L_E_T_ = ''
-    and (SRA.RA_CC = 304 or SRA.RA_CC = 302 or SRA.RA_CC = 206 or SRA.RA_MAT = '002282')
+    and (SRD.RD_CC = 304 or SRD.RD_CC = 302 or SRD.RD_CC = 206 or SRA.RA_MAT = '002282')
     and SRD.RD_PERIODO > 202112
 group by
 	SRD.RD_FILIAL,
@@ -47,5 +47,5 @@ group by
 	SRD.RD_MAT,
 	SRA.RA_NOME,
 	SRJ.RJ_DESC,
-	SRA.RA_CC,
+	SRD.RD_CC,
 	SRA.RA_ITEM
