@@ -22,6 +22,9 @@ select
     end as DESTINO,
     
     concat(TR4.TR4_DTANAL, ' ', TR4.TR4_HRANAL) as DATA,
+    (select sum(STJ010.TJ_CUSTTER) from STJ010 (nolock) where STJ010.D_E_L_E_T_ = '' and STJ010.TJ_CODBEM = TR4.TR4_CODBEM and TR4.TR4_DESTIN = 6) as VALOR_SERVICOS,
+    (select ST9010.T9_VALCPA from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = TR4.TR4_CODBEM and TR4.TR4_DESTIN = 6) as VALOR_COMPRA,
+    (select ST9010.T9_CONTACU from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = TR4.TR4_CODBEM and TR4.TR4_DESTIN = 6) as CONTADOR,
     1 as QTD_ANALISE
 
 from TR4010 TR4 (nolock)
