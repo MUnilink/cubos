@@ -28,9 +28,9 @@ select
     TQN.TQN_VALTOT,
     TQN.TQN_YTIPO,
 
-    TQN.TQN_HODOM as km_ATU,
-    lag(TQN.TQN_HODOM, 1, 0.0) over (partition by TQN.TQN_FROTA, TQN.TQN_YTIPO order by TQN.R_E_C_N_O_) as km_ANT,
-    case TQN.TQN_YTIPO when 'P' then 0.0 else TQN.TQN_HODOM - lag(TQN.TQN_HODOM, 1, 0.0) over (partition by TQN.TQN_FROTA, TQN.TQN_YTIPO order by TQN.R_E_C_N_O_) end as RODADO,
+    case when TQN.TQN_CODCOM != 2 then TQN.TQN_HODOM end as km_ATU,
+    case when TQN.TQN_CODCOM != 2 then lag(TQN.TQN_HODOM, 1, 0.0) over (partition by TQN.TQN_FROTA, TQN.TQN_YTIPO order by TQN.R_E_C_N_O_) end as km_ANT,
+    case when TQN.TQN_CODCOM != 2 then case TQN.TQN_YTIPO when 'P' then 0.0 else TQN.TQN_HODOM - lag(TQN.TQN_HODOM, 1, 0.0) over (partition by TQN.TQN_FROTA, TQN.TQN_YTIPO order by TQN.R_E_C_N_O_) end end as RODADO,
     TQN.R_E_C_N_O_
 
 from TQN010 TQN (nolock)
