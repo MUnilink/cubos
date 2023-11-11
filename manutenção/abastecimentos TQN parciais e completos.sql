@@ -26,8 +26,12 @@ select
     TQN.TQN_QUANT,
     TQN.TQN_VALUNI,
     TQN.TQN_VALTOT,
-    TQN.TQN_HODOM,
-    TQN.TQN_YTIPO
+    TQN.TQN_YTIPO,
+
+    TQN.TQN_HODOM as km_ATU,
+    lag(TQN.TQN_HODOM, 1, 0.0) over (partition by TQN.TQN_FROTA, TQN.TQN_YTIPO order by TQN.R_E_C_N_O_) as km_ANT,
+    case TQN.TQN_YTIPO when 'P' then 0.0 else TQN.TQN_HODOM - lag(TQN.TQN_HODOM, 1, 0.0) over (partition by TQN.TQN_FROTA, TQN.TQN_YTIPO order by TQN.R_E_C_N_O_) end as RODADO,
+    TQN.R_E_C_N_O_
 
 from TQN010 TQN (nolock)
     left join SD3010 SD3 (nolock)
@@ -76,4 +80,4 @@ from TQN010 TQN (nolock)
 		and TQM.TQM_CODCOM = TQN.TQN_CODCOM
 where 
 		TQN.D_E_L_E_T_ = ''
-	and year(TQN.TQN_DTABAS) > 2022
+    and TQN.TQN_FROTA like 'CM5%'
