@@ -1,6 +1,6 @@
 select
     TQN.TQN_FILIAL,
-    TQN.TQN_FROTA,
+    trim(TQN.TQN_FROTA) as TQN_FROTA,
 	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
 	trim(TQM.TQM_NOMCOM) as TQM_NOMCOM,
 	(
@@ -13,7 +13,7 @@ select
 			and substring(SD1010.D1_DTDIGIT, 1, 6) = isnull(substring(TQN.TQN_DTABAS, 1, 6), TQN.TQN_DTABAS)
 	) as VALOR_COMPRA,
 
-	TQN.TQN_DTABAS as PERIODO_TQN,
+	substring(TQN.TQN_DTABAS, 1, 6) as PERIODO_TQN,
 	convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
 	SD3.D3_NUMSEQ,
 	SD3.D3_LOCAL,
