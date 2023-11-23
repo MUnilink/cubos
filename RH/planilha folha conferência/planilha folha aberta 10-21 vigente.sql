@@ -917,7 +917,7 @@ from
                     on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
-                    SRC010.RC_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770')
+                    SRC010.RC_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770', '772')
                 and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
@@ -940,7 +940,7 @@ from
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
         ) as Primeira_13_avos,
-                (
+        (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
@@ -962,7 +962,7 @@ from
                     on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
-                    SRC010.RC_PD in ('009')
+                    SRC010.RC_PD in ('009', '772')
                 and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
@@ -1022,7 +1022,7 @@ from
                     on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
-                    SRC010.RC_PD in ('414', '533')
+                    SRC010.RC_PD in ('373', '414', '533')
                 and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
@@ -1037,7 +1037,7 @@ from
                     on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
-                    SRC010.RC_PD in ('768', '769', '770')
+                    SRC010.RC_PD in ('009', '010', '768', '769', '770')
                 and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
