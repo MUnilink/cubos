@@ -64,7 +64,7 @@ select
     max(isnull(FOLHA_ABERTA.Primeira_13_avos, 0.0)) as 'Primeira Parcela 13° - Avos',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_insalubridade, 0.0)) as 'Primeira Parcela 13° - Insalubridade',
     sum(isnull(FOLHA_ABERTA.Primeira_13_media_periculosidade, 0.0)) as 'Primeira Parcela 13° - Ad. risco/Periculosidade',
-    sum(isnull(FOLHA_ABERTA.Primeira_13_media_outros, 0.0)) as 'Primeira Parcela 13° - Outros valores',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_media_outros, 0.0)) as 'Primeira Parcela 13° - total média em horas',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_ATS, 0.0)) as 'Primeira Parcela 13° - Ad. tempo serviço',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_maternidade, 0.0)) as 'Primeira Parcela 13° - sal. maternidade',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_alimenticia, 0.0)) as 'Primeira Parcela 13° - pensão alimentícia',
