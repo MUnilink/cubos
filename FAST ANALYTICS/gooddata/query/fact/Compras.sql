@@ -25,12 +25,13 @@ SELECT
     
     COALESCE(SC7.C7_EMISSAO, ' ') AS DATA,
     COALESCE(SC7.C7_DATPRF, ' ') AS DTENTR,
+    
     COALESCE(SC1.C1_EMISSAO, ' ') AS DTEORD,
     
-    1 as QORDCP, /* qtd da solicitação de compra*/
-    1 as QTDPC, /* qtd do pedido de compra*/
-    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE else SC7.C7_QUANT end as QCOMPR, /* qtd do pedido de compra*/
-    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE * SC7.C7_PRECO else SC7.C7_TOTAL end as VCOMPR, /* valor do pedido de compra*/
+    1 as QORDCP, /* qtd da solicitação de compra */
+    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE else SC7.C7_QUANT end as QCOMPR, /* qtd do pedido de compra */
+    SC7.C7_QUJE as QTD_ATENDIDA,
+    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE * SC7.C7_PRECO else SC7.C7_TOTAL end as VCOMPR, /* valor do pedido de compra */
     
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC7.C7_CONAPRO, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
 		
