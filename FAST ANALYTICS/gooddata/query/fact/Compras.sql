@@ -21,13 +21,17 @@ SELECT
     
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
     'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SBM.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
-    SC7.C7_NUM PEDIDO,
+    /* OBSOLETO */ SC7.C7_NUM PEDIDO,
+    
     COALESCE(SC7.C7_EMISSAO, ' ') AS DATA,
     COALESCE(SC7.C7_DATPRF, ' ') AS DTENTR,
     COALESCE(SC1.C1_EMISSAO, ' ') AS DTEORD,
-    1 QORDCP,
-    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE else SC7.C7_QUANT end as QCOMPR,
-    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE * SC7.C7_PRECO else SC7.C7_TOTAL end as VCOMPR,
+    
+    1 as QORDCP, /* qtd da solicitação de compra*/
+    1 as QTDPC, /* qtd do pedido de compra*/
+    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE else SC7.C7_QUANT end as QCOMPR, /* qtd do pedido de compra*/
+    case when SC7.C7_RESIDUO = 'S' then SC7.C7_QUJE * SC7.C7_PRECO else SC7.C7_TOTAL end as VCOMPR, /* valor do pedido de compra*/
+    
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC7.C7_CONAPRO, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
 		
 FROM SC7010 SC7
