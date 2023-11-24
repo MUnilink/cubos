@@ -23,8 +23,9 @@ SELECT
     COALESCE(SC1.C1_EMISSAO, ' ') as DATA,
     COALESCE(SC1.C1_DATPRF, ' ') as DTENTR,
     case when SC1.C1_RESIDUO = 'S' then SC1.C1_QUJE else SC1.C1_QUANT end as QCOMPR,
+    SC1.C1_QUJE as QTD_ATENDIDA,
     case when SC1.C1_RESIDUO = 'S' then SC1.C1_QUJE * SC1.C1_PRECO else SC1.C1_TOTAL end as VCOMPR,
-    'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC1.C1_CONAPRO, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
+    'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC1.C1_APROV, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA
 		
 FROM SC1010 SC1
     left join SB1010 SB1
@@ -63,11 +64,11 @@ FROM SC1010 SC1
         on CTD.D_E_L_E_T_ = ' '
         and CTD.CTD_FILIAL = '      '
         and CTD.CTD_ITEM = SC1.C1_ITEMCTA
-    left join SC1010 SC1
-        on SC1.D_E_L_E_T_ = ' '
-        and SC1.C1_FILIAL = SC1.C1_FILIAL
-        and SC1.C1_NUM = SC1.C1_NUMSC
-        and SC1.C1_ITEM = SC1.C1_ITEMSC
+    left join SC7010 SC7
+        on SC7.D_E_L_E_T_ = ' '
+        and SC7.C7_FILIAL = SC1.C1_FILIAL
+        and SC7.C7_NUMSC = SC1.C1_NUM
+        and SC7.C7_ITEMSC = SC1.C1_ITEM
     left join SAH010 SAH
         on SAH.D_E_L_E_T_ = ' '
         and SAH.AH_FILIAL = '      '
@@ -76,6 +77,5 @@ FROM SC1010 SC1
         on SM2.D_E_L_E_T_ = ' '
         and SM2.M2_DATA = SC1.C1_EMISSAO
 WHERE
-        SC1.C1_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-    AND (SC1.C1_RESIDUO <> 'S' OR SC1.C1_QUJE > 0)
+        SC1.C1_RESIDUO <> 'S'
     AND SC1.D_E_L_E_T_ = ' '
