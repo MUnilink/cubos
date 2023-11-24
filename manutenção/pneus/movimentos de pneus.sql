@@ -44,7 +44,7 @@ from STZ010 STZ (nolock)
 		inner join ST9010 PNEU (nolock)
 			on PNEU.D_E_L_E_T_ = ''
 			and PNEU.T9_CODBEM = TQS.TQS_CODBEM
-			and trim(PNEU.T9_CODBEM) like '[0-9]%'
+			and PNEU.T9_CATBEM = 3
 
 			inner join TQY010 TQY (nolock)
 				on TQY.D_E_L_E_T_ = ''
@@ -58,10 +58,9 @@ from STZ010 STZ (nolock)
 				on SB1.D_E_L_E_T_ = ''
 				and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
 
-
 	inner join ST9010 CARRO (nolock)
 		on CARRO.D_E_L_E_T_ = ''
 		and CARRO.T9_CODBEM = STZ.TZ_BEMPAI
-		and trim(CARRO.T9_CODBEM) not like '[0-9]%'
+		and PNEU.T9_CATBEM != 3
 where
 		STZ.D_E_L_E_T_ = ''
