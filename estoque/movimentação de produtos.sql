@@ -8,6 +8,7 @@
         SB2.B2_CM1 as CM_ATUAL,
         SB2.B2_VATU1 as VALOR_ATUAL,
         SB2.B2_QATU as QTD_ATUAL,
+        SB2.B2_CM2,SB2.B2_CM3,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -24,6 +25,7 @@
         SD3.D3_DOC as DOC,
         SD3.D3_CUSTO1 as CUSTO_MOV,
         SD3.D3_QUANT as QTD_MOV,
+        SD3.D3_YOS as OS_PORT,
         'INT' as TIPO_MOV
         
     from SD3010 SD3 (nolock)
@@ -56,6 +58,7 @@ union
         SB2.B2_CM1 as CM_ATUAL,
         SB2.B2_VATU1 as VALOR_ATUAL,
         SB2.B2_QATU as QTD_ATUAL,
+        SB2.B2_CM2,SB2.B2_CM3,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -72,6 +75,7 @@ union
         SD1.D1_DOC as DOC,
         SD1.D1_CUSTO as CUSTO_MOV,
         SD1.D1_QUANT as QTD_MOV,
+        null as OS_PORT,
         'ENT' as TIPO_MOV
         
     from SD1010 SD1 (nolock)
@@ -104,6 +108,7 @@ union
         SB2.B2_CM1 as CM_ATUAL,
         SB2.B2_VATU1 as VALOR_ATUAL,
         SB2.B2_QATU as QTD_ATUAL,
+        SB2.B2_CM2,SB2.B2_CM3,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -120,6 +125,7 @@ union
         SD2.D2_DOC as DOC,
         SD2.D2_CUSTO1 as CUSTO_MOV,
         SD2.D2_QUANT as QTD_MOV,
+        null as OS_PORT,
         'SAI' as TIPO_MOV
         
     from SD2010 SD2 (nolock)
