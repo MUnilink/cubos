@@ -1,8 +1,8 @@
 select
-    ST9.T9_CODBEM as ESTRUTURA,
-    STC.TC_COMPONE as COMPONENTE,
-    ST9.T9_CCUSTO as CC,
-    ST9.T9_ITEMCTA as ATIVIDADE,
+    trim(ST9.T9_CODBEM) as ESTRUTURA,
+    trim(STC.TC_COMPONE) as COMPONENTE,
+    trim(ST9.T9_CCUSTO) as CC,
+    trim(ST9.T9_ITEMCTA) as ATIVIDADE,
     
     case when STC.TC_COMPONE = (select ST9010.T9_CODBEM from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODFAMI = 'VP' and ST9010.T9_CODBEM = STC.TC_COMPONE) then 'CM ATRELADO'
         else
