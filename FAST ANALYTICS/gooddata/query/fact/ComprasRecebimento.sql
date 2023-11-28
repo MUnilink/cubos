@@ -25,43 +25,36 @@ SELECT
         ELSE 'P |'+'|'
     END AS BK_SITUACAO_COMPRA,
     
-    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,	 
-    SD1.D1_PEDIDO PEDIDO,
-    SD1.D1_ITEM SEQCIA,
-    SD1.D1_DOC NUMNF,
-    SD1.D1_EMISSAO DATANF,
-    SD1.D1_DTDIGIT AS DATA,
-    SD1.D1_SERIE SERNF,
-    SD1.D1_REMITO REMITO,
-    SD1.D1_SERIREM SERREM,
-    SD1.D1_ITEMREM ITEREM,
-    SD1.D1_QUANT QRECEB,
-    SD1.D1_TOTAL VRECEB,
-    SC7.C7_NUMSC ORDEM,
-    SC7.C7_EMISSAO DTEPED,
-    SC7.C7_DATPRF DTPREV,
-    SC1.C1_EMISSAO DTEORD,
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
+    SD1.D1_ITEM as SEQCIA,
+    SD1.D1_DOC as NUMNF,
+    SD1.D1_EMISSAO as DATANF,
+    SD1.D1_DTDIGIT as DATA,
+    SD1.D1_SERIE as SERNF,
+    SD1.D1_QUANT as QTD_ATENDIDA,
+    SD1.D1_TOTAL as VALOR_TOTAL,
+    SC7.C7_EMISSAO as DTEPED,
+    SC7.C7_DATPRF as DTPREV,
+    SC1.C1_EMISSAO as DTEORD,
     
-    CASE WHEN (COALESCE(SC7.C7_DATPRF, ' ') = ' ')
-            OR (SC7.C7_DATPRF = NULL)
-            OR (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ')
-            OR (SD1.D1_DTDIGIT = NULL)
-            OR (SD1.D1_DTDIGIT > SC7.C7_DATPRF) THEN 0
-        ELSE DATEDIFF(DD, SD1.D1_DTDIGIT, SC7.C7_DATPRF)
-    END AS QDIAAN,
+    CASE WHEN (COALESCE(SC7.C7_DATPRF, ' ') = ' ') or (SC7.C7_DATPRF = NULL)
+            or (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ') or (SD1.D1_DTDIGIT = NULL)
+            or (SD1.D1_DTDIGIT > SC7.C7_DATPRF)
+            then 0
+        else datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF)
+    end as QTD_DIAS_ADIANTADO,
     
-    CASE WHEN (COALESCE(SC7.C7_DATPRF, ' ') = ' ')
-            OR (SC7.C7_DATPRF = NULL)
-            OR (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ')
-            OR (SD1.D1_DTDIGIT = NULL)
-            OR (SC7.C7_DATPRF > SD1.D1_DTDIGIT) THEN 0
-        ELSE DATEDIFF(DD, SC7.C7_DATPRF, SD1.D1_DTDIGIT)
-    END AS QDIAAT,
+    CASE WHEN (COALESCE(SC7.C7_DATPRF, ' ') = ' ') or (SC7.C7_DATPRF = NULL)
+            or (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ') or (SD1.D1_DTDIGIT = NULL)
+            or (SC7.C7_DATPRF > SD1.D1_DTDIGIT)
+        then 0
+        else datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT)
+    end as QTD_DIAS_ATRASO,
     
-    CASE WHEN DATEDIFF(DD, SD1.D1_DTDIGIT, SC7.C7_DATPRF) > 0 THEN 1 ELSE 0 END AS QRECAN,
-    CASE WHEN DATEDIFF(DD, SC7.C7_DATPRF, SD1.D1_DTDIGIT) < 0 THEN 1 ELSE 0 END AS QRECAT,
-    CASE WHEN (DATEDIFF(DD, SD1.D1_DTDIGIT, SC7.C7_DATPRF) = 0) AND (DATEDIFF(DD, SC7.C7_DATPRF, SD1.D1_DTDIGIT) = 0) THEN 1 ELSE 0 END AS QRECDT,
-    CASE WHEN (SD1.D1_QUANT >= SC7.C7_QUANT) THEN 1 ELSE 0 END AS QRECUN
+    case when datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF) > 0 then 1 else 0 end as QTD_ADIANTADA, /* diferença entre data classificação e data prevista */
+    case when datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT) < 0 then 1 else 0 end as QTD_ATRASADA, /* diferença entre data prevista e data classificação */
+    case when (datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF) = 0) and (datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT) = 0) then 1 else 0 end as QTD_EMDIA, /* recebimento em dia */
+    case when (SD1.D1_QUANT >= SC7.C7_QUANT) THEN 1 ELSE 0 END AS QRECUN /* se quantidade atendida maior que quantidade pedida*/
 
 FROM SD1010 SD1
     LEFT JOIN SB1010 SB1
@@ -92,7 +85,7 @@ FROM SD1010 SD1
             AND GRPFOR.D_E_L_E_T_ = ' '
     
     LEFT JOIN CTT010 CTT
-        ON CTT.CTT_FILIAL = SUBSTRING(SD1.D1_FILIAL, 1, 4)
+        ON CTT.CTT_FILIAL = substring(SD1.D1_FILIAL, 1, 4)
         AND CTT.CTT_CUSTO = SD1.D1_CC
         AND CTT.D_E_L_E_T_ = ' '
     LEFT JOIN CTD010 CTD
@@ -117,12 +110,12 @@ FROM SD1010 SD1
             AND SE4.D_E_L_E_T_ = ' '
     
     LEFT JOIN ACV010 ACV
-        ON ACV.ACV_FILIAL = SUBSTRING(SD1.D1_FILIAL, 1, 4)
+        ON ACV.ACV_FILIAL = substring(SD1.D1_FILIAL, 1, 4)
         AND ACV.ACV_CODPRO = SD1.D1_COD
         AND ACV.D_E_L_E_T_ = ' '
         
         LEFT JOIN ACU010 ACU
-            ON ACU.ACU_FILIAL = ACV_FILIAL
+            ON ACU.ACU_FILIAL = ACV.ACV_FILIAL
             AND ACU.ACU_COD = ACV.ACV_CATEGO
             AND ACU.D_E_L_E_T_ = ' '
     
@@ -140,7 +133,7 @@ FROM SD1010 SD1
             AND SC1.C1_PRODUTO = SC7.C7_PRODUTO
             AND SC1.D_E_L_E_T_ = ' '
         LEFT JOIN SY1010 SY1
-            on SY1.Y1_FILIAL = SUBSTRING(SC7.C7_FILIAL, 1, 2)
+            on SY1.Y1_FILIAL = substring(SC7.C7_FILIAL, 1, 2)
             and SY1.Y1_USER = SC7.C7_USER
             and SY1.Y1_COD not in (1, 6, 11)
     
