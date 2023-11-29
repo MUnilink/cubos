@@ -1,0 +1,158 @@
+SELECT 'P |01|01' AS BK_EMPRESA,
+       CASE
+           WHEN D1_FILIAL IS NULL THEN 'P |01||'
+           ELSE 'P |01|01'+ CAST(D1_FILIAL AS CHAR (6))
+       END AS BK_FILIAL,
+       'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(D1_COD, ' ')), ' '), '|') AS BK_ITEM,
+       'P |01|SB2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B2_FILIAL, ' '))+'|'+RTRIM(COALESCE(D1_LOCAL, ' ')), ' '), '|') AS BK_DEPOSITO,
+       'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(D1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+       'Saldo Entradas' AS TIPO_DE_SALDO,<<EXTRACTION_DATE>> AS DATA_DE_EXTRACAO,
+                                           SUM(D1_QUANT) AS SALDO_ENT,
+                                           0 AS SALDO_SAI,
+                                           0 AS SALDO_MOV_ENT,
+                                           0 AS SALDO_MOV_SAI
+FROM SD1010 SD1
+INNER JOIN SF4010 SF4 ON F4_FILIAL = '      '
+AND F4_CODIGO = D1_TES
+AND F4_ESTOQUE = 'S'
+AND SF4.D_E_L_E_T_ = ' '
+LEFT JOIN SB1010 SB1 ON B1_FILIAL = '      '
+AND B1_COD = D1_COD
+AND SB1.D_E_L_E_T_ = ' '
+LEFT JOIN SB2010 SB2 ON B2_FILIAL = D1_FILIAL
+AND B2_COD = D1_COD
+AND B2_LOCAL = D1_LOCAL
+AND SB2.D_E_L_E_T_ = ' '
+LEFT JOIN SAH010 SAH ON AH_FILIAL = '      '
+AND AH_UNIMED = D1_UM
+AND SAH.D_E_L_E_T_ = ' '
+WHERE D1_DTDIGIT <= <<EXTRACTION_DATE>>
+  AND D1_ORIGLAN <> 'LF'
+  AND D1_QUANT > 0
+  AND SD1.D_E_L_E_T_ = ' '
+GROUP BY D1_FILIAL,
+         B1_FILIAL,
+         B2_FILIAL,
+         AH_FILIAL,
+         D1_COD,
+         D1_LOCAL,
+         D1_UM
+UNION ALL
+SELECT 'P |01|01' AS BK_EMPRESA,
+       CASE
+           WHEN D2_FILIAL IS NULL THEN 'P |01||'
+           ELSE 'P |01|01'+ CAST(D2_FILIAL AS CHAR (6))
+       END AS BK_FILIAL,
+       'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(D2_COD, ' ')), ' '), '|') AS BK_ITEM,
+       'P |01|SB2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B2_FILIAL, ' '))+'|'+RTRIM(COALESCE(D2_LOCAL, ' ')), ' '), '|') AS BK_DEPOSITO,
+       'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(D2_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+       'Saldo Sa��das' AS TIPO_DE_SALDO,<<EXTRACTION_DATE>> AS DATA_DE_EXTRACAO,
+                                          0 AS SALDO_ENT,
+                                          SUM(D2_QUANT) AS SALDO_SAI,
+                                          0 AS SALDO_MOV_ENT,
+                                          0 AS SALDO_MOV_SAI
+FROM SD2010 SD2
+INNER JOIN SF4010 SF4 ON F4_FILIAL = '      '
+AND F4_CODIGO = D2_TES
+AND F4_ESTOQUE = 'S'
+AND SF4.D_E_L_E_T_ = ' '
+LEFT JOIN SB1010 SB1 ON B1_FILIAL = '      '
+AND B1_COD = D2_COD
+AND SB1.D_E_L_E_T_ = ' '
+LEFT JOIN SB2010 SB2 ON B2_FILIAL = D2_FILIAL
+AND B2_COD = D2_COD
+AND B2_LOCAL = D2_LOCAL
+AND SB2.D_E_L_E_T_ = ' '
+LEFT JOIN SAH010 SAH ON AH_FILIAL = '      '
+AND AH_UNIMED = D2_UM
+AND SAH.D_E_L_E_T_ = ' '
+WHERE D2_DTDIGIT <= <<EXTRACTION_DATE>>
+  AND D2_ORIGLAN <> 'LF'
+  AND D2_QUANT > 0
+  AND SD2.D_E_L_E_T_ = ' '
+GROUP BY D2_FILIAL,
+         B1_FILIAL,
+         B2_FILIAL,
+         AH_FILIAL,
+         D2_COD,
+         D2_LOCAL,
+         D2_UM
+UNION ALL
+SELECT 'P |01|01' AS BK_EMPRESA,
+       CASE
+           WHEN D3_FILIAL IS NULL THEN 'P |01||'
+           ELSE 'P |01|01'+ CAST(D3_FILIAL AS CHAR (6))
+       END AS BK_FILIAL,
+       'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(D3_COD, ' ')), ' '), '|') AS BK_ITEM,
+       'P |01|SB2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B2_FILIAL, ' '))+'|'+RTRIM(COALESCE(D3_LOCAL, ' ')), ' '), '|') AS BK_DEPOSITO,
+       'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(D3_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+       'Saldo Movimento Entradas' AS TIPO_DE_SALDO,<<EXTRACTION_DATE>> AS DATA_DE_EXTRACAO,
+                                                     0 AS SALDO_ENT,
+                                                     0 AS SALDO_SAI,
+                                                     SUM(D3_QUANT) AS SALDO_MOV_ENT,
+                                                     0 AS SALDO_MOV_SAI
+FROM SD3010 SD3
+LEFT JOIN SB1010 SB1 ON B1_FILIAL = '      '
+AND B1_COD = D3_COD
+AND SB1.D_E_L_E_T_ = ' '
+LEFT JOIN SB2010 SB2 ON B2_FILIAL = D3_FILIAL
+AND B2_COD = D3_COD
+AND B2_LOCAL = D3_LOCAL
+AND SB2.D_E_L_E_T_ = ' '
+LEFT JOIN SAH010 SAH ON AH_FILIAL = '      '
+AND AH_UNIMED = D3_UM
+AND SAH.D_E_L_E_T_ = ' '
+WHERE D3_EMISSAO <= <<EXTRACTION_DATE>>
+  AND D3_ESTORNO = ' '
+  AND D3_TM <= '500'
+  AND (D3_TM = '499'
+       OR 0 <
+         (SELECT COUNT(*)
+          FROM SF5010 SF5
+          WHERE F5_FILIAL = '      '
+            AND F5_CODIGO = D3_TM
+            AND SF5.D_E_L_E_T_ = ' ' ))
+  AND SD3.D_E_L_E_T_ = ' '
+GROUP BY D3_FILIAL,
+         B1_FILIAL,
+         B2_FILIAL,
+         AH_FILIAL,
+         D3_COD,
+         D3_LOCAL,
+         D3_UM
+UNION ALL
+SELECT 'P |01|01' AS BK_EMPRESA,
+       CASE
+           WHEN D3_FILIAL IS NULL THEN 'P |01||'
+           ELSE 'P |01|01'+ CAST(D3_FILIAL AS CHAR (6))
+       END AS BK_FILIAL,
+       'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(D3_COD, ' ')), ' '), '|') AS BK_ITEM,
+       'P |01|SB2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B2_FILIAL, ' '))+'|'+RTRIM(COALESCE(D3_LOCAL, ' ')), ' '), '|') AS BK_DEPOSITO,
+       'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(D3_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+       'Saldo Movimento Entradas' AS TIPO_DE_SALDO,<<EXTRACTION_DATE>> AS DATA_DE_EXTRACAO,
+                                                     0 AS SALDO_ENT,
+                                                     0 AS SALDO_SAI,
+                                                     0 AS SALDO_MOV_ENT,
+                                                     SUM(D3_QUANT) AS SALDO_MOV_SAI
+FROM SD3010 SD3
+LEFT JOIN SB1010 SB1 ON B1_FILIAL = '      '
+AND B1_COD = D3_COD
+AND SB1.D_E_L_E_T_ = ' '
+LEFT JOIN SB2010 SB2 ON B2_FILIAL = D3_FILIAL
+AND B2_COD = D3_COD
+AND B2_LOCAL = D3_LOCAL
+AND SB2.D_E_L_E_T_ = ' '
+LEFT JOIN SAH010 SAH ON AH_FILIAL = '      '
+AND AH_UNIMED = D3_UM
+AND SAH.D_E_L_E_T_ = ' '
+WHERE D3_EMISSAO <= <<EXTRACTION_DATE>>
+  AND D3_ESTORNO = ' '
+  AND D3_TM > '500'
+  AND SD3.D_E_L_E_T_ = ' '
+GROUP BY D3_FILIAL,
+         B1_FILIAL,
+         B2_FILIAL,
+         AH_FILIAL,
+         D3_COD,
+         D3_LOCAL,
+         D3_UM
