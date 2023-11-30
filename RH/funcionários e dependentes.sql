@@ -89,5 +89,10 @@ from SRA010 SRA (nolock)
 	inner join CTD010 CTD (nolock)
 		on CTD.D_E_L_E_T_ = ''
 		and CTD.CTD_ITEM = SRA.RA_ITEM
+	inner join RHR010 RHR (nolock)
+		on RHR.RHR_FILIAL = SRA.RA_FILIAL
+		and RHR.RHR_MAT = SRA.RA_MAT
+		and year(RHR.RHR_DATA) = 2023
+		and month(RHR.RHR_DATA) = 11
 where
 		SRA.D_E_L_E_T_ = ''
