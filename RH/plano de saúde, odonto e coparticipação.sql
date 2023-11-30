@@ -110,9 +110,7 @@
         null as TIPO_PLANO,
         null as PLANO,
         RHP.RHP_ORIGEM as ORIGEM,
-        RHP.RHP_CODIGO as COD_DEPAGG,
-
-        null as ULTIMO_AFASTAMENTO
+        RHP.RHP_CODIGO as COD_DEPAGG
 
     from RHP010 RHP (nolock)
         inner join SRV010 SRV (nolock)
@@ -282,9 +280,7 @@ union
         null as TIPO_PLANO,
         null as PLANO,
         RHO.RHO_ORIGEM as ORIGEM,
-        RHO.RHO_CODIGO as COD_DEPAGG,
-
-        null as ULTIMO_AFASTAMENTO
+        RHO.RHO_CODIGO as COD_DEPAGG
 
     from RHO010 RHO (nolock)
         inner join SRV010 SRV (nolock)
@@ -453,9 +449,7 @@ union
         RHR.RHR_TPPLAN as TIPO_PLANO,
         RHR.RHR_PLANO as PLANO,
         RHR.RHR_ORIGEM as ORIGEM,
-        RHR.RHR_CODIGO as COD_DEPAGG,
-
-        null as ULTIMO_AFASTAMENTO
+        RHR.RHR_CODIGO as COD_DEPAGG
 
     from RHR010 RHR (nolock)
         inner join SRV010 SRV (nolock)
@@ -623,9 +617,7 @@ union
         RHS.RHS_TPPLAN as TIPO_PLANO,
         RHS.RHS_PLANO as PLANO,
         RHS.RHS_ORIGEM as ORIGEM,
-        RHS.RHS_CODIGO as COD_DEPAGG,
-
-        case when RHS.RHS_PD in (87, 565, 571) then (select top 1 last_value(SR8010.R8_CID) over(partition by SR8010.R8_FILIAL, SR8010.R8_MAT order by SR8010.R8_MAT) from SR8010 (nolock) where SR8010.D_E_L_E_T_ = '' and SR8010.R8_PD != 130 and SR8010.R8_FILIAL = RHS.RHS_FILIAL and SR8010.R8_MAT = RHS.RHS_MAT) else null end as ULTIMO_AFASTAMENTO
+        RHS.RHS_CODIGO as COD_DEPAGG
 
     from RHS010 RHS (nolock)
         left join SRD010 BASE_ODONTO (nolock)
