@@ -61,6 +61,6 @@ from STZ010 STZ (nolock)
 	inner join ST9010 CARRO (nolock)
 		on CARRO.D_E_L_E_T_ = ''
 		and CARRO.T9_CODBEM = STZ.TZ_BEMPAI
-		and PNEU.T9_CATBEM != 3
+		and CARRO.T9_CATBEM != 3
 where
 		STZ.D_E_L_E_T_ = ''
