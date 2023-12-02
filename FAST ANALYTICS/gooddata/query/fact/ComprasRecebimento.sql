@@ -1,5 +1,6 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
+    concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NF,
     concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
     concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACAO,
     case when SD1.D1_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SD1.D1_FILIAL as char (6)) end as BK_FILIAL,
@@ -18,19 +19,14 @@ SELECT
     'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
     case when SA2.A2_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     
-    CASE
-        WHEN (SC7.C7_QUJE > 0)
-            AND (SC7.C7_QUJE < SC7.C7_QUANT) THEN 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
-        WHEN (SC7.C7_QUJE >= SC7.C7_QUANT) THEN 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
-        ELSE 'P |'+'|'
-    END AS BK_SITUACAO_COMPRA,
+    case
+        when (SC7.C7_QUJE > 0) and (SC7.C7_QUJE < SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
+        when (SC7.C7_QUJE >= SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
+    else 'P |'+'|' end as BK_SITUACAO_COMPRA,
     
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
-    SD1.D1_ITEM as SEQCIA,
-    SD1.D1_DOC as NUMNF,
     SD1.D1_EMISSAO as DATANF,
     SD1.D1_DTDIGIT as DATA,
-    SD1.D1_SERIE as SERNF,
     SD1.D1_QUANT as QTD_ATENDIDA,
     SD1.D1_TOTAL as VALOR_TOTAL,
     SC7.C7_EMISSAO as DTEPED,
@@ -54,7 +50,7 @@ SELECT
     case when datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF) > 0 then 1 else 0 end as QTD_ADIANTADA, /* diferença entre data classificação e data prevista */
     case when datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT) < 0 then 1 else 0 end as QTD_ATRASADA, /* diferença entre data prevista e data classificação */
     case when (datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF) = 0) and (datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT) = 0) then 1 else 0 end as QTD_EMDIA, /* recebimento em dia */
-    case when (SD1.D1_QUANT >= SC7.C7_QUANT) THEN 1 ELSE 0 END AS QRECUN /* se quantidade atendida maior que quantidade pedida*/
+    case when (SD1.D1_QUANT >= SC7.C7_QUANT) then 1 else 0 end as QRECUN /* se quantidade atendida maior que quantidade pedida*/
 
 FROM SD1010 SD1
     LEFT JOIN SB1010 SB1
