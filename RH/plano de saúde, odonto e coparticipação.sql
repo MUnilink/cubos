@@ -26,6 +26,24 @@
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+        trim(SRA.RA_MAE) as NOME_MAE,
+        trim(SRA.RA_PAI) as NOME_PAI,
+        trim(SRA.RA_RG) as RG,
+        convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
+        trim(SRA.RA_RGUF) as RG_UFEXP,
+        trim(SRA.RA_RGORG) as RG_ORGEXP,
+        
+        trim(SRA.RA_ENDEREC) as ENDERECO,
+        trim(SRA.RA_NUMENDE) as NUMERO,
+        trim(SRA.RA_COMPLEM) as COMPLEMENTO,
+        trim(SRA.RA_BAIRRO) as BAIRRO,
+        trim(SRA.RA_ESTADO) as ESTADO,
+        trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
+        trim(SRA.RA_CEP) as CEP,
+        trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+
+        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 
         datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR) as IDADE,
 
@@ -87,13 +105,21 @@
         case when RHP.RHP_ORIGEM = 1 then RHP.RHP_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHP.RHP_ORIGEM != 1 then RHP.RHP_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
-        trim(DEP.RB_NOME) DEPENDENTE,
+        trim(DEP.RB_NOME) as DEPENDENTE,
+	    trim(DEP.RB_CIC) as DEP_CPF,
         convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
         trim(DEP.RB_SEXO) as DEP_SEXO,
         datediff(year, DEP.RB_DTNASC, RHP.RHP_DTOCOR) as DEP_IDADE,
         DEP.RB_TPDEP as DEP_ES,
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
+        
+        case DEP.RB_GRAUPAR
+            when 'C' then 'CÔNJUGE'
+            when 'F' then 'FILHO/A'
+            when 'O' then 'OUTROS'
+            else '-'
+	    end as DEP_PARENTESCO,
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
@@ -196,6 +222,24 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+        trim(SRA.RA_MAE) as NOME_MAE,
+        trim(SRA.RA_PAI) as NOME_PAI,
+        trim(SRA.RA_RG) as RG,
+        convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
+        trim(SRA.RA_RGUF) as RG_UFEXP,
+        trim(SRA.RA_RGORG) as RG_ORGEXP,
+        
+        trim(SRA.RA_ENDEREC) as ENDERECO,
+        trim(SRA.RA_NUMENDE) as NUMERO,
+        trim(SRA.RA_COMPLEM) as COMPLEMENTO,
+        trim(SRA.RA_BAIRRO) as BAIRRO,
+        trim(SRA.RA_ESTADO) as ESTADO,
+        trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
+        trim(SRA.RA_CEP) as CEP,
+        trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+
+        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
         
         datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR) as IDADE,
 
@@ -257,13 +301,21 @@ union
         case when RHO.RHO_ORIGEM = 1 then RHO.RHO_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHO.RHO_ORIGEM != 1 then RHO.RHO_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
-        trim(DEP.RB_NOME) DEPENDENTE,
+        trim(DEP.RB_NOME) as DEPENDENTE,
+	    trim(DEP.RB_CIC) as DEP_CPF,
         convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
         trim(DEP.RB_SEXO) as DEP_SEXO,
         datediff(year, DEP.RB_DTNASC, RHO.RHO_DTOCOR) as DEP_IDADE,
         DEP.RB_TPDEP as DEP_ES,
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
+        
+        case DEP.RB_GRAUPAR
+            when 'C' then 'CÔNJUGE'
+            when 'F' then 'FILHO/A'
+            when 'O' then 'OUTROS'
+            else '-'
+	    end as DEP_PARENTESCO,
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
@@ -365,6 +417,24 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+        trim(SRA.RA_MAE) as NOME_MAE,
+        trim(SRA.RA_PAI) as NOME_PAI,
+        trim(SRA.RA_RG) as RG,
+        convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
+        trim(SRA.RA_RGUF) as RG_UFEXP,
+        trim(SRA.RA_RGORG) as RG_ORGEXP,
+        
+        trim(SRA.RA_ENDEREC) as ENDERECO,
+        trim(SRA.RA_NUMENDE) as NUMERO,
+        trim(SRA.RA_COMPLEM) as COMPLEMENTO,
+        trim(SRA.RA_BAIRRO) as BAIRRO,
+        trim(SRA.RA_ESTADO) as ESTADO,
+        trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
+        trim(SRA.RA_CEP) as CEP,
+        trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+
+        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 
         datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
         
@@ -426,13 +496,21 @@ union
         case when RHR.RHR_ORIGEM = 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHR.RHR_ORIGEM != 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
-        trim(DEP.RB_NOME) DEPENDENTE,
+        trim(DEP.RB_NOME) as DEPENDENTE,
+	    trim(DEP.RB_CIC) as DEP_CPF,
         convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
         trim(DEP.RB_SEXO) as DEP_SEXO,
         datediff(year, DEP.RB_DTNASC, RHR.RHR_DATA) as DEP_IDADE,
         DEP.RB_TPDEP as DEP_ES,
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
+        
+        case DEP.RB_GRAUPAR
+            when 'C' then 'CÔNJUGE'
+            when 'F' then 'FILHO/A'
+            when 'O' then 'OUTROS'
+            else '-'
+	    end as DEP_PARENTESCO,
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
@@ -533,6 +611,24 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+        trim(SRA.RA_MAE) as NOME_MAE,
+        trim(SRA.RA_PAI) as NOME_PAI,
+        trim(SRA.RA_RG) as RG,
+        convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
+        trim(SRA.RA_RGUF) as RG_UFEXP,
+        trim(SRA.RA_RGORG) as RG_ORGEXP,
+        
+        trim(SRA.RA_ENDEREC) as ENDERECO,
+        trim(SRA.RA_NUMENDE) as NUMERO,
+        trim(SRA.RA_COMPLEM) as COMPLEMENTO,
+        trim(SRA.RA_BAIRRO) as BAIRRO,
+        trim(SRA.RA_ESTADO) as ESTADO,
+        trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
+        trim(SRA.RA_CEP) as CEP,
+        trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+
+        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
         
         datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
@@ -594,13 +690,21 @@ union
         case when RHS.RHS_ORIGEM = 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHS.RHS_ORIGEM != 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
-        trim(DEP.RB_NOME) DEPENDENTE,
+        trim(DEP.RB_NOME) as DEPENDENTE,
+	    trim(DEP.RB_CIC) as DEP_CPF,
         convert(date, DEP.RB_DTNASC, 103) as DEP_NASC,
         trim(DEP.RB_SEXO) as DEP_SEXO,
         datediff(year, DEP.RB_DTNASC, RHS.RHS_DATA) as DEP_IDADE,
         DEP.RB_TPDEP as DEP_ES,
         DEP.RB_TIPIR as DEP_IR,
         DEP.RB_TIPSF as DEP_SF,
+        
+        case DEP.RB_GRAUPAR
+            when 'C' then 'CÔNJUGE'
+            when 'F' then 'FILHO/A'
+            when 'O' then 'OUTROS'
+            else '-'
+	    end as DEP_PARENTESCO,
 
         trim(RHM.RHM_NOME) as AGG_NOME,
         convert(date, RHM.RHM_DTNASC, 103) as AGG_NASC,
