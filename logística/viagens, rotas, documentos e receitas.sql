@@ -140,6 +140,10 @@ select
     RPS.D2_VALICM as RPS_VALICM,
     convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
 
+    SE1.E1_NUM as ND_TITULO,
+    SE1.E1_VALOR as ND_VALOR,
+    SE1.E1_EMISSAO as ND_EMISSAO,
+
     (
         select cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
@@ -304,7 +308,7 @@ from DTQ010 DTQ (nolock)
         left join DUY010 REG_COL (nolock)
             ON REG_COL.D_E_L_E_T_ = ' '
             and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
-            and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI        
+            and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
         left join DUY010 REG_ENT (nolock)
             ON REG_ENT.D_E_L_E_T_ = ' '
             and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
@@ -326,6 +330,9 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_SERIE = SC5.C5_SERIE
             and RPS.D2_CLIENTE = SC5.C5_CLIENTE
             and RPS.D2_LOJA = SC5.C5_LOJACLI
-
+    
+    left join SE1010 SE1 (nolock)
+        on SE1.D_E_L_E_T_ = ''
+        and trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM
 where
         DTQ.D_E_L_E_T_ = ''
