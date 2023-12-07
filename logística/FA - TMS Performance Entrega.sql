@@ -213,10 +213,10 @@ FROM DT6010 DT6
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
-                isnull
+                coalesce /* nullif geral, de forma a tratar quando o concat for ' ' ou '' ou ':' e afins, mais ou menos da forma nullif(trim(concat)))*/
                 (
-                    concat(DF1010.DF1_DATPRC, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00')),
-                    concat(DF1010.DF1_DATPRE, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00'))
+                    nullif(trim(concat(DF1010.DF1_DATPRC, ' ', substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00'),
+                    nullif(trim(concat(DF1010.DF1_DATPRE, ' ', substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00')
                 ) as CHE_CLIDEV_PREV
 
             from DF1010
@@ -224,15 +224,13 @@ FROM DT6010 DT6
                     on DTC010.D_E_L_E_T_ = ''
                     and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
-            where
-                    DF1010.D_E_L_E_T_ = ''
-                and (DF1010.DF1_HORPRC != '' or DF1010.DF1_HORPRE != '')
-                and (DF1010.DF1_DATPRC != '' or DF1010.DF1_DATPRE != '')
+            where DF1010.D_E_L_E_T_ = ''
         ) DF1
             on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
             and DF1.DTC_DOC = VIAGEM.DUD_DOC
             and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
 where
+        VIAGEM.CHE_CLIDEV_REAL between <<START_DATE>> and <<FINAL_DATE>>
         DT6.D_E_L_E_T_ = ' '
     AND DT6.DT6_DATENT <> ' '
     AND DT6.DT6_SERIE <> 'COL'
