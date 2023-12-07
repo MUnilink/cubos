@@ -213,7 +213,7 @@ FROM DT6010 DT6
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
-                coalesce /* nullif geral, de forma a tratar quando o concat for ' ' ou '' ou ':' e afins, mais ou menos da forma nullif(trim(concat)))*/
+                coalesce
                 (
                     nullif(trim(concat(DF1010.DF1_DATPRC, ' ', substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00'),
                     nullif(trim(concat(DF1010.DF1_DATPRE, ' ', substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00')
