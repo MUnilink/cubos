@@ -69,8 +69,7 @@ SELECT
     VIAGEM.ID_MOTORISTA,
     DF1.DF1_YOSCLI,
     DF1.DF1_NUMAGE,
-    DF1.DF1_ITEAGE,
-    1 as FATO1
+    DF1.DF1_ITEAGE
 
 FROM DT6010 DT6
     LEFT JOIN SA1010 REM
@@ -231,7 +230,7 @@ FROM DT6010 DT6
             and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
 where
         VIAGEM.CHE_CLIDEV_REAL between <<START_DATE>> and <<FINAL_DATE>>
-        DT6.D_E_L_E_T_ = ' '
-    AND DT6.DT6_DATENT <> ' '
-    AND DT6.DT6_SERIE <> 'COL'
-    AND DT6.DT6_SERIE <> 'PED'
+    and DT6.D_E_L_E_T_ = ' '
+    and DT6.DT6_DATENT <> ' '
+    and DT6.DT6_SERIE <> 'COL'
+    and DT6.DT6_SERIE <> 'PED'
