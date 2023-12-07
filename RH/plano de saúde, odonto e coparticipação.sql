@@ -41,7 +41,7 @@
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((trim(SRA.RA_DDDFONE)), (trim(SRA.RA_TELEFON))), concat((trim(SRA.RA_DDDCELU)), (trim(SRA.RA_NUMCELU))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 
@@ -237,7 +237,7 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((trim(SRA.RA_DDDFONE)), (trim(SRA.RA_TELEFON))), concat((trim(SRA.RA_DDDCELU)), (trim(SRA.RA_NUMCELU))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
         
@@ -432,7 +432,7 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((trim(SRA.RA_DDDFONE)), (trim(SRA.RA_TELEFON))), concat((trim(SRA.RA_DDDCELU)), (trim(SRA.RA_NUMCELU))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 
@@ -626,7 +626,7 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((trim(SRA.RA_DDDFONE)), (trim(SRA.RA_TELEFON))), concat((trim(SRA.RA_DDDCELU)), (trim(SRA.RA_NUMCELU))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
         
