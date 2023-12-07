@@ -214,8 +214,8 @@ FROM DT6010 DT6
                 DTC010.DTC_SERIE,
                 coalesce
                 (
-                    nullif(trim(concat(DF1010.DF1_DATPRC, ' ', substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00'),
-                    nullif(trim(concat(DF1010.DF1_DATPRE, ' ', substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00')
+                    nullif(trim(concat(nullif(DF1010.DF1_DATPRC, ''), case DF1010.DF1_HORPRC when '' then null else concat(substring(DF1010.DF1_HORPRC, 1, 2), ' :', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00') end)), ':  :00'),
+                    nullif(trim(concat(nullif(DF1010.DF1_DATPRE, ''), case DF1010.DF1_HORPRE when '' then null else concat(substring(DF1010.DF1_HORPRE, 1, 2), ' :', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00') end)), ':  :00')
                 ) as CHE_CLIDEV_PREV
 
             from DF1010
@@ -229,8 +229,7 @@ FROM DT6010 DT6
             and DF1.DTC_DOC = VIAGEM.DUD_DOC
             and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
 where
-        VIAGEM.CHE_CLIDEV_REAL between <<START_DATE>> and <<FINAL_DATE>>
-    and DT6.D_E_L_E_T_ = ' '
+        DT6.D_E_L_E_T_ = ' '
     and DT6.DT6_DATENT <> ' '
     and DT6.DT6_SERIE <> 'COL'
     and DT6.DT6_SERIE <> 'PED'
