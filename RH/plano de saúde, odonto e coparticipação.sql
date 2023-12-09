@@ -126,6 +126,7 @@
         trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHP.RHP_DTOCOR) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
+        RHM.RHM_CPF as AGG_CPF,
         
         RHP.RHP_VLRFUN as VALOR_FUNC_TOTAL,
         RHP.RHP_VLREMP as VALOR_EMPRESA,
@@ -322,6 +323,7 @@ union
         trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHO.RHO_DTOCOR) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
+        RHM.RHM_CPF as AGG_CPF,
         
         RHO.RHO_VLRFUN as VALOR_FUNC_TOTAL,
         RHO.RHO_VLREMP as VALOR_EMPRESA,
@@ -517,6 +519,7 @@ union
         trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHR.RHR_DATA) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
+        RHM.RHM_CPF as AGG_CPF,
         
         RHR.RHR_VLRFUN as VALOR_FUNC_TOTAL,
         RHR.RHR_VLREMP as VALOR_EMPRESA,
@@ -711,6 +714,7 @@ union
         trim(RHM.RHM_YSEXO) as AGG_SEXO,
         datediff(year, RHM.RHM_DTNASC, RHS.RHS_DATA) as AGG_IDADE,
         RHM.RHM_TPCALC as AGG_ES,
+        RHM.RHM_CPF as AGG_CPF,
         
         RHS.RHS_VLRFUN as VALOR_FUNC_TOTAL,
         isnull(BASE_ODONTO.RD_VALOR, RHS.RHS_VLREMP) as VALOR_EMPRESA,
