@@ -67,9 +67,7 @@ SELECT
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
-    DF1.DF1_YOSCLI,
-    DF1.DF1_NUMAGE,
-    DF1.DF1_ITEAGE
+    DF1.*
 
 FROM DT6010 DT6
     LEFT JOIN SA1010 REM
@@ -212,10 +210,12 @@ FROM DT6010 DT6
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
+                concat(DF1010.DF1_DATPRC, DF1010.DF1_HORPRC) as PREV_COL,
+                concat(DF1010.DF1_DATPRE, DF1010.DF1_HORPRE) as PREV_ENT,
                 coalesce
                 (
-                    nullif(trim(concat(nullif(DF1010.DF1_DATPRC, ''), case DF1010.DF1_HORPRC when '' then null else concat(substring(DF1010.DF1_HORPRC, 1, 2), ' :', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00') end)), ':  :00'),
-                    nullif(trim(concat(nullif(DF1010.DF1_DATPRE, ''), case DF1010.DF1_HORPRE when '' then null else concat(substring(DF1010.DF1_HORPRE, 1, 2), ' :', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00') end)), ':  :00')
+                    concat(DF1010.DF1_DATPRC, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00')),
+                    concat(DF1010.DF1_DATPRE, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00'))
                 ) as CHE_CLIDEV_PREV
 
             from DF1010
