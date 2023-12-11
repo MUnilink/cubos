@@ -17,6 +17,8 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_DESC) as DESC_INSUMO,
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
+    ZC1.ZC1_TABPRC,
+    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
@@ -38,6 +40,7 @@ select
     ZC2.ZC2_QTDREA as QTD_REAL,
     ZC2.ZC2_VLUPRV as VAL_PREV,
     ZC2.ZC2_VLUREA as VAL_REAL,
+    ZC2.ZC2_QTDREC as QTD_RECURSO,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
@@ -50,7 +53,7 @@ select
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
     datediff(minute, convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103), convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103))/60.0 as HORAS_APONT,
-    trim(ZC2.ZC2_NMUSU) as ZC2_NMUSU
+    trim(ZC2.ZC2_NMUSU) as USUARIO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
