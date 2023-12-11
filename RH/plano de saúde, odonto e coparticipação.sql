@@ -7,7 +7,7 @@
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+        trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
@@ -41,7 +41,7 @@
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 
@@ -68,7 +68,7 @@
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHP.RHP_ORIGEM
-            when 1 then SRA.RA_NOME
+            when 1 then SRA.RA_NOMECMP
             when 2 then DEP.RB_NOME
             when 3 then RHM.RHM_NOME
             else null
@@ -204,7 +204,7 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+        trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
@@ -238,7 +238,7 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
         
@@ -265,7 +265,7 @@ union
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHO.RHO_ORIGEM
-            when 1 then SRA.RA_NOME
+            when 1 then SRA.RA_NOMECMP
             when 2 then DEP.RB_NOME
             when 3 then RHM.RHM_NOME
             else null
@@ -400,7 +400,7 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+        trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
@@ -434,7 +434,7 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 
@@ -461,7 +461,7 @@ union
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHR.RHR_ORIGEM
-            when 1 then SRA.RA_NOME
+            when 1 then SRA.RA_NOMECMP
             when 2 then DEP.RB_NOME
             when 3 then RHM.RHM_NOME
             else 'OUTROS'
@@ -595,7 +595,7 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+        trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
@@ -629,7 +629,7 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
-        concat(trim(SRA.RA_DDDCELU), trim(SRA.RA_NUMCELU)) as CELULAR,
+        coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
         
@@ -656,7 +656,7 @@ union
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
         case RHS.RHS_ORIGEM
-            when 1 then SRA.RA_NOME
+            when 1 then SRA.RA_NOMECMP
             when 2 then DEP.RB_NOME
             when 3 then RHM.RHM_NOME
             else null
