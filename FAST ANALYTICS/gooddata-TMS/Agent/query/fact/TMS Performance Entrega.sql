@@ -26,6 +26,7 @@ SELECT
     END AS BK_FILIAL_DOCTO,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,
+    
     'CTRC' + DT6.DT6_DOC as ID_DOCUMENTO,
     
     DF1.CHE_CLIDEV_PREV as PRAZO_ENTREGA,
@@ -66,8 +67,7 @@ SELECT
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
-    DF1.DF1_YOSCLI,
-    1 as FATO1
+    DF1.DF1_YOSCLI
 
 FROM DT6010 DT6
     LEFT JOIN SA1010 REM
@@ -146,7 +146,6 @@ FROM DT6010 DT6
                     and DTW010.DTW_DATREA != ''
                     and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
                     and DTW010.DTW_CODCLI != 761
-                order by DTW010.DTW_SEQUEN
             ) as SAI_CLIDEV_REAL,
 
             (
@@ -207,12 +206,11 @@ FROM DT6010 DT6
             select
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
-                DF1010.DF1_YDIBOO,
                 DF1010.DF1_YOSCLI,
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
-                isnull
+                coalesce
                 (
                     concat(DF1010.DF1_DATPRC, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00')),
                     concat(DF1010.DF1_DATPRE, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00'))
@@ -223,17 +221,14 @@ FROM DT6010 DT6
                     on DTC010.D_E_L_E_T_ = ''
                     and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
-            where
-                    DF1010.D_E_L_E_T_ = ''
-                and (DF1010.DF1_HORPRC != '' or DF1010.DF1_HORPRE != '')
-                and (DF1010.DF1_DATPRC != '' or DF1010.DF1_DATPRE != '')
+            where DF1010.D_E_L_E_T_ = ''
         ) DF1
             on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
             and DF1.DTC_DOC = VIAGEM.DUD_DOC
             and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
 where
         VIAGEM.CHE_CLIDEV_REAL between <<START_DATE>> and <<FINAL_DATE>>
-    AND DT6.D_E_L_E_T_ = ' '
-    AND DT6.DT6_DATENT <> ' '
-    AND DT6.DT6_SERIE <> 'COL'
-    AND DT6.DT6_SERIE <> 'PED'
+    and DT6.D_E_L_E_T_ = ' '
+    and DT6.DT6_DATENT <> ' '
+    and DT6.DT6_SERIE <> 'COL'
+    and DT6.DT6_SERIE <> 'PED'

@@ -24,7 +24,7 @@ select
     trim(DEV.A1_NOME) as CLIENTE,
 
     (
-        select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
+        select top 1 isnull(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), DTW010.DTW_YHODFI)
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -41,7 +41,7 @@ select
             and DTW010.DTW_ATIVID = 50
     ) as km_fim,
     (
-        select top 1 replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ',')
+        select top 1 isnull(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), DTW010.DTW_YHODIN)
         from DTW010 (nolock)
             inner join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
@@ -80,14 +80,6 @@ select
 
     DT6.DT6_CLIDEV,
     DT6.DT6_LOJDEV,
-
-    DT6.DT6_PRZENT AS PRAZO_ENTREGA,
-    DT6.DT6_DATENT AS DATA_ENTREGA,
-    
-    CASE
-        WHEN DT6.DT6_PRZENT < DT6.DT6_DATENT THEN 'FORA DO PRAZO'
-        ELSE 'DENTRO DO PRAZO'
-    END AS STATUS_ATENDIMENTO,
 
     DTC.DTC_FILORI,
     DTC.DTC_DOC,
@@ -140,6 +132,10 @@ select
     RPS.D2_VALICM as RPS_VALICM,
     convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
 
+    SE1.E1_NUM as ND_TITULO,
+    SE1.E1_VALOR as ND_VALOR,
+    SE1.E1_EMISSAO as ND_EMISSAO,
+
     (
         select cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
@@ -177,7 +173,7 @@ select
             and DTW010.DTW_ATIVID = 50
     ) as HORAFIM,
     (
-        select distinct first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        select top 1 first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -186,7 +182,7 @@ select
             and DTW010.DTW_ATIVID = 57
     ) as DATA_CHECLI,
     (
-        select distinct first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        select top 1 first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -195,7 +191,7 @@ select
             and DTW010.DTW_ATIVID = 57
     ) as HORA_CHECLI,
     (
-        select distinct first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        select top 1 first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -204,7 +200,7 @@ select
             and DTW010.DTW_ATIVID = 56
     ) as DATA_SAICLI,
     (
-        select distinct first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        select top 1 first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
@@ -273,7 +269,6 @@ from DTQ010 DTQ (nolock)
 			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
-            and DT6.DT6_DATEMI > '20211231'
 
             left join SD2010 COMP (nolock)
                 on COMP.D_E_L_E_T_ = ''
@@ -304,7 +299,7 @@ from DTQ010 DTQ (nolock)
         left join DUY010 REG_COL (nolock)
             ON REG_COL.D_E_L_E_T_ = ' '
             and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
-            and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI        
+            and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
         left join DUY010 REG_ENT (nolock)
             ON REG_ENT.D_E_L_E_T_ = ' '
             and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
@@ -326,6 +321,10 @@ from DTQ010 DTQ (nolock)
             and RPS.D2_SERIE = SC5.C5_SERIE
             and RPS.D2_CLIENTE = SC5.C5_CLIENTE
             and RPS.D2_LOJA = SC5.C5_LOJACLI
-
+    
+    left join SE1010 SE1 (nolock)
+        on SE1.D_E_L_E_T_ = ''
+        and trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM
 where
         DTQ.D_E_L_E_T_ = ''
+    and year(DTQ.DTQ_DATENC) > 2022
