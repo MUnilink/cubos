@@ -8,6 +8,14 @@ select
     substring(SPI.PI_DATA, 1, 6) as PERIODO,
     trim(SPI.PI_PD) as COD_EVENTO,
 
+    case
+        when month(SPI.PI_DATA) in (1, 2, 3) then '1º'
+        when month(SPI.PI_DATA) in (4, 5, 6) then '2º'
+        when month(SPI.PI_DATA) in (7, 8, 9) then '3º'
+        when month(SPI.PI_DATA) in (10, 11, 12) then  '4º'
+        else '-'
+    end as TRIMESTRE,
+
     case SPI.PI_PD
         when 140 then (SPI.PI_QUANTV) 
         else (SPI.PI_QUANTV * -1)
