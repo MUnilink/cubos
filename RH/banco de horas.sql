@@ -1,7 +1,8 @@
 select 
     trim(SRA.RA_FILIAL) as FILIAL,
     trim(SRA.RA_MAT) as MATRICULA,
-    SRA.RA_NOME as  NOME,
+    SRA.RA_NOME as NOME,
+    SRJ.RJ_DESC as FUNCAO,
     trim(SPI.PI_CC) as CC,
 
     trim(SPI.PI_DATA) as DATA,
@@ -27,6 +28,10 @@ from SPI010 as SPI (nolock)
         on SRA.D_E_L_E_T_ = ''
         and SRA.RA_MAT = SPI.PI_MAT
         and SRA.RA_FILIAL = SPI.PI_FILIAL
+        left join SRJ010 as SRJ (nolock)
+            on SRJ.D_E_L_E_T_ = ''
+            and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 
     inner join SP9010 as SP9 (nolock)
         on SP9.D_E_L_E_T_ = ''
