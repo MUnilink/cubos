@@ -24,9 +24,9 @@ select
     trim(DEV.A1_NOME) as CLIENTE,
 
     (
-        select top 1 isnull(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), DTW010.DTW_YHODFI)
+        select top 1 isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), DTW010.DTW_YHODFI)
         from DTW010 (nolock)
-            inner join ZB1010 (nolock)
+            left join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
                 and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
                 and
@@ -41,9 +41,9 @@ select
             and DTW010.DTW_ATIVID = 50
     ) as km_fim,
     (
-        select top 1 isnull(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), DTW010.DTW_YHODIN)
+        select top 1 isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), DTW010.DTW_YHODIN)
         from DTW010 (nolock)
-            inner join ZB1010 (nolock)
+            left join ZB1010 (nolock)
                 on ZB1010.D_E_L_E_T_ = ''
                 and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
                 and
@@ -327,4 +327,3 @@ from DTQ010 DTQ (nolock)
         and trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM
 where
         DTQ.D_E_L_E_T_ = ''
-    and year(DTQ.DTQ_DATENC) > 2022
