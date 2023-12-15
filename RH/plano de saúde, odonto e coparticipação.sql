@@ -44,6 +44,7 @@
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
@@ -244,6 +245,7 @@ union
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
@@ -443,6 +445,7 @@ union
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
@@ -641,6 +644,7 @@ union
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
