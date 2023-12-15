@@ -3,6 +3,7 @@ select
 	trim(isnull(TQR.TQR_DESMOD, '-')) as MODELO,
 	trim(isnull(ST9.T9_PLACA, '-')) as T9_PLACA,
 	trim(isnull(ST9.T9_CODFAMI, '-')) as T9_CODFAMI,
+	trim(isnull(ST6.T6_NOME, '-')) as T6_NOMEFAMI,
 	convert(date, ST9.T9_DTCOMPR, 103) as T9_DTCOMPR,
 	trim(isnull(ST7.T7_NOME, '-')) as FABRICANTE,
 	trim(isnull(ST9.T9_CHASSI, '-')) as T9_CHASSI,
@@ -28,6 +29,10 @@ select
 	trim(isnull(ATIVIDADE_MNT.CTD_DESC01, '-')) as ATIVIDADE_MNT
 
 from ST9010 ST9 (nolock)
+	left join ST6010 as ST6 (nolock)
+		on ST6.D_E_L_E_T_ = ''
+		and ST6.T6_CODFAMI = ST9.T9_CODFAMI
+
 	inner join TQR010 TQR (nolock)
 		on TQR.D_E_L_E_T_ = ''
 		and TQR.TQR_TIPMOD = ST9.T9_TIPMOD

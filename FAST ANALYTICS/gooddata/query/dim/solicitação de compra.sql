@@ -2,7 +2,7 @@ select
     concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM), trim(SC1.C1_ITEM)) as ID_SOLICITACAO,
     trim(SC1.C1_NUM) as NUM_SC,
 	trim(SC1.C1_ITEM) as ITEM_SC,
-    trim(replace(replace(replace(replace(replace(replace(string_escape(SC1.C1_OBS, 'json'), '\n', ' '), '\r', ' '), '\"', '<<'), '\\', '\'), '\/', '/'), '\u0000', '')) as OBS_SC,
+    trim(replace(SC1.C1_OBS, '/', ' ')) as OBS_SC,
     trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
     trim(SC1.C1_RESIDUO) as RESIDUO_SC
 
