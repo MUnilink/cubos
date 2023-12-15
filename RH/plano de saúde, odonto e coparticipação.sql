@@ -32,6 +32,8 @@
         convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
         trim(SRA.RA_RGUF) as RG_UFEXP,
         trim(SRA.RA_RGORG) as RG_ORGEXP,
+        trim(SRA.RA_PIS) as PIS_TITULAR,
+        trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
         
         trim(SRA.RA_ENDEREC) as ENDERECO,
         trim(SRA.RA_NUMENDE) as NUMERO,
@@ -41,6 +43,8 @@
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
@@ -229,6 +233,8 @@ union
         convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
         trim(SRA.RA_RGUF) as RG_UFEXP,
         trim(SRA.RA_RGORG) as RG_ORGEXP,
+        trim(SRA.RA_PIS) as PIS_TITULAR,
+        trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
         
         trim(SRA.RA_ENDEREC) as ENDERECO,
         trim(SRA.RA_NUMENDE) as NUMERO,
@@ -238,6 +244,8 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
@@ -425,6 +433,8 @@ union
         convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
         trim(SRA.RA_RGUF) as RG_UFEXP,
         trim(SRA.RA_RGORG) as RG_ORGEXP,
+        trim(SRA.RA_PIS) as PIS_TITULAR,
+        trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
         
         trim(SRA.RA_ENDEREC) as ENDERECO,
         trim(SRA.RA_NUMENDE) as NUMERO,
@@ -434,6 +444,8 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
@@ -620,6 +632,8 @@ union
         convert(date, SRA.RA_DTRGEXP, 103) as RG_DATAEXP,
         trim(SRA.RA_RGUF) as RG_UFEXP,
         trim(SRA.RA_RGORG) as RG_ORGEXP,
+        trim(SRA.RA_PIS) as PIS_TITULAR,
+        trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
         
         trim(SRA.RA_ENDEREC) as ENDERECO,
         trim(SRA.RA_NUMENDE) as NUMERO,
@@ -629,6 +643,8 @@ union
         trim(SRA.RA_MUNICIP) as MUNICIPIO_RESI,
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
+        trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
+
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
 
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
