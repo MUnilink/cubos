@@ -7,6 +7,8 @@ select
     DTW010.DTW_YHODIN,
     DTW010.DTW_YHODFI,
     ZB1010.ZB1_MSGTXT,
+    isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), DTW010.DTW_YHODFI) as km_fim,
+    isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), DTW010.DTW_YHODIN) as km_ini,
     datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0) as APONTAMENTO,
     isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), case when DTW010.DTW_ATIVID = 49 then DTW010.DTW_YHODIN when DTW010.DTW_ATIVID = 50 then DTW010.DTW_YHODFI else 0 end) as km
 from DTW010 (nolock)
