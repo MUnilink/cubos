@@ -1,40 +1,26 @@
 select
     DTQ.DTQ_FILORI,
     DTQ.DTQ_VIAGEM,
+    isnull
     (
-        select top 1 isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), DTW010.DTW_YHODFI)
-        from DTW010 (nolock)
-            left join ZB1010 (nolock)
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID = 50
-    ) as km_fim,
-    (
-        select top 1 isnull(nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), ''), DTW010.DTW_YHODIN)
-        from DTW010 (nolock)
-            left join ZB1010 (nolock)
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID = 49
-    ) as km_ini,
+        (
+            select top 1 nullif(replace(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '.', ','), '')
+            from DTW010 (nolock)
+                left join ZB1010 (nolock)
+                    on ZB1010.D_E_L_E_T_ = ''
+                    and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                    and
+                        dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                        =
+                        datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+            where
+                    DTW010.D_E_L_E_T_ = ''
+                and DTW010.DTW_FILORI = DTR.DTR_FILORI
+                and DTW010.DTW_VIAGEM = DTR.DTR_VIAGEM
+                and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                and DTW010.DTW_ATIVID = 49
+        )
+     , ()) as km_ini,
 
     case DTQ.DTQ_STATUS
         when '1' then 'EXCLUÍDA'
