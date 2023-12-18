@@ -73,11 +73,7 @@ from
 	left join
 	(
 		select
-			case cast(TQI010.TQI_CODPOS as int)
-				when 59 then '010102'
-				else trim(isnull(TQI010.TQI_FILIAL, '-'))
-			end as TQI_FILIAL,
-
+			TQI010.TQI_FILIAL,
 			TQI010.TQI_CODPOS,
 			TQI010.TQI_LOJA,
 			TQI010.TQI_TANQUE,
@@ -93,11 +89,8 @@ from
 
 		left join
 		(
-			select
-				case cast(TQF010.TQF_CODIGO as int)
-					when 59 then '010102'
-					else trim(isnull(TQF010.TQF_CODFIL, '-'))
-				end as TQF_FILIAL,
+			select 
+				TQF010.TQF_CODFIL as TQF_FILIAL,
 				TQF010.TQF_CODIGO,
 				TQF010.TQF_LOJA
 			from TQF010
@@ -106,10 +99,10 @@ from
 			on TQF.TQF_FILIAL = TQI.TQI_FILIAL
 			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
 
-	left join ST9010 as ST9
+	left join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-	left join TQM010 as TQM
+	left join TQM010 TQM
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
 where ZD3.ZD3_DATA between <<START_DATE>> AND <<FINAL_DATE>>

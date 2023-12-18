@@ -43,10 +43,7 @@ select
 from
 	(
 		select
-			case cast(isnull(ZD3010.ZD3_TANQUE, TQN.TQN_TANQUE) as int)
-				when 12 then '010102'
-				else trim(isnull(ZD3010.ZD3_FILIAL, TQN.TQN_FILIAL))
-			end as ZD3_FILIAL,
+			isnull(ZD3010.ZD3_FILIAL, TQN.TQN_FILIAL) as ZD3_FILIAL,
 			ZD3010.ZD3_KM as ZD3_HODOM,
 
 			isnull(ZD3010.ZD3_VEICUL, TQN.TQN_FROTA) as ZD3_VEICUL,
@@ -90,17 +87,13 @@ from
 				and SD3.D3_NUMSEQ = TQN.TQN_NUMSEQ
 		where
 				TQN.D_E_L_E_T_ = ''
-			and year(TQN.TQN_DTABAS) > 2021
-	) as ZD3
+			and year(TQN.TQN_DTABAS) > 2022
+	) ZD3
 
 	left join
 	(
 		select
-			case cast(TQI010.TQI_CODPOS as int)
-				when 59 then '010102'
-				else trim(isnull(TQI010.TQI_FILIAL, '-'))
-			end as TQI_FILIAL,
-
+			TQI010.TQI_FILIAL,
 			TQI010.TQI_CODPOS,
 			TQI010.TQI_LOJA,
 			TQI010.TQI_TANQUE,
@@ -108,7 +101,7 @@ from
 			TQI010.TQI_CODCOM,
 			TQI010.TQI_PRODUT,
 			TQI010.TQI_FABRIC
-		from TQI010
+		from TQI010 (nolock)
 		where TQI010.D_E_L_E_T_ = ''
 	) as TQI
 		on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
@@ -116,22 +109,19 @@ from
 
 		left join
 		(
-			select
-				case cast(TQF010.TQF_CODIGO as int)
-					when 59 then '010102'
-					else trim(isnull(TQF010.TQF_CODFIL, '-'))
-				end as TQF_FILIAL,
+			select 
+				TQF010.TQF_CODFIL as TQF_FILIAL,
 				TQF010.TQF_CODIGO,
 				TQF010.TQF_LOJA
-			from TQF010
+			from TQF010 (nolock)
 			where TQF010.D_E_L_E_T_ = ''
 		) as TQF
 			on TQF.TQF_FILIAL = TQI.TQI_FILIAL
 			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
 
-	left join ST9010 as ST9
+	left join ST9010 ST9 (nolock)
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
-	left join TQM010 as TQM
+	left join TQM010 TQM (nolock)
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
