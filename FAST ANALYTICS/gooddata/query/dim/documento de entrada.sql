@@ -1,6 +1,7 @@
 select
-    concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NF,
-    SD1.D1_DOC,
-    SD1.D1_SERIE
-from SD1010 SD1
-where SD1.D_E_L_E_T_ = ''
+    concat('SF1', trim(SF1.F1_FILIAL), trim(SF1.F1_FORNECE), trim(SF1.F1_LOJA), trim(SF1.F1_DOC), trim(SF1.F1_SERIE)) as ID_NF,
+    SF1.F1_DOC,
+    SF1.F1_SERIE,
+    SF1.F1_ESPECIE
+from SF1010 SF1
+where SF1.D_E_L_E_T_ = ''
