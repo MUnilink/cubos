@@ -9,7 +9,7 @@ select distinct
         when '11300001' then 180000
         when '11300002' then 180000
         when '11300003' then 120000
-        when '11300004' then 40000
+        when '11300004' then 80000
         when '11300048' then 60000
         when '11300056' then 40000
         else 0
