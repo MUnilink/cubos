@@ -7,7 +7,7 @@ select distinct
 
     trim(CTD.CTD_DESC01) as ATIVIDADE,
     trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-    trim(SRA.RA_NOME) as NOME,
+    trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
     
     VERBAS.RD_VALOR,

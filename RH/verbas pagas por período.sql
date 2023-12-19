@@ -1,7 +1,7 @@
 	select
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+        trim(SRA.RA_NOMECMP) as NOME,
 		SRJ.RJ_FUNCAO as COD_FUNCAO,
         trim(SRJ.RJ_DESC) as FUNCAO,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
@@ -98,7 +98,7 @@ union
 	select
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+        trim(SRA.RA_NOMECMP) as NOME,
 		SRJ.RJ_FUNCAO as COD_FUNCAO,
         trim(SRJ.RJ_DESC) as FUNCAO,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,

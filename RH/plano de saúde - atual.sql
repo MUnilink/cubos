@@ -1,7 +1,7 @@
 select
     trim(SRA.RA_FILIAL) as FILIAL,
 	trim(SRA.RA_MAT) as MATRICULA,
-	trim(SRA.RA_NOME) as NOME,
+	trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
@@ -37,7 +37,7 @@ select
     end as TIPO_VERBA,
 
     case RHR.RHR_ORIGEM
-        when 1 then SRA.RA_NOME
+        when 1 then SRA.RA_NOMECMP
         when 2 then DEP.RB_NOME
         when 3 then AGG.RB_NOME
         else 'OUTROS'

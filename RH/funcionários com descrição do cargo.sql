@@ -2,7 +2,7 @@ select
 	trim(SRA.RA_FILIAL) as FILIAL,
 	trim(SRA.RA_MAT) as MATRICULA,
 	trim(SRA.RA_MAT) as contador,
-	trim(SRA.RA_NOME) as NOME,
+	trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
 	trim(SRJ.RJ_CODCBO) as CBO,

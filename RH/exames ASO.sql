@@ -5,7 +5,7 @@ select
 
     trim(SRA.RA_FILIAL) as FILIAL,
     trim(SRA.RA_MAT) as MATRICULA,
-    trim(SRA.RA_NOME) as NOME,
+    trim(SRA.RA_NOMECMP) as NOME,
     trim(SRJ.RJ_DESC) as FUNCAO,
     convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
     case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,

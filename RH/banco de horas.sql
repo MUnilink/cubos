@@ -1,7 +1,7 @@
 select 
     trim(SRA.RA_FILIAL) as FILIAL,
     trim(SRA.RA_MAT) as MATRICULA,
-    SRA.RA_NOME as NOME,
+    SRA.RA_NOMECMP as NOME,
     SRJ.RJ_DESC as FUNCAO,
     trim(SPI.PI_CC) as CC,
 

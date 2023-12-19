@@ -7,7 +7,7 @@ select /* PLANO DE SAÚDE E ODONTO */
     end as NOME_FILIAL,
 
     trim(SRA.RA_MAT) as MATRICULA,
-    trim(SRA.RA_NOME) as NOME,
+    trim(SRA.RA_NOMECMP) as NOME,
     trim(SRJ.RJ_DESC) as FUNCAO,
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
     trim(SRA.RA_ESTADO) as UF,
@@ -66,7 +66,7 @@ select /* PLANO DE SAÚDE E ODONTO */
     trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
 
     case RHR.RHR_ORIGEM
-        when 1 then SRA.RA_NOME
+        when 1 then SRA.RA_NOMECMP
         when 2 then DEP.RB_NOME
         when 3 then RHM.RHM_NOME
         else 'OUTROS'

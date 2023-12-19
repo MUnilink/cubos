@@ -3,7 +3,7 @@ select
 	substring(SRT.RT_DATACAL, 1, 6) as RT_PERIODO,
     trim(isnull(SRT.RT_TIPPROV, '-')) as RT_TIPPROV,
 	trim(isnull(SRT.RT_MAT, '-')) as RT_MAT,
-	trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
+	trim(isnull(SRA.RA_NOMECMP, '-')) as RA_NOME,
 	trim(isnull(SRT.RT_VERBA, '-')) as RT_PD,
 	trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
 	trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
