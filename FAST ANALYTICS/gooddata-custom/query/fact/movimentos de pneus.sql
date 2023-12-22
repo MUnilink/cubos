@@ -34,5 +34,6 @@ from STZ010 STZ
 				on SB1.D_E_L_E_T_ = ''
 				and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
 where
-		STZ.D_E_L_E_T_ = ''
+		STZ.TZ_DATAMOV between <<START_DATE>> and <<FINAL_DATE>>
+	and STZ.D_E_L_E_T_ = ''
 	and PNEU.T9_CATBEM = 3
