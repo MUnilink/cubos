@@ -1,11 +1,11 @@
 select
-	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-	trim(isnull(ST9.T9_NOME, '-')) as T9_NOME,
-	trim(isnull(ST9.T9_DTCOMPR, '-')) as T9_DTCOMPR,
-	trim(isnull(ST9.T9_PLACA, '-')) as T9_PLACA,
-	trim(isnull(ST9.T9_NFCOMPR, '-')) as T9_NFCOMPR,
-	trim(isnull(ST9.T9_TIPMOD, '-')) as T9_TIPMOD,
-	trim(isnull(ST9.T9_CODFAMI, '-')) as T9_CODFAMI,
+	trim(ST9.T9_CODBEM) as T9_CODBEM,
+	trim(ST9.T9_NOME) as T9_NOME,
+	trim(ST9.T9_DTCOMPR) as T9_DTCOMPR,
+	trim(ST9.T9_PLACA) as T9_PLACA,
+	trim(ST9.T9_NFCOMPR) as T9_NFCOMPR,
+	trim(ST9.T9_TIPMOD) as T9_TIPMOD,
+	trim(ST9.T9_CODFAMI) as T9_CODFAMI,
 
 	case ST9.T9_CATBEM
 		when 1 then 'BEM'
@@ -20,4 +20,3 @@ select
 from ST9010 ST9
 where
 		ST9.D_E_L_E_T_ = ''
-	and ST9.T9_CATBEM != 3

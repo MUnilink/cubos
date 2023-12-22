@@ -1,8 +1,8 @@
 select
-	trim(isnull(STZ.TZ_FILIAL, '-')) as TJ_FILIAL,
-	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
-	trim(isnull(PNEU.T9_CODBEM, '-')) as IDPNEU,
-	trim(isnull(CARRO.T9_CODBEM, '-')) as IDCARRO,
+	trim(STZ.TZ_FILIAL) as TJ_FILIAL,
+	trim(STZ.TZ_ORDEM) as TZ_ORDEM,
+	trim(PNEU.T9_CODBEM) as IDPNEU,
+	trim(CARRO.T9_CODBEM) as IDCARRO,
 	SB1.B1_COD as PRODUTO,
     PNEU.T9_LOCPAD,
 	TQS.TQS_MEDIDA,
