@@ -33,9 +33,6 @@ select
     end as DTQ_STATUS
 
 from DTQ010 DTQ (nolock)
-    inner join DA8010 DA8 (nolock)
-        on DA8.D_E_L_E_T_ = ''
-        and DA8.DA8_COD = DTQ.DTQ_ROTA
     inner join DTR010 DTR (nolock)
         on DTR.D_E_L_E_T_ = ''
         and DTR.DTR_FILORI = DTQ.DTQ_FILORI
