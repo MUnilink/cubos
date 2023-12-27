@@ -1,8 +1,8 @@
 select distinct
-    STC.TC_CODBEM,
-    TQS.TQS_CODBEM,
-    SB1.B1_COD,
-    SB1.B1_DESC,
+    trim(STC.TC_CODBEM) as TC_CODBEM,
+    trim(TQS.TQS_CODBEM) as TQS_CODBEM,
+    trim(SB1.B1_COD) as B1_COD,
+    trim(SB1.B1_DESC) as B1_DESC,
     PNEU_CUSTO.B9_CM,
 
     case SB1.B1_COD
@@ -26,7 +26,7 @@ from STC010 STC (nolock)
 
             inner join SB1010 SB1 (nolock)
                 on SB1.D_E_L_E_T_ = ''
-                and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
+                and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
 
                 left join
                 (
