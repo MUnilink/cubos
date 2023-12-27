@@ -72,9 +72,9 @@ select
     DTR.DTR_CODRB2,
     DTR.DTR_CODRB3,
 
-    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
+    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
+    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
 
@@ -117,12 +117,12 @@ select
     DF1.DF1_CODOBC,
     DF1.DF1_YDSARM as NOME_ARMADORA,
 
-    COMP.D2_DOC as COMP_DOC,
-    COMP.D2_SERIE as COMP_SERIE,
-    COMP.D2_TOTAL as COMP_TOTAL,
-    COMP.D2_VALIPI as COMP_VALIPI,
-    COMP.D2_VALICM as COMP_VALICM,
-    convert(date, COMP.D2_EMISSAO, 103) as COMP_EMISSAO,
+    DT6C.D2_DOC as COMP_DOC,
+    DT6C.D2_SERIE as COMP_SERIE,
+    DT6C.D2_TOTAL as COMP_TOTAL,
+    DT6C.D2_VALIPI as COMP_VALIPI,
+    DT6C.D2_VALICM as COMP_VALICM,
+    convert(date, DT6C.D2_EMISSAO, 103) as COMP_EMISSAO,
 
     SC5.C5_NUM as RPS_PEDIDO,
     RPS.D2_DOC as RPS_DOC,
@@ -270,18 +270,18 @@ from DTQ010 DTQ (nolock)
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-            left join SD2010 COMP (nolock)
-                on COMP.D_E_L_E_T_ = ''
-                and COMP.D2_NFORI = DT6.DT6_DOC
-                and COMP.D2_SERIORI = DT6.DT6_SERIE
-                and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
-                and COMP.D2_LOJA = DT6.DT6_LOJDEV
+            left join SD2010 DT6C (nolock)
+                on DT6C.D_E_L_E_T_ = ''
+                and DT6C.D2_NFORI = DT6.DT6_DOC
+                and DT6C.D2_SERIORI = DT6.DT6_SERIE
+                and DT6C.D2_CLIENTE = DT6.DT6_CLIDEV
+                and DT6C.D2_LOJA = DT6.DT6_LOJDEV
 
-            INNER JOIN SA1010 DEV
-                ON DEV.A1_FILIAL = '      '
-                AND DEV.A1_COD = DT6.DT6_CLIDEV
-                AND DEV.A1_LOJA = DT6.DT6_LOJDEV
-                AND DEV.D_E_L_E_T_ = ' '
+            left join SA1010 DEV (nolock)
+                on DEV.A1_FILIAL = '      '
+                and DEV.A1_COD = DT6.DT6_CLIDEV
+                and DEV.A1_LOJA = DT6.DT6_LOJDEV
+                and DEV.D_E_L_E_T_ = ' '
 
         LEFT JOIN DUY010 DUYORI
             ON DUYORI.DUY_FILIAL = DT6_FILIAL
