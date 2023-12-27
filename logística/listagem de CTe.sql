@@ -2,18 +2,17 @@ select
     DT6.DT6_FILIAL as FILIAL,
     DT6.DT6_DOC as DOCUMENTO,
     DT6.DT6_SERIE as SERIE,
-    cast(convert(date, DT6.DT6_DATEMI, 103) as varchar) as EMISSAO,
+    convert(date, DT6.DT6_DATEMI, 103) as EMISSAO,
     DT6.DT6_VALFRE as VALOR_FRETE,
     DT6.DT6_VALIMP as VALOR_ICMS,
     DT6.DT6_VALTOT as VALOR_TOTAL,
     DT6.DT6_CHVCTE as CHAVE,
 
-    year(DT6.DT6_DATEMI) as ANO_EMISSAO,
-    month(DT6.DT6_DATEMI) as MES_EMISSAO,
+    substring(DT6.DT6_DATEMI, 1, 6) as COMPETENCIA,
 
-    DT6.DT6_VALFRE / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) as CTE_CM,
+    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / (select count(DTR010.DTR_CODVEI) from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM) IMPOSTO_CM,
+    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
 
@@ -55,6 +54,7 @@ select
         when '4' then 'CHEGADA EM FILIAL'
         when '5' then 'FECHADA'
         when '9' then 'CANCELADA'
+        when '' then 'SEM VIAGEM'
         else 'OUTROS'
     end as DTQ_STATUS
 
@@ -83,22 +83,22 @@ from DT6010 DT6 (nolock)
             and DTQ.DTQ_FILORI = DUD.DUD_FILORI
             and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
 
-            inner join DA8010 DA8 (nolock)
+            left join DA8010 DA8 (nolock)
                 on DA8.D_E_L_E_T_ = ''
                 and DA8.DA8_COD = DTQ.DTQ_ROTA
-            inner join DTR010 DTR (nolock)
+            left join DTR010 DTR (nolock)
                 on DTR.D_E_L_E_T_ = ''
                 and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                 and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
 
-                inner join DUP010 DUP (nolock)
+                left join DUP010 DUP (nolock)
                     on DUP.D_E_L_E_T_ = ''
                     and DUP.DUP_FILORI = DTR.DTR_FILORI
                     and DUP.DUP_VIAGEM = DTR.DTR_VIAGEM
                     and DUP.DUP_ITEDTR = DTR.DTR_ITEM
                     and DUP.DUP_CODVEI = DTR.DTR_CODVEI
 
-                    inner join DA4010 DA4 (nolock)
+                    left join DA4010 DA4 (nolock)
                         on DA4.DA4_COD = DUP.DUP_CODMOT
 
         left join DT5010 DT5 (nolock)
