@@ -1,7 +1,7 @@
 select
     ZC1.ZC1_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM_OS,
-    substring(ZC1.ZC1_NUM, 6, 10) as OS,
+    cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
@@ -29,8 +29,6 @@ select
     
     ZC2.ZC2_ITEM as ITEM,
     SB1.B1_GRUPO as GRUPO,
-    trim(ZC2.ZC2_COD) as INSUMO,
-    trim(ZC2.ZC2_DESC) as DESC_INSUMO,
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
@@ -44,6 +42,17 @@ select
         when 7 then 'CONTABILIDADE'
         else 'OUTROS'
     end as TIPO_INSUMO,
+
+    trim(ZC2.ZC2_COD) as INSUMO,
+    case ZC2.ZC2_TIPO
+        when 1 then trim(SB1.B1_DESC)
+        when 2 then trim(SRV.RV_DESC)
+        when 3 then 
+        when 4 then trim(SB1.B1_DESC)
+        when 6 then ''
+        when 7 then ''
+        else trim(ZC2.ZC2_DESC)
+    end as DESC_INSUMO,
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
@@ -65,6 +74,8 @@ select
     ZC2.ZC2_CARRET as SR,
 
     substring(ZC2.ZC2_DTINI, 1, 6) as PERIODO_APONT,
+    ZC2.ZC2_DTINI as DATA_INIAPONT,
+    ZC2.ZC2_DTFIM as DATA_FIMAPONT,
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
     datediff(minute, convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103), convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103))/60.0 as HORAS_APONT,
@@ -93,6 +104,9 @@ from ZC2010 ZC2 (nolock)
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = ZC2.ZC2_COD
+    left join SRV010 SRV (nolock)
+        on SRV.D_E_L_E_T_ = ''
+        and SRV.RV_COD = ZC2.ZC2_COD
     left join DA3010 DA3 (nolock)
         on DA3.D_E_L_E_T_ = ''
         and DA3.DA3_COD = ZC2.ZC2_VEICUL
