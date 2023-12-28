@@ -1,23 +1,38 @@
 select
-    ZC1.ZC1_FILIAL,
-    ZC1.ZC1_NUM,
+    ZC1.ZC1_FILIAL as FILIAL,
+    ZC1.ZC1_NUM as NUM_OS,
     substring(ZC1.ZC1_NUM, 6, 10) as OS,
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
     
-    ZC1.ZC1_PORTO,
+    ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
-    ZC1.ZC1_NAVIO,
+    ZC1.ZC1_NAVIO as NAVIO,
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
+
+    DEV.A1_COD as CLI_CODIGO,
+    DEV.A1_LOJA as CLI_LOJA,
+    DEV.A1_CGC as CLI_CNPJ,
+    trim(DEV.A1_NOME) as CLIENTE,
+
+    ARM.A1_COD as ARM_CODIGO,
+    ARM.A1_LOJA as ARM_LOJA,
+    ARM.A1_CGC as ARM_CNPJ,
+    trim(DEV.A1_NOME) as ARMADORA,
+
+    DES.A2_COD as DESP_CODIGO,
+    DES.A2_LOJA as DESP_LOJA,
+    DES.A2_CGC as DESP_CNPJ,
+    trim(DES.A2_NOME) as DESPACHANTE,
     
     ZC2.ZC2_ITEM as ITEM,
     SB1.B1_GRUPO as GRUPO,
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_DESC) as DESC_INSUMO,
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
-    ZC1.ZC1_TABPRC,
+    ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
     
     case ZC2.ZC2_TIPO
