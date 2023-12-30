@@ -1,58 +1,26 @@
-select
-    DTQ.DTQ_FILORI,
-    DTQ.DTQ_VIAGEM,
+select DTQ.DTQ_FILORI, DTQ.DTQ_VIAGEM,
     (
-        select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-        from DTW010 (nolock)
-            left join ZB1010 (nolock)
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+        select
+        (
+            select substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT))
+            from ZB1010 (nolock)
+            where
+                    ZB1010.D_E_L_E_T_ = ''
                 and
                     dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
                     =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+                    datetimefromparts(year(DTW.DTW_DATREA), month(DTW.DTW_DATREA), day(DTW.DTW_DATREA), substring(DTW.DTW_HORREA, 1, 2), substring(DTW.DTW_HORREA, 3, 4), 0, 0)
+                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                and ZB1010.ZB1_MACRON = 7
+                and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+        )
+        from DTW010 DTW (nolock)
         where
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTR.DTR_FILORI
-            and DTW010.DTW_VIAGEM = DTR.DTR_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID = 50
+                DTW.D_E_L_E_T_ = ''
+            and DTW.DTW_FILORI = DTR.DTR_FILORI
+            and DTW.DTW_VIAGEM = DTR.DTR_VIAGEM
+            and DTW.DTW_ATIVID = 50
     ) as km_fim_atual,
-    (
-        select top 1 isnull(nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), ''), DTW010.DTW_YHODFI)
-        from DTW010 (nolock)
-            left join ZB1010 (nolock)
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTR.DTR_FILORI
-            and DTW010.DTW_VIAGEM = DTR.DTR_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID = 50
-    ) as km_fim_AUTO,
-
-    (
-        select top 1 isnull(nullif(DTW010.DTW_YHODFI, ''), 0.0)
-        from DTW010 (nolock)
-            left join ZB1010 (nolock)
-                on ZB1010.D_E_L_E_T_ = ''
-                and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                and
-                    dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                    =
-                    datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTR.DTR_FILORI
-            and DTW010.DTW_VIAGEM = DTR.DTR_VIAGEM
-            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-            and DTW010.DTW_ATIVID = 50
-    ) as km_fim_MANU,
 
     case DTQ.DTQ_STATUS
         when '1' then 'EXCLUÍDA'
@@ -69,4 +37,6 @@ from DTQ010 DTQ (nolock)
         on DTR.D_E_L_E_T_ = ''
         and DTR.DTR_FILORI = DTQ.DTQ_FILORI
         and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
-where DTQ.D_E_L_E_T_ = '' and DTQ.DTQ_VIAGEM between 11949 and 12696
+where
+        DTQ.D_E_L_E_T_ = ''
+    and DTQ.DTQ_VIAGEM between 11949 and 12696

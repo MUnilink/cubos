@@ -1,0 +1,7 @@
+select ZB1010.ZB1_CODDA3, ZB1010.ZB1_MSGTIM
+from ZB1010 (nolock)
+where
+        ZB1010.D_E_L_E_T_ = ''
+    and ZB1010.ZB1_MACRON = 7
+group by ZB1010.ZB1_CODDA3, ZB1010.ZB1_MSGTIM
+having count(ZB1010.ZB1_MSGTIM) > 1
