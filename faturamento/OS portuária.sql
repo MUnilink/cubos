@@ -28,7 +28,6 @@ select
     trim(DES.A2_NOME) as DESPACHANTE,
     
     ZC2.ZC2_ITEM as ITEM,
-    SB1.B1_GRUPO as GRUPO,
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
@@ -45,12 +44,12 @@ select
 
     trim(ZC2.ZC2_COD) as INSUMO,
     case ZC2.ZC2_TIPO
-        when 1 then trim(SB1.B1_DESC)
-        when 2 then trim(SRV.RV_DESC)
-        when 3 then 
-        when 4 then trim(SB1.B1_DESC)
-        when 6 then ''
-        when 7 then ''
+        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
+        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
+        when 3 then trim(ST9.T9_CODBEM)
+        when 4 then (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 4)
+        when 6 then trim(ST9.T9_CODBEM)
+        when 7 then trim(ZA7.ZA7_DESC)
         else trim(ZC2.ZC2_DESC)
     end as DESC_INSUMO,
 
@@ -79,7 +78,16 @@ select
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
     datediff(minute, convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103), convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103))/60.0 as HORAS_APONT,
-    trim(ZC2.ZC2_NMUSU) as USUARIO
+    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
+
+    SC6.C6_NUM as PEDIDO,
+    SC6.C6_ITEM as ITEM_PEDIDO,
+    SC6.C6_UM as UN_PEDIDO,
+    SC6.C6_QTDVEN as QTD_PEDIDO,
+    SC6.C6_PRCVEN as PRECO_PEDIDO,
+    SC6.C6_VALOR as VALOR_PEDIDO,
+    SC6.C6_CC as CC_PEDIDO,
+    SC6.C6_ITEMCTA as ATIVIDADE_PEDIDO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -100,19 +108,21 @@ from ZC2010 ZC2 (nolock)
             on DES.D_E_L_E_T_ = ''
             and DES.A2_COD = ZC1.ZC1_DESPA
             and DES.A2_LOJA = ZC1.ZC1_LJDESP
-    
-    left join SB1010 SB1 (nolock)
-        on SB1.D_E_L_E_T_ = ''
-        and SB1.B1_COD = ZC2.ZC2_COD
-    left join SRV010 SRV (nolock)
-        on SRV.D_E_L_E_T_ = ''
-        and SRV.RV_COD = ZC2.ZC2_COD
-    left join DA3010 DA3 (nolock)
-        on DA3.D_E_L_E_T_ = ''
-        and DA3.DA3_COD = ZC2.ZC2_VEICUL
+
+    left join ST9010 ST9 (nolock)
+        on ST9.D_E_L_E_T_ = ''
+        and trim(ST9.T9_CODBEM) = trim(ZC2.ZC2_COD)
+    left join ZA7010 ZA7 (nolock)
+        on ZA7.D_E_L_E_T_ = ''
+        and trim(ZA7.ZA7_COD) = trim(ZC2.ZC2_COD)
     left join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = ZC2.ZC2_MOTORI
+    left join SC6010 SC6 (nolock)
+        on SC6.D_E_L_E_T_ = ''
+        and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
+        and SC6.C6_YOS = ZC2.ZC2_NUM
+        and SC6.C6_YITOS = ZC2.ZC2_ITEM
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
