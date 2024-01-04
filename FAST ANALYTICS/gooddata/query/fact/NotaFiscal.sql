@@ -26,8 +26,8 @@ SELECT
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD2.D2_ITEMCC, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD2.D2_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     
-    'P |01|SC6010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SC6.C6_FILIAL, ' ')) + '|' + RTRIM(COALESCE(SC6.C6_NUM, ' ')) + RTRIM(COALESCE(SC6.C6_ITEM, ' ')), ' '), '|') as BK_PEDIDODEVENDA,
-    'P |01|ZC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ZC2.ZC2_FILIAL, ' ')) + '|' + RTRIM(COALESCE(ZC2.ZC2_NUM, ' ')), ' '), '|') as BK_OSPORTUARIA,
+    'P |01|SC5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SC5.C5_FILIAL, ' ')) + '|' + RTRIM(COALESCE(SC5.C5_NUM, ' ')), ' '), '|') as BK_PEDIDODEVENDA,
+    'P |01|ZC1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ZC1.ZC1_FILIAL, ' ')) + '|' + RTRIM(COALESCE(ZC1.ZC1_NUM, ' ')), ' '), '|') as BK_OSPORTUARIA,
     
     coalesce(SD2.D2_VALBRUT, 0.0) as VL_FATURAMENTO_TOTAL,
     coalesce(SD2.D2_VALICM, 0.0) as VL_ICMS_FATURAMENTO,
@@ -107,18 +107,15 @@ from SD2010 SD2
         AND AH_UNIMED = SD2.D2_UM
         AND SAH.D_E_L_E_T_ = ' '
     
-    left join SC6010 SC6
-        on SC6.D_E_L_E_T_ = ''
-        and SC6.C6_FILIAL = SD2.D2_FILIAL
-        and SC6.C6_NUM = SD2.D2_PEDIDO
-        and SC6.C6_ITEM = SD2.D2_ITEMPV
-        
-        left join ZC2010 ZC2
-            on ZC2.D_E_L_E_T_ = ''
-            and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
-            and ZC2.ZC2_NUM = SC6.C6_YOS
-            and ZC2.ZC2_ITEM = SC6.C6_YITOS
-WHERE
-        SD2.D2_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-    AND SD2.D2_TIPO NOT IN ('B', 'D')
-    AND SD2.D_E_L_E_T_ = ' '
+    left join SC5010 SC5
+        on SC5.D_E_L_E_T_ = ''
+        and SC5.C5_FILIAL = SD2.D2_FILIAL
+        and SC5.C5_NUM = SD2.D2_PEDIDO        
+    left join ZC1010 ZC1
+        on ZC1.D_E_L_E_T_ = ''
+        and ZC1.ZC1_FILIAL = SC5.C5_FILIAL
+        and ZC1.ZC1_NUM = SC5.C5_YOS
+where
+        SD2.D2_EMISSAO between <<START_DATE>> and <<FINAL_DATE>>
+    and SD2.D2_TIPO not in ('B', 'D')
+    and SD2.D_E_L_E_T_ = ' '
