@@ -1,4 +1,4 @@
-select distinct
+select
     trim(STC.TC_CODBEM) as TC_CODBEM,
     trim(TQS.TQS_CODBEM) as TQS_CODBEM,
     trim(SB1.B1_COD) as B1_COD,
@@ -43,11 +43,10 @@ from STC010 STC (nolock)
                         SB9010.B9_COD
                 ) PNEU_CUSTO
                     on PNEU_CUSTO.B9_COD = SB1.B1_COD
+    
+    inner join ST9010 ST9 (nolock)
+        on ST9.D_E_L_E_T_ = ''
+        and ST9.T9_CODBEM = STC.TC_CODBEM
+        and ST9.T9_CATBEM != 3
 where
         STC.D_E_L_E_T_ = ''
-    and
-        (
-                STC.TC_CODBEM like 'CM%'
-            or STC.TC_CODBEM like 'SR%'
-            or STC.TC_CODBEM like 'VM%'
-        )
