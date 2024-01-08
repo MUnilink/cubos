@@ -17,8 +17,12 @@ select
 
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
-	substring(SR7.R7_DATA, 1, 6) as PERIODO,
 	
+    substring(SR7.R7_DATA, 1, 6) as PERIODO,
+    convert(date, SR7.R7_DATA, 103) as DATA,
+    SR7.R7_SEQ as SEQUENCIA,
+    (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '41' and SX5010.X5_CHAVE = SR7.R7_TIPO) as TIPO,
+    trim(SR7.R7_TIPO) as TIPO_ALTER,
     SRJ.RJ_FUNCAO as COD_FUNCAO,
     trim(SRJ.RJ_DESC) as FUNCAO,
     trim(SRJ.RJ_CODCBO) as CBO,
