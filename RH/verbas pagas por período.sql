@@ -66,6 +66,12 @@
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
 
+		null as DATARQ,
+		null as STATUS_LANC,
+		null as INSS,
+		null as IR,
+		null as FGTS,
+
 		case when lag(SRC.RC_MAT, 1, 0) over (partition by SRC.RC_FILIAL, SRC.RC_PERIODO, SRC.RC_MAT order by SRC.R_E_C_N_O_) = 0 then SRA.RA_HRSMES else 0 end as HORAS_MES,
 		case when lag(SRC.RC_MAT, 1, 0) over (partition by SRC.RC_FILIAL, SRC.RC_PERIODO, SRC.RC_MAT order by SRC.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
 
@@ -162,6 +168,12 @@ union
 		SRD.RD_HORAS as HORAS,
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
+
+		SRD.RD_DATARQ as DATARQ,
+		SRD.RD_STATUS as STATUS_LANC,
+		SRD.RD_INSS as INSS,
+		SRD.RD_IR as IR,
+		SRD.RD_FGTS as FGTS,
 
 		case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then SRA.RA_HRSMES else 0 end as HORAS_MES,
 		case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
