@@ -6,4 +6,4 @@ select
 from SC5010 SC5
 where SC5.D_E_L_E_T_ = ''
 
-union select null, null, null, null
+union select '', '', '', ''
