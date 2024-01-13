@@ -1,5 +1,7 @@
 select
-    concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OS,
+    'P |01|01' AS BK_EMPRESA,
+    CASE WHEN SD2.D2_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(SD2.D2_FILIAL AS CHAR (6)) END AS BK_FILIAL,
+    concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as BK_OSPORTUARIA,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DEV.A1_COD, ' '))+RTRIM(COALESCE(DEV.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as BK_PEDIDODEVENDA,
     concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF,
@@ -19,20 +21,13 @@ select
         when 4 then 'MATERIAIS'
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
+        when 8 then 'DESPESAS FINANCEIRAS'
+        
+        when 13 then 'TARIFA'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
     trim(ZC2.ZC2_COD) as INSUMO,
-    case ZC2.ZC2_TIPO
-        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 inner join SB1010 on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
-        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
-        when 3 then trim(ST9.T9_CODBEM)
-        when 4 then (select trim(SB1010.B1_DESC) from SB1010 where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 4)
-        when 6 then trim(ST9.T9_CODBEM)
-        when 7 then trim(ZA7.ZA7_DESC)
-        else trim(ZC2.ZC2_DESC)
-    end as DESC_INSUMO,
-    
     ZC2.ZC2_QTDPRV as QTD_PREV,
     ZC2.ZC2_QTDREA as QTD_REAL,
     ZC2.ZC2_VLUPRV as VAL_PREV,
@@ -67,7 +62,7 @@ from ZC2010 ZC2
         left join SA2010 DES
             on DES.D_E_L_E_T_ = ''
             and DES.A2_COD = ZC1.ZC1_DESPA
-            and DES.A2_LOJA = ZC1.ZC1_LJDESP    
+            and DES.A2_LOJA = ZC1.ZC1_LJDESP
         left join SC5010 SC5
             on SC5.D_E_L_E_T_ = ''
             and SC5.C5_FILIAL = ZC1.ZC1_FILIAL
