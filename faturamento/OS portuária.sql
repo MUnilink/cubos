@@ -34,11 +34,14 @@ select
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
-        when 2 then 'FUNÇÃO'
+        when 2 then 'RH'
         when 3 then 'EQUIPAMENTO'
         when 4 then 'MATERIAIS'
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
+        when 8 then 'DESPESAS FINANCEIRAS'
+
+        when 13 then 'TARIFA'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
@@ -72,12 +75,12 @@ select
     ZC2.ZC2_VEICUL as CM,
     ZC2.ZC2_CARRET as SR,
 
-    substring(ZC2.ZC2_DTINI, 1, 6) as PERIODO_APONT,
-    ZC2.ZC2_DTINI as DATA_INIAPONT,
-    ZC2.ZC2_DTFIM as DATA_FIMAPONT,
-    convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
-    convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
-    datediff(minute, convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103), convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103))/60.0 as HORAS_APONT,
+    substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
+    convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
+    convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
+    convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 113) as DTINI_APONT,
+    convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 113) as DTFIM_APONT,
+    datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
 
     SC6.C6_NUM as PEDIDO,
@@ -94,7 +97,6 @@ from ZC2010 ZC2 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-        and substring(ZC1.ZC1_NUM, 1, 4) > 2022
         
         left join SA1010 DEV (nolock)
             on DEV.D_E_L_E_T_ = ''
