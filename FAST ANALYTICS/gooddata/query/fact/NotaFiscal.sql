@@ -110,7 +110,7 @@ from SD2010 SD2
     left join SC5010 SC5
         on SC5.D_E_L_E_T_ = ''
         and SC5.C5_FILIAL = SD2.D2_FILIAL
-        and SC5.C5_NUM = SD2.D2_PEDIDO        
+        and SC5.C5_NUM = SD2.D2_PEDIDO
     left join ZC1010 ZC1
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = SC5.C5_FILIAL
