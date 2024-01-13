@@ -204,4 +204,4 @@ union
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
 			SRD.D_E_L_E_T_ = ''
-		and substring(SRD.RD_PERIODO, 1, 4) > 2021
+		and substring(SRD.RD_PERIODO, 1, 4) > 2022
