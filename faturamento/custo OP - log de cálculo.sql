@@ -1,4 +1,4 @@
-select
+select distinct
     ZG1.ZG1_FILORI as FILIAL_LOG,
     ZG1.ZG1_TABELA as TABELA_LOG,
     ZG1.ZG1_CODIGO as CODIGO_LOG,
@@ -22,7 +22,9 @@ select
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     
+    ZC2.ZC2_COMPET,
     substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
+    substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
@@ -50,8 +52,11 @@ select
     ZC2.ZC2_ITEM as ITEM,
 
     SD3.D3_CUSTO1,
+    TQN.TQN_DTABAS,
     TQN.TQN_VALTOT,
+    MNT.TJ_ORDEM,
     MNT.TL_CUSTO,
+    DEP.DATA_MOV,
     DEP.N4_VLROC1
 
 from ZC2010 ZC2 (nolock)
@@ -63,18 +68,19 @@ from ZC2010 ZC2 (nolock)
         on ZG1.D_E_L_E_T_ = ''
         and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
         and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
+        and ZG1.ZG1_COMPET = substring(ZC2.ZC2_DTFIM, 1, 6)
     
     left join SD3010 SD3 (nolock)
         on SD3.D_E_L_E_T_ = ''
         and SD3.D3_FILIAL = ZC2.ZC2_FILIAL
         and SD3.D3_YOS = ZC2.ZC2_NUM
-        and substring(SD3.D3_EMISSAO, 1, 6) = ZC2.ZC2_COMPET
+        and eomonth(SD3.D3_EMISSAO) = ZC2.ZC2_COMPET
         and ZC2.ZC2_TIPO = 4
     left join TQN010 TQN (nolock)
         on TQN.D_E_L_E_T_ = ''
         and TQN.TQN_FILIAL = ZC2.ZC2_FILIAL
         and TQN.TQN_FROTA = ZC2.ZC2_COD
-        and substring(TQN.TQN_DTABAS, 1, 6) = ZC2.ZC2_COMPET
+        and eomonth(TQN.TQN_DTABAS) = ZC2.ZC2_COMPET
         and ZC2.ZC2_TIPO = 3
     /*left join SRD010 SRD (nolock)*/
     left join
@@ -87,14 +93,16 @@ from ZC2010 ZC2 (nolock)
             STL010.TL_SEQRELA,
             STL010.TL_CUSTO,
             STL010.TL_DTINICI,
-            substring(STL010.TL_DTINICI, 1, 6) as PERIODO
+            eomonth(STL010.TL_DTINICI) as PERIODO
         from STJ010 (nolock)
             left join STL010 (nolock)
                 on STL010.D_E_L_E_T_ = ''
                 and STL010.TL_FILIAL = STJ010.TJ_FILIAL
                 and STL010.TL_PLANO = STJ010.TJ_PLANO
                 and STL010.TL_ORDEM = STJ010.TJ_ORDEM
-        where STJ010.D_E_L_E_T_ = ''
+        where
+                STJ010.D_E_L_E_T_ = ''
+            and STL010.TL_SEQRELA > 0
     ) MNT
         on ZC2.ZC2_TIPO = 3
         and MNT.TJ_CODBEM = ZC2.ZC2_COD
@@ -106,7 +114,7 @@ from ZC2010 ZC2 (nolock)
             SN1010.N1_CODBEM,
             SN4010.N4_VLROC1,
             convert(datetime, concat(SN4010.N4_DATA, ' ', SN4010.N4_HORA), 113) as DATA_MOV,
-            substring(SN4010.N4_DATA, 1, 6) as PERIODO,
+            eomonth(SN4010.N4_DATA) as PERIODO,
             trim(SN1010.N1_CBASE) as ATIVO,
             trim(SN1010.N1_DESCRIC) as DESC_ATIVO,
             trim(ST9010.T9_CODBEM) as T9_CODBEM
