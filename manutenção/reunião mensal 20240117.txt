@@ -1,0 +1,13 @@
+Wellington cita a reunião do dia 19 referente à análise histórica e revisão de 2023 dos indicadores de gestão de manutenção;
+Naara cita a inclusão de outros indicadores SSMA para 2024, os mesmos acompanhados pela CIPP e faz um histórico da redução dos indicadores de acidentes com ou sem afastamentos, emissão de CATs para acidentes mais graves. Ressalta que a redução deve ser contínua, visto que acidentes podem ser potencialmente graves.
+Cita também os acidentes e incidentes ambientais, algo acompanhado pela CIPP, visto que foi escolhido o porto de referência ambiental no Brasil em 2022.
+Wellington diz que os indicadores de quase acidentes e os totais são para acompanhamento da operação e da gestão, não sendo um indicador estratégico;
+Leandro inicia a explicação dos indicadores lembrando que alguns deles são influencidos pelo preço do combustível.
+Wellington sugere alterar o gráfico de consumo e CPK de combustível (frotas rodoviária e portuária), para melhor avaliar a variação desses indicadores.
+Leandro lembra que o LHM esteve parado até por volta do dia 28/12 e não houve abastecimento, de forma que não contabilizou a hora rodada em dezembro, assim as horas rodadas e o CPH são referentes ao TEREX antigo.
+É citada a utilização da RS16 e, um pouco menos, da RS17 para serviços da APM de movimentação de contêineres, o que exige acompanhamento próximo das manutenções e do uso dos pneus.
+Leandro solicita avaliação do processo de estorno de atendimentos do almoxarifado para a manutenção, referindo-se ao radiador da KAL07.
+Wellington sugere revisar o indicador de disponibilidade de equipamentos portuários, pois envolve máquinas diferentes e guindastes.
+Rodrigo explica o baixo atendimento de preventivas de agosto a outubro como produto da alta demanda por veículos pela logística. Ressalta, porém, que o menor atendimento de preventivas significa maior frequência de corretivas e maiores custos de mitigação.
+Fátima lembra que o atendimento do indicador de aguardando peças é prejudicado pelo período de não faturamento, durante o qual não se pausam as solicitações de compra, mas os pedidos de compra, assim restando muitas pendências de compras.
+Wellington levanta a possibilidade de criar uma meta de produção, isto é, a quantidade de toneladas movimentadas. Eduardo e Jonas, neste momento, ficam em dúvida sobre a forma de controle da quantidade movimentada no porto, isto é, a movimentação dos serviços prestados no CFS e nas operações de navios e de placas.
