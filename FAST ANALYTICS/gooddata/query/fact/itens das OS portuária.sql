@@ -12,19 +12,10 @@ select
     ZC1.ZC1_TABPRC as TABELA_PRECO,
     
     ZC2.ZC2_ITEM as ITEM,
-    ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
-        when 2 then 'FUNÇÃO'
-        when 3 then 'EQUIPAMENTO'
-        when 4 then 'MATERIAIS'
-        when 6 then 'DEPRECIAÇÃO'
-        when 7 then 'CONTABILIDADE'
-        when 8 then 'DESPESAS FINANCEIRAS'
-        
-        when 13 then 'TARIFA'
-        else 'OUTROS'
+        else 'CUSTO OU DESPESA'
     end as TIPO_INSUMO,
 
     trim(ZC2.ZC2_COD) as INSUMO,
@@ -32,17 +23,7 @@ select
     ZC2.ZC2_QTDREA as QTD_REAL,
     ZC2.ZC2_VLUPRV as VAL_PREV,
     ZC2.ZC2_VLUREA as VAL_REAL,
-    ZC2.ZC2_QTDREC as QTD_RECURSO,
-    
-    trim(ZC2.ZC2_CONTEI) as CONTEINER,
-    trim(ZC2.ZC2_LACRE) as LACRE,
-    ZC2.ZC2_MOTORI as COD_MOT,
-    ZC2.ZC2_VEICUL as CM,
-    ZC2.ZC2_CARRET as SR,
-
-    concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) as DTINI_APONT,
-    concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) as DTFIM_APONT,
-    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO
+    ZC2.ZC2_QTDREC as QTD_RECURSO
 
 from ZC2010 ZC2
     left join ZC1010 ZC1
