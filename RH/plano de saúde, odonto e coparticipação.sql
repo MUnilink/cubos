@@ -55,7 +55,7 @@
 
         case when RHP.RHP_PD in (87, 565, 571) then 'HAPVIDA'
         else
-            case when RHP.RHP_PD in (88) then 'UNIMED'
+            case when RHP.RHP_PD in (88, 626, 627) then 'UNIMED'
             else
                 case when RHP.RHP_PD in (428, 429) then 'REDE SAUDE'
                 else
@@ -256,7 +256,7 @@ union
 
         case when RHO.RHO_PD in (87, 565, 571) then 'HAPVIDA'
         else
-            case when RHO.RHO_PD in (88) then 'UNIMED'
+            case when RHO.RHO_PD in (88, 626, 627) then 'UNIMED'
             else
                 case when RHO.RHO_PD in (428, 429) then 'REDE SAUDE'
                 else
@@ -456,7 +456,7 @@ union
 
         case when RHR.RHR_PD in (87, 565, 571) then 'HAPVIDA'
         else
-            case when RHR.RHR_PD in (88) then 'UNIMED'
+            case when RHR.RHR_PD in (88, 626, 627) then 'UNIMED'
             else
                 case when RHR.RHR_PD in (428, 429) then 'REDE SAUDE'
                 else
@@ -655,7 +655,7 @@ union
 
         case when RHS.RHS_PD in (87, 565, 571) then 'HAPVIDA'
         else
-            case when RHS.RHS_PD in (88) then 'UNIMED'
+            case when RHS.RHS_PD in (88, 626, 627) then 'UNIMED'
             else
                 case when RHS.RHS_PD in (428, 429) then 'REDE SAUDE'
                 else
