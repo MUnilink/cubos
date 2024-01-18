@@ -1,48 +1,35 @@
-SELECT
+select
     'P |01|01' AS BK_EMPRESA,
-    CASE
-        WHEN C5_FILIAL IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(C5_FILIAL AS CHAR (6))
-    END AS BK_FILIAL,
-    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(C5_CLIENTE, ' '))+RTRIM(COALESCE(C5_LOJACLI, ' ')), ' '), '|') AS BK_CLIENTE,
-    'P |01|SA4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A4_FILIAL, ' '))+'|'+RTRIM(COALESCE(C5_TRANSP, ' ')), ' '), '|') AS BK_TRANSPORTADORA,
-    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(C5_VEND1, ' ')), ' '), '|') AS BK_VENDEDOR,
-    'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(C5_CONDPAG, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
-    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(C6_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
-    'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(C6_TES, ' ')), ' '), '|') AS BK_TES,
-    CASE
-        WHEN A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_EST, ' ')), ' '), '|')
-        ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_EST, ' '))+RTRIM(COALESCE(A1_COD_MUN, ' ')), ' '), '|')
-    END AS BK_REGIAO,
-    C5_NUM AS NUMERO_DO_PEDIDO,
-    C5_EMISSAO AS DATA_DA_VENDA,
-    C6_ENTREG AS DATA_DA_ENTREGA,
-    C6_ITEM AS NUMERO_DO_ITEM,
-    C6_VALOR AS VL_VENDA_TOTAL,
-    C6_QTDVEN AS QTDE_VENDIDA,
-    C6_PRCVEN AS VL_PRECO_UNITARIO,
-    C6_VALOR AS VL_VENDA_MERCADORIA,
-    C6_VALOR AS VL_VENDA_LIQUIDA,
-    C6_PRUNIT AS VL_PRECO_LISTA,
-    CASE
-        WHEN C9_BLEST = ' '
-            AND C9_BLCRED = '  ' THEN 'Liberado'
-        ELSE 'Bloqueado'
-    END STATUS_DO_ITEM_DO_PEDIDO,
-    CASE
-        WHEN C5_LIBEROK = '  '
-            AND C5_NOTA = '  '
-            AND C5_BLQ = '  ' THEN 'Aberto'
-        WHEN C5_NOTA <> '  '
-            OR C5_LIBEROK = 'E'
-            AND C5_BLQ = '  ' THEN 'Encerrado'
-        WHEN (C5_LIBEROK <> '  '
-                AND C5_NOTA = '  '
-                AND C5_BLQ = '  ') THEN 'Liberado'
-        WHEN (C5_BLQ = '1') THEN 'Bloqueio por Regra'
-        WHEN (C5_BLQ= '2') THEN 'Bloqueio por Verba'
-END STATUS_DO_PEDIDO
-FROM SC5010 SC5
+    case when SC5.C5_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SC5.C5_FILIAL AS CHAR (6)) end as BK_FILIAL,
+    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC5.C5_CLIENTE, ' '))+RTRIM(COALESCE(SC5.C5_LOJACLI, ' ')), ' '), '|') AS BK_CLIENTE,
+    'P |01|SA4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA4.A4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC5.C5_TRANSP, ' ')), ' '), '|') AS BK_TRANSPORTADORA,
+    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA3.A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC5.C5_VEND1, ' ')), ' '), '|') AS BK_VENDEDOR,
+    'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC5.C5_CONDPAG, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
+    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
+    'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_TES, ' ')), ' '), '|') AS BK_TES,
+    case when  SA1.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' '))+RTRIM(COALESCE(SA1.A1_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    
+    SC5.C5_NUM AS NUMERO_DO_PEDIDO,
+    SC5.C5_EMISSAO AS DATA_DA_VENDA,
+    SC6.C6_ENTREG AS DATA_DA_ENTREGA,
+    SC6.C6_ITEM AS NUMERO_DO_ITEM,
+    SC6.C6_VALOR AS VL_VENDA_TOTAL,
+    SC6.C6_QTDVEN AS QTDE_VENDIDA,
+    SC6.C6_PRCVEN AS VL_PRECO_UNITARIO,
+    SC6.C6_VALOR AS VL_VENDA_MERCADORIA,
+    SC6.C6_VALOR AS VL_VENDA_LIQUIDA,
+    SC6.C6_PRUNIT AS VL_PRECO_LISTA,
+    
+    case when SC9.C9_BLEST = ' ' and SC9.C9_BLCRED = '  ' then 'Liberado' else 'Bloqueado' end as STATUS_DO_ITEM_DO_PEDIDO,    
+    case
+        when SC5.C5_LIBEROK = '' and SC5.C5_NOTA = '' and SC5.C5_BLQ = '' then 'Aberto'
+        when SC5.C5_NOTA != '' or SC5.C5_LIBEROK = 'E' and SC5.C5_BLQ = '' then 'Encerrado'
+        when (SC5.C5_LIBEROK != '' and SC5.C5_NOTA = '' and SC5.C5_BLQ = '') then 'Liberado'
+        when (SC5.C5_BLQ = '1') then 'Bloqueio por Regra'
+        when (SC5.C5_BLQ = '2') then 'Bloqueio por Verba'
+    end as STATUS_DO_PEDIDO
+
+from SC5010 SC5
     INNER JOIN SC6010 SC6
         ON C6_FILIAL = C5_FILIAL
         AND C6_NUM = C5_NUM
@@ -72,34 +59,35 @@ FROM SC5010 SC5
         ON E4_FILIAL = '      '
         AND E4_CODIGO = C5_CONDPAG
         AND SE4.D_E_L_E_T_ = ' '
+    
     LEFT JOIN
     (
         SELECT
-            C9_BLEST,
-            C9_BLCRED,
-            C9_PEDIDO,
-            C9_PRODUTO,
-            C9_ITEM,
-            C9_FILIAL
-        FROM SC9010 SC9
+            SC9010.C9_BLEST,
+            SC9010.C9_BLCRED,
+            SC9010.C9_PEDIDO,
+            SC9010.C9_PRODUTO,
+            SC9010.C9_ITEM,
+            SC9010.C9_FILIAL
+        FROM SC9010
         WHERE
-                SC9.D_E_L_E_T_ = ' '
-            AND C9_SEQUEN =
-        (
-            SELECT MAX(C9_SEQUEN)
-            FROM SC9010 A
-            WHERE
-                    A.C9_FILIAL = SC9.C9_FILIAL
-                AND A.C9_PEDIDO = SC9.C9_PEDIDO
-                AND A.C9_PRODUTO = SC9.C9_PRODUTO
-                AND A.C9_ITEM = SC9.C9_ITEM
-                AND A.D_E_L_E_T_ = ' '
-        )
-    ) C9
-        ON C9.C9_PEDIDO = C6_NUM
-        AND C9.C9_PRODUTO = C6_PRODUTO
-        AND C9.C9_ITEM = C6_ITEM
-        AND C9.C9_FILIAL = C5_FILIAL
-WHERE
-        C5_TIPO = 'N'
-    AND SC5.D_E_L_E_T_ = ' '
+                SC9010.D_E_L_E_T_ = ' '
+            AND SC9010.C9_SEQUEN =
+            (
+                SELECT MAX(C9_SEQUEN)
+                FROM SC9010 A
+                WHERE
+                        A.C9_FILIAL = SC9.C9_FILIAL
+                    AND A.C9_PEDIDO = SC9.C9_PEDIDO
+                    AND A.C9_PRODUTO = SC9.C9_PRODUTO
+                    AND A.C9_ITEM = SC9.C9_ITEM
+                    AND A.D_E_L_E_T_ = ' '
+            )
+    ) SC9
+        ON SC9.C9_PEDIDO = SC6.C6_NUM
+        AND SC9.C9_PRODUTO = SC6.C6_PRODUTO
+        AND SC9.C9_ITEM = SC6.C6_ITEM
+        AND SC9.C9_FILIAL = SC5.C5_FILIAL
+where
+        SC5.C5_TIPO = 'N'
+    and SC5.D_E_L_E_T_ = ''
