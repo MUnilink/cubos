@@ -1,5 +1,5 @@
 select
-    concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM), trim(SC1.C1_ITEM)) as ID_SOLICITACAO,
+    concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACAO,
     trim(SC1.C1_NUM) as NUM_SC,
 	trim(SC1.C1_ITEM) as ITEM_SC,
     trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,

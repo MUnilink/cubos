@@ -79,4 +79,6 @@ FROM SC1010 SC1
     left join SM2010 SM2
         on SM2.D_E_L_E_T_ = ' '
         and SM2.M2_DATA = SC1.C1_EMISSAO
-where SC1.D_E_L_E_T_ = ' '
+where
+        SC1.C1_EMISSAO between <<START_DATE>> and <<FINAL_DATE>>
+    and SC1.D_E_L_E_T_ = ' '
