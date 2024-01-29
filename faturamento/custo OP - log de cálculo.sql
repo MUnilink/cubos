@@ -1,4 +1,4 @@
-select distinct
+select
     ZG1.ZG1_FILORI as FILIAL_LOG,
     ZG1.ZG1_TABELA as TABELA_LOG,
     ZG1.ZG1_CODIGO as CODIGO_LOG,
@@ -25,13 +25,12 @@ select distinct
     ZC2.ZC2_COMPET,
     substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 103) as DTINI_APONT,
-    convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 103) as DTFIM_APONT,
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
         when 6 then 'FECHADA'
+        when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
     end as STATUS_OS,
     
@@ -43,15 +42,27 @@ select distinct
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
-
-        when 13 then 'TARIFA'
+        when 9 then 'DOCUMENTAÇÃO E TAXAS'
         else 'OUTROS'
     end as TIPO_INSUMO,
     
-    ZC2.ZC2_COD as INSUMO,
+    trim(ZC2.ZC2_COD) as INSUMO,
+    case ZC2.ZC2_TIPO
+        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
+        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
+        when 3 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 3)
+        when 4 then (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 4)
+        when 6 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 6)
+        when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 7)
+        else trim(ZC2.ZC2_DESC)
+    end as DESC_INSUMO,
     ZC2.ZC2_ITEM as ITEM,
 
+    isnull(nullif(concat(ZC2.ZC2_NUM, '-', ZC2.ZC2_ITEM), '-'), 'COMPARATIVO TIPO ' + ZC2.ZC2_TIPO) as OS_ITEM,
+
     SD3.D3_CUSTO1,
+    SD3.D3_NUMSA as SA,
+    SD3.D3_DOC as DOC_EST,
     TQN.TQN_DTABAS,
     TQN.TQN_VALTOT,
     MNT.TJ_ORDEM,
@@ -68,7 +79,7 @@ from ZC2010 ZC2 (nolock)
         on ZG1.D_E_L_E_T_ = ''
         and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
         and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
-        and ZG1.ZG1_COMPET = substring(ZC2.ZC2_DTFIM, 1, 6)
+        and ZG1.ZG1_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)
     
     left join SD3010 SD3 (nolock)
         on SD3.D_E_L_E_T_ = ''
@@ -76,6 +87,7 @@ from ZC2010 ZC2 (nolock)
         and SD3.D3_YOS = ZC2.ZC2_NUM
         and eomonth(SD3.D3_EMISSAO) = ZC2.ZC2_COMPET
         and ZC2.ZC2_TIPO = 4
+    
     left join TQN010 TQN (nolock)
         on TQN.D_E_L_E_T_ = ''
         and TQN.TQN_FILIAL = ZC2.ZC2_FILIAL
@@ -141,4 +153,6 @@ from ZC2010 ZC2 (nolock)
         and DEP.PERIODO = ZC2.ZC2_COMPET
     /*left join CT2010 CT2 (nolock) and ZC2.ZC2_TIPO = 7*/
 where
-            ZC2.D_E_L_E_T_ = ''
+        ZC2.D_E_L_E_T_ = ''
+    and ZC2.ZC2_HRINI != '  :  '
+    and ZC2.ZC2_HRFIM != '  :  '
