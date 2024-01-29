@@ -1,0 +1,69 @@
+Alterar link de acesso ao app de apontamento das operações portuárias.
+Receita aparece no app, e não deveria.
+Grupo contém as informações da placa a ser carregada, navio, e informativos de final de operação e fim da OS.
+Testar erro de apontamento, quando não aparece o início para o correto apontamento do fim.
+Aparecer nome do navio em vez do código, nome do cliente não é essencial, diferente do navio. Para o CFS, o número do contêiner em vez do navio.
+Verificar bateria dos coletores, incluindo coletores novos, para o correto apontamento.
+Programação dos navios é conhecida pelo operacional do TMUT.
+Jonas relata que não há uma pessoa dedicada ao acompanhamento dos apontamentos das operações.
+Abertura de OS de importação inicia no TMUT, e, em exportação, no pátio.
+Navio de placas com 3 serviços, recebimento, transferência e embarque. Em paralelo, o TMUT faz a OS de atracação e desatracação do navio, com apontamento de conferente. Hoje a Cleide encerra as OS para realizar o faturamento.
+Eólica com exportação e importação. Às vezes a gestão é apenas de uma parte, por exemplo a recepção das pás, ou o desembarque.
+Balancear os serviços divididos, pois parte das operações são executadas pela empresa e parte por terceiro. Bruno sugere limitar o período de apontamento apenas ao turno de trabalho.
+Avaliar apontamento ou rateio dos custos das correntes para RS, TEREX e Bardella.
+Ver retirada de campo com descrição do navio, pela normalização.
+Eduardo questiona a falta de visualização dos apontamentos anteriores no app, mas reconhece em discussão que não seria simples apenas exibir esses dados na tela. Discorda um pouco do apontamento por turno, pois em várias operações o mesmo tipo de equipe está trabalhando. Necessário documentar o processo de apontamento, para esclarecer as regras de início e fim dos trabalhos.
+
+19/12 Gate
+Imprimir OS portuária com data e hora de emissão do relatório. Posicionamento do contêiner deve ser feito pelo motorista que entra com o contêiner, de forma que a impressão deve ter apenas um motorista.
+Sistema não barra a emissão de EIR com informações de contêiner divergente.
+Verificar data e hora início e término do processo. Encerramento da viagem é feito por quem agendou o motorista para uma nova viagem.
+Analisar caminho Operação > OS > imprimir OS.
+Verificar emissão de EIR com motoristas terceiras.
+
+28/12
+TMUT
+Automatizar o porto para OS abertas no Pecém.
+Exceto placas, são apenas um serviço.
+Para cliente ferronorte, cliente da OS é referente a prestação de serviços para Tecer.
+Minério/granel OS para o cliente. Melhorar a busca da OS no cadastro.
+Pátio
+Tratativa de OS com receita e sem apontamento de função e equipamento.
+OBS e especificações na tabela ZC1.
+Data início e fim do serviço. Data de abertura e encerramento da OS.
+Receita não é o tipo de serviço.
+OS pode ser para um serviço. Verificar vínculo da OS com tabela de preço para realizar faturamento.
+
+15/01 Para reunião com Alana, Cristianne e Eduardo
+1 - Compras diretas, tarifas portuárias e taxas;
+2 - Valores das apólices de seguro;
+3 - Apropriação dos valores de manutenção das correntes e de outros equipamentos da operação portuária que tenham valor significativo;
+4 - Custos de pneus;
+5 - O custo de manutenção deve se dar pela data do apontamento da manutenção. Preferencialmente, pela data final, pois é o momento em que o custo estará totalmente apontado;
+6 - Analogamente, a competência correspondente à produção, isto é, o apontamento da OS portuária, só estará finalizado com o apontamento final do recurso, de forma que a competência é o mês do final do apontamento;
+7 - Analisar se todo o ativo fixo é integrado à contabilidade ou se o vínculo é por ativo, por grupo, por conta etc., a fim de apropriar os custos de seguro dos veículos locados;
+8 - Analisar a viabilidade de criação de itens e de rotina automática para solicitações de compra referentes às tarifas portuárias, de modo semelhante aos itens de receita, para que os valores cobrados pela CIPP sejam apropriados às OS portuárias;
+9 - Alterar os valores possíveis para status da OS. Aberta se mantém, "faturada" para quando houver pedido de venda e/ou NF de saída (verificar com Cleide), e "encerrada", encerramento pelo adm Pecém (após análise de viabilidade) de forma automática quando gerada a solicitação de compra das tarifas, ou manual, momento a partir do qual não mais se podem apontar recursos;
+10 - Registro dos usuários de abertura e encerramento da OS e de apontamentos inicial e final de recurso;
+11 - Criar tabela de preço das cobranças dos serviços da CIPP, semelhante à existente tabela de preço dos serviços prestados;
+12 - Campo OBS da OS não pode ser consultado no banco;
+13 - Investigar se a rotina "imprimir OS" registra nos itens da OS do CFS os valores inseridos. Se, alterar a rotina de EIR para que se torne um relatório automaticamente preenchido ao se selecionar um item específico da OS portuária. Se não, entender o momento em que se registram motorista e veículo na CIPP para registrar também na OS do CFS.
+14- Memória de Cálculo de cada etapa;
+15 - Manual de Procedimentos da Rotina de fechamentos dos custos
+
+18/01 Marília
+26/01 Marília
+
+
+Assuntos pendentes
+Receita aparece no app, e não deveria.
+Aparecer nome do navio em vez do código, nome do cliente não é essencial, diferente do navio. Para o CFS, o número do contêiner em vez do navio.
+Testar erro de apontamento, quando não aparece o início para o correto apontamento do fim. Relato de que às vezes se encontra o apontamento inicial, mas retorna erro de quantidade ao apontar o final.
+Avaliar apontamento ou rateio dos custos das correntes para RS, TEREX e Bardella.
+Sistema não barra a emissão de EIR com informações de contêiner divergente.
+Analisar caminho Operação > OS > imprimir OS.
+Verificar emissão de EIR com motoristas terceiras.
+Automatizar o porto para OS abertas no Pecém.
+Data de abertura e encerramento da OS.
+Automatizar o porto para OS abertas no Pecém.
+Custos de pneus;
