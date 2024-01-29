@@ -53,16 +53,19 @@
 
         RHP.RHP_COMPPG as PERIODO,
 
-        case when RHP.RHP_PD in (87, 565, 571) then 'HAPVIDA'
+        case when RHP.RHP_PD in (87, 565, 571) and RHP.RHP_CODFOR = 2 then 'HAPVIDA'
         else
-            case when RHP.RHP_PD in (88, 626, 627) then 'UNIMED'
+            case when RHP.RHP_PD in (88, 626, 627) and RHP.RHP_CODFOR = 1 then 'UNIMED'
             else
-                case when RHP.RHP_PD in (428, 429) then 'REDE SAUDE'
+                case when RHP.RHP_PD in (87, 565, 571) and RHP.RHP_CODFOR = 4 then 'UNIMED'
                 else
-                    case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                    case when RHP.RHP_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
+                        case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                        else
+                            case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
+                            else 'OUTROS'
+                            end
                         end
                     end
                 end
@@ -254,16 +257,19 @@ union
 
         RHO.RHO_COMPPG as PERIODO,
 
-        case when RHO.RHO_PD in (87, 565, 571) then 'HAPVIDA'
+        case when RHO.RHO_PD in (87, 565, 571) and RHO.RHO_CODFOR = 2 then 'HAPVIDA'
         else
-            case when RHO.RHO_PD in (88, 626, 627) then 'UNIMED'
+            case when RHO.RHO_PD in (88, 626, 627) and RHO.RHO_CODFOR = 1 then 'UNIMED'
             else
-                case when RHO.RHO_PD in (428, 429) then 'REDE SAUDE'
+                case when RHO.RHO_PD in (87, 565, 571) and RHO.RHO_CODFOR = 4 then 'UNIMED'
                 else
-                    case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                    case when RHO.RHO_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
+                        case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                        else
+                            case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
+                            else 'OUTROS'
+                            end
                         end
                     end
                 end
@@ -454,16 +460,19 @@ union
         
         RHR.RHR_COMPPG as PERIODO,
 
-        case when RHR.RHR_PD in (87, 565, 571) then 'HAPVIDA'
+        case when RHR.RHR_PD in (87, 565, 571) and RHR.RHR_CODFOR = 2 then 'HAPVIDA'
         else
-            case when RHR.RHR_PD in (88, 626, 627) then 'UNIMED'
+            case when RHR.RHR_PD in (88, 626, 627) and RHR.RHR_CODFOR = 1 then 'UNIMED'
             else
-                case when RHR.RHR_PD in (428, 429) then 'REDE SAUDE'
+                case when RHR.RHR_PD in (87, 565, 571) and RHR.RHR_CODFOR = 4 then 'UNIMED'
                 else
-                    case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                    case when RHR.RHR_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
+                        case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                        else
+                            case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
+                            else 'OUTROS'
+                            end
                         end
                     end
                 end
@@ -644,25 +653,25 @@ union
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
-
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
-        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-        
+        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,        
         datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
-        RHS.RHS_COMPPG as PERIODO,        
-
-        case when RHS.RHS_PD in (87, 565, 571) then 'HAPVIDA'
+        RHS.RHS_COMPPG as PERIODO,
+        
+        case when RHS.RHS_PD in (87, 565, 571) and RHS.RHS_CODFOR = 2 then 'HAPVIDA'
         else
-            case when RHS.RHS_PD in (88, 626, 627) then 'UNIMED'
+            case when RHS.RHS_PD in (88, 626, 627) and RHS.RHS_CODFOR = 1 then 'UNIMED'
             else
-                case when RHS.RHS_PD in (428, 429) then 'REDE SAUDE'
+                case when RHS.RHS_PD in (87, 565, 571) and RHS.RHS_CODFOR = 4 then 'UNIMED'
                 else
-                    case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
+                    case when RHS.RHS_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
+                        case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
+                        else
+                            case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
+                            else 'OUTROS'
+                            end
                         end
                     end
                 end
