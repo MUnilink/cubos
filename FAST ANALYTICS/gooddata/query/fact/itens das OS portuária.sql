@@ -1,17 +1,16 @@
 select
     'P |01|01' AS BK_EMPRESA,
     CASE WHEN SD2.D2_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(SD2.D2_FILIAL AS CHAR (6)) END AS BK_FILIAL,
-    concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as BK_OSPORTUARIA,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DEV.A1_COD, ' '))+RTRIM(COALESCE(DEV.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
-    concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as BK_PEDIDODEVENDA,
+    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DES.D1_FORNECE, ' '))+RTRIM(COALESCE(DES.D1_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
+    /*concat(ARM.A1_COD, ARM.A1_LOJA) as ARMADORA,*/
+    concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
+    concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
     concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF,
 
-    ZC1.ZC1_EMISSA as DATA_OS,    
-    /*concat(ARM.A1_COD, ARM.A1_LOJA) as ARMADORA,*/
-    concat(DES.A2_COD, DES.A2_LOJA) as DESPACHANTE,
+    ZC1.ZC1_EMISSA as DATA_OS,
     ZC1.ZC1_TABPRC as TABELA_PRECO,
-    
-    ZC2.ZC2_ITEM as ITEM,    
+    ZC2.ZC2_ITEM as ITEM,
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
         when 2 then 'FUNÇÃO'
@@ -20,8 +19,7 @@ select
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
-        
-        when 13 then 'TARIFA'
+        when 9 then 'DOCUMENTAÇÃO E TAXAS'
         else 'OUTROS'
     end as TIPO_INSUMO,
 

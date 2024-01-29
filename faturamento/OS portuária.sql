@@ -1,7 +1,9 @@
 select
     ZC1.ZC1_FILIAL as FILIAL,
+    concat(trim(ZC1.ZC1_NUM), trim(ZC2.ZC2_ITEM)) as ID_OS,
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
+    ZC2.ZC2_ITEM as ITEM,
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
@@ -27,7 +29,6 @@ select
     DES.A2_CGC as DESP_CNPJ,
     trim(DES.A2_NOME) as DESPACHANTE,
     
-    ZC2.ZC2_ITEM as ITEM,
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
@@ -40,8 +41,6 @@ select
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
-
-        when 13 then 'TARIFA'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
@@ -59,6 +58,7 @@ select
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
         when 6 then 'FECHADA'
+        when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
     end as STATUS_OS,
     
