@@ -17,8 +17,11 @@ select
 		else '-'
 	end as RV_TIPOCOD,
 
-	sum(SRD.RD_VALOR) as RD_VALOR,
-	sum(SRD.RD_HORAS) as RD_HORAS
+	SRD.RD_VALOR as RD_VALOR,
+	SRD.RD_HORAS as RD_HORAS,
+
+	ZC2.*
+
 from SRD010 SRD (nolock)
     inner join SRV010 SRV (nolock)
     	on SRV.D_E_L_E_T_ = ''
@@ -33,7 +36,36 @@ from SRD010 SRD (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+	
+	left join 
+	(
+		select
+			ZC1010.ZC1_FILIAL as FILIAL,
+			ZC1010.ZC1_NUM as NUM_OS,
+			ZC2010.ZC2_ITEM as ITEM,
+			trim(ZC2010.ZC2_COD) as INSUMO,
+			cast(substring(ZC1010.ZC1_NUM, 6, 10) as int) as OS,			
+			ZC2010.ZC2_COMPET,
+			substring(ZC1010.ZC1_EMISSA, 1, 6) as PERIODO_OS,
+			case ZC1010.ZC1_STATUS
+				when 1 then 'ABERTA'
+				when 6 then 'FECHADA'
+				when 9 then 'PEDIDO CRIADO'
+				else 'OUTROS'
+			end as STATUS_OS
+		from ZC2010 (nolock)
+			left join ZC1010 (nolock)
+				on ZC1010.D_E_L_E_T_ = ''
+				and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+				and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+		where
+				ZC2010.D_E_L_E_T_ = ''
+			and ZC2010.ZC2_TIPO = 2
+	) ZC2
+		on SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+		and trim(SRA.RA_CODFUNC) = ZC2.INSUMO
 where
         SRD.D_E_L_E_T_ = ''
-    and SRD.RD_PERIODO > 202112
+    and SRD.RD_PERIODO > 202212
 	and SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848)
+
