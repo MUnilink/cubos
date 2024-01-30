@@ -23,9 +23,7 @@ select
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     
     ZC2.ZC2_COMPET,
-    substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
@@ -60,52 +58,10 @@ select
 
     isnull(nullif(concat(ZC2.ZC2_NUM, '-', ZC2.ZC2_ITEM), '-'), 'COMPARATIVO TIPO ' + ZC2.ZC2_TIPO) as OS_ITEM,
 
-    SD3.D3_CUSTO1,
-    SD3.D3_NUMSA as SA,
-    SD3.D3_DOC as DOC_EST,
-    TQN.TQN_DTABAS,
-    TQN.TQN_VALTOT,
-    MNT.TJ_ORDEM,
-    MNT.TL_CUSTO,
-    DEP.DATA_MOV,
-    DEP.N4_VLROC1
-
-from ZC2010 ZC2 (nolock)
-    left join ZC1010 ZC1 (nolock)
-        on ZC1.D_E_L_E_T_ = ''
-        and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
-        and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-    inner join ZG1010 ZG1 (nolock)
-        on ZG1.D_E_L_E_T_ = ''
-        and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
-        and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
-        and ZG1.ZG1_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)
-    
-    left join SD3010 SD3 (nolock)
-        on SD3.D_E_L_E_T_ = ''
-        and SD3.D3_FILIAL = ZC2.ZC2_FILIAL
-        and SD3.D3_YOS = ZC2.ZC2_NUM
-        and eomonth(SD3.D3_EMISSAO) = ZC2.ZC2_COMPET
-        and ZC2.ZC2_TIPO = 4
-    
-    left join TQN010 TQN (nolock)
-        on TQN.D_E_L_E_T_ = ''
-        and TQN.TQN_FILIAL = ZC2.ZC2_FILIAL
-        and TQN.TQN_FROTA = ZC2.ZC2_COD
-        and eomonth(TQN.TQN_DTABAS) = ZC2.ZC2_COMPET
-        and ZC2.ZC2_TIPO = 3
-    /*left join SRD010 SRD (nolock)*/
-    left join
-    (   
-        select
-            STJ010.TJ_FILIAL,
-            STJ010.TJ_ORDEM,
-            STJ010.TJ_CODBEM,
-            STL010.TL_CODIGO,
-            STL010.TL_SEQRELA,
-            STL010.TL_CUSTO,
-            STL010.TL_DTINICI,
-            eomonth(STL010.TL_DTINICI) as PERIODO
+    (select sum(SD3010.D3_CUSTO1) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO != 'S' and ZC2.ZC2_TIPO = 4 and ZG1.ZG1_TABELA = 'SD3') as ESTOQUE,
+    (select sum(TQN010.TQN_VALTOT) from TQN010 (nolock) where TQN010.D_E_L_E_T_ = '' and TQN010.TQN_FROTA = ZC2.ZC2_COD and eomonth(TQN010.TQN_DTABAS) = ZC2.ZC2_COMPET and ZC2.ZC2_TIPO = 3 and ZG1.ZG1_TABELA = 'TQN') as COMBUSTIVEL,
+    (
+        select sum(STL010.TL_CUSTO)
         from STJ010 (nolock)
             left join STL010 (nolock)
                 on STL010.D_E_L_E_T_ = ''
@@ -114,22 +70,15 @@ from ZC2010 ZC2 (nolock)
                 and STL010.TL_ORDEM = STJ010.TJ_ORDEM
         where
                 STJ010.D_E_L_E_T_ = ''
+            and STJ010.TJ_CODBEM = ZC2.ZC2_COD
+            and eomonth(STL010.TL_DTFIM) = ZC2.ZC2_COMPET
             and STL010.TL_SEQRELA > 0
-    ) MNT
-        on ZC2.ZC2_TIPO = 3
-        and MNT.TJ_CODBEM = ZC2.ZC2_COD
-        and MNT.PERIODO = ZC2.ZC2_COMPET
+            and ZC2.ZC2_TIPO = 3
+            and ZG1.ZG1_TABELA = 'STJ'
+    ) as MANUTENCAO,
     
-    left join
     (
-        select
-            SN1010.N1_CODBEM,
-            SN4010.N4_VLROC1,
-            convert(datetime, concat(SN4010.N4_DATA, ' ', SN4010.N4_HORA), 113) as DATA_MOV,
-            eomonth(SN4010.N4_DATA) as PERIODO,
-            trim(SN1010.N1_CBASE) as ATIVO,
-            trim(SN1010.N1_DESCRIC) as DESC_ATIVO,
-            trim(ST9010.T9_CODBEM) as T9_CODBEM
+        select sum(SN4010.N4_VLROC1)
         from SN4010 (nolock)
             inner join SN3010 (nolock)
                 on SN3010.D_E_L_E_T_ = ''
@@ -140,18 +89,96 @@ from ZC2010 ZC2 (nolock)
                     on SN1010.D_E_L_E_T_ = ''
                     and SN1010.N1_CBASE = SN3010.N3_CBASE
                     and SN1010.N1_ITEM = SN3010.N3_ITEM
-
-                    inner join ST9010 (nolock)
-                        on ST9010.D_E_L_E_T_ = ''
-                        and ST9010.T9_CODBEM = SN1010.N1_CODBEM
         where
                 SN4010.D_E_L_E_T_ = ''
+            and SN1010.N1_CODBEM = ZC2.ZC2_COD
+            and eomonth(SN4010.N4_DATA) = ZC2.ZC2_COMPET
             and SN4010.N4_OCORR = 6
-    ) DEP
-        on ZC2.ZC2_TIPO = 6
-        and DEP.T9_CODBEM = ZC2.ZC2_COD
-        and DEP.PERIODO = ZC2.ZC2_COMPET
-    /*left join CT2010 CT2 (nolock) and ZC2.ZC2_TIPO = 7*/
+            and SN4010.N4_TIPOCNT = 3
+            and ZC2.ZC2_TIPO = 6
+            and ZG1.ZG1_TABELA = 'ST9'
+    ) as DEPRECIACAO,
+
+    (
+        select sum(TS1010.TS1_VALOR)
+        from TS1010 (nolock)
+            left join SE2010 (nolock)
+                on SE2010.D_E_L_E_T_ = ''
+                and trim(SE2010.E2_PREFIXO) = 'MNT'
+                and SE2010.E2_NUM = TS1010.TS1_NUMSE2
+        where
+                TS1010.D_E_L_E_T_ = ''
+            and TS1010.TS1_CODBEM = ZC2.ZC2_COD
+            and year(SE2010.E2_VENCREA) = substring(ZC2.ZC2_COMPET, 1, 4)
+            and ZC2.ZC2_TIPO = 3
+            and ZG1.ZG1_TABELA = 'TS1'
+    )/12 as DOCUMENTACAO,
+
+    (
+        select sum(ZC2010.ZC2_TOTAL)
+        from ZA7010 (nolock)
+            inner join ZC2010 (nolock)
+                on ZC2010.D_E_L_E_T_ = ''
+                and ZC2010.ZC2_COD = ZA7010.ZA7_COD
+        where
+                ZA7010.D_E_L_E_T_ = ''
+            and ZC2010.ZC2_COD = ZC2.ZC2_COD
+            and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
+            and ZC2010.ZC2_TIPO = 7
+            and ZG1.ZG1_TABELA = 'CT2'
+    ) as CONTABILIDADE,
+
+    (
+        select sum(SRD.RD_VALOR)
+            trim(isnull(SRD.RD_FILIAL, '-')) as RD_FILIAL,
+            trim(isnull(SRD.RD_PERIODO, '-')) as RD_PERIODO,
+            trim(isnull(SRD.RD_MAT, '-')) as RD_MAT,
+            trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
+            trim(isnull(SRD.RD_PD, '-')) as RD_PD,
+            trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
+            trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
+            trim(isnull(SRJ.RJ_DESC, '-')) as RJ_DESC,
+            trim(isnull(SRD.RD_CC, '-')) as RA_CC,
+
+            case trim(SRV.RV_TIPOCOD)
+                when '1' then 'PROVENTO'
+                when '2' then 'DESCONTO'
+                when '3' then 'BASE PROVENTO'
+                when '4' then 'BASE DESCONTO'
+                else '-'
+            end as RV_TIPOCOD
+        from SRD010 (nolock)
+            inner join SRV010 (nolock)
+                on SRV010.D_E_L_E_T_ = ''
+                and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                and SRD010.RD_PD = SRV010.RV_COD
+            inner join SRA010 (nolock)
+                on SRA010.D_E_L_E_T_ = ''
+                and SRA010.RA_FILIAL = SRD010.RD_FILIAL
+                and SRA010.RA_MAT = SRD010.RD_MAT
+
+                inner join SRJ010 SRJ (nolock)
+                    on SRJ.D_E_L_E_T_ = ''
+                    and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+                    and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+        where
+                SRD.D_E_L_E_T_ = ''
+            and SRD.RD_PERIODO = 
+            and SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848)
+
+    ) as FOLHA
+
+from ZC2010 ZC2 (nolock)
+    left join ZC1010 ZC1 (nolock)
+        on ZC1.D_E_L_E_T_ = ''
+        and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+        and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+    inner join ZG1010 ZG1 (nolock)
+        on ZG1.D_E_L_E_T_ = ''
+        and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
+        and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
+        and ZG1.ZG1_ATIVO = 'S'
+        and ZG1.ZG1_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_HRINI != '  :  '
