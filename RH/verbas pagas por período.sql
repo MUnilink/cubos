@@ -2,7 +2,7 @@
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOMECMP) as NOME,
-		SRJ.RJ_FUNCAO as COD_FUNCAO,
+		trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
         trim(SRJ.RJ_DESC) as FUNCAO,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
@@ -46,6 +46,8 @@
 				end
 			end
 		end as CONTA,
+
+		case when SRC.RC_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848) then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -59,7 +61,7 @@
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
 			else 'OUTROS'
-		end as RV_TIPOCOD,
+		end as TIPO_VERBA,
 
 		SRC.RC_VALOR as VALOR,
 		SRC.RC_HORAS as HORAS,
@@ -105,7 +107,7 @@ union
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOMECMP) as NOME,
-		SRJ.RJ_FUNCAO as COD_FUNCAO,
+		trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
         trim(SRJ.RJ_DESC) as FUNCAO,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
@@ -149,6 +151,8 @@ union
 				end
 			end
 		end as CONTA,
+
+		case when SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848) then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -162,7 +166,7 @@ union
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
 			else '-'
-		end as RV_TIPOCOD,
+		end as TIPO_VERBA,
 
 		SRD.RD_VALOR as VALOR,
 		SRD.RD_HORAS as HORAS,
