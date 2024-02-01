@@ -74,7 +74,6 @@ select
             and eomonth(STL010.TL_DTFIM) = ZC2.ZC2_COMPET
             and STL010.TL_SEQRELA > 0
             and ZC2.ZC2_TIPO = 3
-            and ZG1.ZG1_TABELA = 'STJ'
     ) as MANUTENCAO,
     
     (
@@ -96,7 +95,6 @@ select
             and SN4010.N4_OCORR = 6
             and SN4010.N4_TIPOCNT = 3
             and ZC2.ZC2_TIPO = 6
-            and ZG1.ZG1_TABELA = 'ST9'
     ) as DEPRECIACAO,
 
     (
@@ -111,7 +109,6 @@ select
             and TS1010.TS1_CODBEM = ZC2.ZC2_COD
             and year(SE2010.E2_VENCREA) = substring(ZC2.ZC2_COMPET, 1, 4)
             and ZC2.ZC2_TIPO = 3
-            and ZG1.ZG1_TABELA = 'TS1'
     )/12 as DOCUMENTACAO,
 
     (
@@ -125,55 +122,15 @@ select
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
             and ZC2010.ZC2_TIPO = 7
-            and ZG1.ZG1_TABELA = 'CT2'
     ) as CONTABILIDADE,
 
-    (
-        select sum(SRD.RD_VALOR)
-            trim(isnull(SRD.RD_FILIAL, '-')) as RD_FILIAL,
-            trim(isnull(SRD.RD_PERIODO, '-')) as RD_PERIODO,
-            trim(isnull(SRD.RD_MAT, '-')) as RD_MAT,
-            trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
-            trim(isnull(SRD.RD_PD, '-')) as RD_PD,
-            trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
-            trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
-            trim(isnull(SRJ.RJ_DESC, '-')) as RJ_DESC,
-            trim(isnull(SRD.RD_CC, '-')) as RA_CC,
-
-            case trim(SRV.RV_TIPOCOD)
-                when '1' then 'PROVENTO'
-                when '2' then 'DESCONTO'
-                when '3' then 'BASE PROVENTO'
-                when '4' then 'BASE DESCONTO'
-                else '-'
-            end as RV_TIPOCOD
-        from SRD010 (nolock)
-            inner join SRV010 (nolock)
-                on SRV010.D_E_L_E_T_ = ''
-                and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                and SRD010.RD_PD = SRV010.RV_COD
-            inner join SRA010 (nolock)
-                on SRA010.D_E_L_E_T_ = ''
-                and SRA010.RA_FILIAL = SRD010.RD_FILIAL
-                and SRA010.RA_MAT = SRD010.RD_MAT
-
-                inner join SRJ010 SRJ (nolock)
-                    on SRJ.D_E_L_E_T_ = ''
-                    and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                    and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-        where
-                SRD.D_E_L_E_T_ = ''
-            and SRD.RD_PERIODO = 
-            and SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848)
-
-    ) as FOLHA
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-    inner join ZG1010 ZG1 (nolock)
+    left join ZG1010 ZG1 (nolock)
         on ZG1.D_E_L_E_T_ = ''
         and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
         and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
