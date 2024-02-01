@@ -108,7 +108,7 @@ select
                 TS1010.D_E_L_E_T_ = ''
             and TS1010.TS1_CODBEM = ZC2.ZC2_COD
             and year(SE2010.E2_VENCREA) = substring(ZC2.ZC2_COMPET, 1, 4)
-            and ZC2.ZC2_TIPO = 3
+            and ZC2.ZC2_TIPO = 9
     )/12 as DOCUMENTACAO,
 
     (
@@ -122,8 +122,7 @@ select
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
             and ZC2010.ZC2_TIPO = 7
-    ) as CONTABILIDADE,
-
+    ) as CONTABILIDADE
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
