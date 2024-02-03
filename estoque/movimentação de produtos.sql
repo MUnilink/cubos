@@ -8,7 +8,6 @@
         SB2.B2_CM1 as CM_ATUAL,
         SB2.B2_VATU1 as VALOR_ATUAL,
         SB2.B2_QATU as QTD_ATUAL,
-        SB2.B2_CM2,SB2.B2_CM3,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -23,6 +22,8 @@
         SD3.D3_TM as TM,
         SD3.D3_CF as CF,
         SD3.D3_DOC as DOC,
+        SD3.D3_SEQCALC as SEQ,
+        SD3.D3_ESTORNO as ESTORNO,
         SD3.D3_CUSTO1 as CUSTO_MOV,
         SD3.D3_QUANT as QTD_MOV,
         SD3.D3_YOS as OS_PORT,
@@ -58,7 +59,6 @@ union
         SB2.B2_CM1 as CM_ATUAL,
         SB2.B2_VATU1 as VALOR_ATUAL,
         SB2.B2_QATU as QTD_ATUAL,
-        SB2.B2_CM2,SB2.B2_CM3,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -73,9 +73,11 @@ union
         SD1.D1_TES as TM,
         SD1.D1_CF as CF,
         SD1.D1_DOC as DOC,
+        null as SEQ,
+        null as ESTORNO,
         SD1.D1_CUSTO as CUSTO_MOV,
         SD1.D1_QUANT as QTD_MOV,
-        null as OS_PORT,
+        SD1.D1_YOS as OS_PORT,
         'ENT' as TIPO_MOV
         
     from SD1010 SD1 (nolock)
@@ -108,7 +110,6 @@ union
         SB2.B2_CM1 as CM_ATUAL,
         SB2.B2_VATU1 as VALOR_ATUAL,
         SB2.B2_QATU as QTD_ATUAL,
-        SB2.B2_CM2,SB2.B2_CM3,
 
         SB9.B9_CM1 as CM_INI,
         SB9.B9_VINI1 as VALOR_INI,
@@ -123,6 +124,8 @@ union
         SD2.D2_TES as TM,
         SD2.D2_CF as CF,
         SD2.D2_DOC as DOC,
+        null as SEQ,
+        null as ESTORNO,
         SD2.D2_CUSTO1 as CUSTO_MOV,
         SD2.D2_QUANT as QTD_MOV,
         null as OS_PORT,
