@@ -98,18 +98,26 @@ select
     ) as DEPRECIACAO,
 
     (
-        select sum(TS1010.TS1_VALOR)
-        from TS1010 (nolock)
-            left join SE2010 (nolock)
-                on SE2010.D_E_L_E_T_ = ''
-                and trim(SE2010.E2_PREFIXO) = 'MNT'
-                and SE2010.E2_NUM = TS1010.TS1_NUMSE2
+        select sum(TS1.DOCTAX_VALOR)/12
+        from
+        (
+            select
+                TS1010.TS1_CODBEM,
+                TS1010.TS1_DOCTO,
+                max(TS1010.TS1_DTVENC) as DOCTAX_DTVENC,
+                max(TS1010.TS1_VALOR) as DOCTAX_VALOR
+            from TS1010 (nolock)
+            where
+                    TS1010.D_E_L_E_T_ = ''
+                and TS1010.TS1_CODBEM = ZC2.ZC2_COD
+                and year(TS1010.TS1_DTVENC) <= substring(ZC2.ZC2_COMPET, 1, 4)
+            group by
+                TS1010.TS1_CODBEM,
+                TS1010.TS1_DOCTO
+        ) TS1
         where
-                TS1010.D_E_L_E_T_ = ''
-            and TS1010.TS1_CODBEM = ZC2.ZC2_COD
-            and year(SE2010.E2_VENCREA) = substring(ZC2.ZC2_COMPET, 1, 4)
-            and ZC2.ZC2_TIPO = 9
-    )/12 as DOCUMENTACAO,
+                ZC2.ZC2_TIPO = 9
+    ) as DOCUMENTACAO,
 
     (
         select sum(ZC2010.ZC2_TOTAL)
