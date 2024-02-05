@@ -24,7 +24,7 @@ select
     sum(isnull(FOLHA_ABERTA.PTS_premio_tempo_serviço, 0.0)) as 'PTS (premio tempo serviço)',
     sum(isnull(FOLHA_ABERTA.Férias_Qtde_de_dias_comprados, 0.0)) as 'Férias Qtde de dias comprados',
     sum(isnull(FOLHA_ABERTA.Pgto_de_férias_compradas, 0.0)) as 'Pgto de férias compradas',
-    sum(isnull(FOLHA_ABERTA.Dobras_DomingosFeriados, 0.0)) as 'Dobras Domingos/ Feriados',
+    sum(isnull(FOLHA_ABERTA.Dobras_DomingosFeriados_provento, 0.0) - isnull(FOLHA_ABERTA.Dobras_DomingosFeriados_desconto, 0.0)) as 'Dobras Domingos/ Feriados',
     sum(isnull(FOLHA_ABERTA.Hora_Extra_Eventual_mês, 0.0)) as 'Hora Extra Eventual (mês)',
     sum(isnull(FOLHA_ABERTA.Adicional_Noturno_FIXO, 0.0)) as 'Adicional Noturno',
     sum(isnull(FOLHA_ABERTA.Pericul_FIXA, 0.0)) as 'Periculosidade // Adic. Risco',
@@ -59,6 +59,7 @@ select
     sum(isnull(FOLHA_ABERTA.Desconto_VA, 0.0)) as 'Desconto VA',
     sum(isnull(FOLHA_ABERTA.Descontos_autorizados, 0.0)) as 'Descontos Autorizados (Funcionários)',
     sum(isnull(FOLHA_ABERTA.DescontoVT, 0.0)) as 'Desconto Vale Transporte',
+    
     sum(isnull(FOLHA_ABERTA.Primeira_13, 0.0)) as 'Primeira Parcela 13° - Proventos',
     sum(isnull(FOLHA_ABERTA.Primeira_13, 0.0) - isnull(FOLHA_ABERTA.Primeira_13_valor_alimenticia, 0.0)) as 'Primeira Parcela 13° - Valor a pagar',
     max(isnull(FOLHA_ABERTA.Primeira_13_avos, 0.0)) as 'Primeira Parcela 13° - Avos',
@@ -69,6 +70,7 @@ select
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_maternidade, 0.0)) as 'Primeira Parcela 13° - sal. maternidade',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_alimenticia, 0.0)) as 'Primeira Parcela 13° - pensão alimentícia',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_totaismedia, 0.0)) as 'Primeira Parcela 13° - totais média',
+    
     sum(isnull(FOLHA_ABERTA.Segunda_13_provento, 0.0) - isnull(FOLHA_ABERTA.Segunda_13_desconto, 0.0)) as 'Segunda Parcela 13° - Valor a pagar',
     max(isnull(FOLHA_ABERTA.Segunda_13_avos, 0.0)) as 'Segunda Parcela 13° - Avos',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_insalubridade, 0.0)) as 'Segunda Parcela 13° - Insalubridade',
@@ -130,7 +132,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('796', '560', '563', '719', '749', '056', '570', '574', '575', '576', '577', '711', '738', '057', '008', '132', '133', '113', '029', '111', '112', '113', '344', '030', '041', '039', '096', '097', '215', '356', '054', '113', '407', '001', '2112', '999')
@@ -145,7 +148,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('796') /* custo do func. incluso no custo total com pessoal, que é apenas da empresa */
@@ -161,7 +165,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('560', '563', '719') /* 410 apenas func */
@@ -177,7 +182,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('749')  /* 562 apenas func */
@@ -192,7 +198,8 @@ from
             select max(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('056', '570', '574', '575', '576', '577', '711')
@@ -207,7 +214,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('738')
@@ -222,7 +230,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('057')
@@ -237,7 +246,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('0')
@@ -252,7 +262,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD not in ('450')
@@ -275,7 +286,8 @@ from
             select sum(SRC010.RC_HORAS)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('020', '025')
@@ -290,7 +302,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('020', '025')
@@ -306,7 +319,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('008')
@@ -322,7 +336,8 @@ from
             select sum(SRC010.RC_HORAS)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('132', '152')
@@ -338,7 +353,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('132', '133')
@@ -354,10 +370,11 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
-                    SRC010.RC_PD in ('113', '451', '452', '623')
+                    SRC010.RC_PD in ('113', '451', '452')
                 and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
@@ -365,12 +382,30 @@ from
                 and SRC010.RC_PD = FOLHA.RC_PD
             
             and SRC010.RC_SEQ = FOLHA.RC_SEQ
-        ) as Dobras_DomingosFeriados,
+        ) as Dobras_DomingosFeriados_provento,
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRC010.RC_PD = SRV010.RV_COD
+            where
+                    SRC010.RC_PD in ('623')
+                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRC010.RC_PD = FOLHA.RC_PD
+            
+            and SRC010.RC_SEQ = FOLHA.RC_SEQ
+        ) as Dobras_DomingosFeriados_desconto,
+        (
+            select sum(SRC010.RC_VALOR)
+            from SRC010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('029', '111', '112', '113', '344')
@@ -386,7 +421,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('030', '041', '371', '372')
@@ -402,7 +438,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('039', '096', '097', '215', '356', '013')
@@ -418,7 +455,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('054')
@@ -434,7 +472,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('001')
@@ -450,7 +489,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('450')
@@ -466,7 +506,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('461')
@@ -482,7 +523,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('091')
@@ -498,7 +540,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
@@ -514,7 +557,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('183')
@@ -530,7 +574,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('999')
@@ -546,7 +591,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('567')
@@ -562,7 +608,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('474')
@@ -578,7 +625,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('566')
@@ -593,7 +641,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('113')
@@ -608,7 +657,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('147')
@@ -623,7 +673,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('140')
@@ -638,7 +689,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
@@ -653,7 +705,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('999')
@@ -668,7 +721,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     cast(SRC010.RC_PD as int) != 450
@@ -683,7 +737,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('401')
@@ -698,7 +753,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('402')
@@ -713,7 +769,8 @@ from
             select max(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('569', '570', '574', '575', '576', '577')
@@ -728,7 +785,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('565', '571')
@@ -743,7 +801,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('420', '421', '422')
@@ -758,7 +817,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('421')
@@ -773,7 +833,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('530', '535', '414')
@@ -789,7 +850,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('407')
@@ -805,7 +867,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('980')
@@ -821,7 +884,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('622')
@@ -837,7 +901,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('440')
@@ -853,7 +918,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('440', '445')
@@ -869,7 +935,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('410')
@@ -884,7 +951,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('597')
@@ -899,7 +967,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('561')
@@ -914,7 +983,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770', '772')
@@ -929,7 +999,8 @@ from
             select avg(SRC010.RC_HORAS)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770')
@@ -944,7 +1015,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('167')
@@ -959,7 +1031,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '772')
@@ -974,7 +1047,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('010')
@@ -989,7 +1063,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('011')
@@ -1004,7 +1079,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('202')
@@ -1019,7 +1095,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('373', '414', '533')
@@ -1034,7 +1111,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '010', '768', '769', '770')
@@ -1049,7 +1127,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('300', '013', '015', '203', '204', '205', '206', '247', '304', '306', '307')
@@ -1064,7 +1143,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('510', '403', '407', '423', '530', '535', '373', '374')
@@ -1079,7 +1159,8 @@ from
             select avg(SRC010.RC_HORAS)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('300')
@@ -1094,7 +1175,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('015')
@@ -1109,7 +1191,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in (304)
@@ -1124,7 +1207,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('013')
@@ -1139,7 +1223,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('306')
@@ -1154,7 +1239,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('307')
@@ -1169,7 +1255,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
@@ -1184,7 +1271,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('247')
@@ -1199,7 +1287,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('203', '206')
@@ -1214,7 +1303,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
@@ -1229,7 +1319,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('403')
@@ -1244,7 +1335,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('423')
@@ -1259,7 +1351,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('530', '535', '373', '374')
@@ -1274,7 +1367,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
@@ -1290,7 +1384,8 @@ from
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
