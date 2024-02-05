@@ -178,7 +178,7 @@ from
                     and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
-                    SRC010.RC_PD in ('113', '451', '452') /* ??? 114 equivalente a domingo/feriado ou hora extra mesmo? aparentemente OK*/
+                    SRC010.RC_PD in ('113', '451', '452', '623')
                 and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
