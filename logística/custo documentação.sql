@@ -4,6 +4,7 @@ select
     TS1.TS1_QTDPAR,
     TS1.TS1_VALOR/TS1.TS1_QTDPAR as VALPARC,
     TS1.TS1_VALOR,
+    TS1.TS1_VALOR/TS1.TS1_QTDPAR/12 as RATEIO,
 
     trim(isnull(TS0.TS0_NOMDOC, '-')) as TS0_DOCTO,
     trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
