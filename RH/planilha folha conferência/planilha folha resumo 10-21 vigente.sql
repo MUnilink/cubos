@@ -19,7 +19,7 @@ select
     sum(FOLHA_RESUMO.IRRF_ADIANTAMENTO) as IR_ADIANTAMENTO,
     max(FOLHA_RESUMO.SALARIO_BASE) as SALARIO_BASE,
     sum(FOLHA_RESUMO.HORAS_EXTRAS) as HORAS_EXTRAS,
-    sum(FOLHA_RESUMO.DOMINGOS_FERIADOS_provento - FOLHA_RESUMO.DOMINGOS_FERIADOS_desconto) as DOMINGOS_FERIADOS,
+    sum(isnull(FOLHA_RESUMO.DOMINGOS_FERIADOS_provento, 0.0)) - sum(isnull(FOLHA_RESUMO.DOMINGOS_FERIADOS_desconto, 0.0)) as DOMINGOS_FERIADOS,
     sum(FOLHA_RESUMO.ADICIONAL_NOTURNO) as ADICIONAL_NOTURNO,
     sum(FOLHA_RESUMO.PERICULOSIDADES) as PERICULOSIDADES,
     sum(FOLHA_RESUMO.VALE_TRANSPORTE) as VALE_TRANSPORTE,
@@ -179,10 +179,11 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('113', '451', '452')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
-                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
         ) as DOMINGOS_FERIADOS_provento,
@@ -195,10 +196,11 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('623')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
-                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
         ) as DOMINGOS_FERIADOS_desconto,

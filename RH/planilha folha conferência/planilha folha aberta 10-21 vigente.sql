@@ -137,7 +137,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('796', '560', '563', '719', '749', '056', '570', '574', '575', '576', '577', '711', '738', '057', '008', '132', '133', '113', '029', '111', '112', '113', '344', '030', '041', '039', '096', '097', '215', '356', '054', '113', '407', '001', '2112', '999')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -153,7 +154,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('796') /* custo do func. incluso no custo total com pessoal, que é apenas da empresa */
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -187,7 +189,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('749')  /* 562 apenas func */
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -203,7 +206,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('056', '570', '574', '575', '576', '577', '711')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -219,7 +223,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('738')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -235,7 +240,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('057')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -251,7 +257,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('0')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -291,7 +298,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('020', '025')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -307,7 +315,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('020', '025')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -324,7 +333,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('008')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -341,7 +351,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('132', '152')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -358,7 +369,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('132', '133')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -375,13 +387,13 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('113', '451', '452')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
         ) as Dobras_DomingosFeriados_provento,
         (
             select sum(SRC010.RC_VALOR)
@@ -392,13 +404,13 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('623')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
         ) as Dobras_DomingosFeriados_desconto,
         (
             select sum(SRC010.RC_VALOR)
@@ -409,7 +421,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('029', '111', '112', '113', '344')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -426,7 +439,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('030', '041', '371', '372')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -443,7 +457,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('039', '096', '097', '215', '356', '013')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -460,7 +475,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('054')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -477,7 +493,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('001')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -494,7 +511,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('450')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -511,7 +529,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('461')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -528,7 +547,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('091')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -545,7 +565,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -562,7 +583,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('183')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -579,7 +601,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('999')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -596,7 +619,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('567')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -613,7 +637,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('474')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -630,7 +655,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('566')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -646,7 +672,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('113')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO and substring(SRC010.RC_PERIODO, 5, 6) = '07'
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -662,7 +689,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('147')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -678,7 +706,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('140')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -694,7 +723,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -710,7 +740,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('999')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -742,7 +773,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('401')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -758,7 +790,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('402')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -774,7 +807,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('569', '570', '574', '575', '576', '577')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -790,7 +824,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('565', '571')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -806,7 +841,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('420', '421', '422')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -822,7 +858,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('421')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -838,7 +875,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('530', '535', '414')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -855,7 +893,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('407')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -872,7 +911,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('980')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -889,7 +929,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('622')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -906,7 +947,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('440')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -923,7 +965,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('440', '445')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -940,7 +983,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('410')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -956,7 +1000,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('597')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -972,7 +1017,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('561')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -988,7 +1034,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770', '772')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1004,7 +1051,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1020,7 +1068,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('167')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1036,7 +1085,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '772')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1052,7 +1102,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('010')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1068,7 +1119,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('011')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1084,7 +1136,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('202')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1100,7 +1153,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('373', '414', '533')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1116,7 +1170,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('009', '010', '768', '769', '770')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1132,7 +1187,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('300', '013', '015', '203', '204', '205', '206', '247', '304', '306', '307')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1148,7 +1204,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('510', '403', '407', '423', '530', '535', '373', '374')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1164,7 +1221,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('300')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1180,7 +1238,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('015')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1196,7 +1255,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in (304)
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1212,7 +1272,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('013')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1228,7 +1289,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('306')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1244,7 +1306,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('307')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1260,7 +1323,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1276,7 +1340,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('247')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1292,7 +1357,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('203', '206')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1308,7 +1374,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1324,7 +1391,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('403')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1340,7 +1408,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('423')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1356,7 +1425,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('530', '535', '373', '374')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1372,7 +1442,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -1389,7 +1460,8 @@ from
                     and SRC010.RC_PD = SRV010.RV_COD
             where
                     SRC010.RC_PD in ('2112')
-                and SRC010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
                 and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
