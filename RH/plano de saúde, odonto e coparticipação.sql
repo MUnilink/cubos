@@ -109,6 +109,13 @@
             else null
         end as IDADE_USUARIO,
 
+        case RHP.RHP_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
+
         case when RHP.RHP_ORIGEM = 1 then RHP.RHP_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHP.RHP_ORIGEM != 1 then RHP.RHP_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
@@ -313,6 +320,13 @@ union
             else null
         end as IDADE_USUARIO,
 
+        case RHO.RHO_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
+
         case when RHO.RHO_ORIGEM = 1 then RHO.RHO_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHO.RHO_ORIGEM != 1 then RHO.RHO_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
@@ -516,6 +530,13 @@ union
             else null
         end as IDADE_USUARIO,
 
+        case RHR.RHR_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
+
         case when RHR.RHR_ORIGEM = 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHR.RHR_ORIGEM != 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
 
@@ -714,6 +735,13 @@ union
             when 3 then datediff(year, RHM.RHM_DTNASC, RHS.RHS_DATA)
             else null
         end as IDADE_USUARIO,
+
+        case RHS.RHS_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
 
         case when RHS.RHS_ORIGEM = 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHS.RHS_ORIGEM != 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_DEPAGG,
