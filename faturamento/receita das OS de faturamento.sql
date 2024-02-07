@@ -8,11 +8,6 @@ select
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
     
-    SD2.D2_LOCAL as ARMAZEM,
-    SD2.D2_TES as TM,
-    SD2.D2_CF as CF,
-    SD2.D2_DOC as DOC,
-    
     ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
     ZC1.ZC1_NAVIO as NAVIO,
@@ -39,7 +34,7 @@ select
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
 
     trim(ZC2.ZC2_COD) as INSUMO,
-    (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2) as DESC_INSUMO,
+    (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1) as DESC_INSUMO,
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
@@ -72,7 +67,34 @@ select
     SC6.C6_PRCVEN as PRECO_PEDIDO,
     SC6.C6_VALOR as VALOR_PEDIDO,
     SC6.C6_CC as CC_PEDIDO,
-    SC6.C6_ITEMCTA as ATIVIDADE_PEDIDO
+    SC6.C6_ITEMCTA as ATIVIDADE_PEDIDO,
+
+    convert(date, SD2.D2_EMISSAO, 103) as DATA_NF,
+    substring(SD2.D2_EMISSAO, 1, 6) PERIODO_NF,
+
+    SD2.D2_DOC as NF_DOC,
+    SD2.D2_SERIE as NF_SERIE,
+    SD2.D2_LOCAL as ARMAZEM,
+    SD2.D2_TES as TM,
+    SD2.D2_CF as CF,
+
+    CAST(COALESCE(SD2.D2_VALBRUT, 0) AS DECIMAL(14, 2)) AS VL_FATURAMENTO_TOTAL,
+    CAST(COALESCE(SD2.D2_VALICM, 0) AS DECIMAL(14, 2)) AS VL_ICMS_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_VALIPI, 0) AS DECIMAL(14, 2)) AS VL_IPI_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_VALFRE, 0) AS DECIMAL(14, 2)) AS VL_FRETE_NF,
+    CAST(COALESCE(SD2.D2_DESPESA, 0) AS DECIMAL(14, 2)) AS VL_DESPESA,
+    CAST(COALESCE(SD2.D2_TOTAL, 0) AS DECIMAL(14, 2)) AS VL_FATURAMENTO_MERCADORIA,
+    CAST(COALESCE(SD2.D2_VALIMP6, 0) AS DECIMAL(14, 2)) AS VL_PIS_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_VALIMP5, 0) AS DECIMAL(14, 2)) AS VL_COFINS_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_QUANT, 0) AS DECIMAL(13, 3)) AS QTD_FATURADA_ITEM,
+    CAST(COALESCE(SD2.D2_VALISS, 0) AS DECIMAL(14, 2)) AS VL_ISS_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_ICMSRET, 0) AS DECIMAL(14, 2)) AS VL_ICMS_SUBST_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_DESCON, 0) AS DECIMAL(12, 2)) AS VL_DESCONTO_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_VALIRRF, 0) AS DECIMAL(14, 2)) AS VL_IRF_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_VALINS, 0) AS DECIMAL(14, 2)) AS VL_INSS_FATURAMENTO,
+    CAST(COALESCE(SD2.D2_PESO * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_LIQUIDO,
+    CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
+    CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -102,30 +124,22 @@ from ZC2010 ZC2 (nolock)
     left join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = ZC2.ZC2_MOTORI
+    
     left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
         and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
         and SC6.C6_YOS = ZC2.ZC2_NUM
         and SC6.C6_YITOS = ZC2.ZC2_ITEM
 
-    inner join SC6010 SC6
-        on SC6.C6_FILIAL = SC5.C5_FILIAL
-        and SC6.C6_NUM = SC5.C5_NUM
-        and SC6.D_E_L_E_T_ = ' '
-            
-        left join SD2010 SD2
-            on SD2.D_E_L_E_T_ = ''
-            and SD2.D2_FILIAL = SC5.C5_FILIAL
-            and SD2.D2_PEDIDO = SC5.C5_NUM
-
-            left join SF2010 SF2
-                on SF2.D_E_L_E_T_= ' '
-                and SF2.F2_FILIAL = SD2.D2_FILIAL
-                and SF2.F2_CLIENTE = SD2.D2_CLIENTE
-                and SF2.F2_LOJA = SD2.D2_LOJA
-                and SF2.F2_DOC = SD2.D2_DOC
-                and SF2.F2_SERIE = SD2.D2_SERIE
+        left join SC5010 SC5
+            on SC5.D_E_L_E_T_ = ' '
+            and SC5.C5_FILIAL = SC6.C6_FILIAL
+            and SC5.C5_NUM = SC6.C6_NUM
+                
+            left join SD2010 SD2
+                on SD2.D_E_L_E_T_ = ''
+                and SD2.D2_FILIAL = SC5.C5_FILIAL
+                and SD2.D2_PEDIDO = SC5.C5_NUM
 where
         ZC2.D_E_L_E_T_ = ''
-    and ZC2.ZC2_TIPO = 2
-    and year(ZC1.ZC1_EMISSA) > 2022
+    and ZC2.ZC2_TIPO = 1
