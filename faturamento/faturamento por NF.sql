@@ -31,8 +31,8 @@ SELECT
 
     SC6.C6_NUM as PEDIDO,
     SC6.C6_ITEM as ITEMPV,
-    SC6.C6_ITEMCTA as ATIVIDADE,
-    SC6.C6_CC as CC,
+    trim(SC6.C6_ITEMCTA) as ATIVIDADE,
+    trim(SC6.C6_CC) as CC,
     
     ZC2.ZC2_NUM as OS_PORTUARIA,
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
@@ -48,6 +48,7 @@ SELECT
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
         when 6 then 'FECHADA'
+        when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
     end as STATUS_OS,
 
