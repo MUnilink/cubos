@@ -66,4 +66,4 @@ Verificar emissão de EIR com motoristas terceiras.
 Automatizar o porto para OS abertas no Pecém.
 Data de abertura e encerramento da OS.
 Automatizar o porto para OS abertas no Pecém.
-Custos de pneus;
+Custos de pneus.
