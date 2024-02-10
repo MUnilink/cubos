@@ -51,10 +51,6 @@ select
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
-    ZC2.ZC2_MOTORI as COD_MOT,
-    DA4.DA4_NOME as MOTORISTA,
-    ZC2.ZC2_VEICUL as CM,
-    ZC2.ZC2_CARRET as SR,
 
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
@@ -136,10 +132,11 @@ from ZC2010 ZC2 (nolock)
             and SC5.C5_FILIAL = SC6.C6_FILIAL
             and SC5.C5_NUM = SC6.C6_NUM
                 
-            left join SD2010 SD2
-                on SD2.D_E_L_E_T_ = ''
-                and SD2.D2_FILIAL = SC5.C5_FILIAL
-                and SD2.D2_PEDIDO = SC5.C5_NUM
+        left join SD2010 SD2
+            on SD2.D_E_L_E_T_ = ''
+            and SD2.D2_FILIAL = SC6.C6_FILIAL
+            and SD2.D2_PEDIDO = SC6.C6_NUM
+            and SD2.D2_ITEMPV = SC6.C6_ITEM
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_TIPO = 1
