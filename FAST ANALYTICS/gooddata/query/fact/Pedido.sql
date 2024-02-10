@@ -9,6 +9,10 @@ select
     'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_TES, ' ')), ' '), '|') AS BK_TES,
     case when  SA1.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' '))+RTRIM(COALESCE(SA1.A1_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     
+    concat(trim(ZC2.ZC2_FILIAL), trim(ZC2.ZC2_NUM)) as ID_OSPORTUARIA,
+    concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
+    concat('SF2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF,
+
     SC5.C5_NUM AS NUMERO_DO_PEDIDO,
     SC5.C5_EMISSAO AS DATA_DA_VENDA,
     SC6.C6_ENTREG AS DATA_DA_ENTREGA,
@@ -63,31 +67,42 @@ from SC5010 SC5
     LEFT JOIN
     (
         SELECT
-            SC9010.C9_BLEST,
-            SC9010.C9_BLCRED,
-            SC9010.C9_PEDIDO,
-            SC9010.C9_PRODUTO,
-            SC9010.C9_ITEM,
-            SC9010.C9_FILIAL
-        FROM SC9010
+            A.C9_BLEST,
+            A.C9_BLCRED,
+            A.C9_PEDIDO,
+            A.C9_PRODUTO,
+            A.C9_ITEM,
+            A.C9_FILIAL
+        FROM SC9010 A
         WHERE
-                SC9010.D_E_L_E_T_ = ' '
-            AND SC9010.C9_SEQUEN =
+                A.D_E_L_E_T_ = ' '
+            AND A.C9_SEQUEN =
             (
                 SELECT MAX(C9_SEQUEN)
-                FROM SC9010 A
+                FROM SC9010
                 WHERE
-                        A.C9_FILIAL = SC9.C9_FILIAL
-                    AND A.C9_PEDIDO = SC9.C9_PEDIDO
-                    AND A.C9_PRODUTO = SC9.C9_PRODUTO
-                    AND A.C9_ITEM = SC9.C9_ITEM
-                    AND A.D_E_L_E_T_ = ' '
+                        SC9010.C9_FILIAL = A.C9_FILIAL
+                    AND SC9010.C9_PEDIDO = A.C9_PEDIDO
+                    AND SC9010.C9_PRODUTO = A.C9_PRODUTO
+                    AND SC9010.C9_ITEM = A.C9_ITEM
+                    AND SC9010.D_E_L_E_T_ = ' '
             )
     ) SC9
         ON SC9.C9_PEDIDO = SC6.C6_NUM
         AND SC9.C9_PRODUTO = SC6.C6_PRODUTO
         AND SC9.C9_ITEM = SC6.C6_ITEM
         AND SC9.C9_FILIAL = SC5.C5_FILIAL
+    
+    left join ZC2010 ZC2 (nolock)
+        on ZC2.D_E_L_E_T_ = ''
+        and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+        and ZC2.ZC2_NUM = SC6.C6_YOS
+        and ZC2.ZC2_ITEM = SC6.C6_YITOS
+            
+        left join SD2010 SD2
+            on SD2.D_E_L_E_T_ = ''
+            and SD2.D2_FILIAL = SC5.C5_FILIAL
+            and SD2.D2_PEDIDO = SC5.C5_NUM
 where
         SC5.C5_TIPO = 'N'
     and SC5.D_E_L_E_T_ = ''
