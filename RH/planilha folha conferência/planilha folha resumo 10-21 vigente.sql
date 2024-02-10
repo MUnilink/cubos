@@ -8,6 +8,7 @@ select
     FOLHA_RESUMO.RC_CC,
     FOLHA_RESUMO.CTT_DESC01,
     FOLHA_RESUMO.CTD_DESC01,
+    FOLHA_RESUMO.RC_ROTEIR as ROTEIRO,
     0 as ATIVOS,
     0 as LICENCA,
     0 as DEMITIDOS,
@@ -20,6 +21,8 @@ select
     max(FOLHA_RESUMO.SALARIO_BASE) as SALARIO_BASE,
     sum(FOLHA_RESUMO.HORAS_EXTRAS) as HORAS_EXTRAS,
     sum(isnull(FOLHA_RESUMO.DOMINGOS_FERIADOS_provento, 0.0)) - sum(isnull(FOLHA_RESUMO.DOMINGOS_FERIADOS_desconto, 0.0)) as DOMINGOS_FERIADOS,
+    sum(isnull(FOLHA_RESUMO.DOMINGOS_FERIADOS_provento, 0.0)) as DOBRAS_VALOR_TOTAL,
+    sum(isnull(FOLHA_RESUMO.DOMINGOS_FERIADOS_desconto, 0.0)) as DOBRAS_DESCONTO,
     sum(FOLHA_RESUMO.ADICIONAL_NOTURNO) as ADICIONAL_NOTURNO,
     sum(FOLHA_RESUMO.PERICULOSIDADES) as PERICULOSIDADES,
     sum(FOLHA_RESUMO.VALE_TRANSPORTE) as VALE_TRANSPORTE,
@@ -44,44 +47,13 @@ from
         FOLHA.RC_PD,
         FOLHA.RC_SEMANA,
         FOLHA.RC_SEQ,
+        FOLHA.RC_ROTEIR,
         CTT010.CTT_DESC01,
         CTD010.CTD_DESC01,
         FOLHA.RC_CC,
         SRA010.RA_NOME,
         FOLHA.RC_PROCES,
         SRA010.RA_SITFOLH,
-        row_number() over
-            (
-                partition by
-                FOLHA.RC_FILIAL,
-                FOLHA.RC_PERIODO,
-                FOLHA.RC_MAT,
-                FOLHA.RC_PD,
-                FOLHA.RC_SEMANA ,
-                FOLHA.RC_SEQ ,
-                FOLHA.RC_CC,
-                FOLHA.RC_PROCES
-
-                order by FOLHA.RC_PERIODO
-            ) as contador,
-        count(FOLHA.RC_MAT) over
-        (
-            partition by
-            FOLHA.RC_FILIAL,
-            FOLHA.RC_PERIODO,
-            FOLHA.RC_PD
-
-            order by FOLHA.RC_PD
-        ) as contador_matriculasPORverba,
-        count(FOLHA.RC_PD) over
-        (
-            partition by
-            FOLHA.RC_FILIAL,
-            FOLHA.RC_PERIODO,
-            FOLHA.RC_MAT
-
-            order by FOLHA.RC_MAT
-        ) as contador_verbasPORmatricula,
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -97,6 +69,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Custo_Total_COM_Diárias_Motoristas_provento,
         (
             select sum(SRC010.RC_VALOR)
@@ -113,6 +86,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Custo_Total_COM_Diárias_Motoristas_bases,
         (
             select sum(SRC010.RC_VALOR)
@@ -129,6 +103,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Custo_Total_SEM_Diárias_Motoristas_provento,
         (
             select sum(SRC010.RC_VALOR)
@@ -145,6 +120,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Custo_Total_SEM_Diárias_Motoristas_bases,
         (
             select max(SRA010.RA_SALARIO)
@@ -169,6 +145,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as HORAS_EXTRAS,
         (
             select sum(SRC010.RC_VALOR)
@@ -186,6 +163,7 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as DOMINGOS_FERIADOS_provento,
         (
             select sum(SRC010.RC_VALOR)
@@ -203,6 +181,7 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as DOMINGOS_FERIADOS_desconto,
         (
             select sum(SRC010.RC_VALOR)
@@ -219,6 +198,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as ADICIONAL_NOTURNO,
         (
             select sum(SRC010.RC_VALOR)
@@ -235,6 +215,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as PERICULOSIDADES,
         (
             select sum(SRC010.RC_VALOR)
@@ -251,6 +232,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as VALE_TRANSPORTE,
         (
             select sum(SRC010.RC_VALOR)
@@ -267,6 +249,7 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as VALE_ALIMENTACAO,
         (
             select sum(SRC010.RC_VALOR)
@@ -283,9 +266,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
-                
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as VALE_CESTA,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -301,9 +283,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
-                
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as PLANO_SAUDE,
-
         (
             select max(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -319,9 +300,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
-                
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as PLANO_ODONTOLOGICO,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -337,9 +317,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
-                
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as DIARIAS_VIAGEM,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -355,9 +334,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
-                
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as FERIAS_COMPRADAS,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -373,8 +351,8 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ 
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as ADIANTAMENTO,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -390,8 +368,8 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ 
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as ARR_ADIANTAMENTO,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -407,8 +385,8 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ 
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as IRRF_ADIANTAMENTO,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -423,8 +401,8 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as PRIMEIRA_13,
-
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -439,6 +417,7 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as SEGUNDA_13_provento,
         (
             select sum(SRC010.RC_VALOR)
@@ -454,6 +433,7 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as SEGUNDA_13_desconto,
         (
             select sum(SRC010.RC_VALOR)
@@ -469,6 +449,7 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Segunda_13_media_horas,
         (
             select sum(SRC010.RC_VALOR)
@@ -484,6 +465,7 @@ from
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Segunda_13_media_valor
 
     from SRC010 FOLHA (nolock)
@@ -512,4 +494,5 @@ group by
     FOLHA_RESUMO.RA_NOME,
     FOLHA_RESUMO.CTT_DESC01,
     FOLHA_RESUMO.RC_CC,
-    FOLHA_RESUMO.CTD_DESC01
+    FOLHA_RESUMO.CTD_DESC01,
+    FOLHA_RESUMO.RC_ROTEIR
