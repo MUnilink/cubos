@@ -62,10 +62,6 @@ select
         else 'OUTROS'
     end as STATUS_OS,
     
-    ZC2.ZC2_QTDPRV as QTD_PREV,
-    ZC2.ZC2_QTDREA as QTD_REAL,
-    ZC2.ZC2_VLUPRV as VAL_PREV,
-    ZC2.ZC2_VLUREA as VAL_REAL,
     ZC2.ZC2_QTDREC as QTD_RECURSO,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
