@@ -53,10 +53,11 @@ OS pode ser para um serviço. Verificar vínculo da OS com tabela de preço para
 
 18/01 Marília
 26/01 Marília
+08/02 Marília
 
 
 Assuntos pendentes
-Receita aparece no app, e não deveria.
+Item de receita aparece no app, quando não deveria.
 Aparecer nome do navio em vez do código, nome do cliente não é essencial, diferente do navio. Para o CFS, o número do contêiner em vez do navio.
 Testar erro de apontamento, quando não aparece o início para o correto apontamento do fim. Relato de que às vezes se encontra o apontamento inicial, mas retorna erro de quantidade ao apontar o final.
 Avaliar apontamento ou rateio dos custos das correntes para RS, TEREX e Bardella.
@@ -67,3 +68,8 @@ Automatizar o porto para OS abertas no Pecém.
 Data de abertura e encerramento da OS.
 Automatizar o porto para OS abertas no Pecém.
 Custos de pneus.
+Melhorar a busca da OS no cadastro.
+Data hora início e fim da OS. Data início e fim do serviço, data de abertura e encerramento da OS. Analisar qual data hora é adequada para calcular o tempo de execução do serviço: se a da OS ou a dos apontamentos de pessoal e equipamentos ou de serviços.
+Automatizar o porto para OS abertas no Pecém.
+OBS e especificações na tabela ZC1 não podem ser consultadas no banco.
+Receita não é sempre o tipo de serviço prestado.
