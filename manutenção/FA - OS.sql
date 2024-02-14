@@ -97,7 +97,11 @@ select
 		end
 	end as TL_UNI,
 
+	convert(date, STL.TL_DTINICI, 103) as DTINI_APP,
+	convert(date, STL.TL_DTFIM, 103) as DTFIM_APP,
+
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
+	ST9.T9_CODFAMI as FAMILIA,
 	trim(isnull(TT9.TT9_DESCRI, '-')) as T5_TAREFA,
 	trim(isnull(STJ.TJ_USUARIO, '-')) as TJ_USUAINI,
 	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
