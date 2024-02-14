@@ -43,7 +43,7 @@ from SRD010 SRD (nolock)
 			ZC1010.ZC1_NUM as NUM_OS,
 			ZC2010.ZC2_ITEM as ITEM,
 			trim(ZC2010.ZC2_COD) as INSUMO,
-			cast(substring(ZC1010.ZC1_NUM, 6, 10) as int) as OS,			
+			cast(substring(ZC1010.ZC1_NUM, 6, 10) as int) as OS,
 			ZC2010.ZC2_COMPET,
 			substring(ZC1010.ZC1_EMISSA, 1, 6) as PERIODO_OS,
 			ZC2010.ZC2_DTINI,
@@ -69,6 +69,6 @@ from SRD010 SRD (nolock)
 		and trim(SRA.RA_CODFUNC) = ZC2.INSUMO
 where
         SRD.D_E_L_E_T_ = ''
-    and SRD.RD_PERIODO = 202303
-	and substring(ZC2.ZC2_DTFIM, 1, 6) = 202303
+    and SRD.RD_PERIODO = 202310
+	and substring(ZC2.ZC2_DTFIM, 1, 6) = 202310
 	and SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848)
