@@ -73,13 +73,6 @@ from SRD010 SRD (nolock)
 		on SRD.RD_FILIAL = ZC2.FILIAL
 		and SRD.RD_PERIODO = substring(ZC2.PERIODO, 1, 6)
 		and trim(SRA.RA_CODFUNC) = ZC2.INSUMO
-	
-	    left join ZG1010 ZG1 (nolock)
-			on ZG1.D_E_L_E_T_ = ''
-			and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
-			and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
-			and ZG1.ZG1_ATIVO = 'S'
-			and ZG1.ZG1_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)
 where
         SRD.D_E_L_E_T_ = ''
     and SRD.RD_PERIODO = 202310
