@@ -1,13 +1,14 @@
 select
-	trim(isnull(SRD.RD_FILIAL, '-')) as RD_FILIAL,
-	trim(isnull(SRD.RD_PERIODO, '-')) as RD_PERIODO,
-	trim(isnull(SRD.RD_MAT, '-')) as RD_MAT,
-	trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
-	trim(isnull(SRD.RD_PD, '-')) as RD_PD,
-	trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
-	trim(isnull(SRV.RV_DESCDET, '-')) as RV_DESCDET,
-	trim(isnull(SRJ.RJ_DESC, '-')) as RJ_DESC,
-	trim(isnull(SRD.RD_CC, '-')) as RA_CC,
+	trim(SRD.RD_FILIAL) as RD_FILIAL,
+	trim(SRD.RD_PERIODO) as RD_PERIODO,
+	trim(SRD.RD_MAT) as RD_MAT,
+	trim(SRA.RA_NOME) as RA_NOME,
+	trim(SRD.RD_PD) as RD_PD,
+	trim(SRV.RV_DESC) as RV_DESC,
+	trim(SRV.RV_DESCDET) as RV_DESCDET,
+	trim(SRJ.RJ_DESC) as RJ_DESC,
+	trim(SRJ.RJ_YHRPADR) as HORAS_PADRAO,
+	trim(SRD.RD_CC) as RA_CC,
 
 	case trim(SRV.RV_TIPOCOD)
 		when '1' then 'PROVENTO'
@@ -16,9 +17,11 @@ select
 		when '4' then 'BASE DESCONTO'
 		else '-'
 	end as RV_TIPOCOD,
-
-	case when lag(SRD.RD_PD, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 then SRD.RD_VALOR else 0 end as RD_VALOR,
-
+	
+	SRD.RD_VALOR,
+	SRD.RD_HORAS,
+	case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then SRA.RA_HRSMES else 0 end as HORAS_MES,
+	
 	ZC2.*
 
 from SRD010 SRD (nolock)
@@ -35,40 +38,49 @@ from SRD010 SRD (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+			and SRJ.RJ_YPORTAL = 'S'
 	
 	left join 
 	(
 		select
 			ZC1010.ZC1_FILIAL as FILIAL,
 			ZC1010.ZC1_NUM as NUM_OS,
-			ZC2010.ZC2_ITEM as ITEM,
 			trim(ZC2010.ZC2_COD) as INSUMO,
 			cast(substring(ZC1010.ZC1_NUM, 6, 10) as int) as OS,
-			ZC2010.ZC2_COMPET,
-			substring(ZC1010.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-			ZC2010.ZC2_DTINI,
-			ZC2010.ZC2_HRINI,
-			ZC2010.ZC2_DTFIM,
-			ZC2010.ZC2_HRFIM,
-			case ZC1010.ZC1_STATUS
-				when 1 then 'ABERTA'
-				when 6 then 'FECHADA'
-				when 9 then 'PEDIDO CRIADO'
-				else 'OUTROS'
-			end as STATUS_OS
+			ZC2010.ZC2_COMPET as PERIODO,
+			sum(ZC2010.ZC2_QTDPRV) as QTD_PREV,
+			sum(ZC2010.ZC2_QTDREA) as QTD_REAL,
+			sum(ZC2010.ZC2_VLUPRV) as VAL_PREV,
+			sum(ZC2010.ZC2_VLUREA) as VAL_REAL,
+			sum(datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0) as HORAS_APONT
 		from ZC2010 (nolock)
 			left join ZC1010 (nolock)
 				on ZC1010.D_E_L_E_T_ = ''
 				and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
 				and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+				and substring(ZC1010.ZC1_NUM, 1, 4) > 2022
 		where
 				ZC2010.D_E_L_E_T_ = ''
 			and ZC2010.ZC2_TIPO = 2
+			and ZC2010.ZC2_HRINI != '  :  '
+			and ZC2010.ZC2_HRFIM != '  :  '
+		group by
+			ZC1010.ZC1_FILIAL,
+			ZC1010.ZC1_NUM,
+			ZC2010.ZC2_COD,
+			ZC2010.ZC2_COMPET
 	) ZC2
-		on SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+		on SRD.RD_FILIAL = ZC2.FILIAL
+		and SRD.RD_PERIODO = substring(ZC2.PERIODO, 1, 6)
 		and trim(SRA.RA_CODFUNC) = ZC2.INSUMO
+	
+	    left join ZG1010 ZG1 (nolock)
+			on ZG1.D_E_L_E_T_ = ''
+			and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
+			and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
+			and ZG1.ZG1_ATIVO = 'S'
+			and ZG1.ZG1_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)
 where
         SRD.D_E_L_E_T_ = ''
     and SRD.RD_PERIODO = 202310
-	and substring(ZC2.ZC2_DTFIM, 1, 6) = 202310
 	and SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848)
