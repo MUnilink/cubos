@@ -5,10 +5,26 @@ select
 	trim(SRA.RA_NOME) as RA_NOME,
 	trim(SRD.RD_PD) as RD_PD,
 	trim(SRV.RV_DESC) as RV_DESC,
-	trim(SRV.RV_DESCDET) as RV_DESCDET,
 	trim(SRJ.RJ_DESC) as RJ_DESC,
 	trim(SRJ.RJ_YHRPADR) as HORAS_PADRAO,
-	trim(SRD.RD_CC) as RA_CC,
+	
+	SRD.RD_VALOR,
+	SRD.RD_HORAS,
+	
+	ZC2.OS,
+	ZC2.HORAS_APONT,
+	ZC2.INSUMO,
+	ZC2.QTD_PREV,
+	ZC2.QTD_REAL,
+	ZC2.VAL_PREV,
+	ZC2.VAL_REAL,
+
+	case when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 then SRD.RD_VALOR else 0 end as VALOR_FOLHA,
+	
+	case
+		when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 and SRD.RD_PD = 20 then SRD.RD_HORAS
+		when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 and SRD.RD_PD in (440, 445) then SRD.RD_HORAS*-1
+	else 0 end as HORAS_FOLHA,
 
 	case trim(SRV.RV_TIPOCOD)
 		when '1' then 'PROVENTO'
@@ -16,13 +32,7 @@ select
 		when '3' then 'BASE PROVENTO'
 		when '4' then 'BASE DESCONTO'
 		else '-'
-	end as RV_TIPOCOD,
-	
-	SRD.RD_VALOR,
-	SRD.RD_HORAS,
-	case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then SRA.RA_HRSMES else 0 end as HORAS_MES,
-	
-	ZC2.*
+	end as RV_TIPOCOD
 
 from SRD010 SRD (nolock)
     inner join SRV010 SRV (nolock)
