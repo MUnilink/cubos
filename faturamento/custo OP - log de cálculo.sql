@@ -12,6 +12,7 @@ select
     ZG1.ZG1_VLPROD as VALOR_PRODT,
     ZG1.ZG1_HRIMPR as HORA_IMPRO,
     ZG1.ZG1_VLIMPR as VALOR_IMPRO,
+    ZG1.ZG1_VLPROD + ZG1.ZG1_VLIMPR as VLR_IMPPRO,
     
     ZG1.ZG1_COMPET as PERIODO_LOG,
     ZG1.ZG1_DTCALC as CALCULO_CUSTO,
@@ -27,6 +28,7 @@ select
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
+        when 5 then 'ENCERRADA COMO CORTESIA'
         when 6 then 'FECHADA'
         when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
