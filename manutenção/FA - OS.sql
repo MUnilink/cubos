@@ -96,6 +96,7 @@ select
 			end
 		end
 	end as TL_UNI,
+	STL.TL_CUSTO as CUSTO_MNT,
 
 	convert(date, STL.TL_DTINICI, 103) as DTINI_APP,
 	convert(date, STL.TL_DTFIM, 103) as DTFIM_APP,
@@ -113,7 +114,7 @@ select
 	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
 	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
 	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
-	substring(STL.TL_DTINICI, 1, 6) as PERIODO,
+	substring(STL.TL_DTFIM, 1, 6) as PERIODO,
 	substring(STJ.TJ_DTORIGI, 1, 6) as PERIODO_OS,
 	SCP.CP_NUM as SA,
 	SCP.CP_QUANT as SA_QTD_SOLICTADA,
