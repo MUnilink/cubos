@@ -35,7 +35,6 @@ from SRD010 SRD (nolock)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 where
         SRD.D_E_L_E_T_ = ''
-    and (SRD.RD_CC = 304 or SRD.RD_CC = 302 or SRD.RD_CC = 206 or SRA.RA_MAT = '002282')
     and SRD.RD_PERIODO > 202112
 group by
 	SRD.RD_FILIAL,
