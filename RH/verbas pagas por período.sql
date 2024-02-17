@@ -24,6 +24,7 @@
 		trim(isnull(SRC.RC_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRC.RC_PD, '-')) as VERBA,
 		trim(isnull(SRC.RC_SEQ, '-')) as SEQ,
+		trim(isnull(SRC.RC_ROTEIR, '-')) as ROTEIRO,
 		
 		case when SRC.RC_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
@@ -67,6 +68,7 @@
 		SRC.RC_HORAS as HORAS,
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
+		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
 		null as DATARQ,
 		null as STATUS_LANC,
@@ -129,6 +131,7 @@ union
 		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRD.RD_PD, '-')) as VERBA,
 		trim(isnull(SRD.RD_SEQ, '-')) as SEQ,
+		trim(isnull(SRD.RD_ROTEIR, '-')) as ROTEIRO,
 		
 		case when SRD.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
@@ -172,6 +175,7 @@ union
 		SRD.RD_HORAS as HORAS,
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
+		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
 		SRD.RD_DATARQ as DATARQ,
 		SRD.RD_STATUS as STATUS_LANC,
