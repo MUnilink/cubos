@@ -47,6 +47,7 @@ SELECT
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
+        when 5 then 'ENCERRADA COMO CORTESIA'
         when 6 then 'FECHADA'
         when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
