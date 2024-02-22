@@ -18,8 +18,7 @@ select
 	cast(ZC2.HORAS_APONT as numeric(15, 2)) as HORAS_APONT,
 
 	case
-		when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 and SRD.RD_PD = 20 then SRD.RD_VALOR
-		when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 and SRD.RD_PD in (440, 445) then SRD.RD_VALOR
+		when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 then SRD.RD_VALOR
 	else 0 end as VALOR_FOLHA,
 	
 	case when lag(ZC2.OS, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT, SRD.RD_PD order by SRD.R_E_C_N_O_) = 0 and SRD.RD_PD = 20 then SRD.RD_HORAS*SRJ.RJ_YHRPADR/30
@@ -85,4 +84,4 @@ from SRD010 SRD (nolock)
 where
         SRD.D_E_L_E_T_ = ''
 	and SRD.RD_PERIODO > 202212
-	and SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848)
+	and SRD.RD_PD in (20, 25, 29, 30, 38, 39, 51, 113, 134, 170, 171, 172, 173, 224, 255, 336, 344, 371, 371, 440, 441, 442, 444, 445, 446, 591, 719, 738, 739, 749, 796, 800, 817, 830, 831, 832, 833, 834, 845, 846, 847, 848, 950, 955, 960, 961, 962)
