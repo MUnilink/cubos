@@ -84,12 +84,27 @@ select
 			and SRD010.RD_FILIAL = ZC2.ZC2_FILIAL
 			and SRD010.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
 			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
-	) as HORAS_FOLHA,
-	
+	) as DIAS_FOLHA,
+
+	avg(ZG1.ZG1_HRPAD) as HORA_PADRAO,
+    avg(ZG1.ZG1_VLTOTL) as VALOR_TOTAL,
+    avg(ZG1.ZG1_VLHORA) as VALOR_HORA,
+    avg(ZG1.ZG1_HRPRO) as HORA_PRODT,
+    avg(ZG1.ZG1_VLPROD) as VALOR_PRODT,
+    avg(ZG1.ZG1_HRIMPR) as HORA_IMPRO,
+    avg(ZG1.ZG1_VLIMPR) as VALOR_IMPRO,
+
 	count(ZC2.ZC2_NUM) as QTD_OS,
 	count(ZC2.ZC2_COD) as QTD_APONT
 
 from ZC2010 ZC2 (nolock)
+	left join ZG1010 ZG1 (nolock)
+        on ZG1.D_E_L_E_T_ = ''
+        and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
+        and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
+        and ZG1.ZG1_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)
+		and ZG1.ZG1_TABELA = 'SRJ'
+		and ZG1.ZG1_ATIVO = 'S'
 where
 		ZC2.D_E_L_E_T_ = ''
 	and ZC2.ZC2_TIPO = 2
