@@ -24,7 +24,6 @@ select
 					on SRJ010.D_E_L_E_T_ = ''
 					and SRJ010.RJ_FILIAL = substring(SRA010.RA_FILIAL, 1, 4)
 					and SRJ010.RJ_FUNCAO = SRA010.RA_CODFUNC
-					and SRJ010.RJ_YPORTAL = 'S'
 
 			inner join SRV010 (nolock)
 				on SRV010.D_E_L_E_T_ = ''
@@ -49,7 +48,6 @@ select
 					on SRJ010.D_E_L_E_T_ = ''
 					and SRJ010.RJ_FILIAL = substring(SRA010.RA_FILIAL, 1, 4)
 					and SRJ010.RJ_FUNCAO = SRA010.RA_CODFUNC
-					and SRJ010.RJ_YPORTAL = 'S'
 
 			inner join SRV010 (nolock)
 				on SRV010.D_E_L_E_T_ = ''
@@ -62,6 +60,31 @@ select
 			and SRT010.RT_DATACAL = ZC2.ZC2_COMPET
 			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
 	) as VALOR_PROV,
+
+	(
+		select sum(SRD010.RD_HORAS)
+		from SRD010 (nolock)
+			inner join SRA010 (nolock)
+				on SRD010.D_E_L_E_T_ = ''
+				and SRD010.RD_FILIAL = SRA010.RA_FILIAL
+				and SRD010.RD_MAT = SRA010.RA_MAT
+				
+				inner join SRJ010 (nolock)
+					on SRJ010.D_E_L_E_T_ = ''
+					and SRJ010.RJ_FILIAL = substring(SRA010.RA_FILIAL, 1, 4)
+					and SRJ010.RJ_FUNCAO = SRA010.RA_CODFUNC
+
+			inner join SRV010 (nolock)
+				on SRV010.D_E_L_E_T_ = ''
+				and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+				and SRD010.RD_PD = SRV010.RV_COD
+		where
+				SRD010.D_E_L_E_T_ = ''
+			and SRD010.RD_PD in (20, 130, 51, 50, 200, 358) /* DIAS TRABALHADOS, FÉRIAS, AUX. DOENÇA, AUX. MATERNIDADE, VALOR DE AFASTAMENTO,  AUX. ACIDENTE*/
+			and SRD010.RD_FILIAL = ZC2.ZC2_FILIAL
+			and SRD010.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
+	) as HORAS_FOLHA,
 	
 	count(ZC2.ZC2_NUM) as QTD_OS,
 	count(ZC2.ZC2_COD) as QTD_APONT
