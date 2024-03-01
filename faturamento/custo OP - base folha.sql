@@ -20,10 +20,7 @@ select
 				and SRD010.RD_FILIAL = SRA010.RA_FILIAL
 				and SRD010.RD_MAT = SRA010.RA_MAT
 				
-				inner join SRJ010 (nolock)
-					on SRJ010.D_E_L_E_T_ = ''
-					and SRJ010.RJ_FILIAL = substring(SRA010.RA_FILIAL, 1, 4)
-					and SRJ010.RJ_FUNCAO = SRA010.RA_CODFUNC
+
 
 			inner join SRV010 (nolock)
 				on SRV010.D_E_L_E_T_ = ''
@@ -62,7 +59,7 @@ select
 	) as VALOR_PROV,
 
 	(
-		select sum(SRD010.RD_HORAS)
+		select sum(SRD010.RD_HORAS) * avg(cast(SRJ010.RJ_YHRPADR as int))
 		from SRD010 (nolock)
 			inner join SRA010 (nolock)
 				on SRD010.D_E_L_E_T_ = ''
@@ -84,7 +81,7 @@ select
 			and SRD010.RD_FILIAL = ZC2.ZC2_FILIAL
 			and SRD010.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
 			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
-	) as DIAS_FOLHA,
+	)/30 as DIAS_FOLHA,
 
 	avg(ZG1.ZG1_HRPAD) as HORA_PADRAO,
     avg(ZG1.ZG1_VLTOTL) as VALOR_TOTAL,
