@@ -24,27 +24,32 @@ select
     
     trim(STF.TF_PARADA) as PARADA,
     STF.TF_ATIVO as ATIVO,
-    STG.TG_SEQRELA as TG_SEQRELA,
-    trim(STG.TG_TAREFA) as TAREFA,
+
+    ST5.T5_SEQRELA as SEQ_TAREFA,
+    ST5.T5_TAREFA as TAREFA,
     trim(ST5.T5_DESCRIC) as DESC_TAREFA,
-    trim(STG.TG_TIPOREG) as TIPO_INSUMO,
-    STG.TG_CODIGO as INSUMO,
 
-    STG.TG_QUANTID as QTD,
-    STG.TG_UNIDADE as UN
+    trim(TQR.TQR_DESMOD) as MODELO,
+    trim(ST7.T7_NOME) as FABRICANTE
 
-from STF010 STF (nolock)    
+from ST5010 ST5 (nolock)
     inner join ST4010 ST4 (nolock)
 		on ST4.D_E_L_E_T_ = ''
-		and ST4.T4_SERVICO = STF.TF_SERVICO
+		and ST4.T4_SERVICO = ST5.T5_SERVICO
         
-        inner join ST5010 ST5 (nolock)
-            on ST5.D_E_L_E_T_ = ''
-            and ST5.T5_SERVICO = ST4.T4_SERVICO
-
-            inner join STG010 STG (nolock)
-                on STG.D_E_L_E_T_ = ''
-                and STG.TG_CODBEM = ST5.T5_CODBEM
-                and STG.TG_SERVICO = ST5.T5_SERVICO
-                and STG.TG_SEQRELA = ST5.T5_SEQRELA
-where STF.D_E_L_E_T_ = ''
+        inner join STF010 STF (nolock)
+            on STF.D_E_L_E_T_ = ''
+            and STF.TF_SERVICO = ST4.T4_SERVICO
+            
+            inner join ST9010 ST9 (nolock)
+                on ST9.D_E_L_E_T_ = ''
+                and ST9.T9_CODBEM = STF.TF_CODBEM
+            
+                inner join TQR010 TQR (nolock)
+                    on TQR.D_E_L_E_T_ = ''
+                    and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+                    
+                    inner join ST7010 ST7 (nolock)
+                        on ST7.D_E_L_E_T_ = ''
+                        and TQR.TQR_FABRIC = ST7.T7_FABRICA
+where ST5.D_E_L_E_T_ = ''
