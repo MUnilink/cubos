@@ -32,6 +32,7 @@ select
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
+    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZA9.ZA9_CODTAX)) as TABELA_TAXAS,
 
     trim(ZC2.ZC2_COD) as INSUMO,
     (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1) as DESC_INSUMO,
@@ -42,6 +43,17 @@ select
         when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
     end as STATUS_OS,
+
+    case ZC2.ZC2_TIPO
+        when 1 then 'RECEITA'
+        when 2 then 'RH'
+        when 3 then 'EQUIPAMENTO'
+        when 4 then 'MATERIAIS'
+        when 6 then 'DEPRECIAÇÃO'
+        when 7 then 'CONTABILIDADE'
+        when 8 then 'DESPESAS FINANCEIRAS'
+        else 'OUTROS'
+    end as TIPO_INSUMO,
     
     ZC2.ZC2_QTDPRV as QTD_PREV,
     ZC2.ZC2_QTDREA as QTD_REAL,
@@ -120,6 +132,9 @@ from ZC2010 ZC2 (nolock)
     left join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = ZC2.ZC2_MOTORI
+    left join ZA9010 ZA9 (nolock)
+        on ZA9.D_E_L_E_T_ = ''
+        and trim(ZA9.ZA9_SERVIC) = trim(ZC2.ZC2_COD)
     
     left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
@@ -127,12 +142,12 @@ from ZC2010 ZC2 (nolock)
         and SC6.C6_YOS = ZC2.ZC2_NUM
         and SC6.C6_YITOS = ZC2.ZC2_ITEM
 
-        left join SC5010 SC5
+        left join SC5010 SC5 (nolock)
             on SC5.D_E_L_E_T_ = ' '
             and SC5.C5_FILIAL = SC6.C6_FILIAL
             and SC5.C5_NUM = SC6.C6_NUM
                 
-        left join SD2010 SD2
+        left join SD2010 SD2 (nolock)
             on SD2.D_E_L_E_T_ = ''
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
