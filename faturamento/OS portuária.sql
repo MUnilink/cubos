@@ -63,6 +63,8 @@ select
         else 'OUTROS'
     end as STATUS_OS,
     
+    ZC2.ZC2_QTDPRV as QTD_PREV,
+    ZC2.ZC2_QTDREA as QTD_REAL,
     ZC2.ZC2_QTDREC as QTD_RECURSO,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
@@ -78,16 +80,7 @@ select
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 113) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 113) as DTFIM_APONT,
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
-    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
-
-    SC6.C6_NUM as PEDIDO,
-    SC6.C6_ITEM as ITEM_PEDIDO,
-    SC6.C6_UM as UN_PEDIDO,
-    SC6.C6_QTDVEN as QTD_PEDIDO,
-    SC6.C6_PRCVEN as PRECO_PEDIDO,
-    SC6.C6_VALOR as VALOR_PEDIDO,
-    SC6.C6_CC as CC_PEDIDO,
-    SC6.C6_ITEMCTA as ATIVIDADE_PEDIDO
+    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -117,11 +110,6 @@ from ZC2010 ZC2 (nolock)
     left join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = ZC2.ZC2_MOTORI
-    left join SC6010 SC6 (nolock)
-        on SC6.D_E_L_E_T_ = ''
-        and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
-        and SC6.C6_YOS = ZC2.ZC2_NUM
-        and SC6.C6_YITOS = ZC2.ZC2_ITEM
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
