@@ -1,0 +1,11 @@
+O km previsto, por padrão do sistema, é cadastrado para cada medida de pneu. Assim, seria necessário customizar o km previsto para cada vida do pneu, em vez de um km previsto para todas as vidas.
+O custo dos pneus é obtido pela soma dos valores de compra, reforma e conserto em cada pneu.
+O problema está em definir quanto desse valor se deve apropriar aos veículos pelos quais esses pneus passam ao longo de sua vida útil.
+O uso do km mensal do veículo, obtido do abastecimento, mitiga os erros de km no histórico de movimentos de pneus e de SRs (estas, referentes a atrelamentos) e simplifica o cálculo. Contudo a apropriação de custos ainda depende da movimentação correta de pneus e SRs nas estruturas. Otimizar o processo de mudança de CC, para que seja mais próxima às mudanças da operação
+
+CPK 1 - descartado pela preferência e maior precisão do CPK 3: apropriado o custo total do pneu até então pela proporção entre o km rodado no mês pelo veículo e o km previsto em todas as vidas do pneu
+CPK 2 - descartado pela distorção observada para pneus com baixo km: apropriado o CPK do pneu até então (ativo ou inativo) pelo km rodado pelo veículo no mês
+CPK 3 - escolhida pela relativa precisão, por considerar o km esperado para cada vida - apropriada proporção entre o valor de compra, valores de reformas e de consertos e km esperado para a primeira vida e para cada uma das demais vidas, em relação ao km rodado pelo veículo no mês
+CPK 4 - não analisado - apropriado o CPK da medida do pneu no mês, obtido a partir do sucateamento de pneus daquela medida, proporcional ao km rodado pelo equipamento onde está instalado o pneu
+
+Porto faz o seguinte raciocício estimado: para 100 mil km previstos para pneus novos e 80 mil km por reforma, estipula-se uma quantidade de meses que duraria uma pneu na primeira vida para e que atue somente na operação de transporte, baseando também na quantidade de km (esta já conhecida). Por fim, 4 mil km (100 mil km em 24 meses) equivaleriam a 540 horas (18 horas por 30 dias), dentro do período.
