@@ -32,6 +32,11 @@ select
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
+    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZA9.ZA9_CODTAX) /*and ZC2.ZC2_TIPO = 11*/) as TAXA_PORT,
+    trim(AIB.AIB_CODPRO) as COD_TAXA,
+    cast(AIB.AIB_PRCCOM as decimal(15, 2)) as TAXA_VALUNI,
+    cast(AIB.AIB_PRCCOM * ZC2.ZC2_QTDPRV as decimal(15, 2)) as TAXA_VALPRV,
+    cast(AIB.AIB_PRCCOM * ZC2.ZC2_QTDREA as decimal(15, 2)) as TAXA_VALREA,
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
@@ -46,7 +51,7 @@ select
 
     trim(ZC2.ZC2_COD) as INSUMO,
     case ZC2.ZC2_TIPO
-        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
+        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(trim(SB1010.B1_DESC), 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
         when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
         when 3 then trim(ST9.T9_CODBEM)
         when 4 then (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 4)
@@ -80,7 +85,9 @@ select
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 113) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 113) as DTFIM_APONT,
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
-    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO
+    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
+
+    (select count(*) from ZC3010 where ZC3010.D_E_L_E_T_ = '' and ZC3010.ZC3_FILIAL = ZC2.ZC2_FILIAL and ZC3010.ZC3_NUM = ZC2.ZC2_NUM and ZC3010.ZC3_ITEM = ZC2.ZC2_ITEM) as QTD_RATEIO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -110,6 +117,17 @@ from ZC2010 ZC2 (nolock)
     left join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = ZC2.ZC2_MOTORI
+    
+    left join ZA9010 ZA9 (nolock)
+        on ZA9.D_E_L_E_T_ = ''
+        and ZA9.ZA9_FILIAL = ZC2.ZC2_FILIAL
+        and ZA9.ZA9_SERVIC = ZC2.ZC2_COD
+
+        left join AIB010 AIB (nolock)
+            on AIB.D_E_L_E_T_ = ''
+            and AIB.AIB_CODFOR = ZA9.ZA9_PORTO
+            and AIB.AIB_LOJFOR = ZA9.ZA9_LJPORT
+            and AIB.AIB_CODPRO = ZA9.ZA9_CODTAX
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
