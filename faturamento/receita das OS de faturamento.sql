@@ -37,12 +37,21 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1) as DESC_INSUMO,
 
-    case ZC1.ZC1_STATUS
+        case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
-        when 6 then 'FECHADA'
+        when 2 then 'SOLICITADO CANCELAMENTO'
+        when 3 then 'CANCELADA'
+        when 1 then 'ABERTA'
+        when 6 then 'ENCERRADA'
         when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
     end as STATUS_OS,
+case ZC1.ZC1_STATU2
+        when 1 then 'PENDENTE'
+        when 2 then 'PARCIAL'
+        when 3 then 'FINALIZADO'
+        else 'OUTROS'
+    end as STATUS_PEDIDO,
 
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
