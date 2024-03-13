@@ -57,7 +57,6 @@ SELECT
     CAST(COALESCE(SD2.D2_VALIRRF, 0) AS DECIMAL(14, 2)) AS VL_IRF_FATURAMENTO,
     CAST(COALESCE(SD2.D2_VALINS, 0) AS DECIMAL(14, 2)) AS VL_INSS_FATURAMENTO,
     CAST(COALESCE(SD2.D2_PESO * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_LIQUIDO,
-    CAST(COALESCE(SB1.B1_PESBRU * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_BRUTO,
     1 AS contador,
     CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
@@ -66,6 +65,7 @@ SELECT
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
+    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
     trim(ZC2.ZC2_ITEM) as ITEMOS,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO_OS,
     ZC2.ZC2_QTDPRV as QTD_PREV,
@@ -73,7 +73,6 @@ SELECT
     ZC2.ZC2_VLUPRV as VAL_PREV,
     ZC2.ZC2_VLUREA as VAL_REAL,
     
-    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
     trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
@@ -84,7 +83,34 @@ SELECT
         when 6 then 'FECHADA'
         when 9 then 'PEDIDO CRIADO'
         else 'OUTROS'
-    end as STATUS_OS
+    end as STATUS_OS,
+
+    DUD.DUD_FILORI as FIL_VGA,
+    DUD.DUD_VIAGEM as VIAGEM,
+    DT6C.D2_DOC as COMP_DOC,
+    DT6C.D2_SERIE as COMP_SERIE,
+    DT6C.D2_TOTAL as COMP_TOTAL,
+    DT6C.D2_VALIPI as COMP_VALIPI,
+    DT6C.D2_VALICM as COMP_VALICM,
+    convert(date, DT6C.D2_EMISSAO, 103) as COMP_EMISSAO,
+
+    SC5.C5_NUM as RPS_PEDIDO,
+    RPS.D2_DOC as RPS_DOC,
+    RPS.D2_SERIE as RPS_SERIE,
+    RPS.D2_TOTAL as RPS_TOTAL,
+    RPS.D2_VALIPI as RPS_VALIPI,
+    RPS.D2_VALICM as RPS_VALICM,
+    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
+
+    (
+        select substring(DTW010.DTW_DATREA, 1, 6)
+        from DTW010 (nolock)
+        where 
+                DTW010.D_E_L_E_T_ = ''
+            and DTW010.DTW_FILORI = DUD.DUD_FILORI
+            and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+            and DTW010.DTW_ATIVID = 50
+    ) as PERIODO_VGA
 
 FROM SD2010 SD2
     INNER JOIN SF2010 SF2 (nolock)
@@ -147,6 +173,36 @@ FROM SD2010 SD2
                 and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
                 and ZC1.ZC1_NUM = ZC2.ZC2_NUM
     
+    left join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILDOC = SD2.D2_FILIAL
+        and DUD.DUD_DOC = SD2.D2_DOC
+        and DUD.DUD_SERIE = SD2.D2_SERIE
+
+		left join DT6010 DT6 (nolock)
+			on DT6.D_E_L_E_T_ = ''
+			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+			and DT6.DT6_DOC = DUD.DUD_DOC
+			and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+            left join SD2010 DT6C (nolock)
+                on DT6C.D_E_L_E_T_ = ''
+                and DT6C.D2_NFORI = DT6.DT6_DOC
+                and DT6C.D2_SERIORI = DT6.DT6_SERIE
+                and DT6C.D2_CLIENTE = DT6.DT6_CLIDEV
+                and DT6C.D2_LOJA = DT6.DT6_LOJDEV
+    
+        left join SC5010 SC5 (nolock)
+            on SC5.D_E_L_E_T_ = ''
+            and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
+
+            left join SD2010 RPS (nolock)
+                on RPS.D_E_L_E_T_ = ''
+                and RPS.D2_FILIAL = SC5.C5_FILIAL
+                and RPS.D2_DOC = SC5.C5_NOTA
+                and RPS.D2_SERIE = SC5.C5_SERIE
+                and RPS.D2_CLIENTE = SC5.C5_CLIENTE
+                and RPS.D2_LOJA = SC5.C5_LOJACLI
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
