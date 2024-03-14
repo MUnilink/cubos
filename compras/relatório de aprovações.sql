@@ -7,6 +7,7 @@
         trim(isnull(SB1.B1_UM, '-')) as UN,
         SCP.CP_QUANT as QTD_PEDIDA,
         SCP.CP_QUJE as QTD_ATENDIDA,
+        null as VALOR_APROV,
 
         trim(isnull(SCP.CP_ITEMCTA, '-')) as ATIVIDADE,
         trim(isnull(SCP.CP_CC, '-')) as CC,
@@ -14,6 +15,7 @@
         (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA) DESC_CONTA,
 
         SCR.CR_TIPO as TIPO,
+        trim(SCR.CR_NIVEL) as NIVEL,
         trim(isnull(SCP.CP_NUM, '-')) as NUMERO,
         trim(isnull(SCP.CP_ITEM, '-')) as ITEM,
         convert(date, SCP.CP_EMISSAO, 103) as DATA,
@@ -21,12 +23,13 @@
         substring(SCP.CP_EMISSAO, 1, 6) as PERIODO,
         substring(SCP.CP_DATPRF, 1, 6) as PERIODO_ITEM,
         trim(isnull(SCP.CP_OBS, '-')) as OBS,
-        
-        trim(isnull(upper(SCP.CP_SOLICIT), '-')) as SOLICITANTE,
+        case SCR.CR_DATALIB when '' then -.5 else datediff(day, SCP.CP_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
+        trim(isnull(upper(SCR.CR_YNOMSOL), SCP.CP_SOLICIT)) as SOLICITANTE,
 
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
         case SCR.CR_STATUS
+            when 1 then 'PENDENTE'
             when 2 then 'PENDENTE'
             when 3 then 'APROVADA'
             when 5 then 'APROVADA'
@@ -69,7 +72,6 @@
             and STJ.TJ_ORDEM = substring(SCP.CP_OP, 1, 6)
     where
             SCP.D_E_L_E_T_ = ''
-        and year(SCP.CP_DATPRF) > 2022
 union
     select
         trim(isnull(SC7.C7_FILIAL, '-')) as FILIAL,
@@ -80,6 +82,7 @@ union
         trim(isnull(SB1.B1_UM, '-')) as UN,
         SC7.C7_QUANT as QTD_PEDIDA,
         SC7.C7_QUJE as QTD_ATENDIDA,
+        SCR.CR_TOTAL as VALOR_APROV,
 
         trim(isnull(SC7.C7_ITEMCTA, '-')) as ATIVIDADE,
         trim(isnull(SC7.C7_CC, '-')) as CC,
@@ -87,6 +90,7 @@ union
         (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SC7.C7_CONTA) DESC_CONTA,
 
         SCR.CR_TIPO as TIPO,
+        trim(SCR.CR_NIVEL) as NIVEL,
         trim(isnull(SC7.C7_NUM, '-')) as NUMERO,
         trim(isnull(SC7.C7_ITEM, '-')) as ITEM,
         convert(date, SC7.C7_EMISSAO, 103) as DATA,
@@ -94,12 +98,13 @@ union
         substring(SC7.C7_EMISSAO, 1, 6) as PERIODO,
         substring(SC7.C7_DATPRF, 1, 6) as PERIODO_ITEM,
         trim(isnull(SC7.C7_OBS, '-')) as OBS,
-        
-        trim(isnull(upper(SC7.C7_SOLICIT), '-')) as SOLICITANTE,
+        case SCR.CR_DATALIB when '' then -.5 else datediff(day, SC7.C7_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
+        trim(isnull(upper(SCR.CR_YNOMSOL), (select SY1010.Y1_NOME from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER))) as SOLICITANTE,
 
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
         case SCR.CR_STATUS
+            when 1 then 'PENDENTE'
             when 2 then 'PENDENTE'
             when 3 then 'APROVADA'
             when 5 then 'APROVADA'
@@ -135,4 +140,3 @@ union
             and STJ.TJ_ORDEM = substring(SC7.C7_OP, 1, 6)
     where
             SC7.D_E_L_E_T_ = ''
-        and year(SC7.C7_DATPRF) > 2022
