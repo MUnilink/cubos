@@ -13,6 +13,8 @@
         trim(isnull(SCP.CP_CC, '-')) as CC,
         trim(isnull(SCP.CP_CONTA, '-')) as CONTA,
         (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA) DESC_CONTA,
+        null as FORNECEDOR,
+	    null as FORNECEDOR_RED,
 
         SCR.CR_TIPO as TIPO,
         trim(SCR.CR_NIVEL) as NIVEL,
@@ -24,7 +26,7 @@
         substring(SCP.CP_DATPRF, 1, 6) as PERIODO_ITEM,
         trim(isnull(SCP.CP_OBS, '-')) as OBS,
         case SCR.CR_DATALIB when '' then -.5 else datediff(day, SCP.CP_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
-        trim(isnull(upper(SCR.CR_YNOMSOL), SCP.CP_SOLICIT)) as SOLICITANTE,
+        upper(trim(isnull(SCR.CR_YNOMSOL, SCP.CP_SOLICIT))) as SOLICITANTE,
 
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
@@ -87,7 +89,9 @@ union
         trim(isnull(SC7.C7_ITEMCTA, '-')) as ATIVIDADE,
         trim(isnull(SC7.C7_CC, '-')) as CC,
         trim(isnull(SC7.C7_CONTA, '-')) as CONTA,
-        (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SC7.C7_CONTA) DESC_CONTA,
+        null as DESC_CONTA,
+        trim(isnull(SA2.A2_NOME, '-')) as FORNECEDOR,
+	    trim(isnull(SA2.A2_NREDUZ, '-')) as FORNECEDOR_RED,
 
         SCR.CR_TIPO as TIPO,
         trim(SCR.CR_NIVEL) as NIVEL,
@@ -99,7 +103,7 @@ union
         substring(SC7.C7_DATPRF, 1, 6) as PERIODO_ITEM,
         trim(isnull(SC7.C7_OBS, '-')) as OBS,
         case SCR.CR_DATALIB when '' then -.5 else datediff(day, SC7.C7_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
-        trim(isnull(upper(SCR.CR_YNOMSOL), (select SY1010.Y1_NOME from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER))) as SOLICITANTE,
+        upper(trim(isnull(nullif(SCR.CR_YNOMSOL, ''), (select SY1010.Y1_NOME from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER)))) as SOLICITANTE,
 
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
@@ -138,5 +142,9 @@ union
             on STJ.D_E_L_E_T_ = ''
             and STJ.TJ_FILIAL = SC7.C7_FILIAL
             and STJ.TJ_ORDEM = substring(SC7.C7_OP, 1, 6)
+        inner join SA2010 SA2 (nolock)
+            on SA2.D_E_L_E_T_ = ''
+            and SA2.A2_COD = SC7.C7_FORNECE
+            and SA2.A2_LOJA = SC7.C7_LOJA
     where
             SC7.D_E_L_E_T_ = ''

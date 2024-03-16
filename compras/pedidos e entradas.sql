@@ -43,7 +43,6 @@ select
 
 	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
 
-
 	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
 	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
 	trim(isnull(SC7.C7_FORNECE, '-')) as FORNECEDOR,
