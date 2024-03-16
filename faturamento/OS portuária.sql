@@ -95,6 +95,13 @@ select
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
 
+    SC6.C6_NUM as PEDIDO,
+    SC6.C6_ITEM as ITEM_PEDIDO,
+    SC6.C6_UM as UN_PEDIDO,
+    SC6.C6_QTDVEN as QTD_PEDIDO,
+    trim(SC6.C6_CC) as CC_PEDIDO,
+    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
+
     (select count(*) from ZC3010 where ZC3010.D_E_L_E_T_ = '' and ZC3010.ZC3_FILIAL = ZC2.ZC2_FILIAL and ZC3010.ZC3_NUM = ZC2.ZC2_NUM and ZC3010.ZC3_ITEM = ZC2.ZC2_ITEM) as QTD_RATEIO
 
 from ZC2010 ZC2 (nolock)
@@ -136,6 +143,13 @@ from ZC2010 ZC2 (nolock)
             and AIB.AIB_CODFOR = ZA9.ZA9_PORTO
             and AIB.AIB_LOJFOR = ZA9.ZA9_LJPORT
             and AIB.AIB_CODPRO = ZA9.ZA9_CODTAX
+    
+    left join SC6010 SC6 (nolock)
+        on SC6.D_E_L_E_T_ = ''
+        and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
+        and SC6.C6_YOS = ZC2.ZC2_NUM
+        and SC6.C6_YITOS = ZC2.ZC2_ITEM
+
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
