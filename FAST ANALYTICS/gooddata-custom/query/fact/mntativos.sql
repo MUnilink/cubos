@@ -1,5 +1,5 @@
 select
-	trim(isnull(STL.TL_SEQRELA, '-')) as TL_SEQRELA,
+	trim(STL.TL_SEQRELA) as TL_SEQRELA,
 	STL.TL_QUANTID,
 
 	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
@@ -21,9 +21,9 @@ select
 		end
 	end as TL_CUSTO,
 
-	trim(isnull(STL.TL_DTINICI, '-')) as TL_DTINICI,
-	trim(isnull(STL.TL_DTFIM, '-')) as TL_DTFIM,
-	trim(isnull(STJ.TJ_DTORIGI, '-')) as TJ_DTORIGI,
+	trim(STL.TL_DTINICI) as TL_DTINICI,
+	trim(STL.TL_DTFIM) as TL_DTFIM,
+	trim(STJ.TJ_DTORIGI) as TJ_DTORIGI,
 
 	STJ.TJ_POSCONT,
 	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
@@ -32,9 +32,10 @@ select
 	STJ.TJ_CUSTMAA,
 	STJ.TJ_CUSTMAS,
 	STJ.TJ_CUSTTER,
+	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
 
-	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
-	trim(isnull(STL.TL_LOCAL, '-')) as ARMAZEM,
+	trim(STL.TL_CODIGO) as INSUMO,
+	trim(STL.TL_LOCAL) as ARMAZEM,
 
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
@@ -52,37 +53,28 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
 
-	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
-	trim(isnull(STL.TL_TAREFA, '-')) as T5_TAREFA,
-	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
-	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
-	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
-	trim(isnull(ST1.T1_CODFUNC, '-')) as T1_CODFUNC,
-
-	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
-	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
-	trim(isnull(SA2.A2_COD + SA2.A2_LOJA, '-')) as ID_FORNECEDOR,
-	trim(isnull(STI.TI_PLANO, '-')) as TI_PLANO,
-	trim(isnull(STJ.TJ_FILIAL, '-')) as COD_FILIAL,
-	trim(isnull(ST4.T4_SERVICO, '-')) as T4_SERVICO,
-	trim(isnull(STJ.TJ_CCUSTO, '-')) as CC,
-	trim(isnull(STJ.TJ_YITMCT, '-')) as ATIVIDADE,
+	trim(STJ.TJ_ORDEM) as TJ_ORDEM,
+	trim(STL.TL_TAREFA) as T5_TAREFA,
+	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
+	trim(SH4.H4_CODIGO) as H4_CODIGO,
+	trim(ST0.T0_ESPECIA) as T0_ESPECIA,
+	trim(ST1.T1_CODFUNC) as T1_CODFUNC,
+	trim(SB1.B1_GRUPO) as B1_GRUPO,
+	trim(SB1.B1_COD) as B1_COD,
+	trim(SA2.A2_COD) + trim(SA2.A2_LOJA) as ID_FORNECEDOR,
+	trim(STL.TL_PLANO) as TI_PLANO,
+	trim(STL.TL_FILIAL) as COD_FILIAL,
+	trim(STJ.TJ_SERVICO) as T4_SERVICO,
+	trim(STJ.TJ_CCUSTO) as CC,
+	trim(STJ.TJ_YITMCT) as ATIVIDADE,
 	null as B1_UPRC,
 	null as T1_SALARIO
 
-from STJ010 as STJ /**/
-	inner join ST9010 as ST9
+from STJ010 STJ
+	inner join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = STJ.TJ_CODBEM
-
-		left join TQR010 as TQR
-			on 	TQR.D_E_L_E_T_ = ''
-			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
-
-	inner join ST4010 as ST4
-		on ST4.D_E_L_E_T_ = ''
-		and ST4.T4_SERVICO = STJ.TJ_SERVICO
-	inner join STL010 as STL
+	inner join STL010 STL
 		on STL.D_E_L_E_T_ = ''
 		and STL.TL_ORDEM = STJ.TJ_ORDEM
 		and STL.TL_PLANO = STJ.TJ_PLANO
@@ -109,28 +101,24 @@ from STJ010 as STJ /**/
 		) ADESIVO_CUSTO
 			on ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO
 
-		left join SA2010 as SA2
+		left join SA2010 SA2
 			on SA2.D_E_L_E_T_ = ''
 			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
-		left join SB1010 as SB1
+		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
 			and SB1.B1_COD = STL.TL_CODIGO
-		left join SH4010 as SH4
+		left join SH4010 SH4
 			on SH4.D_E_L_E_T_ = ''
 			and SH4.H4_CODIGO = STL.TL_CODIGO
-		left join ST0010 as ST0
+		left join ST0010 ST0
 			on ST0.D_E_L_E_T_ = ''
 			and ST0.T0_ESPECIA = STL.TL_CODIGO
-		left join ST1010 as ST1
+		left join ST1010 ST1
 			on ST1.D_E_L_E_T_ = ''
 			and ST1.T1_FILIAL = STL.TL_FILIAL
 			and ST1.T1_CODFUNC = STL.TL_CODIGO
-		left join STI010 as STI
-			on STI.D_E_L_E_T_ = ''
-			and STI.TI_FILIAL = STL.TL_FILIAL
-			and STI.TI_PLANO = STL.TL_PLANO
 where
 		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
 	and STL.D_E_L_E_T_ = ''
-	/*and trim(ST9.T9_CODBEM) not like '[0-9]%'*/
+	and STL.TL_SEQRELA > 0
 	and year(STJ.TJ_DTORIGI) between 2019 and 2029
