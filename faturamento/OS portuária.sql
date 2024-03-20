@@ -46,6 +46,9 @@ select
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
+        when 9 then ''
+        when 10 then 'COMBUSTIVEL'
+        when 11 then 'TAXAS PORTUARIAS'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
@@ -93,6 +96,7 @@ select
     convert(datetime, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), 113) as DTINI_APONT,
     convert(datetime, concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM), 113) as DTFIM_APONT,
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
+    ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_TOTAIS,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
 
     SC6.C6_NUM as PEDIDO,
