@@ -61,10 +61,16 @@
                 else
                     case when RHP.RHP_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                        case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) and RHP.RHP_CODFOR = 2 then 'DENTAL MASTER'
                         else
-                            case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
-                            else 'OUTROS'
+                            case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) and RHP.RHP_CODFOR = 4 then 'SUL-AMERICA'
+                            else
+                                case when RHP.RHP_PD in (624, 625) and RHP.RHP_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
+                                else
+                                    case when RHP.RHP_PD in (624, 625) and RHP.RHP_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
+                                    else 'OUTROS'
+                                    end
+                                end
                             end
                         end
                     end
@@ -272,10 +278,16 @@ union
                 else
                     case when RHO.RHO_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                        case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) and RHO.RHO_CODFOR = 2 then 'DENTAL MASTER'
                         else
-                            case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
-                            else 'OUTROS'
+                            case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) and RHO.RHO_CODFOR = 4 then 'SUL-AMERICA'
+                            else
+                                case when RHO.RHO_PD in (624, 625) and RHO.RHO_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
+                                else
+                                    case when RHO.RHO_PD in (624, 625) and RHO.RHO_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
+                                    else 'OUTROS'
+                                    end
+                                end
                             end
                         end
                     end
@@ -482,10 +494,16 @@ union
                 else
                     case when RHR.RHR_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
+                        case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) and RHR.RHR_CODFOR = 2 then 'DENTAL MASTER'
                         else
-                            case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
-                            else 'OUTROS'
+                            case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) and RHR.RHR_CODFOR = 4 then 'SUL-AMERICA'
+                            else
+                                case when RHR.RHR_PD in (624, 625) and RHR.RHR_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
+                                else
+                                    case when RHR.RHR_PD in (624, 625) and RHR.RHR_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
+                                    else 'OUTROS'
+                                    end
+                                end
                             end
                         end
                     end
@@ -688,10 +706,16 @@ union
                 else
                     case when RHS.RHS_PD in (428, 429) then 'REDE SAUDE'
                     else
-                        case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
+                        case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) and RHS.RHS_CODFOR = 2 then 'DENTAL MASTER'
                         else
-                            case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
-                            else 'OUTROS'
+                            case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) and RHS.RHS_CODFOR = 4 then 'SUL-AMERICA'
+                            else
+                                case when RHS.RHS_PD in (624, 625) and RHS.RHS_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
+                                else
+                                    case when RHS.RHS_PD in (624, 625) and RHS.RHS_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
+                                    else 'OUTROS'
+                                    end
+                                end
                             end
                         end
                     end
