@@ -91,34 +91,7 @@ SELECT
         when 2 then 'PARCIAL'
         when 3 then 'FINALIZADO'
         else 'OUTROS'
-    end as STATUS_PEDIDO,
-
-    DUD.DUD_FILORI as FIL_VGA,
-    DUD.DUD_VIAGEM as VIAGEM,
-    DT6C.D2_DOC as COMP_DOC,
-    DT6C.D2_SERIE as COMP_SERIE,
-    DT6C.D2_TOTAL as COMP_TOTAL,
-    DT6C.D2_VALIPI as COMP_VALIPI,
-    DT6C.D2_VALICM as COMP_VALICM,
-    convert(date, DT6C.D2_EMISSAO, 103) as COMP_EMISSAO,
-
-    SC5.C5_NUM as RPS_PEDIDO,
-    RPS.D2_DOC as RPS_DOC,
-    RPS.D2_SERIE as RPS_SERIE,
-    RPS.D2_TOTAL as RPS_TOTAL,
-    RPS.D2_VALIPI as RPS_VALIPI,
-    RPS.D2_VALICM as RPS_VALICM,
-    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
-
-    (
-        select substring(DTW010.DTW_DATREA, 1, 6)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DUD.DUD_FILORI
-            and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 50
-    ) as PERIODO_VGA
+    end as STATUS_PEDIDO
 
 FROM SD2010 SD2
     INNER JOIN SF2010 SF2 (nolock)
@@ -180,37 +153,7 @@ FROM SD2010 SD2
                 on ZC1.D_E_L_E_T_ = ''
                 and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
                 and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-    
-    left join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILDOC = SD2.D2_FILIAL
-        and DUD.DUD_DOC = SD2.D2_DOC
-        and DUD.DUD_SERIE = SD2.D2_SERIE
 
-		left join DT6010 DT6 (nolock)
-			on DT6.D_E_L_E_T_ = ''
-			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-			and DT6.DT6_DOC = DUD.DUD_DOC
-			and DT6.DT6_SERIE = DUD.DUD_SERIE
-
-            left join SD2010 DT6C (nolock)
-                on DT6C.D_E_L_E_T_ = ''
-                and DT6C.D2_NFORI = DT6.DT6_DOC
-                and DT6C.D2_SERIORI = DT6.DT6_SERIE
-                and DT6C.D2_CLIENTE = DT6.DT6_CLIDEV
-                and DT6C.D2_LOJA = DT6.DT6_LOJDEV
-    
-        left join SC5010 SC5 (nolock)
-            on SC5.D_E_L_E_T_ = ''
-            and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
-
-            left join SD2010 RPS (nolock)
-                on RPS.D_E_L_E_T_ = ''
-                and RPS.D2_FILIAL = SC5.C5_FILIAL
-                and RPS.D2_DOC = SC5.C5_NOTA
-                and RPS.D2_SERIE = SC5.C5_SERIE
-                and RPS.D2_CLIENTE = SC5.C5_CLIENTE
-                and RPS.D2_LOJA = SC5.C5_LOJACLI
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
