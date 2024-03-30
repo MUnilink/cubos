@@ -50,6 +50,7 @@ select
 	trim(isnull(SA2.A2_NOME, '-')) as NOME_FORNECEDOR,
 	trim(isnull(SA2.A2_NREDUZ, '-')) as NOMERED_FORNECEDOR,
 	trim(isnull(SA2.A2_CGC, '-')) as CNPJ,
+	trim(isnull(SA2.A2_EST, '-')) as UF,
 	trim(isnull(SC7.C7_OBS, '-')) as OBS_PC,
 	trim(isnull(SC7.C7_OBSM, '-')) as MEMO_PC,
 
@@ -120,7 +121,9 @@ select
 	SD1.D1_VALFRE as NF_VALFRE,
 	SD1.D1_SEGURO as NF_SEGURO,
 	SD1.D1_DESPESA as NF_DESPESA,
-	SD1.D1_YOS as OS_PORT
+	SD1.D1_YOS as OS_PORT,
+
+	case when lag(SC7.C7_NUM, 1, 0) over (partition by SC7.C7_FILIAL, SC7.C7_NUM, SD1.D1_DOC, SD1.D1_SERIE order by SC7.R_E_C_N_O_) = 0 then 1 else 0 end as QTD_PEDIDOS
 
 from SC7010 SC7 (nolock)
 	left join SC8010 SC8 (nolock)
