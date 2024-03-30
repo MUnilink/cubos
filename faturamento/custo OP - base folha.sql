@@ -2,6 +2,12 @@ select
 	ZC2.ZC2_FILIAL as FILIAL,
 	ZC2.ZC2_COMPET as PERIODO,
 	trim(ZC2.ZC2_COD) as INSUMO,
+	
+	case ZC2.ZC2_TIPO
+        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
+        else trim(ZC2.ZC2_DESC)
+    end as DESC_INSUMO,
+	
 	ZC2.ZC2_NUM as NUM_OS,
 	cast(substring(ZC2.ZC2_NUM, 6, 10) as int) as OS,
 	ZC2.ZC2_ITEM as ITEM,
@@ -10,22 +16,20 @@ select
 	cast(sum(ZC2.ZC2_QTDREA) as numeric(15, 2)) as QTD_REAL,
 	cast(sum(ZC2.ZC2_VLUPRV) as numeric(15, 2)) as VAL_PREV,
 	cast(sum(ZC2.ZC2_VLUREA) as numeric(15, 2)) as VAL_REAL,
-	sum(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0) as HORAS_APONT,
+	cast(sum(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0) as numeric (15, 4)) as HORAS_APONT,
+	cast(avg(ZC2.ZC2_QTDREC) * sum(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0) as numeric (15, 4)) as HORAS_TOTAIS,
 
 	(
 		select sum(SRD010.RD_VALOR)
 		from SRD010 (nolock)
 			inner join SRA010 (nolock)
-				on SRD010.D_E_L_E_T_ = ''
-				and SRD010.RD_FILIAL = SRA010.RA_FILIAL
-				and SRD010.RD_MAT = SRA010.RA_MAT
-				
-
-
+				on SRA010.D_E_L_E_T_ = ''
+				and SRA010.RA_FILIAL = SRD010.RD_FILIAL
+				and SRA010.RA_MAT = SRD010.RD_MAT
 			inner join SRV010 (nolock)
 				on SRV010.D_E_L_E_T_ = ''
-				and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
-				and SRD010.RD_PD = SRV010.RV_COD
+				and SRV010.RV_FILIAL = substring(SRD010.RD_FILIAL, 1, 4)
+				and SRV010.RV_COD = SRD010.RD_PD
 		where
 				SRD010.D_E_L_E_T_ = ''
 			and SRD010.RD_PD in (20, 25, 29, 30, 38, 39, 51, 113, 134, 170, 171, 172, 173, 224, 255, 336, 344, 371, 371, 440, 441, 442, 444, 445, 446, 591, 719, 738, 739, 749, 796, 800, 817, 830, 831, 832, 833, 834, 845, 846, 847, 848, 950, 955, 960, 961, 962)
@@ -37,9 +41,9 @@ select
 		select sum(SRT010.RT_VALOR)
 		from SRT010 (nolock)
 			inner join SRA010 (nolock)
-				on SRT010.D_E_L_E_T_ = ''
-				and SRT010.RT_FILIAL = SRA010.RA_FILIAL
-				and SRT010.RT_MAT = SRA010.RA_MAT
+				on SRA010.D_E_L_E_T_ = ''
+				and SRA010.RA_FILIAL = SRT010.RT_FILIAL
+				and SRA010.RA_MAT = SRT010.RT_MAT
 				
 				inner join SRJ010 (nolock)
 					on SRJ010.D_E_L_E_T_ = ''
@@ -48,8 +52,8 @@ select
 
 			inner join SRV010 (nolock)
 				on SRV010.D_E_L_E_T_ = ''
-				and substring(SRT010.RT_FILIAL, 1, 4) = SRV010.RV_FILIAL
-				and SRT010.RT_VERBA = SRV010.RV_COD
+				and SRV010.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
+				and SRV010.RV_COD = SRT010.RT_VERBA
 		where
 				SRT010.D_E_L_E_T_ = ''
 			and SRT010.RT_VERBA in (20, 25, 29, 30, 38, 39, 51, 113, 134, 170, 171, 172, 173, 224, 255, 336, 344, 371, 371, 440, 441, 442, 444, 445, 446, 591, 719, 738, 739, 749, 796, 800, 817, 830, 831, 832, 833, 834, 845, 846, 847, 848, 950, 955, 960, 961, 962)
@@ -114,4 +118,6 @@ group by
 	ZC2.ZC2_NUM,
 	ZC2.ZC2_COD,
 	ZC2.ZC2_COMPET,
-	ZC2.ZC2_ITEM
+	ZC2.ZC2_ITEM,
+	ZC2.ZC2_TIPO,
+	ZC2.ZC2_DESC
