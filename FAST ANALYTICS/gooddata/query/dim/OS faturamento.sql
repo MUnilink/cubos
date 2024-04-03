@@ -19,7 +19,7 @@ select
         when 2 then 'PARCIAL'
         when 3 then 'FINALIZADO'
         else 'OUTROS'
-    end as STATUS_PEDIDO
+    end as STATUS_FATURAMENTO
 
 from ZC1010 ZC1
 where
