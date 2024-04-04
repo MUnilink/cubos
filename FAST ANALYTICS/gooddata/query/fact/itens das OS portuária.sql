@@ -2,7 +2,7 @@ select
     'P |01|01' AS BK_EMPRESA,
     CASE WHEN SD2.D2_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(SD2.D2_FILIAL AS CHAR (6)) END AS BK_FILIAL,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DEV.A1_COD, ' '))+RTRIM(COALESCE(DEV.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
-    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DES.D1_FORNECE, ' '))+RTRIM(COALESCE(DES.D1_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
+    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(DES.A2_COD, ' '))+RTRIM(COALESCE(DES.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     /*concat(ARM.A1_COD, ARM.A1_LOJA) as ARMADORA,*/
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
@@ -10,7 +10,9 @@ select
 
     ZC1.ZC1_EMISSA as DATA_OS,
     ZC1.ZC1_TABPRC as TABELA_PRECO,
-    ZC2.ZC2_ITEM as ITEM,
+    trim(ZC2.ZC2_CONTEI) as CONTEINER,
+    trim(ZC2.ZC2_LACRE) as LACRE,
+    
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
         when 2 then 'FUNÇÃO'
@@ -20,24 +22,20 @@ select
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
         when 9 then 'DOCUMENTAÇÃO E TAXAS'
+        when 10 then 'COMBUSTIVEL'
+        when 11 then 'TAXAS'
+        when 12 then 'SEGURO'
+        when 13 then 'PNEUS'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
     trim(ZC2.ZC2_COD) as INSUMO,
-    ZC2.ZC2_QTDPRV as QTD_PREV,
-    ZC2.ZC2_QTDREA as QTD_REAL,
-    ZC2.ZC2_VLUPRV as VAL_PREV,
-    ZC2.ZC2_VLUREA as VAL_REAL,
-    ZC2.ZC2_QTDREC as QTD_RECURSO,
-    
-    trim(ZC2.ZC2_CONTEI) as CONTEINER,
-    trim(ZC2.ZC2_LACRE) as LACRE,
-    ZC2.ZC2_MOTORI as COD_MOT,
-    ZC2.ZC2_VEICUL as CM,
-    ZC2.ZC2_CARRET as SR,
-
-    concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) as DTINI_APONT,
-    concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) as DTFIM_APONT
+    sum(ZC2.ZC2_QTDPRV) as QTD_PREV,
+    sum(ZC2.ZC2_QTDREA) as QTD_REAL,
+    sum(ZC2.ZC2_VLUPRV) as VAL_PREV,
+    sum(ZC2.ZC2_VLUREA) as VAL_REAL,
+    sum(ZC2.ZC2_QTDREC) as QTD_RECURSO,
+    sum(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0) as HORAS_APONT
 
 from ZC2010 ZC2
     left join ZC1010 ZC1
@@ -88,3 +86,30 @@ from ZC2010 ZC2
 where
         ZC2.ZC2_DTFIM between <<START_DATE>> and <<FINAL_DATE>>
     and ZC2.D_E_L_E_T_ = ''
+    and nullif(nullif(ZC2.ZC2_DTINI, ''), '  :  ') is not null
+	and nullif(nullif(ZC2.ZC2_HRINI, ''), '  :  ') is not null
+	and nullif(nullif(ZC2.ZC2_DTFIM, ''), '  :  ') is not null
+	and nullif(nullif(ZC2.ZC2_HRFIM, ''), '  :  ') is not null
+group by
+    SD2.D2_FILIAL,
+    DEV.A1_FILIAL,
+    DES.A2_FILIAL,
+    DEV.A1_COD,
+    DES.A2_COD,
+    DEV.A1_LOJA,
+    DES.A2_LOJA,
+    ZC1.ZC1_FILIAL,
+    SC5.C5_FILIAL,
+    SF2.F2_FILIAL,
+    ZC1.ZC1_NUM,
+    SC5.C5_NUM,
+    SF2.F2_CLIENTE,
+    SF2.F2_LOJA,
+    SF2.F2_DOC,
+    SF2.F2_SERIE,
+    ZC1.ZC1_EMISSA,
+    ZC1.ZC1_TABPRC,
+    ZC2.ZC2_CONTEI,
+    ZC2.ZC2_LACRE,
+    ZC2.ZC2_TIPO,
+    ZC2.ZC2_COD
