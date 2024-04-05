@@ -44,13 +44,17 @@ select
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
-        when 2 then 'RH'
+        when 2 then 'FUNÇÃO'
         when 3 then 'EQUIPAMENTO'
         when 4 then 'MATERIAIS'
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
         when 9 then 'DOCUMENTAÇÃO E TAXAS'
+        when 10 then 'COMBUSTIVEL'
+        when 11 then 'TAXAS'
+        when 12 then 'SEGURO'
+        when 13 then 'PNEUS'
         else 'OUTROS'
     end as TIPO_INSUMO,
     
@@ -130,17 +134,45 @@ select
     ) as DOCUMENTACAO,
 
     (
-        select sum(ZC2010.ZC2_TOTAL)
-        from ZA7010 (nolock)
-            inner join ZC2010 (nolock)
-                on ZC2010.D_E_L_E_T_ = ''
-                and ZC2010.ZC2_COD = ZA7010.ZA7_COD
+        select sum(CT2010.CT2_VALOR)
+        from CT2010 (nolock)
+            inner join ZA8010 (nolock)
+                on ZA8010.D_E_L_E_T_ = ''
+                and CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM
+                and CT2010.CT2_ITEMD between ZA8010.ZA8_CTDINI and ZA8010.ZA8_CTDFIM
+                and CT2010.CT2_CCD between ZA8010.ZA8_CTTINI and ZA8010.ZA8_CTTFIM
+
+                inner join ZA7010 (nolock)
+                    on ZA7010.D_E_L_E_T_ = ''
+                    and ZA7010.ZA7_COD = ZA8010.ZA8_COD
         where
-                ZA7010.D_E_L_E_T_ = ''
+                CT2010.D_E_L_E_T_ = ''
+            and ZA7010.ZA7_COD = ZC2.ZC2_COD
+            and eomonth(CT2010.CT2_DATA) = ZC2.ZC2_COMPET
+            and ZC2.ZC2_TIPO = 7
+    ) as CONTABILIDADE,
+    
+    (
+        select sum(ZC2010.ZC2_TOTAL)
+        from ZC2010 (nolock)
+        where
+                ZC2010.D_E_L_E_T_ = ''
+            and ZC2010.ZC2_TIPO = 12
+
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
-            and ZC2010.ZC2_TIPO = 7
-    ) as CONTABILIDADE
+    ) as SEGURO,
+    
+    (
+        select sum(ZC2010.ZC2_TOTAL)
+        from ZC2010 (nolock)
+        where
+                ZC2010.D_E_L_E_T_ = ''
+            and ZC2010.ZC2_TIPO = 11
+            
+            and ZC2010.ZC2_COD = ZC2.ZC2_COD
+            and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
+    ) as TAXAS
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
