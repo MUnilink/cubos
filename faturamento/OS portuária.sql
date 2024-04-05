@@ -104,9 +104,7 @@ select
     SC6.C6_UM as UN_PEDIDO,
     SC6.C6_QTDVEN as QTD_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
-    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
-
-    (select count(*) from ZC3010 where ZC3010.D_E_L_E_T_ = '' and ZC3010.ZC3_FILIAL = ZC2.ZC2_FILIAL and ZC3010.ZC3_NUM = ZC2.ZC2_NUM and ZC3010.ZC3_ITEM = ZC2.ZC2_ITEM) as QTD_RATEIO
+    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)

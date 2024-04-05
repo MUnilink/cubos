@@ -92,26 +92,27 @@ from ZC2010 ZC2
         
             left join SC5010 SC5
                 on SC5.D_E_L_E_T_ = ''
-                and SC5.C5_FILIAL = ZC1.ZC1_FILIAL
-                and SC5.C5_YOS = ZC1.ZC1_NUM
+                and SC5.C5_FILIAL = ZC3.ZC3_FILIAL
+                and SC5.C5_NUM = ZC3.ZC3_PEDIDO
+                and SC5.C5_YOS = ZC3.ZC3_NUM
 
                 left join SC6010 SC6
                     on SC6.D_E_L_E_T_ = ''
-                    and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
-                    and SC6.C6_YOS = ZC2.ZC2_NUM
+                    and SC6.C6_FILIAL = SC5.C5_FILIAL
+                    and SC6.C6_NUM = SC5.C5_NUM
 
-                    left join SD2010 SD2
-                        on SD2.D_E_L_E_T_ = ''
-                        and SD2.D2_FILIAL = SC5.C5_FILIAL
-                        and SD2.D2_PEDIDO = SC5.C5_NUM
+                left join SD2010 SD2
+                    on SD2.D_E_L_E_T_ = ''
+                    and SD2.D2_FILIAL = SC5.C5_FILIAL
+                    and SD2.D2_PEDIDO = SC5.C5_NUM
 
-                        left join SF2010 SF2
-                            on SF2.D_E_L_E_T_= ' '
-                            and SF2.F2_FILIAL = SD2.D2_FILIAL
-                            and SF2.F2_CLIENTE = SD2.D2_CLIENTE
-                            and SF2.F2_LOJA = SD2.D2_LOJA
-                            and SF2.F2_DOC = SD2.D2_DOC
-                            and SF2.F2_SERIE = SD2.D2_SERIE
+                    left join SF2010 SF2
+                        on SF2.D_E_L_E_T_= ' '
+                        and SF2.F2_FILIAL = SD2.D2_FILIAL
+                        and SF2.F2_CLIENTE = SD2.D2_CLIENTE
+                        and SF2.F2_LOJA = SD2.D2_LOJA
+                        and SF2.F2_DOC = SD2.D2_DOC
+                        and SF2.F2_SERIE = SD2.D2_SERIE
 
     left join ST9010 ST9
         on ST9.D_E_L_E_T_ = ''
