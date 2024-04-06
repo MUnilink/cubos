@@ -86,6 +86,7 @@ select
                 STJ010.D_E_L_E_T_ = ''
             and STJ010.TJ_CODBEM = ZC2.ZC2_COD
             and eomonth(STL010.TL_DTFIM) = ZC2.ZC2_COMPET
+            and STJ010.TJ_SERVICO not in ('PNEMOV', 'PNEROD')
             and STL010.TL_SEQRELA > 0
             and ZC2.ZC2_TIPO = 3
     ) as MANUTENCAO,
