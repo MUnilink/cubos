@@ -1,4 +1,4 @@
-select
+select distinct
     ZC2.ZC2_TIPO,
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
