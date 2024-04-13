@@ -48,7 +48,7 @@
 			end
 		end as CONTA,
 
-		case when SRC.RC_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848) then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -155,7 +155,7 @@ union
 			end
 		end as CONTA,
 
-		case when SRD.RD_PD in (020,113,344,039,030,029,749,719,796,738,800,962,950,955,960,961,817,830,845,442,440,441,444,446,591,038,025,051,134,170,171,172,173,371,445,739,831,832,833,834,846,847,848) then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
