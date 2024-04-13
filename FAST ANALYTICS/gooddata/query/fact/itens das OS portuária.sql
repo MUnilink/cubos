@@ -14,13 +14,13 @@ select
     case when ZC2.ZC2_TIPO in (3, 6, 9, 10, 12, 13) then ZC2.ZC2_COD else null end as COD_DA3,
     case ZC2.ZC2_TIPO when 2 then ZC2.ZC2_COD else null end as COD_SRJ,
     case ZC2.ZC2_TIPO when 7 then ZC2.ZC2_COD else null end as COD_ZA7,
-    case ZC2.ZC2_TIPO when 8 then ZC2.ZC2_COD else null end as COD_SE1
+    case ZC2.ZC2_TIPO when 8 then ZC2.ZC2_COD else null end as COD_SE1,
 
-    ZC1.ZC1_EMISSA as DATA_OS,
-    ZC1.ZC1_TABPRC as TABELA_PRECO,
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
     trim(ZC2.ZC2_COD) as INSUMO,
+    ZC1.ZC1_EMISSA as DATA_OS,
+    ZC2.ZC2_COMPET as COMPETENCIA,
 
     trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
     ZC3.ZC3_QTD as QTD_RATEIO,
@@ -34,14 +34,12 @@ select
     
     datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
     cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) as HORAS_TOTAIS
-    
 
 from ZC2010 ZC2
-    left join ZC1010 ZC1
+    inner join ZC1010 ZC1
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-        and substring(ZC1.ZC1_NUM, 1, 4) > 2022
         
         left join SA2010 SA2
             on SA2.D_E_L_E_T_ = ''
@@ -50,14 +48,14 @@ from ZC2010 ZC2
         left join SED010 SED
             on SED.D_E_L_E_T_ = ''
             and SED.ED_CODIGO = ZC1.ZC1_NATURE
-        left join SED010 SE4
+        left join SE4010 SE4
             on SE4.D_E_L_E_T_ = ''
             and SE4.E4_CODIGO = ZC1.ZC1_COND
         left join DA0010 DA0
             on DA0.D_E_L_E_T_ = ''
             and DA0.DA0_CODTAB = ZC1.ZC1_TABPRC
         
-    left join ZC3010 ZC3
+    inner join ZC3010 ZC3
         on ZC3.D_E_L_E_T_ = ''
         and ZC3.ZC3_FILIAL = ZC2.ZC2_FILIAL
         and ZC3.ZC3_NUM = ZC2.ZC2_NUM
