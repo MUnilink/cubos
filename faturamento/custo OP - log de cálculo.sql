@@ -60,7 +60,7 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     case ZC2.ZC2_TIPO
         when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
-        when 2 then null
+        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
         when 3 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 3)
         when 4 then (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 4)
         when 6 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 6)
@@ -185,7 +185,85 @@ select
             
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
-    ) else 0 end as TAXAS
+    ) else 0 end as TAXAS,
+    
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
+    (
+		select sum(SRD010.RD_VALOR)
+		from SRD010 (nolock)
+			inner join SRA010 (nolock)
+				on SRA010.D_E_L_E_T_ = ''
+				and SRA010.RA_FILIAL = SRD010.RD_FILIAL
+				and SRA010.RA_MAT = SRD010.RD_MAT
+			inner join SRV010 SRV (nolock)
+				on SRV.D_E_L_E_T_ = ''
+				and SRV.RV_FILIAL = substring(SRD010.RD_FILIAL, 1, 4)
+				and SRV.RV_COD = SRD010.RD_PD
+		where
+				SRD010.D_E_L_E_T_ = ''
+			and SRD010.RD_FILIAL = ZC2.ZC2_FILIAL
+			and SRD010.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
+			and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
+            and ZC2.ZC2_TIPO = 2
+            and ZG1.ZG1_TABELA = 'SRJ'
+	) else 0 end as VALOR_FOLHA,
+	
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
+    (
+		select sum(SRT010.RT_VALOR)
+		from SRT010 (nolock)
+			inner join SRA010 (nolock)
+				on SRA010.D_E_L_E_T_ = ''
+				and SRA010.RA_FILIAL = SRT010.RT_FILIAL
+				and SRA010.RA_MAT = SRT010.RT_MAT
+				
+				inner join SRJ010 (nolock)
+					on SRJ010.D_E_L_E_T_ = ''
+					and SRJ010.RJ_FILIAL = substring(SRA010.RA_FILIAL, 1, 4)
+					and SRJ010.RJ_FUNCAO = SRA010.RA_CODFUNC
+
+			inner join SRV010 SRV (nolock)
+				on SRV.D_E_L_E_T_ = ''
+				and SRV.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
+				and SRV.RV_COD = SRT010.RT_VERBA
+		where
+				SRT010.D_E_L_E_T_ = ''
+			and SRT010.RT_FILIAL = ZC2.ZC2_FILIAL
+			and SRT010.RT_DATACAL = ZC2.ZC2_COMPET
+			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
+			and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
+            and ZC2.ZC2_TIPO = 2
+            and ZG1.ZG1_TABELA = 'SRJ'
+	) else 0 end as VALOR_PROV,
+
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
+	(
+		select sum(SRD010.RD_HORAS) * avg(cast(SRJ010.RJ_YHRPADR as int))
+		from SRD010 (nolock)
+			inner join SRA010 (nolock)
+				on SRD010.D_E_L_E_T_ = ''
+				and SRD010.RD_FILIAL = SRA010.RA_FILIAL
+				and SRD010.RD_MAT = SRA010.RA_MAT
+				
+				inner join SRJ010 (nolock)
+					on SRJ010.D_E_L_E_T_ = ''
+					and SRJ010.RJ_FILIAL = substring(SRA010.RA_FILIAL, 1, 4)
+					and SRJ010.RJ_FUNCAO = SRA010.RA_CODFUNC
+
+			inner join SRV010 SRV (nolock)
+				on SRV.D_E_L_E_T_ = ''
+				and substring(SRD010.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
+				and SRD010.RD_PD = SRV.RV_COD
+		where
+				SRD010.D_E_L_E_T_ = ''
+			and SRD010.RD_FILIAL = ZC2.ZC2_FILIAL
+			and SRD010.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
+            and ZC2.ZC2_TIPO = 2
+            and ZG1.ZG1_TABELA = 'SRJ'
+			and SRD010.RD_PD in (20, 130, 51, 50, 200, 358) /* DIAS TRABALHADOS, FÉRIAS, AUX. DOENÇA, AUX. MATERNIDADE, VALOR DE AFASTAMENTO,  AUX. ACIDENTE*/
+	)/30 else 0 end as DIAS_FOLHA
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
