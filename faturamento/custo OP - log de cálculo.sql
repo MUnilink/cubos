@@ -77,8 +77,10 @@ select
 
     isnull(nullif(concat(ZC2.ZC2_NUM, '-', ZC2.ZC2_ITEM), '-'), 'COMPARATIVO TIPO ' + ZC2.ZC2_TIPO) as OS_ITEM,
 
-    (select sum(SD3010.D3_CUSTO1) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO != 'S' and ZC2.ZC2_TIPO = 4 and ZG1.ZG1_TABELA = 'SD3') as ESTOQUE,
-    (select sum(TQN010.TQN_VALTOT) from TQN010 (nolock) where TQN010.D_E_L_E_T_ = '' and TQN010.TQN_FROTA = ZC2.ZC2_COD and eomonth(TQN010.TQN_DTABAS) = ZC2.ZC2_COMPET and ZC2.ZC2_TIPO = 10 and ZG1.ZG1_TABELA = 'TQN') as COMBUSTIVEL,
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then (select sum(SD3010.D3_CUSTO1) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO != 'S' and ZC2.ZC2_TIPO = 4 and ZG1.ZG1_TABELA = 'SD3') else 0 end as ESTOQUE,
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then (select sum(TQN010.TQN_VALTOT) from TQN010 (nolock) where TQN010.D_E_L_E_T_ = '' and TQN010.TQN_FROTA = ZC2.ZC2_COD and eomonth(TQN010.TQN_DTABAS) = ZC2.ZC2_COMPET and ZC2.ZC2_TIPO = 10 and ZG1.ZG1_TABELA = 'TQN') else 0 end as COMBUSTIVEL,
+    
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
         select sum(STL010.TL_CUSTO)
         from STJ010 (nolock)
@@ -94,8 +96,9 @@ select
             and STJ010.TJ_SERVICO not in ('PNEMOV', 'PNEROD')
             and STL010.TL_SEQRELA > 0
             and ZC2.ZC2_TIPO = 3
-    ) as MANUTENCAO,
+    ) else 0 end as MANUTENCAO,
     
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
         select sum(SN4010.N4_VLROC1)
         from SN4010 (nolock)
@@ -115,8 +118,9 @@ select
             and SN4010.N4_OCORR = 6
             and SN4010.N4_TIPOCNT = 3
             and ZC2.ZC2_TIPO = 6
-    ) as DEPRECIACAO,
+    ) else 0 end as DEPRECIACAO,
 
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
         select sum(TS1.DOCTAX_VALOR)/12
         from
@@ -137,8 +141,9 @@ select
         ) TS1
         where
                 ZC2.ZC2_TIPO = 9
-    ) as DOCUMENTACAO,
-
+    ) else 0 end as DOCUMENTACAO,
+    
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
         select sum(CT2010.CT2_VALOR)
         from CT2010 (nolock)
@@ -156,8 +161,9 @@ select
             and ZA7010.ZA7_COD = ZC2.ZC2_COD
             and eomonth(CT2010.CT2_DATA) = ZC2.ZC2_COMPET
             and ZC2.ZC2_TIPO = 7
-    ) as CONTABILIDADE,
+    ) else 0 end as CONTABILIDADE,
     
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
         select sum(ZC2010.ZC2_TOTAL)
         from ZC2010 (nolock)
@@ -167,8 +173,9 @@ select
 
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
-    ) as SEGURO,
+    ) else 0 end as SEGURO,
     
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
         select sum(ZC2010.ZC2_TOTAL)
         from ZC2010 (nolock)
@@ -178,7 +185,7 @@ select
             
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
-    ) as TAXAS
+    ) else 0 end as TAXAS
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
