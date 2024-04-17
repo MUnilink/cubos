@@ -58,6 +58,13 @@ select
     end as TIPO_INSUMO,
     
     trim(ZC2.ZC2_COD) as INSUMO,
+    ZC2.ZC2_ITEM as ITEM,
+
+    ZC2.ZC2_QTDPRV as QTD_PREV,
+    ZC2.ZC2_QTDREA as QTD_REAL,
+    ZC2.ZC2_VLUPRV as VAL_PREV,
+    ZC2.ZC2_VLUREA as VAL_REAL,
+
     case ZC2.ZC2_TIPO
         when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
         when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
@@ -73,7 +80,6 @@ select
         when 13 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 13)
         else trim(ZC2.ZC2_DESC)
     end as DESC_INSUMO,
-    ZC2.ZC2_ITEM as ITEM,
 
     isnull(nullif(concat(ZC2.ZC2_NUM, '-', ZC2.ZC2_ITEM), '-'), 'COMPARATIVO TIPO ' + ZC2.ZC2_TIPO) as OS_ITEM,
 
@@ -263,7 +269,21 @@ select
             and ZC2.ZC2_TIPO = 2
             and ZG1.ZG1_TABELA = 'SRJ'
 			and SRD010.RD_PD in (20, 130, 51, 50, 200, 358) /* DIAS TRABALHADOS, FÉRIAS, AUX. DOENÇA, AUX. MATERNIDADE, VALOR DE AFASTAMENTO,  AUX. ACIDENTE*/
-	)/30 else 0 end as DIAS_FOLHA
+	)/30 else 0 end as DIAS_FOLHA,
+
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
+    (
+        select max(cast(ST6010.T6_YHRPADR as int))
+        from ST9010 (nolock)
+            inner join ST6010 (nolock)
+                on ST6010.D_E_L_E_T_ = ''
+                and ST6010.T6_CODFAMI = ST9010.T9_CODFAMI
+        where
+                ST9010.D_E_L_E_T_ = ''
+            and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD)
+            and ZC2.ZC2_TIPO = 3
+    ) * datediff(day, dateadd(day, 1, dateadd(month, -1, ZC2.ZC2_DTFIM)), eomonth(ZC2.ZC2_DTFIM))
+    else 0 end as DIAS_EQUIP
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
