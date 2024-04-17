@@ -65,6 +65,9 @@ select
     ZC2.ZC2_VLUPRV as VAL_PREV,
     ZC2.ZC2_VLUREA as VAL_REAL,
 
+    ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as TOT_ITEMPRE,
+    ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as TOT_ITEMREA,
+
     case ZC2.ZC2_TIPO
         when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
         when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
@@ -99,7 +102,6 @@ select
                 STJ010.D_E_L_E_T_ = ''
             and STJ010.TJ_CODBEM = ZC2.ZC2_COD
             and eomonth(STL010.TL_DTFIM) = ZC2.ZC2_COMPET
-            and STJ010.TJ_SERVICO not in ('PNEMOV', 'PNEROD')
             and STL010.TL_SEQRELA > 0
             and ZC2.ZC2_TIPO = 3
     ) else 0 end as MANUTENCAO,
@@ -151,13 +153,13 @@ select
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-        select sum(CT2010.CT2_VALOR)
+        select sum(case when CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2)) else case when CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2))*-1 else 0.0 end end)
         from CT2010 (nolock)
             inner join ZA8010 (nolock)
                 on ZA8010.D_E_L_E_T_ = ''
-                and CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM
-                and CT2010.CT2_ITEMD between ZA8010.ZA8_CTDINI and ZA8010.ZA8_CTDFIM
-                and CT2010.CT2_CCD between ZA8010.ZA8_CTTINI and ZA8010.ZA8_CTTFIM
+                and (CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM or CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM)
+                and (CT2010.CT2_ITEMD between ZA8010.ZA8_CTDINI and ZA8010.ZA8_CTDFIM or CT2010.CT2_ITEMC between ZA8010.ZA8_CTDINI and ZA8010.ZA8_CTDFIM)
+                and (CT2010.CT2_CCD between ZA8010.ZA8_CTTINI and ZA8010.ZA8_CTTFIM or CT2010.CT2_CCC between ZA8010.ZA8_CTTINI and ZA8010.ZA8_CTTFIM)
 
                 inner join ZA7010 (nolock)
                     on ZA7010.D_E_L_E_T_ = ''
