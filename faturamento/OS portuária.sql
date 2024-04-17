@@ -7,6 +7,9 @@ select
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
+    ZC2.R_E_C_N_O_,
+    convert(datetime, concat(ZC1.ZC1_DTINI, ' ', nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', substring(ZC1.ZC1_HRINI, 5, 2), '00')), ':  :00')), 113) as DTINI_OS,
+    convert(datetime, concat(ZC1.ZC1_DTFIM, ' ', nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', substring(ZC1.ZC1_HRFIM, 5, 2), '00')), ':  :00')), 113) as DTFIM_OS,
     
     ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
@@ -90,6 +93,7 @@ select
     ZC2.ZC2_VEICUL as CM,
     ZC2.ZC2_CARRET as SR,
 
+    substring(ZC2.ZC2_COMPET, 1, 6) as PERIODO,
     substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
@@ -155,6 +159,6 @@ from ZC2010 ZC2 (nolock)
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
-    and ZC2.ZC2_HRINI != '  :  '
-    and ZC2.ZC2_HRFIM != '  :  '
+    and nullif(nullif(ZC2.ZC2_HRINI, ''), '  :  ') is not null
+	and nullif(nullif(ZC2.ZC2_HRFIM, ''), '  :  ') is not null
     and year(ZC1.ZC1_EMISSA) > 2022
