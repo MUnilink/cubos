@@ -165,9 +165,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as TOTAL_VT,
         (
             select sum(SRC010.RC_VALOR)
@@ -183,9 +182,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Vale_Alimentação_Total,
         (
             select sum(SRC010.RC_VALOR)
@@ -258,25 +256,7 @@ from
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
                 and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
-        ) as Diárias_Motoristas,/*
-        (
-            select sum(SRC010.RC_VALOR)
-            from SRC010 (nolock)
-                inner join SRV010 (nolock)
-                    on SRV010.D_E_L_E_T_ = ''
-                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                    and SRC010.RC_PD = SRV010.RV_COD
-            where
-                    SRC010.RC_PD in ('0')
-                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
-                and SRC010.D_E_L_E_T_ = ''
-                and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
-                and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
-                and SRC010.RC_MAT = FOLHA.RC_MAT
-                and SRC010.RC_PD = FOLHA.RC_PD
-                and SRC010.RC_SEQ = FOLHA.RC_SEQ
-                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
-        ) as Custo_Total_com_Pessoal,*/
+        ) as Diárias_Motoristas,
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -335,9 +315,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Salário_Base_Pro_ratamês,
         (
             select sum(SRC010.RC_VALOR)
@@ -354,9 +333,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as PTS_premio_tempo_serviço,
         (
             select sum(SRC010.RC_HORAS)
@@ -373,9 +351,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Férias_Qtde_de_dias_comprados,
         (
             select sum(SRC010.RC_VALOR)
@@ -392,9 +369,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pgto_de_férias_compradas,
         (
             select sum(SRC010.RC_VALOR)
@@ -483,9 +459,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Hora_Extra_Eventual_mês,
         (
             select sum(SRC010.RC_VALOR)
@@ -502,9 +477,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Adicional_Noturno_FIXO,
         (
             select sum(SRC010.RC_VALOR)
@@ -521,9 +495,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pericul_FIXA,
         (
             select sum(SRC010.RC_VALOR)
@@ -540,9 +513,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Sal_Família,
         (
             select sum(SRC010.RC_VALOR)
@@ -559,9 +531,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pgto_1a_Q_créd_em_folha_PROVENTO,
         (
             select sum(SRC010.RC_VALOR)
@@ -578,9 +549,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pgto_1a_Q_créd_em_folha_DESCONTO,
         (
             select sum(SRC010.RC_VALOR)
@@ -597,9 +567,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Arredond_1,
         (
             select sum(SRC010.RC_VALOR)
@@ -616,9 +585,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Arredond_2,
         (
             select sum(SRC010.RC_VALOR)
@@ -635,9 +603,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pgto_1a_Q_espécie,
         (
             select sum(SRC010.RC_VALOR)
@@ -654,9 +621,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Saldo_Folha_Pgto_1a_Q,
         (
             select sum(SRC010.RC_VALOR)
@@ -673,9 +639,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pgto_2a_Q_créd_em_folha,
         (
             select sum(SRC010.RC_VALOR)
@@ -692,9 +657,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as BV_Financ,
         (
             select sum(SRC010.RC_VALOR)
@@ -711,9 +675,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Santander_Financ,
         (
             select sum(SRC010.RC_VALOR)
@@ -732,7 +695,7 @@ from
                 and SRC010.RC_PD = FOLHA.RC_PD
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
                 and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
-        ) as Biorc_Financ,
+        ) as BioRC_Financ,
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
@@ -963,9 +926,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Pens_Alim,
         (
             select sum(SRC010.RC_VALOR)
@@ -982,9 +944,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Mensal_Sind_Patronal,
         (
             select sum(SRC010.RC_VALOR)
@@ -1563,9 +1524,8 @@ from
                 and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                 and SRC010.RC_MAT = FOLHA.RC_MAT
                 and SRC010.RC_PD = FOLHA.RC_PD
-            
-            and SRC010.RC_SEQ = FOLHA.RC_SEQ
-            and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Observações_da_Folha_de_Adiantamento_1a_QUINZENA,
         (
             select sum(SRC010.RC_VALOR)
