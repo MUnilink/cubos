@@ -8,8 +8,26 @@ select
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
     ZC2.R_E_C_N_O_,
-    convert(datetime, concat(ZC1.ZC1_DTINI, ' ', nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', substring(ZC1.ZC1_HRINI, 5, 2), '00')), ':  :00')), 113) as DTINI_OS,
-    convert(datetime, concat(ZC1.ZC1_DTFIM, ' ', nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', substring(ZC1.ZC1_HRFIM, 5, 2), '00')), ':  :00')), 113) as DTFIM_OS,
+    
+    convert
+    (
+        datetime,
+        case isdate(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(ZC1.ZC1_DTINI, ' ', '12:00')
+        end,
+        113
+    )as DTINI_OS,
+    
+    convert
+    (
+        datetime,
+        case isdate(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTFIM, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(ZC1.ZC1_DTFIM, ' ', '12:00')
+        end,
+        113
+    ) as DTFIM_OS,
     
     ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
@@ -43,26 +61,33 @@ select
     
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
-        when 2 then 'RH'
+        when 2 then 'FUNÇÃO'
         when 3 then 'EQUIPAMENTO'
         when 4 then 'MATERIAIS'
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
-        when 9 then ''
+        when 9 then 'DOCUMENTAÇÃO E TAXAS'
         when 10 then 'COMBUSTIVEL'
-        when 11 then 'TAXAS PORTUARIAS'
+        when 11 then 'TAXAS'
+        when 12 then 'SEGURO'
+        when 13 then 'PNEUS'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
     trim(ZC2.ZC2_COD) as INSUMO,
     case ZC2.ZC2_TIPO
-        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(trim(SB1010.B1_DESC), 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 1)
-        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 2)
-        when 3 then trim(ST9.T9_CODBEM)
-        when 4 then (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and ZC2.ZC2_TIPO = 4)
-        when 6 then trim(ST9.T9_CODBEM)
-        when 7 then trim(ZA7.ZA7_DESC)
+        when 1 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 1)
+        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
+        when 3 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3)
+        when 4 then (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 4)
+        when 6 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 6)
+        when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
+        when 9 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 9)
+        when 10 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 10)
+        when 11 then (select case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 11)
+        when 12 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 12)
+        when 13 then (select trim(ST9010.T9_CODBEM) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 13)
         else trim(ZC2.ZC2_DESC)
     end as DESC_INSUMO,
 
@@ -108,7 +133,9 @@ select
     SC6.C6_UM as UN_PEDIDO,
     SC6.C6_QTDVEN as QTD_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
-    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO
+    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
+    convert(date, SC6.C6_ENTREG, 103) as DATA_PEDIDO,
+    substring(SC6.C6_ENTREG, 1, 6) as PERIODO_PEDIDO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -159,6 +186,8 @@ from ZC2010 ZC2 (nolock)
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
+    and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
+	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
     and nullif(nullif(ZC2.ZC2_HRINI, ''), '  :  ') is not null
 	and nullif(nullif(ZC2.ZC2_HRFIM, ''), '  :  ') is not null
     and year(ZC1.ZC1_EMISSA) > 2022
