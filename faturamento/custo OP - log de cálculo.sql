@@ -300,5 +300,3 @@ from ZC2010 ZC2 (nolock)
         and ZG1.ZG1_ATIVO = 'S'
 where
         ZC2.D_E_L_E_T_ = ''
-    and ZC2.ZC2_HRINI != '  :  '
-    and ZC2.ZC2_HRFIM != '  :  '
