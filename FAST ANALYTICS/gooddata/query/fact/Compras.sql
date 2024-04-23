@@ -12,7 +12,7 @@ SELECT
     'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_TES, ' ')), ' '), '|') AS BK_TES,
     'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU.ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU.ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
     
-    case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,    
+    case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     case
         when (SC7.C7_QUJE > 0) and (SC7.C7_QUJE < SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
         when (SC7.C7_QUJE >= SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
@@ -27,6 +27,9 @@ SELECT
     COALESCE(SC7.C7_EMISSAO, ' ') AS DATA_EMISSAO,
     COALESCE(SC7.C7_DATPRF, ' ') AS DTENTR,
     COALESCE(SC1.C1_EMISSAO, ' ') AS DTEORD, /* data SC */
+
+    (select max(SCR010.CR_DATALIB) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC, /* data aprovação SC */
+    (select max(SCR010.CR_DATALIB) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC, /* data aprovação PC */
     
     1 as QORDCP, /* qtd de SCs */
     SC7.C7_QUANT as QTD_SOLICITADA,
