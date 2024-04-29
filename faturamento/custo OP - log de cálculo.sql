@@ -87,6 +87,7 @@ select
 
     (select sum(SD3010.D3_CUSTO1) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO != 'S' and ZC2.ZC2_TIPO = 4 and ZG1.ZG1_TABELA = 'SD3') as ESTOQUE,
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then (select sum(TQN010.TQN_VALTOT) from TQN010 (nolock) where TQN010.D_E_L_E_T_ = '' and TQN010.TQN_FROTA = ZC2.ZC2_COD and eomonth(TQN010.TQN_DTABAS) = ZC2.ZC2_COMPET and ZC2.ZC2_TIPO = 10 and ZG1.ZG1_TABELA = 'TQN') else 0 end as COMBUSTIVEL,
+    (select sum(SD1010.D1_CUSTO) from SD1010 (nolock) where SD1010.D_E_L_E_T_ = '' and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL and SD1010.D1_YOS = ZC2.ZC2_NUM and SD1010.D1_COD = ZC2.ZC2_COD and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET and ZC2.ZC2_TIPO = 5 and ZG1.ZG1_TABELA = 'SD1') as COMPRAS,
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
@@ -140,7 +141,7 @@ select
             from TS1010 (nolock)
             where
                     TS1010.D_E_L_E_T_ = ''
-                and TS1.TS1_DOCTO in (1, 2, 3, 7)
+                and TS1010.TS1_DOCTO in (1, 2, 3, 7)
                 and TS1010.TS1_CODBEM = ZC2.ZC2_COD
                 and TS1010.TS1_DTVENC <= ZC2.ZC2_COMPET
             group by
