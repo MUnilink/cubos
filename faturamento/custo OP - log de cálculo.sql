@@ -11,7 +11,7 @@ select
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then ZG1.ZG1_VLPROD else 0 end as VALOR_PRODT,
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then ZG1.ZG1_HRIMPR else 0 end as HORA_IMPRO,
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then ZG1.ZG1_VLIMPR else 0 end as VALOR_IMPRO,
-    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then ZG1.ZG1_VLPROD + ZG1.ZG1_VLIMPR else 0 end as VLR_IMPPRO,
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then ZG1.ZG1_VLPROD + ZG1.ZG1_VLIMPR else 0 end as SOMA_PROIMP,
     
     ZG1.ZG1_COMPET as PERIODO_LOG,
     ZG1.ZG1_DTCALC as CALCULO_CUSTO,
@@ -140,6 +140,7 @@ select
             from TS1010 (nolock)
             where
                     TS1010.D_E_L_E_T_ = ''
+                and TS1.TS1_DOCTO in (1, 2, 3, 7)
                 and TS1010.TS1_CODBEM = ZC2.ZC2_COD
                 and TS1010.TS1_DTVENC <= ZC2.ZC2_COMPET
             group by
@@ -192,7 +193,7 @@ select
             
             and ZC2010.ZC2_COD = ZC2.ZC2_COD
             and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
-    ) else 0 end as TAXAS,
+    ) else 0 end as TAXAS_CIPP,
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
