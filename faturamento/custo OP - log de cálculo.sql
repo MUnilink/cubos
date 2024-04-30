@@ -174,14 +174,13 @@ select
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-        select sum(ZC2010.ZC2_TOTAL)
-        from ZC2010 (nolock)
+        select sum(ZC4010.ZC4_VLSEG)/12
+        from ZC4010 (nolock)
         where
-                ZC2010.D_E_L_E_T_ = ''
-            and ZC2010.ZC2_TIPO = 12
-
-            and ZC2010.ZC2_COD = ZC2.ZC2_COD
-            and ZC2010.ZC2_COMPET = ZC2.ZC2_COMPET
+                ZC2.D_E_L_E_T_ = ''
+            and ZC2.ZC2_TIPO = 12
+            and ZC2.ZC2_COD = ZC4010.ZC4_CODBEM
+            and ZC2.ZC2_COMPET between ZC4010.ZC4_DTVGIN and ZC4010.ZC4_DTVGFI
     ) else 0 end as SEGURO,
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
