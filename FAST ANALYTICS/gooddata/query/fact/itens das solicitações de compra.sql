@@ -24,12 +24,16 @@ SELECT
     SC1.C1_NUM as SC,
     COALESCE(SC1.C1_EMISSAO, ' ') as DATA,
     COALESCE(SC1.C1_DATPRF, ' ') as DTENTR,
+
+    (select max(SCR010.CR_DATALIB) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC, /* data aprovação SC */
+    (select max(SCR010.CR_DATALIB) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC, /* data aprovação PC */
     
     SC1.C1_QUANT as QTD_SOLICITADA,
     SC1.C1_QUJE as QTD_ATENDIDA,
     SC1.C1_PRECO as VALOR_UNITARIO,
-    SC1.C1_TOTAL as VALOR_TOTAL
-		
+    SC1.C1_TOTAL as VALOR_TOTAL,
+    (select trim(SC7010.C7_OBS) from SC1010 where SC1010.D_E_L_E_T_ = '' and SC1010.C1_FILIAL = SC1.C1_FILIAL and SC1010.C1_NUM = SC1.C1_NUM and SC1.C1_ITEM = SC1.C1_ITEM group by SC1010.C1_FILIAL, SC1010.C1_NUM having SC1010.C1_ITEM = min(SC1.C1_ITEM)) as OBS_SC
+
 FROM SC1010 SC1
     left join SB1010 SB1
         on SB1.D_E_L_E_T_ = ' '
