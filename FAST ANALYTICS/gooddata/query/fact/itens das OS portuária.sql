@@ -32,8 +32,8 @@ select
     ZC2.ZC2_VLUREA as VAL_REAL,
     ZC2.ZC2_QTDREC as QTD_RECURSO,
     
-    datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
-    cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) as HORAS_TOTAIS
+    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
+	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
 
 from ZC2010 ZC2
     inner join ZC1010 ZC1
@@ -91,7 +91,3 @@ from ZC2010 ZC2
                     and SF2.F2_SERIE = SD2.D2_SERIE
 where
         ZC2.D_E_L_E_T_ = ''
-    and nullif(nullif(ZC2.ZC2_DTINI, ''), '  :  ') is not null
-	and nullif(nullif(ZC2.ZC2_HRINI, ''), '  :  ') is not null
-	and nullif(nullif(ZC2.ZC2_DTFIM, ''), '  :  ') is not null
-	and nullif(nullif(ZC2.ZC2_HRFIM, ''), '  :  ') is not null

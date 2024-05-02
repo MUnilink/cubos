@@ -15,8 +15,7 @@ select
         case isdate(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2)))
             when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', '00')), ':  :00'), '00:00'))
             else concat(ZC1.ZC1_DTINI, ' ', '12:00')
-        end,
-        113
+        end, 113
     ) as DTINI_OS,
     
     convert
@@ -25,8 +24,7 @@ select
         case isdate(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2)))
             when 1 then concat(ZC1.ZC1_DTFIM, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', '00')), ':  :00'), '00:00'))
             else concat(ZC1.ZC1_DTFIM, ' ', '12:00')
-        end,
-        113
+        end, 113
     ) as DTFIM_OS,
     
     ZC1.ZC1_PORTO as PORTO,
