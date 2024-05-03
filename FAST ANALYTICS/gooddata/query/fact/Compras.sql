@@ -11,6 +11,7 @@ SELECT
     'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SY1.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SY1.Y1_COD, ' ')), ' '), '|') AS BK_COMPRADOR,
     'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_TES, ' ')), ' '), '|') AS BK_TES,
     'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU.ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU.ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
+    'P |01|CT1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_CONTA, ' ')), ' '), '|') AS BK_CONTA,
     
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     case
@@ -28,18 +29,15 @@ SELECT
     COALESCE(SC7.C7_DATPRF, ' ') AS DTENTR,
     COALESCE(SC1.C1_EMISSAO, ' ') AS DTEORD, /* data SC */
 
-    (select max(SCR010.CR_DATALIB) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC, /* data aprovação SC */
-    (select max(SCR010.CR_DATALIB) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC, /* data aprovação PC */
+    (select max(coalesce(SCR010.CR_DATALIB, '')) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC, /* data aprovação SC */
+    (select max(coalesce(SCR010.CR_DATALIB, '')) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC, /* data aprovação PC */
     
     1 as QORDCP, /* qtd de SCs */
     SC7.C7_QUANT as QTD_SOLICITADA,
     SC7.C7_QUJE as QTD_ATENDIDA,
     SC7.C7_PRECO as VALOR_UNITARIO,
-    SC7.C7_TOTAL as VALOR_TOTAL,
+    SC7.C7_TOTAL as VALOR_TOTAL
 
-    (select trim(SC7010.C7_OBS) from SC7010 where SC7010.D_E_L_E_T_ = '' and SC7010.C7_FILIAL = SC7.C7_FILIAL and SC7010.C7_NUM = SC7.C7_NUM and SC7.C7_ITEM = SC7.C7_ITEM group by SC7010.C7_FILIAL, SC7010.C7_NUM having min(SC7010.C7_ITEM) = min(SC7.C7_ITEM)) as OBS_PC,
-    (select trim(SC7010.C7_OBSM) from SC7010 where SC7010.D_E_L_E_T_ = '' and SC7010.C7_FILIAL = SC7.C7_FILIAL and SC7010.C7_NUM = SC7.C7_NUM and SC7.C7_ITEM = SC7.C7_ITEM group by SC7010.C7_FILIAL, SC7010.C7_NUM having min(SC7010.C7_ITEM) = min(SC7.C7_ITEM)) as MEMO_PC
-		
 FROM SC7010 SC7
     left join SB1010 SB1
         on SB1.D_E_L_E_T_ = ' '
