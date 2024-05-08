@@ -130,25 +130,29 @@ select
 
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-        select sum(TS1.DOCTAX_VALOR)/12
-        from
+        select max(TS1010.TS1_VALOR)/12
+        from TS1010 (nolock)
+        inner join
         (
             select
                 TS1010.TS1_CODBEM,
                 TS1010.TS1_DOCTO,
-                max(TS1010.TS1_DTVENC) as DOCTAX_DTVENC,
-                max(TS1010.TS1_VALOR) as DOCTAX_VALOR
+                max(TS1010.TS1_DTVENC) as TS1_DTVENC
             from TS1010 (nolock)
             where
                     TS1010.D_E_L_E_T_ = ''
                 and TS1010.TS1_DOCTO in (1, 2, 3, 7)
-                and TS1010.TS1_CODBEM = ZC2.ZC2_COD
             group by
                 TS1010.TS1_CODBEM,
                 TS1010.TS1_DOCTO
         ) TS1
+            on TS1010.D_E_L_E_T_ = ''
+            and TS1.TS1_DOCTO = TS1010.TS1_DOCTO
+            and TS1.TS1_CODBEM = TS1010.TS1_CODBEM
+            and TS1.TS1_DTVENC = TS1010.TS1_DTVENC
         where
                 ZC2.ZC2_TIPO = 9
+            and TS1010.TS1_CODBEM = ZC2.ZC2_COD
     ) else 0 end as DOCUMENTACAO,
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
