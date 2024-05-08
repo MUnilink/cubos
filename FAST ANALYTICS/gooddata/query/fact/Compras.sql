@@ -13,6 +13,41 @@ SELECT
     'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU.ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU.ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
     'P |01|CT1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_CONTA, ' ')), ' '), '|') AS BK_CONTA,
     
+    (
+        select max(SCR.BK_APROVADOR)
+        from
+        (
+            select
+                SAK010.AK_FILIAL,
+                SAK010.AK_COD,
+                SCR010.CR_LIBAPRO,
+                SCR010.CR_FILIAL,
+                SCR010.CR_NUM,
+                SCR010.CR_NIVEL,
+                max(SCR010.CR_NIVEL) as NIVEL_MAX,
+                'P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|') as BK_APROVADOR
+            from SCR010
+                inner join SAK010
+                    on SAK010.D_E_L_E_T_ = ''
+                    and SAK010.AK_COD = SCR010.CR_LIBAPRO
+            where
+                    SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'PC'
+            group by
+                SAK010.AK_FILIAL,
+                SAK010.AK_COD,
+                SCR010.CR_LIBAPRO,
+                SCR010.CR_FILIAL,
+                SCR010.CR_NUM,
+                SCR010.CR_NIVEL
+        ) SCR
+        where
+                SCR.CR_FILIAL = SC7.C7_FILIAL
+            and SCR.CR_NUM = SC7.C7_NUM
+        group by SCR.CR_FILIAL, SCR.CR_NUM, SCR.CR_NIVEL
+        having SCR.CR_NIVEL > max(SCR.CR_NIVEL)
+    ) as BK_APROVADOR,
+    
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     case
         when (SC7.C7_QUJE > 0) and (SC7.C7_QUJE < SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
