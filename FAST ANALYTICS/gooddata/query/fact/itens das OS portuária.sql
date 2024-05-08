@@ -19,7 +19,6 @@ select
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
     trim(ZC2.ZC2_COD) as INSUMO,
-    ZC1.ZC1_EMISSA as DATA_OS,
     ZC2.ZC2_COMPET as COMPETENCIA,
 
     trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
@@ -90,4 +89,5 @@ from ZC2010 ZC2
                     and SF2.F2_DOC = SD2.D2_DOC
                     and SF2.F2_SERIE = SD2.D2_SERIE
 where
-        ZC2.D_E_L_E_T_ = ''
+        ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+    and ZC2.D_E_L_E_T_ = ''
