@@ -143,7 +143,6 @@ select
                     TS1010.D_E_L_E_T_ = ''
                 and TS1010.TS1_DOCTO in (1, 2, 3, 7)
                 and TS1010.TS1_CODBEM = ZC2.ZC2_COD
-                and TS1010.TS1_DTVENC <= ZC2.ZC2_COMPET
             group by
                 TS1010.TS1_CODBEM,
                 TS1010.TS1_DOCTO
