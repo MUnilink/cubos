@@ -130,7 +130,7 @@ select
 
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-        select max(TS1010.TS1_VALOR)/12
+        select sum(TS1010.TS1_VALOR)/12
         from TS1010 (nolock)
         inner join
         (
@@ -177,13 +177,28 @@ select
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-        select sum(ZC4010.ZC4_VLSEG)/12
+        select sum(ZC4010.ZC4_VLSEG)/sum(ZC4.diff)
         from ZC4010 (nolock)
+            inner join
+                (
+                    select
+                        datediff(day, ZC4010.ZC4_DTVGIN, ZC4010.ZC4_DTVGFI)/30.0 as diff,
+                        ZC4010.ZC4_CODBEM,
+                        ZC4010.ZC4_DTVGIN,
+                        ZC4010.ZC4_DTVGFI
+                    from ZC4010 (nolock)
+                    where
+                            ZC4010.D_E_L_E_T_ = ''
+                ) ZC4
+                    on ZC4010.ZC4_CODBEM = ZC4.ZC4_CODBEM
+                    and ZC4010.ZC4_DTVGIN = ZC4.ZC4_DTVGIN
+                    and ZC4010.ZC4_DTVGFI = ZC4.ZC4_DTVGFI
         where
-                ZC2.D_E_L_E_T_ = ''
+                ZC4010.D_E_L_E_T_ = ''
             and ZC2.ZC2_TIPO = 12
             and ZC2.ZC2_COD = ZC4010.ZC4_CODBEM
-            and ZC2.ZC2_COMPET between ZC4010.ZC4_DTVGIN and ZC4010.ZC4_DTVGFI
+            
+            and ZC2.ZC2_COMPET between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
     ) else 0 end as SEGURO,
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
