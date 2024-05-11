@@ -238,7 +238,16 @@ select
 	
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-		select sum(SRT010.RT_VALOR)
+		select sum
+        (
+            case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30
+            else
+                case when SRT.RT_VERBA (880, 890) then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30
+                else 0.0
+                end
+            end
+            + case when month(SRT.RT_DATACAL) = 12 then 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30 else 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30 end
+        )
 		from SRT010 (nolock)
 			inner join SRA010 (nolock)
 				on SRA010.D_E_L_E_T_ = ''
