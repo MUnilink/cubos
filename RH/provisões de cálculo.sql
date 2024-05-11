@@ -29,10 +29,10 @@ select
 	case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/30 else case when SRT.RT_VERBA in (880, 890) then 2.5 * SRT.RT_SALARIO/30 else 0.0 end end as VL_FERIAS,
 	case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/90 else case when SRT.RT_VERBA in (880, 890) then 2.5 * SRT.RT_SALARIO/90 else 0.0 end end as VL_FTERC,
 	case when SRT.RT_VERBA = 830 then .08 * 2.5 * SRT.RT_SALARIO/30 else case when SRT.RT_VERBA in (880, 890) then .08 * 2.5 * SRT.RT_SALARIO/30 else 0.0 end end as VL_FFGTS,
-	case when SRT.RT_VERBA = 830 then .075 * 2.5 * SRT.RT_SALARIO/90 else case when SRT.RT_VERBA in (880, 890) then .075 * 2.5 * SRT.RT_SALARIO/90 else 0.0 end end as VL_FINSS,
+	case when SRT.RT_VERBA = 830 then .14 * 2.5 * SRT.RT_SALARIO/90 else case when SRT.RT_VERBA in (880, 890) then .14 * 2.5 * SRT.RT_SALARIO/90 else 0.0 end end as VL_FINSS,
 	case when month(SRT.RT_DATACAL) = 12 then 2.5 * SRT.RT_SALARIO/30 else 2.5 * SRT.RT_SALARIO/30 end as VL_DECIMO,
 	case when month(SRT.RT_DATACAL) = 12 then .08 * 2.5 * SRT.RT_SALARIO/30 else .08 * 2.5 * SRT.RT_SALARIO/30 end as VL_13FGTS,
-	case when month(SRT.RT_DATACAL) = 12 then .075 * 2.5 * SRT.RT_SALARIO/30 else .075 * 2.5 * SRT.RT_SALARIO/30 end as VL_13INSS,
+	case when month(SRT.RT_DATACAL) = 12 then .14 * 2.5 * SRT.RT_SALARIO/30 else .14 * 2.5 * SRT.RT_SALARIO/30 end as VL_13INSS,
 
 	SRT.RT_DFERVEN as DIAS_FERVENC,
 	isnull(nullif(SRT.RT_DFERVEN, 0), 1) * SRT.RT_SALARIO/30 as VALOR_FERVENC,

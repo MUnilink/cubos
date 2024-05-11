@@ -240,13 +240,13 @@ select
     (
 		select sum
         (
-            case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30
+            case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30
             else
-                case when SRT.RT_VERBA (880, 890) then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30
+                case when SRT.RT_VERBA (880, 890) then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30
                 else 0.0
                 end
             end
-            + case when month(SRT.RT_DATACAL) = 12 then 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30 else 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .075 * 2.5 * SRT.RT_SALARIO/30 end
+            + case when month(SRT.RT_DATACAL) = 12 then 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30 else 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30 end
         )
 		from SRT010 (nolock)
 			inner join SRA010 (nolock)
