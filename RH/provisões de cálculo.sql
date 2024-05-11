@@ -20,11 +20,19 @@ select
 		else '-'
 	end as RV_TIPOCOD,
 
+	case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
+
 	SRT.RT_VALOR as PROV_ACUMULADA,
-	lag(SRT.RT_DFERPRO, 1, 0.0) over (partition by SRT.RT_FILIAL, SRT.RT_MAT, SRT.RT_VERBA, SRT.RT_TIPPROV order by SRT.RT_DATACAL) as AVO_ANT,
-	SRT.RT_DFERPRO as AVO_ATU,
-	2.5 * SRT.RT_SALARIO/30.0 as VALOR_FERIAS,
+	SRT.RT_DFERPRO as AVO_FERPRO,
 	SRT.RT_AVOS13S as AVOS_13,
+
+	case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/30 else case when SRT.RT_VERBA in (880) then 2.5 * SRT.RT_SALARIO/30 else 0.0 end end as VL_FERIAS,
+	case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/90 else case when SRT.RT_VERBA in (880) then 2.5 * SRT.RT_SALARIO/90 else 0.0 end end as VL_FTERC,
+	case when SRT.RT_VERBA = 830 then .08 * 2.5 * SRT.RT_SALARIO/30 else case when SRT.RT_VERBA in (880) then .08 * 2.5 * SRT.RT_SALARIO/30 else 0.0 end end as VL_FFGTS,
+	case when SRT.RT_VERBA = 830 then .075 * 2.5 * SRT.RT_SALARIO/90 else case when SRT.RT_VERBA in (880) then .075 * 2.5 * SRT.RT_SALARIO/90 else 0.0 end end as VL_FINSS,
+	case when month(SRT.RT_DATACAL) = 12 then 2.5 * SRT.RT_SALARIO/30 else 2.5 * SRT.RT_SALARIO/30 end as VL_DECIMO,
+	case when month(SRT.RT_DATACAL) = 12 then .08 * 2.5 * SRT.RT_SALARIO/30 else .08 * 2.5 * SRT.RT_SALARIO/30 end as VL_13FGTS,
+	case when month(SRT.RT_DATACAL) = 12 then .075 * 2.5 * SRT.RT_SALARIO/30 else .075 * 2.5 * SRT.RT_SALARIO/30 end as VL_13INSS,
 
 	SRT.RT_DFERVEN as DIAS_FERVENC,
 	isnull(nullif(SRT.RT_DFERVEN, 0), 1) * SRT.RT_SALARIO/30 as VALOR_FERVENC,
@@ -61,4 +69,3 @@ from SRT010 SRT (nolock)
         and CTD.CTD_ITEM = SRT.RT_ITEM
 where
         SRT.D_E_L_E_T_ = ''
-	and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
