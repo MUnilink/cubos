@@ -238,21 +238,33 @@ select
 	
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-		select sum
+		select sum(SRT.VL_FERIAS + SRT.VL_FTERC + SRT.VL_FFGTS + SRT.VL_FINSS + SRT.VL_DECIMO + SRT.VL_13FGTS + SRT.VL_13INSS)
+		from
         (
-            case when SRT.RT_VERBA = 830 then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30
-            else
-                case when SRT.RT_VERBA (880, 890) then 2.5 * SRT.RT_SALARIO/30 + 2.5 * SRT.RT_SALARIO/90 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30
-                else 0.0
-                end
-            end
-            + case when month(SRT.RT_DATACAL) = 12 then 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30 else 2.5 * SRT.RT_SALARIO/30 + .08 * 2.5 * SRT.RT_SALARIO/30 + .14 * 2.5 * SRT.RT_SALARIO/30 end
-        )
-		from SRT010 (nolock)
+            select
+                trim(SRT010.RT_FILIAL) as RT_FILIAL,
+                SRT010.RT_DATACAL as RT_DATACAL,
+                trim(SRT010.RT_MAT) as RT_MAT,
+                trim(SRA.RA_CODFUNC) as RA_CODFUNC,
+                SRT010.RT_VERBA,
+            	case when SRT010.RT_VERBA = 830 then 2.5 * SRT010.RT_SALARIO/30 else case when SRT010.RT_VERBA in (880, 890) then 2.5 * SRT010.RT_SALARIO/30 else 0.0 end end as VL_FERIAS,
+                case when SRT010.RT_VERBA = 830 then 2.5 * SRT010.RT_SALARIO/90 else case when SRT010.RT_VERBA in (880, 890) then 2.5 * SRT010.RT_SALARIO/90 else 0.0 end end as VL_FTERC,
+                case when SRT010.RT_VERBA = 830 then .08 * 2.5 * SRT010.RT_SALARIO/30 else case when SRT010.RT_VERBA in (880, 890) then .08 * 2.5 * SRT010.RT_SALARIO/30 else 0.0 end end as VL_FFGTS,
+                case when SRT010.RT_VERBA = 830 then .14 * 2.5 * SRT010.RT_SALARIO/90 else case when SRT010.RT_VERBA in (880, 890) then .14 * 2.5 * SRT010.RT_SALARIO/90 else 0.0 end end as VL_FINSS,
+                case when month(SRT010.RT_DATACAL) = 12 then 2.5 * SRT010.RT_SALARIO/30 else 2.5 * SRT010.RT_SALARIO/30 end as VL_DECIMO,
+                case when month(SRT010.RT_DATACAL) = 12 then .08 * 2.5 * SRT010.RT_SALARIO/30 else .08 * 2.5 * SRT010.RT_SALARIO/30 end as VL_13FGTS,
+                case when month(SRT010.RT_DATACAL) = 12 then .14 * 2.5 * SRT010.RT_SALARIO/30 else .14 * 2.5 * SRT010.RT_SALARIO/30 end as VL_13INSS
+            from SRT010 (nolock)
+                inner join SRA010 SRA (nolock)
+                    on SRA.D_E_L_E_T_ = ''
+                    and SRA.RA_FILIAL = SRT010.RT_FILIAL
+                    and SRA.RA_MAT = SRT010.RT_MAT
+            where SRT010.D_E_L_E_T_ = ''
+        ) SRT
 			inner join SRA010 (nolock)
 				on SRA010.D_E_L_E_T_ = ''
-				and SRA010.RA_FILIAL = SRT010.RT_FILIAL
-				and SRA010.RA_MAT = SRT010.RT_MAT
+				and SRA010.RA_FILIAL = SRT.RT_FILIAL
+				and SRA010.RA_MAT = SRT.RT_MAT
 				
 				inner join SRJ010 (nolock)
 					on SRJ010.D_E_L_E_T_ = ''
@@ -261,12 +273,11 @@ select
 
 			inner join SRV010 SRV (nolock)
 				on SRV.D_E_L_E_T_ = ''
-				and SRV.RV_FILIAL = substring(SRT010.RT_FILIAL, 1, 4)
-				and SRV.RV_COD = SRT010.RT_VERBA
+				and SRV.RV_FILIAL = substring(SRT.RT_FILIAL, 1, 4)
+				and SRV.RV_COD = SRT.RT_VERBA
 		where
-				SRT010.D_E_L_E_T_ = ''
-			and SRT010.RT_FILIAL = ZC2.ZC2_FILIAL
-			and SRT010.RT_DATACAL = ZC2.ZC2_COMPET
+				SRT.RT_FILIAL = ZC2.ZC2_FILIAL
+			and SRT.RT_DATACAL = ZC2.ZC2_COMPET
 			and SRA010.RA_CODFUNC = ZC2.ZC2_COD
 			and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
             and ZC2.ZC2_TIPO = 2
