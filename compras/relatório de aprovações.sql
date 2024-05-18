@@ -40,7 +40,7 @@
             else 'LIBERADA'
         end as STATUS,
         
-        case DBM.DBM_APROV when 1 then upper(trim(SAK.AK_LOGIN)) else '' end as APROVADOR,
+        case DBM.DBM_APROV when 1 then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = DBM.DBM_USER) else '' end as APROVADOR,
         SCR.CR_GRUPO,
         SCR.CR_ITGRP,
         SCR.CR_STATUS,
@@ -60,10 +60,6 @@
             and DBM.DBM_NUM = SCP.CP_NUM
             and DBM.DBM_ITEM = SCP.CP_ITEM
             and DBM.DBM_TIPO = 'SA'
-
-            left join SAK010 SAK (nolock)
-                on SAK.D_E_L_E_T_ = ''
-                and SAK.AK_USER = DBM.DBM_USER
         
         left join SB1010 SB1 (nolock)
             on SB1.D_E_L_E_T_ = ''
@@ -103,7 +99,7 @@ union
         substring(SC7.C7_DATPRF, 1, 6) as PERIODO_ITEM,
         trim(isnull(SC7.C7_OBS, '-')) as OBS,
         case SCR.CR_DATALIB when '' then -.5 else datediff(day, SC7.C7_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
-        upper(trim(isnull(nullif(SCR.CR_YNOMSOL, ''), (select SY1010.Y1_NOME from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER)))) as SOLICITANTE,
+        upper(trim(isnull(nullif(SCR.CR_YNOMSOL, ''), (select max(SY1010.Y1_NOME) from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER)))) as SOLICITANTE,
 
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
