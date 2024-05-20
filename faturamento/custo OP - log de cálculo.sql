@@ -217,25 +217,39 @@ select
     
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
-        select sum(case when SRV.RV_COD in (440, 445) then SRD.RD_VALOR*-1 else case when SRV.RV_COD = SRT.RT_VERBA then SRT.RT_VALOR else SRD.RD_VALOR end end)
+        select sum(case when SRV.RV_COD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end)
 		from SRV010 SRV (nolock)
 			left join SRD010 SRD (nolock)
 				on SRD.D_E_L_E_T_ = ''
 				and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
 				and SRD.RD_PD = SRV.RV_COD
+		where
+				SRV.D_E_L_E_T_ = ''
+			and SRD.RD_FILIAL = ZC2.ZC2_FILIAL
+			and SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+			and ZC2.ZC2_COD in (select distinct SRA010.RA_CODFUNC from SRA010 where SRA010.D_E_L_E_T_ = ''  and SRA010.RA_FILIAL = SRD.RD_FILIAL and SRA010.RA_MAT = SRD.RD_MAT)
+			and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
+            and ZC2.ZC2_TIPO = 2
+            and ZG1.ZG1_TABELA = 'SRJ'
+	) else 0 end as VALOR_FOLHA,
+
+    case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
+    (
+        select sum(case when SRV.RV_COD = SRT.RT_VERBA then SRT.RT_VALOR else 0.0 end)
+		from SRV010 SRV (nolock)
             left join SRT010 SRT (nolock)
 				on SRT.D_E_L_E_T_ = ''
 				and substring(SRT.RT_FILIAL, 1, 4) = SRV.RV_FILIAL
 				and SRT.RT_VERBA = SRV.RV_COD
 		where
 				SRV.D_E_L_E_T_ = ''
-			and (SRD.RD_FILIAL = ZC2.ZC2_FILIAL or SRT.RT_FILIAL = ZC2.ZC2_FILIAL)
-			and (SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6) or SRT.RT_DATACAL = ZC2.ZC2_COMPET)
-			and ZC2.ZC2_COD in (select distinct SRA010.RA_CODFUNC from SRA010 where SRA010.D_E_L_E_T_ = ''  and (SRA010.RA_FILIAL = SRD.RD_FILIAL or SRA010.RA_FILIAL = SRT.RT_FILIAL) and (SRA010.RA_MAT = SRD.RD_MAT or SRA010.RA_MAT = SRT.RT_MAT))
+			and SRT.RT_FILIAL = ZC2.ZC2_FILIAL
+			and SRT.RT_DATACAL = ZC2.ZC2_COMPET
+			and ZC2.ZC2_COD in (select distinct SRA010.RA_CODFUNC from SRA010 where SRA010.D_E_L_E_T_ = ''  and SRA010.RA_FILIAL = SRT.RT_FILIAL and SRA010.RA_MAT = SRT.RT_MAT)
 			and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
             and ZC2.ZC2_TIPO = 2
             and ZG1.ZG1_TABELA = 'SRJ'
-	) else 0 end as VALOR_FOLHA,
+	) else 0 end as VALOR_PROV,
 	
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
     (
@@ -283,7 +297,7 @@ select
 			and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
             and ZC2.ZC2_TIPO = 2
             and ZG1.ZG1_TABELA = 'SRJ'
-	) else 0 end as VALOR_PROV,
+	) else 0 end as VALOR_PROG,
 
     case when lag(ZG1.ZG1_CODIGO, 1, '-') over(partition by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_TIPO, ZG1.ZG1_TABELA, ZG1.ZG1_CODIGO order by ZG1.ZG1_FILORI, ZG1.ZG1_COMPET, ZG1.ZG1_CODIGO) = '-' then
 	(
