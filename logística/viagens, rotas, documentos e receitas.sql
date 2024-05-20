@@ -16,12 +16,29 @@ select
     DTQ.DTQ_DATFEC,
     DTQ.DTQ_DATENC,
 
+    substring(DTQ.DTQ_DATGER, 1, 6) as PERIODO_GERVGA,
+    substring(DTQ.DTQ_DATFEC, 1, 6) as PERIODO_FECVGA,
+    substring(DTQ.DTQ_DATENC, 1, 6) as PERIODO_ENCVGA,
+
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
     trim(DEV.A1_COD) as A1_COD,
     trim(DEV.A1_LOJA) as A1_LOJA,
     trim(DEV.A1_NOME) as CLIENTE,
+
+/*
+    OPERAÇÕES
+    01 – INICIO DE VIAGEM
+    05 – CHEGADA NO CLIENTE
+    06 -  SAIDA DO CLIENTE
+    09 – CHEGADA NO PORTO (No TMS essa macro é apontada como chegada no cliente{porto})
+    10 – SAIDA DO PORTO (No TMS essa macro é apontada como saída no cliente{porto})
+    07 – FIM DE VIAGEM
+
+    OCORRÊNCIA
+    17 – ENTREGA EFETUADA
+*/
 
     (
         select
@@ -119,6 +136,8 @@ select
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
     
+    cast(DF1.DF1_DATCON as date) as DT_AGE,
+    substring(DF1.DF1_DATCON, 1, 6) as PERIODO_AGE,
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
     DF1.DF1_YDSPOR as PORTO,
