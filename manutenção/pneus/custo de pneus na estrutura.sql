@@ -1,0 +1,46 @@
+select
+	trim(isnull(STZ.TZ_ORDEM, '-')) as TZ_ORDEM,
+	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
+	trim(isnull(STZ.TZ_BEMPAI, '-')) as TZ_BEMPAI,
+	ST9.T9_STATUS,
+
+	STZ.TZ_POSCONT,
+	STZ.TZ_CONTSAI,
+	ST9.T9_CONTACU,
+	trim(isnull(STZ.TZ_DATAMOV, '-')) as TZ_DATAMOV,
+	trim(isnull(STZ.TZ_DATASAI, '-')) as TZ_DATASAI,
+	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
+	trim(isnull(STZ.TZ_HORAENT, '-')) as TZ_HORAENT,
+	trim(isnull(STZ.TZ_HORASAI, '-')) as TZ_HORASAI,
+	trim(isnull(TQT.TQT_DESMED, '-')) as TQT_DESMED,
+
+	ZC5.ZC5_VLRCOM,
+	ZC5.ZC5_VLRMAN,
+	ZC5.ZC5_BANDA,
+	ZC5.ZC5_KMEXPE,
+	ZC5.ZC5_KMRODM,
+	ZC5.ZC5_ANOMES,
+
+	ST9.T9_VALCPA as T9_VALCPA,
+	convert(date, ST9.T9_DTCOMPR, 103) as T9_DTCOMPR,
+	ST9.T9_SITBEM,
+
+	case when cast(STZ.TZ_CODBEM as int) > 11140 then 'PNEU NOVO' else 'PNEU ANTIGO' end as TIPO_PNEU
+
+from ZC6010 ZC6 (nolock)
+	left join TQT010 TQT
+		on TQT.D_E_L_E_T_ = ''
+		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+	left join ST9010 ST9
+		on ST9.D_E_L_E_T_ = ''
+		and ST9.T9_CODBEM = TQS.TQS_CODBEM
+
+		left join STZ010 STZ
+			on STZ.D_E_L_E_T_ = ''
+			and ST9.T9_CODBEM = STZ.TZ_CODBEM
+	
+	left join ZC5010 ZC5 (nolock)
+		on ZC5.D_E_L_E_T_ = ''
+		and ZC5.ZC5_PNEU = TQS.TQS_CODBEM
+where
+		TQS.D_E_L_E_T_ = ''
