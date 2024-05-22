@@ -22,7 +22,26 @@ select
 
 	case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 
-	SRT.RT_VALOR / (select case when SRT010.RT_VERBA = 830 then isnull(nullif(SRT010.RT_DFERPRO, 0), 2.5) / 2.5 from SRT010 (nolock) where SRT010.D_E_L_E_T_ = '' and SRT010.RT_TIPPROV = 1 and SRT010.RT_VERBA in (830, 880) and SRT010.RT_FILIAL = SRT.RT_FILIAL and SRT010.RT_MAT = SRT.RT_MAT and SRT010.RT_DATACAL = SRT.RT_DATACAL) as PROV_MENSAL,
+	SRT.RT_VALOR /
+	(
+		select
+			case when SRT010.RT_VERBA in (830, 880) then sum(isnull(nullif(SRT010.RT_DFERPRO, 0), 2.5) / 2.5)
+				else
+				case when SRT010.RT_VERBA = 890 then sum(isnull(nullif(SRT010.RT_DFERPRO, 0), 2.5) / 2.5)
+					else 1.0
+				end
+			end
+		from SRT010 (nolock)
+		where
+				SRT010.D_E_L_E_T_ = ''
+			and SRT010.RT_FILIAL = SRT.RT_FILIAL
+			and SRT010.RT_MAT = SRT.RT_MAT
+			and SRT010.RT_DATACAL = SRT.RT_DATACAL
+			and SRT010.RT_VERBA in (830, 880, 890)
+			and SRT010.RT_TIPPROV = SRT.RT_TIPPROV
+		group by SRT010.RT_VERBA
+	) as PROV_MENSAL,
+	
 	SRT.RT_VALOR as PROV_ACUMULADA,
 	SRT.RT_DFERPRO as AVO_FERPRO,
 	SRT.RT_AVOS13S as AVOS_13,
