@@ -30,6 +30,7 @@ SELECT
                 from SCR010 (nolock)
                 where
                         SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = 'PC'
                     and SCR010.CR_FILIAL = SCR.CR_FILIAL
                     and SCR010.CR_TIPO = SCR.CR_TIPO
                     and SCR010.CR_NUM = SCR.CR_NUM
@@ -71,6 +72,7 @@ SELECT
             from SCR010 (nolock)
             where
                     SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'SC'
                 and SCR010.CR_FILIAL = SCR.CR_FILIAL
                 and SCR010.CR_TIPO = SCR.CR_TIPO
                 and SCR010.CR_NUM = SCR.CR_NUM
@@ -95,6 +97,7 @@ SELECT
             from SCR010 (nolock)
             where
                     SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'PC'
                 and SCR010.CR_FILIAL = SCR.CR_FILIAL
                 and SCR010.CR_TIPO = SCR.CR_TIPO
                 and SCR010.CR_NUM = SCR.CR_NUM
