@@ -2,10 +2,13 @@ SELECT
     SD2.D2_FILIAL as BK_FILIAL,
     SF2.F2_SERIE AS SERIE_DA_NOTA_FISCAL,
     SF2.F2_DOC AS NUMERO_DA_NOTA_FISCAL,
-    convert(date, SF2.F2_EMISSAO, 103) as DATA_NF,
-    substring(SF2.F2_EMISSAO, 1, 6) PERIODO_NF,
+    trim(SD2.D2_CCUSTO) as CC_NF,
+    trim(SD2.D2_ITEMCC) as ATIVIDADE_NF,
     SD2.D2_TIPO AS TIPO_NF,
     SD2.D2_ORIGLAN AS ORIGEM_NF,
+    
+    convert(date, SF2.F2_EMISSAO, 103) as DATA_NF,
+    substring(SF2.F2_EMISSAO, 1, 6) PERIODO_NF,
     SF2.F2_ESPECIE as ESPECIE_NF,
     case SF2.F2_SERIE when '003' then 'EST' when '100' then 'EST' else 'FAT' end as MODULO,
 
@@ -31,8 +34,6 @@ SELECT
 
     trim(SC6.C6_NUM) as PEDIDO,
     trim(SC6.C6_ITEM) as ITEMPV,
-    trim(SC6.C6_NUM) as PEDIDO,
-    trim(SC6.C6_ITEM) as ITEM_PEDIDO,
     trim(SC6.C6_UM) as UN_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
     trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
