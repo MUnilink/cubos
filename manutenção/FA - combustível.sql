@@ -26,6 +26,8 @@ select
 	
 	substring(TQN.TQN_DTABAS, 1, 6) as PERIODO_TQN,
 	convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
+	convert(datetime, lag(concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 1, null) over (partition by TQN.TQN_FROTA, TQN.TQN_CODCOM order by TQN.TQN_FROTA, TQN.TQN_DTABAS, TQN.TQN_HRABAS), 113) as DATA_ANT,
+	datediff(minute, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), lag(concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 1, null) over (partition by TQN.TQN_FROTA, TQN.TQN_CODCOM order by TQN.TQN_FROTA, TQN.TQN_DTABAS, TQN.TQN_HRABAS))/(60 * 24 *-1.0) as DIAS,
 	TQN.TQN_YTIPO as TIPO_ABA,
 	TQN.TQN_QUANT as LITROS,
 	TQN.TQN_VALUNI as VALOR_UNI,
