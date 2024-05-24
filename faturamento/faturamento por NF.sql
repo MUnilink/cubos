@@ -61,7 +61,7 @@ SELECT
     1 AS contador,
     CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
-
+    
     trim(ZC2.ZC2_NUM) as OS_PORTUARIA,
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
@@ -92,7 +92,9 @@ SELECT
         when 2 then 'PARCIAL'
         when 3 then 'FINALIZADO'
         else 'OUTROS'
-    end as STATUS_PEDIDO
+    end as STATUS_PEDIDO,
+
+    DUD.DUD_VIAGEM as VIAGEM_TMS
 
 FROM SD2010 SD2
     INNER JOIN SF2010 SF2 (nolock)
@@ -154,6 +156,18 @@ FROM SD2010 SD2
                 on ZC1.D_E_L_E_T_ = ''
                 and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
                 and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+        
+    left join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILDOC = SD2.D2_FILIAL
+        and DUD.DUD_DOC = SD2.D2_DOC
+        and DUD.DUD_SERIE = SD2.D2_SERIE
+
+		left join DT6010 DT6 (nolock)
+			on DT6.D_E_L_E_T_ = ''
+			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+			and DT6.DT6_DOC = DUD.DUD_DOC
+			and DT6.DT6_SERIE = DUD.DUD_SERIE
 
 where
         SD2.D_E_L_E_T_ = ' '
