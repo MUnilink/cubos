@@ -25,6 +25,7 @@ select
     trim(SR7.R7_TIPO) as TIPO_ALTER,
     SRJ.RJ_FUNCAO as COD_FUNCAO,
     trim(SRJ.RJ_DESC) as FUNCAO,
+	lag(trim(SRJ.RJ_DESC), 1, null) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_DATA) as FUNCAO_ANTERIOR,
     trim(SRJ.RJ_CODCBO) as CBO,
 	
     SRA.RA_SALARIO as SALARIO,
