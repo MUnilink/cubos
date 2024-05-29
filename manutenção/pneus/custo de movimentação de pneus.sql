@@ -1,66 +1,84 @@
-    select
-        trim(STZ.TZ_FILIAL) as TZ_FILIAL,
-        STZ.TZ_ORDEM as TIPOMOV,
-        CM.T9_CODBEM as ESTRUTURA1,
-        trim(SR.T9_CODBEM) as ESTRUTURA2,
-        
-        convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as DT_ATRELA,
-        convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as DT_DESATR,
-        
-        trim(TQS.TQS_CODBEM) as PNEU,
-        trim(TQT.TQT_DESMED) as MEDIDA,
-        convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as ENT_PNEU,
-        convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as SAI_PNEU,
-        case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as MOV_PNEU
+select
+    trim(STZ.TZ_FILIAL) as TZ_FILIAL,
+    STZ.TZ_ORDEM as TIPOMOV,
+    CM.T9_CODBEM as ESTRUTURA1,
+    trim(SR.T9_CODBEM) as ESTRUTURA2,
+    
+    case when nullif(STZ.TZ_ORDEM, '') is null then convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) else null end as DT_ATRELA,
+    case when nullif(STZ.TZ_ORDEM, '') is null then convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) else null end as DT_DESATR,
+    
+    trim(TQS.TQS_CODBEM) as CM_PNEU,
+    trim(TQT.TQT_DESMED) as CM_MEDIDA,
+    convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as CM_ENT_PNEU,
+    convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as CM_SAI_PNEU,
+    case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as CM_MOV_PNEU,
 
-    from STZ010 STZ (nolock)
-        inner join ST9010 CM
-            on CM.D_E_L_E_T_ = ''
-            and CM.T9_CODBEM = STZ.TZ_BEMPAI
-            and CM.T9_TEMCONT = 'S'
+    PNSR.PNEU as SR_PNEU,
+    PNSR.MEDIDA as SR_MEDIDA,
+    PNSR.ENT_PNEU as SR_ENT_PNEU,
+    PNSR.SAI_PNEU as SR_SAI_PNEU,
+    PNSR.TIPOMOV as SR_MOV_PNEU
 
-        left join ST9010 SR
-            on SR.D_E_L_E_T_ = ''
-            and SR.T9_CODBEM = STZ.TZ_CODBEM
-            and SR.T9_TEMCONT = 'P'
+from STZ010 STZ (nolock)
+    inner join ST9010 CM
+        on CM.D_E_L_E_T_ = ''
+        and CM.T9_CODBEM = STZ.TZ_BEMPAI
+        and CM.T9_TEMCONT = 'S'
 
-        left join TQS010 TQS
-            on TQS.D_E_L_E_T_ = ''
-            and TQS.TQS_CODBEM = STZ.TZ_CODBEM
+    left join ST9010 SR
+        on SR.D_E_L_E_T_ = ''
+        and SR.T9_CODBEM = STZ.TZ_CODBEM
+        and SR.T9_TEMCONT = 'P'
 
-            left join TQT010 TQT
-                on TQT.D_E_L_E_T_ = ''
-                and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-    where
-            STZ.D_E_L_E_T_ = ''
-union
-    select
-        trim(STZ.TZ_FILIAL) as TZ_FILIAL,
-        STZ.TZ_ORDEM as TIPOMOV,
-        null as ESTRUTURA1,
-        trim(SR.T9_CODBEM) as ESTRUTURA2,
-        
-        convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as DT_ATRELA,
-        convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as DT_DESATR,
-        
-        trim(TQS.TQS_CODBEM) as PNEU,
-        trim(TQT.TQT_DESMED) as MEDIDA,
-        convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as ENT_PNEU,
-        convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as SAI_PNEU,
-        case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as MOV_PNEU
+        left join
+        (
+            select
+                trim(STZ.TZ_FILIAL) as TZ_FILIAL,
+                null as ESTRUTURA1,
+                trim(SR.T9_CODBEM) as ESTRUTURA2,
+                trim(TQS.TQS_CODBEM) as PNEU,
+                trim(TQT.TQT_DESMED) as MEDIDA,
+                convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as ENT_PNEU,
+                convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as SAI_PNEU,
+                STZ.TZ_TIPOMOV as TIPOMOV
 
-    from STZ010 STZ (nolock)
-        inner join ST9010 SR
-            on SR.D_E_L_E_T_ = ''
-            and SR.T9_CODBEM = STZ.TZ_BEMPAI
-            and SR.T9_TEMCONT = 'P'
+            from STZ010 STZ (nolock)
+                inner join ST9010 SR
+                    on SR.D_E_L_E_T_ = ''
+                    and SR.T9_CODBEM = STZ.TZ_BEMPAI
+                    and SR.T9_TEMCONT = 'P'
 
-        left join TQS010 TQS
-            on TQS.D_E_L_E_T_ = ''
-            and TQS.TQS_CODBEM = STZ.TZ_CODBEM
+                left join TQS010 TQS
+                    on TQS.D_E_L_E_T_ = ''
+                    and TQS.TQS_CODBEM = STZ.TZ_CODBEM
 
-            left join TQT010 TQT
-                on TQT.D_E_L_E_T_ = ''
-                and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-    where
-            STZ.D_E_L_E_T_ = ''
+                    left join TQT010 TQT
+                        on TQT.D_E_L_E_T_ = ''
+                        and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+            where
+                    STZ.D_E_L_E_T_ = ''
+
+        ) PNSR
+            on PNSR.ESTRUTURA2 = SR.T9_CODBEM
+            and
+            (
+                (
+                        PNSR.ENT_PNEU >= concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00'))
+                    and PNSR.ENT_PNEU <= case STZ.TZ_TIPOMOV when 'E' then getdate() else concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) end
+                ) /* entrada do PNEU na SR deve ter acontecido depois do início do atrelamento e antes do fim do atrelamento, ou */
+                or
+                (
+                        PNSR.SAI_PNEU >= concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00'))
+                    and PNSR.SAI_PNEU <= case STZ.TZ_TIPOMOV when 'E' then getdate() else concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) end
+                ) /* ou saída do PNEU na SR deve ter acontecido depois do início do atrelamento e antes do fim do atrelamento */
+            )
+
+    left join TQS010 TQS
+        on TQS.D_E_L_E_T_ = ''
+        and TQS.TQS_CODBEM = STZ.TZ_CODBEM
+
+        left join TQT010 TQT
+            on TQT.D_E_L_E_T_ = ''
+            and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
+where
+        STZ.D_E_L_E_T_ = ''
