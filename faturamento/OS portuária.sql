@@ -90,6 +90,8 @@ select
         else trim(ZC2.ZC2_DESC)
     end as DESC_INSUMO,
 
+    case cast(ZC2.ZC2_TIPO as int) when 3 then (select max(trim(ST9010.T9_CODFAMI)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3) else '-' end as FAMILIA_EQUIP,
+
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
         when 2 then 'SOLICITADO CANCELAMENTO'
