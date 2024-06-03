@@ -7,6 +7,8 @@ select
 	ZC4.ZC4_PROPRI as PROPRIO,
 	convert(date, ZC4.ZC4_DTVGIN, 103) as INI_VIG,
 	convert(date, ZC4.ZC4_DTVGFI, 103) as FIM_VIG,
-	substring(ZC4.ZC4_DTVGFI, 1, 6) as PERIODO
+	substring(ZC4.ZC4_DTVGIN, 1, 6) as PERIODO_FIM,
+	substring(ZC4.ZC4_DTVGFI, 1, 6) as PERIODO_INI,
+	datediff(day, ZC4.ZC4_DTVGIN, ZC4.ZC4_DTVGFI)/30.0 as MESES
 from ZC4010 ZC4 (nolock)
 where ZC4.D_E_L_E_T_ = ''
