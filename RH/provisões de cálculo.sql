@@ -1,6 +1,7 @@
 select
 	trim(SRT.RT_FILIAL) as FILIAL,
 	substring(SRT.RT_DATACAL, 1, 6) as PERIODO,
+	SRT.RT_DATABAS as DATA_BASE,
 	trim(SRT.RT_MAT) as MAT,
 	trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRT.RT_VERBA) as VERBA,
@@ -31,6 +32,9 @@ select
 					else 1.0
 				end
 			end
+			SRT.RT_DFERVEN/2.5)
+			SRT.RT_DFERPRO/2.5)
+			SRT.RT_AVOS13S
 		from SRT010 (nolock)
 		where
 				SRT010.D_E_L_E_T_ = ''
