@@ -50,6 +50,34 @@ select
 			and SRT010.RT_VERBA in (830, 880, 890)
 	), 0), -1*SRT.RT_VALOR) as PROV_MENSAL,
 
+	isnull(nullif(
+	(
+		select max(
+			case when SRT010.RT_VERBA in (830, 880) and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
+			else
+				case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 2 then SRT010.RT_DFERPRO / 2.5
+				else
+					case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 3 then SRT010.RT_AVOS13S
+					else
+						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then 2.5 * floor(datediff(month, SRT010.RT_DATACAL, SRT010.RT_DATABAS))
+						else
+							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, concat('01/01/', year(SRT010.RT_DATACAL)), SRT010.RT_DATACAL))
+							else null
+							end
+						end
+					end
+				end
+			end)
+		from SRT010 (nolock)
+		where
+				SRT010.D_E_L_E_T_ = ''
+			and SRT010.RT_FILIAL = SRT.RT_FILIAL
+			and SRT010.RT_MAT = SRT.RT_MAT
+			and SRT010.RT_DATACAL = SRT.RT_DATACAL
+			and SRT010.RT_VERBA in (830, 880, 890)
+	), 0), -1) as AVO_MENSAL,
+
+/*
 	SRT.RT_VALOR /
 	(
 		select
@@ -68,7 +96,8 @@ select
 			and SRT010.RT_TIPPROV = 1
 			and SRT010.RT_DATABAS != ''
 	) as PROV_CUSTO,
-	
+*/
+
 	SRT.RT_VALOR as PROV_ACUMULADA,
 	SRT.RT_DFERPRO as AVO_FERPRO,
 	SRT.RT_AVOS13S as AVOS_13,
