@@ -1,7 +1,7 @@
 select
 	trim(SRT.RT_FILIAL) as FILIAL,
 	substring(SRT.RT_DATACAL, 1, 6) as PERIODO,
-	SRT.RT_DATABAS as DATA_BASE,
+	cast(SRT.RT_DATABAS as date) as DATA_BASE,
 	trim(SRT.RT_MAT) as MAT,
 	trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRT.RT_VERBA) as VERBA,
@@ -23,18 +23,24 @@ select
 
 	case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 
-	SRT.RT_VALOR /
+	SRT.RT_VALOR / isnull(nullif(
 	(
-		select
-			case when SRT010.RT_VERBA in (830, 880) then sum(isnull(nullif(SRT010.RT_DFERPRO, 0), 2.5) / 2.5)
+		select max(
+			case when SRT010.RT_VERBA in (830, 880) and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
+			else
+				case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 2 then SRT010.RT_DFERPRO / 2.5
 				else
-				case when SRT010.RT_VERBA = 890 then sum(isnull(nullif(SRT010.RT_DFERPRO, 0), 2.5) / 2.5)
-					else 1.0
+					case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 3 then SRT010.RT_AVOS13S
+					else
+						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then 2.5 * floor(datediff(month, SRT010.RT_DATACAL, SRT010.RT_DATABAS))
+						else
+							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, concat('01/01/', year(SRT010.RT_DATACAL)), SRT010.RT_DATACAL))
+							else null
+							end
+						end
+					end
 				end
-			end
-			SRT.RT_DFERVEN/2.5)
-			SRT.RT_DFERPRO/2.5)
-			SRT.RT_AVOS13S
+			end)
 		from SRT010 (nolock)
 		where
 				SRT010.D_E_L_E_T_ = ''
@@ -42,9 +48,26 @@ select
 			and SRT010.RT_MAT = SRT.RT_MAT
 			and SRT010.RT_DATACAL = SRT.RT_DATACAL
 			and SRT010.RT_VERBA in (830, 880, 890)
-			and SRT010.RT_TIPPROV = SRT.RT_TIPPROV
-		group by SRT010.RT_VERBA
-	) as PROV_MENSAL,
+	), 0), -1*SRT.RT_VALOR) as PROV_MENSAL,
+
+	SRT.RT_VALOR /
+	(
+		select
+			CASE
+				WHEN SRT.RT_TIPPROV =  '1' THEN (SRT010.RT_DFERVEN / 2.5)
+				WHEN SRT.RT_TIPPROV =  '2' THEN (SRT010.RT_DFERPRO / 2.5)
+				WHEN SRT.RT_TIPPROV =  '3' THEN SRT010.RT_AVOS13S
+			END
+		from SRT010 (nolock)
+		where 
+				SRT010.D_E_L_E_T_ = ''
+			and SRT010.RT_FILIAL = SRT.RT_FILIAL
+			and SRT010.RT_MAT = SRT.RT_MAT
+			and SRT010.RT_DATACAL = SRT.RT_DATACAL
+			and SRT010.RT_VERBA = 830
+			and SRT010.RT_TIPPROV = 1
+			and SRT010.RT_DATABAS != ''
+	) as PROV_CUSTO,
 	
 	SRT.RT_VALOR as PROV_ACUMULADA,
 	SRT.RT_DFERPRO as AVO_FERPRO,
