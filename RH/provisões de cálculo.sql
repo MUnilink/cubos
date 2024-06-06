@@ -25,56 +25,60 @@ select
 
 	SRT.RT_VALOR / isnull(nullif(
 	(
-		select max(
-			case when SRT010.RT_VERBA in (830, 880) and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
+		select
+		sum(
+			case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
 			else
 				case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 2 then SRT010.RT_DFERPRO / 2.5
 				else
-					case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 3 then SRT010.RT_AVOS13S
+					case when SRT010.RT_VERBA = 880 then SRT010.RT_DFERPRO / 2.5
 					else
-						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then 2.5 * floor(datediff(month, SRT010.RT_DATACAL, SRT010.RT_DATABAS))
+						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then floor(datediff(month, SRT010.RT_DATABAS, SRT010.RT_DATACAL))
 						else
-							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, concat('01/01/', year(SRT010.RT_DATACAL)), SRT010.RT_DATACAL))
-							else null
+							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, SRT010.RT_DATACAL, concat('01/01/', year(SRT010.RT_DATACAL))))
+							else SRT010.RT_AVOS13S
 							end
 						end
 					end
 				end
-			end)
+			end
+		)
 		from SRT010 (nolock)
 		where
 				SRT010.D_E_L_E_T_ = ''
 			and SRT010.RT_FILIAL = SRT.RT_FILIAL
 			and SRT010.RT_MAT = SRT.RT_MAT
 			and SRT010.RT_DATACAL = SRT.RT_DATACAL
-			and SRT010.RT_VERBA in (830, 880, 890)
+			and SRT010.RT_VERBA in (830, 845, 880, 890)
 	), 0), -1*SRT.RT_VALOR) as PROV_MENSAL,
 
 	isnull(nullif(
 	(
-		select max(
-			case when SRT010.RT_VERBA in (830, 880) and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
+		select
+		sum(
+			case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
 			else
 				case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 2 then SRT010.RT_DFERPRO / 2.5
 				else
-					case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 3 then SRT010.RT_AVOS13S
+					case when SRT010.RT_VERBA = 880 then SRT010.RT_DFERPRO / 2.5
 					else
-						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then 2.5 * floor(datediff(month, SRT010.RT_DATACAL, SRT010.RT_DATABAS))
+						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then floor(datediff(month, SRT010.RT_DATABAS, SRT010.RT_DATACAL))
 						else
-							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, concat('01/01/', year(SRT010.RT_DATACAL)), SRT010.RT_DATACAL))
-							else null
+							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, SRT010.RT_DATACAL, concat('01/01/', year(SRT010.RT_DATACAL))))
+							else SRT010.RT_AVOS13S
 							end
 						end
 					end
 				end
-			end)
+			end
+		)
 		from SRT010 (nolock)
 		where
 				SRT010.D_E_L_E_T_ = ''
 			and SRT010.RT_FILIAL = SRT.RT_FILIAL
 			and SRT010.RT_MAT = SRT.RT_MAT
 			and SRT010.RT_DATACAL = SRT.RT_DATACAL
-			and SRT010.RT_VERBA in (830, 880, 890)
+			and SRT010.RT_VERBA in (830, 845, 880, 890)
 	), 0), -1) as AVO_MENSAL,
 
 /*
@@ -96,6 +100,40 @@ select
 			and SRT010.RT_TIPPROV = 1
 			and SRT010.RT_DATABAS != ''
 	) as PROV_CUSTO,
+
+" SELECT "
+	" RA_CODFUNC, "
+	" CASE "
+	" WHEN SRT.RT_TIPPROV =  '1' THEN ROUND(SRT.RT_VALOR/(RT2.RT_DFERVEN/2.5),2)  "
+	" WHEN SRT.RT_TIPPROV =  '2' THEN ROUND(SRT.RT_VALOR/(RT2.RT_DFERPRO/2.5),2)  "
+	" WHEN SRT.RT_TIPPROV =  '3' THEN ROUND(SRT.RT_VALOR/RT2.RT_AVOS13S,2)  "
+	" END AS RD_VALOR
+" FROM "+RetSqlName("SRT")+" SRT "
+	" INNER JOIN "+RetSqlName("SRA")+" SRA "
+	" ON RA_FILIAL='"+xFilial("SRA")+"' AND RA_MAT=SRT.RT_MAT AND SRA.D_E_L_E_T_=' ' "
+	" INNER JOIN "+RetSqlName("SRT")+" RT2 "
+	" ON RT2.RT_FILIAL = RA_FILIAL AND RT2.RT_MAT = RA_MAT AND RT2.RT_TIPPROV = '1' AND RT2.RT_VERBA = '830' AND RT2.RT_DATABAS <> ' '  AND RT2.D_E_L_E_T_ = ' ' AND RT2.RT_DATACAL = SRT.RT_DATACAL "
+" WHERE  "
+	" SRT.RT_FILIAL='"+xFilial("SRT")+"' "
+	" AND SUBSTRING(SRT.RT_DATACAL,1,6) = '"+SUBSTR(DTOS(::dDataIni),1,6)+"'  "
+	" AND SRT.RT_VERBA IN (
+		For nCont:=1 to Len(aVerbas)
+			If nCont>1
+				cQuery	+= ","
+			EndIf
+			cQuery	+= "'"+aVerbas[nCont]+"'"
+		Next
+		For nCont1:=1 to Len(aVerbas1)
+			If nCont1>1
+				cQuery	+= ","
+			EndIf
+			cQuery	+= "'"+aVerbas1[nCont1]+"'"
+		Next
+	" )"
+	" AND SRT.D_E_L_E_T_=' ' "
+	" AND SRA.D_E_L_E_T_=' ') AS FOLHA "
+	" GROUP BY RA_CODFUNC "
+	" )
 */
 
 	SRT.RT_VALOR as PROV_ACUMULADA,
