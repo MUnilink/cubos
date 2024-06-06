@@ -25,8 +25,7 @@ select
 
 	SRT.RT_VALOR / isnull(nullif(
 	(
-		select
-		sum(
+		select sum(
 			case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
 			else
 				case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 2 then SRT010.RT_DFERPRO / 2.5
@@ -36,7 +35,7 @@ select
 						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then floor(datediff(month, SRT010.RT_DATABAS, SRT010.RT_DATACAL))
 						else
 							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, SRT010.RT_DATACAL, concat('01/01/', year(SRT010.RT_DATACAL))))
-							else SRT010.RT_AVOS13S
+							else isnull(nullif(SRT010.RT_AVOS13S, 0), 12)
 							end
 						end
 					end
@@ -49,13 +48,12 @@ select
 			and SRT010.RT_FILIAL = SRT.RT_FILIAL
 			and SRT010.RT_MAT = SRT.RT_MAT
 			and SRT010.RT_DATACAL = SRT.RT_DATACAL
-			and SRT010.RT_VERBA in (830, 845, 880, 890)
+			and SRT010.RT_VERBA in (830, 880, 890)
 	), 0), -1*SRT.RT_VALOR) as PROV_MENSAL,
 
 	isnull(nullif(
 	(
-		select
-		sum(
+		select sum(
 			case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 1 then SRT010.RT_DFERVEN / 2.5
 			else
 				case when SRT010.RT_VERBA = 830 and SRT010.RT_TIPPROV = 2 then SRT010.RT_DFERPRO / 2.5
@@ -65,7 +63,7 @@ select
 						case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV in (1, 2) then floor(datediff(month, SRT010.RT_DATABAS, SRT010.RT_DATACAL))
 						else
 							case when SRT010.RT_VERBA = 890 and SRT010.RT_TIPPROV = 3 then floor(datediff(month, SRT010.RT_DATACAL, concat('01/01/', year(SRT010.RT_DATACAL))))
-							else SRT010.RT_AVOS13S
+							else isnull(nullif(SRT010.RT_AVOS13S, 0), 12)
 							end
 						end
 					end
@@ -78,10 +76,16 @@ select
 			and SRT010.RT_FILIAL = SRT.RT_FILIAL
 			and SRT010.RT_MAT = SRT.RT_MAT
 			and SRT010.RT_DATACAL = SRT.RT_DATACAL
-			and SRT010.RT_VERBA in (830, 845, 880, 890)
+			and SRT010.RT_VERBA in (830, 880, 890)
 	), 0), -1) as AVO_MENSAL,
 
 /*
+	CASE
+	WHEN SRT.RT_TIPPROV =  '1' THEN ROUND(SRT.RT_VALOR/(RT2.RT_DFERVEN/2.5),2)
+	WHEN SRT.RT_TIPPROV =  '2' THEN ROUND(SRT.RT_VALOR/(RT2.RT_DFERPRO/2.5),2)
+	WHEN SRT.RT_TIPPROV =  '3' THEN ROUND(SRT.RT_VALOR/RT2.RT_AVOS13S,2)
+	END AS RD_VALOR,
+
 	SRT.RT_VALOR /
 	(
 		select
@@ -181,5 +185,8 @@ from SRT010 SRT (nolock)
     inner join CTD010 CTD (nolock)
         on CTD.D_E_L_E_T_ = ''
         and CTD.CTD_ITEM = SRT.RT_ITEM
+/*
+	left join SRT010 RT2 ON RT2.RT_FILIAL = SRA.RA_FILIAL AND RT2.RT_MAT = SRA.RA_MAT AND RT2.RT_TIPPROV = '1' AND RT2.RT_VERBA = '830' AND RT2.RT_DATABAS <> ' '  AND RT2.D_E_L_E_T_ = ' ' AND RT2.RT_DATACAL = SRT.RT_DATACAL
+*/
 where
         SRT.D_E_L_E_T_ = ''
