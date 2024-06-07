@@ -1,14 +1,8 @@
-select
+select distinct
     ZC6.ZC6_PNEU as PNEU,
 	ST9.T9_STATUS,
 	ST9.T9_CONTACU,
 	trim(TQT.TQT_DESMED) as MEDIDA,
-
-	ZC5.ZC5_VLRCOM as VLR_COMPRA,
-	ZC5.ZC5_VLRMAN as VLR_SERVIC,
-	ZC5.ZC5_BANDA as VIDAS,
-	ZC5.ZC5_KMEXPE as km_PREVISTO,
-	ZC5.ZC5_KMRODM as km_MES,
 
     ZC6.ZC6_BEMPAI as ESTRUTURA1,
     ZC6.ZC6_TEMCON as TEMCONT,
@@ -37,8 +31,5 @@ from ZC6010 ZC6 (nolock)
         left join ST9010 ST9
             on ST9.D_E_L_E_T_ = ''
             and ST9.T9_CODBEM = TQS.TQS_CODBEM
-        inner join ZC5010 ZC5 (nolock)
-            on ZC5.D_E_L_E_T_ = ''
-            and ZC5.ZC5_PNEU = TQS.TQS_CODBEM
 where
 		ZC6.D_E_L_E_T_ = ''
