@@ -48,7 +48,7 @@ select
     case ZC2.ZC2_TIPO
         /* SB1 */ when 1 then 'RECEITA'
         /* SRJ */ when 2 then 'FUNÇÃO'
-        /* ST9 */ when 3 then 'EQUIPAMENTO'
+        /* ST9 */ when 3 then 'MANUTENÇÃO'
         /* SB1 */ when 4 then 'MATERIAIS'
         /* ST9 */ when 6 then 'DEPRECIAÇÃO'
         /* ZA7 */ when 7 then 'CONTABILIDADE'

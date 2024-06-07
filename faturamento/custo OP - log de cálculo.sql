@@ -44,7 +44,7 @@ select
     case ZG1.ZG1_TIPO
         when 1 then 'RECEITA'
         when 2 then 'FUNÇÃO'
-        when 3 then 'EQUIPAMENTO'
+        when 3 then 'MANUTENÇÃO'
         when 4 then 'MATERIAIS'
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'

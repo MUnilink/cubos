@@ -622,7 +622,7 @@
 
 08/05/24 16:02:45:811  INFO [main] (JdbcExtractor.java:1069) - documento de saída.sql | Tempo de execução: 00h 00min 00s 81ms 
 
-08/05/24 16:02:46:013 DEBUG [main] (JdbcExtractor.java:1041) - tipo de item da OS de faturamento.sql | Query a ser executada: select distinct     ZC2.ZC2_TIPO,     case ZC2.ZC2_TIPO         when 1 then 'RECEITA'         when 2 then 'FUNÇÃO'         when 3 then 'EQUIPAMENTO'         when 4 then 'MATERIAIS'         when 5 then 'COMPRAS'         when 6 then 'DEPRECIAÇÃO'         when 7 then 'CONTABILIDADE'         when 8 then 'DESPESAS FINANCEIRAS'         when 9 then 'DOCUMENTAÇÃO E TAXAS'         when 10 then 'COMBUSTIVEL'         when 11 then 'TAXAS CIPP'         when 12 then 'SEGURO'         when 13 then 'PNEUS'         else 'OUTROS'     end as TIPO_INSUMO from ZC2010 ZC2 where ZC2.D_E_L_E_T_ = '' 
+08/05/24 16:02:46:013 DEBUG [main] (JdbcExtractor.java:1041) - tipo de item da OS de faturamento.sql | Query a ser executada: select distinct     ZC2.ZC2_TIPO,     case ZC2.ZC2_TIPO         when 1 then 'RECEITA'         when 2 then 'FUNÇÃO'         when 3 then 'MANUTENÇÃO'         when 4 then 'MATERIAIS'         when 5 then 'COMPRAS'         when 6 then 'DEPRECIAÇÃO'         when 7 then 'CONTABILIDADE'         when 8 then 'DESPESAS FINANCEIRAS'         when 9 then 'DOCUMENTAÇÃO E TAXAS'         when 10 then 'COMBUSTIVEL'         when 11 then 'TAXAS CIPP'         when 12 then 'SEGURO'         when 13 then 'PNEUS'         else 'OUTROS'     end as TIPO_INSUMO from ZC2010 ZC2 where ZC2.D_E_L_E_T_ = '' 
 
 08/05/24 16:02:46:190  INFO [main] (JdbcExtractor.java:1069) - tipo de item da OS de faturamento.sql | Tempo de execução: 00h 00min 00s 176ms 
 
