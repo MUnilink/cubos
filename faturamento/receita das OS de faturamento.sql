@@ -7,6 +7,23 @@ select
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
     convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
+    substring(ZC2.ZC2_COMPET, 1, 6) as PERIODO,
+
+    convert(
+        datetime,
+        case isdate(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(ZC1.ZC1_DTINI, ' ', '12:00')
+        end, 113
+    ) as DTINI_OS,
+    
+    convert(
+        datetime,
+        case isdate(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTFIM, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(ZC1.ZC1_DTFIM, ' ', '12:00')
+        end, 113
+    ) as DTFIM_OS,
     
     ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
@@ -185,3 +202,4 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 where
         ZC2.D_E_L_E_T_ = ''
+    and year(ZC1.ZC1_EMISSA) > 2023
