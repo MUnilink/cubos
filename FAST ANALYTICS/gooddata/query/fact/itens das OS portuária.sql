@@ -9,6 +9,7 @@ select
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
+    ZC2.ZC2_TIPO as ID_TIPO_ITEM,
 
     case when ZC2.ZC2_TIPO in (1, 4, 11) then ZC2.ZC2_COD else null end as COD_SB1,
     case when ZC2.ZC2_TIPO in (3, 6, 9, 10, 12, 13) then ZC2.ZC2_COD else null end as COD_DA3,
@@ -16,9 +17,8 @@ select
     case ZC2.ZC2_TIPO when 7 then ZC2.ZC2_COD else null end as COD_ZA7,
     case ZC2.ZC2_TIPO when 8 then ZC2.ZC2_COD else null end as COD_SE1,
 
-    trim(ZC2.ZC2_CONTEI) as CONTEINER,
-    trim(ZC2.ZC2_LACRE) as LACRE,
     trim(ZC2.ZC2_COD) as INSUMO,
+    trim(ZC2.ZC2_ITEM) as ITEM,
     ZC2.ZC2_COMPET as COMPETENCIA,
 
     trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
