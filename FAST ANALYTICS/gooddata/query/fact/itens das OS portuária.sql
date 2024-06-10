@@ -13,8 +13,8 @@ select
 
     case when ZC2.ZC2_TIPO in (1, 4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
     case when ZC2.ZC2_TIPO in (3, 6, 9, 10, 12, 13) then ZC2.ZC2_COD else null end as COD_DA3,
-    case ZC2.ZC2_TIPO when 2 then ZC2.ZC2_COD else null end as COD_SRJ,
-    case ZC2.ZC2_TIPO when 7 then ZC2.ZC2_COD else null end as COD_ZA7,
+    case ZC2.ZC2_TIPO when 2 then concat(trim(SRJ.RJ_FILIAL), trim(SRJ.RJ_FUNCAO)) else null end as COD_SRJ,
+    case ZC2.ZC2_TIPO when 7 then concat(trim(ZA7.ZA7_FILIAL), trim(ZA7.ZA7_COD)) else null end as COD_ZA7,
     case ZC2.ZC2_TIPO when 8 then ZC2.ZC2_COD else null end as COD_SE1,
 
     trim(ZC2.ZC2_COD) as INSUMO,
