@@ -11,7 +11,7 @@ select
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     ZC2.ZC2_TIPO as ID_TIPO_ITEM,
 
-    case when ZC2.ZC2_TIPO in (1, 4, 11) then ZC2.ZC2_COD else null end as COD_SB1,
+    case when ZC2.ZC2_TIPO in (1, 4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
     case when ZC2.ZC2_TIPO in (3, 6, 9, 10, 12, 13) then ZC2.ZC2_COD else null end as COD_DA3,
     case ZC2.ZC2_TIPO when 2 then ZC2.ZC2_COD else null end as COD_SRJ,
     case ZC2.ZC2_TIPO when 7 then ZC2.ZC2_COD else null end as COD_ZA7,
@@ -20,6 +20,7 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_ITEM) as ITEM,
     ZC2.ZC2_COMPET as COMPETENCIA,
+    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD2.D2_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
     trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
     ZC3.ZC3_QTD as QTD_RATEIO,
@@ -53,6 +54,11 @@ from ZC2010 ZC2
         left join DA0010 DA0
             on DA0.D_E_L_E_T_ = ''
             and DA0.DA0_CODTAB = ZC1.ZC1_TABPRC
+    
+    left join SB1010 SB1
+        on SB1.D_E_L_E_T_ = ' '
+        and SB1.B1_FILIAL = '      '
+        and SB1.B1_COD = ZC2.ZC2_COD
         
     inner join ZC3010 ZC3
         on ZC3.D_E_L_E_T_ = ''
@@ -88,6 +94,10 @@ from ZC2010 ZC2
                     and SF2.F2_LOJA = SD2.D2_LOJA
                     and SF2.F2_DOC = SD2.D2_DOC
                     and SF2.F2_SERIE = SD2.D2_SERIE
+            
+            left join SAH010 SAH
+                on SAH.D_E_L_E_T_ = ''
+                and SAH.AH_UNIMED = SD2.D2_UM
 where
         ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZC2.D_E_L_E_T_ = ''
