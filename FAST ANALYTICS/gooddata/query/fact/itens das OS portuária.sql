@@ -5,7 +5,7 @@ select
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
-    concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF,
+    concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF, 
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
@@ -26,11 +26,11 @@ select
     ZC3.ZC3_QTD as QTD_RATEIO,
     ZC3.ZC3_PECRAT as PERC_RATEIO,
     
-    ZC2.ZC2_QTDPRV as QTD_PREV,
-    ZC2.ZC2_QTDREA as QTD_REAL,
-    ZC2.ZC2_VLUPRV as VAL_PREV,
-    ZC2.ZC2_VLUREA as VAL_REAL,
-    ZC2.ZC2_QTDREC as QTD_RECURSO,
+    case when ZC2.ZC2_QTDPRV > 9999999 then 9999999 else ZC2.ZC2_QTDPRV end as QTD_PREV,
+    case when ZC2.ZC2_QTDREA > 9999999 then 9999999 else ZC2.ZC2_QTDREA end as QTD_REAL,
+    case when ZC2.ZC2_VLUPRV > 9999999 then 9999999 else ZC2.ZC2_VLUPRV end as VAL_PREV,
+    case when ZC2.ZC2_VLUREA > 9999999 then 9999999 else ZC2.ZC2_VLUREA end as VAL_REAL,
+    case when ZC2.ZC2_QTDREC > 9999999 then 9999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
     
     case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
 	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
