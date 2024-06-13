@@ -12,6 +12,7 @@ select
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
 	ST9.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS,
+	substring(TPN.TPN_DTINIC, 1, 6) as PERIODO_MOV,
 
 	trim(isnull(SN1.N1_GRUPO, '-')) as GRUPO_ATF,
 	trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
@@ -26,11 +27,6 @@ select
 	trim(isnull(ST9.T9_ITEMCTA, '-')) as ATIVIDADE_MNT,
 	(select trim(CTT010.CTT_DESC01) from CTT010 where CTT010.D_E_L_E_T_ = '' and CTT010.CTT_CUSTO = ST9.T9_CCUSTO) as DESC_CC_MNT,
 	(select trim(CTD010.CTD_DESC01) from CTD010 where CTD010.D_E_L_E_T_ = '' and CTD010.CTD_ITEM = ST9.T9_ITEMCTA) as DESC_AT_MNT,
-
-	(select max(convert(datetime, concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC), 113)) from TPN010 (nolock) where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = ST9.T9_CODBEM) as ULT_TRANSFERENCIA,
-
-	trim(TPN.TPN_CCUSTO) as CC,
-	substring(TPN.TPN_DTINIC, 1, 6) as PERIODO_MOV,
 	
 	convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113) as DT_MOV,
 	lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as DT_ANT,
@@ -50,10 +46,13 @@ select
 	case when dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) > lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
 		then dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC)))
 		else lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
-	end as DT_INIMOV
+	end as DT_INIMOV,
+
+	lag(trim(TPN.TPN_CCUSTO), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as CC_ANT,
+	trim(TPN.TPN_CCUSTO) as CC
 
 from TPN010 TPN (nolock)
-	left join ST9010 ST9 (nolock)
+	inner join ST9010 ST9 (nolock)
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = TPN.TPN_CODBEM
 		and ST9.T9_CATBEM != 3
