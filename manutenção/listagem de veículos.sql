@@ -32,8 +32,8 @@ select
 	trim(TPN.TPN_CCUSTO) as CC,
 	substring(TPN.TPN_DTINIC, 1, 6) as PERIODO_MOV,
 	convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113) as DT_MOV,
-	eomonth(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113)) as DTMOV_FIMMES,
-	dateadd(day, 1, eomonth(dateadd(month, -1, convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113)))) as DTMOV_INIMES
+	eomonth(cast(TPN.TPN_DTINIC as date)) as DTMOV_FIMMES,
+	dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) as DTMOV_INIMES
 
 from TPN010 TPN (nolock)
 	left join ST9010 ST9 (nolock)
