@@ -31,7 +31,11 @@ select
 
 	trim(TPN.TPN_CCUSTO) as CC,
 	substring(TPN.TPN_DTINIC, 1, 6) as PERIODO_MOV,
+	
 	convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113) as DT_MOV,
+	lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as DT_ANT,
+	cast(datediff(minute, lag(concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC), concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC))/(60*24.0) as numeric(15, 2)) as diff,
+	
 	eomonth(cast(TPN.TPN_DTINIC as date)) as DTMOV_FIMMES,
 	dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) as DTMOV_INIMES
 
