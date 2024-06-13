@@ -10,6 +10,8 @@ select
 	trim(isnull(ST9.T9_ANOFAB, '-')) as ANOFABRIC,
 	trim(isnull(ST9.T9_RENAVAM, '-')) as RENAVAM,
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
+	ST9.T9_STATUS,
+    trim(TQY.TQY_DESTAT) as STATUS,
 
 	trim(isnull(SN1.N1_GRUPO, '-')) as GRUPO_ATF,
 	trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
@@ -28,11 +30,10 @@ select
 	(select max(convert(datetime, concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC), 113)) from TPN010 (nolock) where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = ST9.T9_CODBEM) as ULT_TRANSFERENCIA,
 
 	trim(TPN.TPN_CCUSTO) as CC,
+	substring(TPN.TPN_DTINIC, 1, 6) as PERIODO_MOV,
 	convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113) as DT_MOV,
 	eomonth(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113)) as DTMOV_FIMMES,
-	dateadd(day, 1, eomonth(dateadd(month, -1, convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113)))) as DTMOV_INIMES,
-
-	datediff(hour, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), eomonth(concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC))/datediff(hour, dateadd(day, 1, eomonth(dateadd(month, -1, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC)))), eomonth(concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC))) as diff
+	dateadd(day, 1, eomonth(dateadd(month, -1, convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113)))) as DTMOV_INIMES
 
 from TPN010 TPN (nolock)
 	left join ST9010 ST9 (nolock)
@@ -56,5 +57,9 @@ from TPN010 TPN (nolock)
 				on SN3.D_E_L_E_T_ = ''
 				and SN3.N3_CBASE = SN1.N1_CBASE
 				and SN3.N3_ITEM = SN1.N1_ITEM
+		
+		left join TQY010 TQY (nolock)
+			on TQY.D_E_L_E_T_ = ''
+			and TQY.TQY_STATUS = ST9.T9_STATUS
 where
 		TPN.D_E_L_E_T_ = ''
