@@ -34,10 +34,23 @@ select
 	
 	convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113) as DT_MOV,
 	lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as DT_ANT,
+	lead(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as DT_PRO,
 	cast(datediff(minute, lag(concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC), concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC))/(60*24.0) as numeric(15, 2)) as diff,
 	
 	eomonth(cast(TPN.TPN_DTINIC as date)) as DTMOV_FIMMES,
-	dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) as DTMOV_INIMES
+	dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) as DTMOV_INIMES,
+
+	/* ver se o fim do mês ocorre antes da próxima movimentação; se sim, fim do mês */
+	case when eomonth(cast(TPN.TPN_DTINIC as date)) < lead(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
+		then eomonth(cast(TPN.TPN_DTINIC as date))
+		else lead(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
+	end as DT_FIMMOV,
+
+	/* ver se última movimentação ocorre antes do princípio do mês; se sim, princípio do mês */
+	case when dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) > lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
+		then dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC)))
+		else lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
+	end as DT_INIMOV
 
 from TPN010 TPN (nolock)
 	left join ST9010 ST9 (nolock)
