@@ -192,4 +192,4 @@ where
     and ZC2.ZC2_INCLUS != 'C'
     and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
 	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
-    and year(ZC1.ZC1_EMISSA) > 2022
+    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202309
