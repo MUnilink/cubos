@@ -18,6 +18,7 @@ select
 	coalesce(datediff(year, SRA.RA_NASC, RHR.RHR_DATA), datediff(year, SRA.RA_NASC, RHS.RHS_DATA), null) as IDADE,
 
 	trim(SRJ.RJ_DESC) as FUNCAO,
+	trim(SQ3.Q3_DESCSUM) as CARGO,
 	trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 
@@ -66,6 +67,10 @@ from SR8010 SR8 (nolock)
 			on SRJ.D_E_L_E_T_ = ''
 			and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 			and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+			left join SQ3010 SQ3 (nolock)
+				on SQ3.D_E_L_E_T_ = ''
+				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 				
 where
 		SRA.D_E_L_E_T_ = ''

@@ -30,6 +30,8 @@ select
 	
 	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
 	trim(SRJ.RJ_DESC) as FUNCAO,
+	trim(SQ3.Q3_CARGO) as COD_CARGO,
+	trim(SQ3.Q3_DESCSUM) as CARGO,
 	trim(CTT.CTT_CUSTO) as COD_CC,
 	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
 	trim(CTD.CTD_ITEM) as COD_ITEM,
@@ -83,6 +85,11 @@ from SRA010 SRA (nolock)
 		on SRJ.D_E_L_E_T_ = ''
 		and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 		and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+		left join SQ3010 SQ3 (nolock)
+			on SQ3.D_E_L_E_T_ = ''
+			and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+	
 	inner join CTT010 CTT (nolock)
 		on CTT.D_E_L_E_T_ = ''
 		and CTT.CTT_CUSTO = SRA.RA_CC
