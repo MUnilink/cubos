@@ -26,6 +26,8 @@ select
     SRJ.RJ_FUNCAO as COD_FUNCAO,
     trim(SRJ.RJ_DESC) as FUNCAO,
 	lag(trim(SRJ.RJ_DESC), 1, null) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_DATA) as FUNCAO_ANTERIOR,
+	trim(SQ3.Q3_DESCSUM) as CARGO,
+	lag(trim(SQ3.Q3_DESCSUM), 1, null) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_DATA) as CARGO_ANTERIOR,
     trim(SRJ.RJ_CODCBO) as CBO,
 	
     SRA.RA_SALARIO as SALARIO,
@@ -50,4 +52,9 @@ from SR7010 SR7 (nolock)
         left join SQB010 SQB (nolock)
             on SQB.D_E_L_E_T_ = ''
             and SQB.QB_DEPTO = SRA.RA_DEPTO
+	
+	left join SQ3010 SQ3 (nolock)
+		on SQ3.D_E_L_E_T_ = ''
+		and SQ3.Q3_CARGO = SR7.R7_CARGO
+
 where SR7.D_E_L_E_T_ = ''
