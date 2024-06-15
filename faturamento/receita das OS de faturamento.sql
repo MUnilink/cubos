@@ -109,6 +109,11 @@ select
     ZC2.ZC2_VLUPRV as VAL_PREV,
     ZC2.ZC2_VLUREA as VAL_REAL,
     ZC2.ZC2_QTDREC as QTD_RECURSO,
+    ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as VALOR_PRE,
+    ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as VALOR_REA,
+
+    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
+	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
