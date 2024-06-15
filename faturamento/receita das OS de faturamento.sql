@@ -3,6 +3,7 @@ select
     concat(trim(ZC1.ZC1_NUM), trim(ZC2.ZC2_ITEM)) as ID_OS,
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
+    ZC2.ZC2_FILORI as FILORI,
     ZC2.ZC2_ITEM as ITEM,
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
@@ -202,4 +203,4 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 where
         ZC2.D_E_L_E_T_ = ''
-    and year(ZC1.ZC1_EMISSA) > 2023
+    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202309
