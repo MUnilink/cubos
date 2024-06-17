@@ -221,5 +221,5 @@ union
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
-			SRD.D_E_L_E_T_ = ''
-		and substring(SRD.RD_PERIODO, 1, 4) > 2022
+			substring(SRD.RD_PERIODO, 1, 4) > 2022
+		and SRD.D_E_L_E_T_ = ''
