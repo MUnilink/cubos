@@ -4,9 +4,9 @@ select
     ZC7.ZC7_CC as CC,
     ZC7.ZC7_COMPET as PERIODO,
     
-    ZC7.ZC7_HRPAD as HORA_PADRAO,
-    ZC7.ZC7_HRPROD as HORA_PRODU,
-    ZC7.ZC7_HRIMPR as HORA_IMPRO,
+    case when lag(ZC7.ZC7_HRPAD, 1, 0) over(partition by ZC7.ZC7_FILIAL, ZC7.ZC7_COMPET, ZC7.ZC7_CC, ZC7.ZC7_CODIGO order by ZC7.ZC7_FILIAL, ZC7.ZC7_COMPET, ZC7.ZC7_CC, ZC7.ZC7_CODIGO) = 0 then cast(ZC7.ZC7_HRPAD as numeric(15, 2)) else 0 end as HORA_PADRAO,
+    case when lag(ZC7.ZC7_HRPROD, 1, 0) over(partition by ZC7.ZC7_FILIAL, ZC7.ZC7_COMPET, ZC7.ZC7_CC, ZC7.ZC7_CODIGO order by ZC7.ZC7_FILIAL, ZC7.ZC7_COMPET, ZC7.ZC7_CC, ZC7.ZC7_CODIGO) = 0 then cast(ZC7.ZC7_HRPROD as numeric(15, 2)) else 0 end as HORA_PRODU,
+    case when lag(ZC7.ZC7_HRIMPR, 1, 0) over(partition by ZC7.ZC7_FILIAL, ZC7.ZC7_COMPET, ZC7.ZC7_CC, ZC7.ZC7_CODIGO order by ZC7.ZC7_FILIAL, ZC7.ZC7_COMPET, ZC7.ZC7_CC, ZC7.ZC7_CODIGO) = 0 then cast(ZC7.ZC7_HRIMPR as numeric(15, 2)) else 0 end as HORA_IMPRO,
 
     ZC1.ZC1_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM_OS,
@@ -77,7 +77,12 @@ select
         when 12 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 12)
         when 13 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 13)
         else trim(ZC2.ZC2_DESC)
-    end as DESC_INSUMO
+    end as DESC_INSUMO,
+
+    case when ZC2.ZC2_QTDREC > 9999999 then 9999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
+    
+    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
+	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
 
 from ZC7010 ZC7 (nolock)
     left join ZC2010 ZC2 (nolock)
