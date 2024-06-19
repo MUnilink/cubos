@@ -21,7 +21,7 @@ select
 	datediff(month, SN3.N3_DINDEPR, cast('20220430' as date)) TEMPO_ATIVO,
 	100 / (SNG.NG_TXDEPR1 /12) as TEMPO_DEPREC,
 	SN3.N3_VORIG1 * (SNG.NG_TXDEPR1 / 1200) as DEPRECMENSAL,
-    case when (12 * (100 / SNG.NG_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20220430' as date)) then SN3.N3_VORIG1 * (SNG.NG_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL
+    case when 12 * (100 / SNG.NG_TXDEPR1) > datediff(month, SN3.N3_DINDEPR, dateadd(day, 1, eomonth(dateadd(month, -1, getdate())))) then SN3.N3_VORIG1 * (SNG.NG_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL
     
 from SN1010 SN1 (nolock)
     inner join ST9010 ST9 (nolock)
