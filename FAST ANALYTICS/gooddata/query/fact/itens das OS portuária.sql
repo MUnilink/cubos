@@ -12,7 +12,7 @@ select
     cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
 
     case when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
-    case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 10) else null end as COD_DA3,
+    case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13)) else null end as COD_DA3,
     case cast(ZC2.ZC2_TIPO as int) when 2 then (select concat(trim(SRJ010.RJ_FILIAL), trim(SRJ010.RJ_FUNCAO)) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2) else null end as COD_SRJ,
     case cast(ZC2.ZC2_TIPO as int) when 7 then (select concat(trim(ZA7010.ZA7_FILIAL), trim(ZA7010.ZA7_COD)) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7) else null end as COD_ZA7,
     case cast(ZC2.ZC2_TIPO as int) when 8 then ZC2.ZC2_COD else null end as COD_SE1,
@@ -40,7 +40,11 @@ from ZC2010 ZC2
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-        
+
+        left join SA1010 SA1
+            on SA1.D_E_L_E_T_ = ''
+            and SA1.A1_COD = ZC1.ZC1_CODSA1
+            and SA1.A1_LOJA = ZC1.ZC1_LOJSA1
         left join SA2010 SA2
             on SA2.D_E_L_E_T_ = ''
             and SA2.A2_COD = ZC1.ZC1_DESPA
@@ -65,11 +69,6 @@ from ZC2010 ZC2
         and ZC3.ZC3_FILIAL = ZC2.ZC2_FILIAL
         and ZC3.ZC3_NUM = ZC2.ZC2_NUM
         and ZC3.ZC3_ITEM = ZC2.ZC2_ITEM
-        
-        left join SA1010 SA1
-            on SA1.D_E_L_E_T_ = ''
-            and SA1.A1_COD = ZC3.ZC3_CODSA1
-            and SA1.A1_LOJA = ZC3.ZC3_LOJSA1
     
         left join SC5010 SC5
             on SC5.D_E_L_E_T_ = ''
