@@ -26,11 +26,11 @@ select
     ZC3.ZC3_QTD as QTD_RATEIO,
     ZC3.ZC3_PECRAT as PERC_RATEIO,
     
-    case when ZC2.ZC2_QTDPRV > 9999999 then 9999999 else ZC2.ZC2_QTDPRV end as QTD_PREV,
-    case when ZC2.ZC2_QTDREA > 9999999 then 9999999 else ZC2.ZC2_QTDREA end as QTD_REAL,
-    case when ZC2.ZC2_VLUPRV > 9999999 then 9999999 else ZC2.ZC2_VLUPRV end as VAL_PREV,
-    case when ZC2.ZC2_VLUREA > 9999999 then 9999999 else ZC2.ZC2_VLUREA end as VAL_REAL,
-    case when ZC2.ZC2_QTDREC > 9999999 then 9999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
+    case when ZC2.ZC2_QTDPRV > 99999999 then 99999999 else ZC2.ZC2_QTDPRV end as QTD_PREV,
+    case when ZC2.ZC2_QTDREA > 99999999 then 99999999 else ZC2.ZC2_QTDREA end as QTD_REAL,
+    case when ZC2.ZC2_VLUPRV > 99999999 then 99999999 else ZC2.ZC2_VLUPRV end as VAL_PREV,
+    case when ZC2.ZC2_VLUREA > 99999999 then 99999999 else ZC2.ZC2_VLUREA end as VAL_REAL,
+    case when ZC2.ZC2_QTDREC > 99999999 then 99999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
     
     case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
 	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
