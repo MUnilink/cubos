@@ -5,83 +5,46 @@ select
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
-    concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF,
+    concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF, 
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
+    cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
 
-    case when ZC2.ZC2_TIPO in (1, 4, 11) then ZC2.ZC2_COD else null end as COD_SB1,
-    case when ZC2.ZC2_TIPO in (3, 6, 9, 10, 12, 13) then ZC2.ZC2_COD else null end as COD_DA3,
-    case ZC2.ZC2_TIPO when 2 then ZC2.ZC2_COD else null end as COD_SRJ,
-    case ZC2.ZC2_TIPO when 7 then ZC2.ZC2_COD else null end as COD_ZA7,
-    case ZC2.ZC2_TIPO when 8 then ZC2.ZC2_COD else null end as COD_SE1,
+    case when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
+    case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13)) else null end as COD_DA3,
+    case cast(ZC2.ZC2_TIPO as int) when 2 then (select concat(trim(SRJ010.RJ_FILIAL), trim(SRJ010.RJ_FUNCAO)) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2) else null end as COD_SRJ,
+    case cast(ZC2.ZC2_TIPO as int) when 7 then (select concat(trim(ZA7010.ZA7_FILIAL), trim(ZA7010.ZA7_COD)) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7) else null end as COD_ZA7,
+    case cast(ZC2.ZC2_TIPO as int) when 8 then ZC2.ZC2_COD else null end as COD_SE1,
 
-    trim(ZC2.ZC2_CONTEI) as CONTEINER,
-    trim(ZC2.ZC2_LACRE) as LACRE,
     trim(ZC2.ZC2_COD) as INSUMO,
-    ZC1.ZC1_EMISSA as DATA_OS,
+    trim(ZC2.ZC2_ITEM) as ITEM,
     ZC2.ZC2_COMPET as COMPETENCIA,
+    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD2.D2_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
     trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
     ZC3.ZC3_QTD as QTD_RATEIO,
     ZC3.ZC3_PECRAT as PERC_RATEIO,
     
-    ZC2.ZC2_QTDPRV as QTD_PREV,
-    ZC2.ZC2_QTDREA as QTD_REAL,
-    ZC2.ZC2_VLUPRV as VAL_PREV,
-    ZC2.ZC2_VLUREA as VAL_REAL,
-    ZC2.ZC2_QTDREC as QTD_RECURSO,
+    case when ZC2.ZC2_QTDPRV > 99999999 then 99999999 else ZC2.ZC2_QTDPRV end as QTD_PREV,
+    case when ZC2.ZC2_QTDREA > 99999999 then 99999999 else ZC2.ZC2_QTDREA end as QTD_REAL,
+    case when ZC2.ZC2_VLUPRV > 99999999 then 99999999 else ZC2.ZC2_VLUPRV end as VAL_PREV,
+    case when ZC2.ZC2_VLUREA > 99999999 then 99999999 else ZC2.ZC2_VLUREA end as VAL_REAL,
+    case when ZC2.ZC2_QTDREC > 99999999 then 99999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
     
-    datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as HORAS_APONT,
-    cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) as HORAS_TOTAIS
-    
-    /**/
-    substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
-    substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    SC6.C6_NUM as PEDIDO,
-    cast(SC6.C6_ITEM as int) as ITEM_PEDIDO,
-    trim(SC6.C6_UM) as UN_PEDIDO,
-    SC6.C6_QTDVEN as QTD_PEDIDO,
-    trim(SC6.C6_CC) as CC_PEDIDO,
-    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
-        
-    case ZC2.ZC2_TIPO
-        /* SB1 */ when 1 then 'RECEITA'
-        /* SRJ */ when 2 then 'FUNÇÃO'
-        /* ST9 */ when 3 then 'MANUTENÇÃO'
-        /* SB1 */ when 4 then 'MATERIAIS'
-        /* ST9 */ when 6 then 'DEPRECIAÇÃO'
-        /* ZA7 */ when 7 then 'CONTABILIDADE'
-        /*  */ when 8 then 'DESPESAS FINANCEIRAS'
-        /* TS0 */ when 9 then 'DOCUMENTAÇÃO E TAXAS'
-        /* ST9 */ when 10 then 'COMBUSTIVEL'
-        /* SB1 */ when 11 then 'TAXAS'
-        /* ST9 */ when 12 then 'SEGURO'
-        /* ST9 */ when 13 then 'PNEUS'
-        else 'OUTROS'
-    end as TIPO_INSUMO,
-    
-    case cast(ZC2.ZC2_TIPO as int)
-        when 1 then (select max(case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end) from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 1)
-        when 11 then (select max(case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end) from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 11)
-        when 2 then (select max(trim(SRJ010.RJ_DESC)) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
-        when 3 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3)
-        when 4 then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 4)
-        when 6 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 6)
-        when 7 then (select max(trim(ZA7010.ZA7_DESC)) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
-        when 9 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 9)
-        when 10 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 10)
-        when 12 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 12)
-        when 13 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 13)
-        else trim(ZC2.ZC2_DESC)
-    end as DESC_INSUMO,
+    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
+	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
 
 from ZC2010 ZC2
     inner join ZC1010 ZC1
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-        
+
+        left join SA1010 SA1
+            on SA1.D_E_L_E_T_ = ''
+            and SA1.A1_COD = ZC1.ZC1_CODSA1
+            and SA1.A1_LOJA = ZC1.ZC1_LOJSA1
         left join SA2010 SA2
             on SA2.D_E_L_E_T_ = ''
             and SA2.A2_COD = ZC1.ZC1_DESPA
@@ -95,17 +58,17 @@ from ZC2010 ZC2
         left join DA0010 DA0
             on DA0.D_E_L_E_T_ = ''
             and DA0.DA0_CODTAB = ZC1.ZC1_TABPRC
+    
+    left join SB1010 SB1
+        on SB1.D_E_L_E_T_ = ' '
+        and SB1.B1_FILIAL = '      '
+        and SB1.B1_COD = ZC2.ZC2_COD
         
-    inner join ZC3010 ZC3
+    left join ZC3010 ZC3
         on ZC3.D_E_L_E_T_ = ''
         and ZC3.ZC3_FILIAL = ZC2.ZC2_FILIAL
         and ZC3.ZC3_NUM = ZC2.ZC2_NUM
         and ZC3.ZC3_ITEM = ZC2.ZC2_ITEM
-        
-        left join SA1010 SA1
-            on SA1.D_E_L_E_T_ = ''
-            and SA1.A1_COD = ZC3.ZC3_CODSA1
-            and SA1.A1_LOJA = ZC3.ZC3_LOJSA1
     
         left join SC5010 SC5
             on SC5.D_E_L_E_T_ = ''
@@ -130,5 +93,9 @@ from ZC2010 ZC2
                     and SF2.F2_LOJA = SD2.D2_LOJA
                     and SF2.F2_DOC = SD2.D2_DOC
                     and SF2.F2_SERIE = SD2.D2_SERIE
+            
+            left join SAH010 SAH
+                on SAH.D_E_L_E_T_ = ''
+                and SAH.AH_UNIMED = SD2.D2_UM
 where
         ZC2.D_E_L_E_T_ = ''
