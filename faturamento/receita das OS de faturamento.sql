@@ -67,7 +67,6 @@ select
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
-    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZA9.ZA9_CODTAX)) as TABELA_TAXAS,
 
     case cast(ZC2.ZC2_TIPO as int)
         when 1 then (select max(case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end) from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 1)
@@ -109,8 +108,9 @@ select
     ZC2.ZC2_VLUPRV as VAL_PREV,
     ZC2.ZC2_VLUREA as VAL_REAL,
     ZC2.ZC2_QTDREC as QTD_RECURSO,
-    ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as VALOR_PRE,
-    ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as VALOR_REA,
+    
+    ZC2.ZC2_QTDREC * ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as VLRTOT_PRE,
+    ZC2.ZC2_QTDREC * ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as VLRTOT_REA,
 
     case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
 	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS,
@@ -186,9 +186,6 @@ from ZC2010 ZC2 (nolock)
     left join DA4010 DA4 (nolock)
         on DA4.D_E_L_E_T_ = ''
         and DA4.DA4_COD = ZC2.ZC2_MOTORI
-    left join ZA9010 ZA9 (nolock)
-        on ZA9.D_E_L_E_T_ = ''
-        and trim(ZA9.ZA9_SERVIC) = trim(ZC2.ZC2_COD)
     
     left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
