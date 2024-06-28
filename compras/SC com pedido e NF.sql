@@ -1,21 +1,23 @@
 select
-	trim(isnull(SC1.C1_FILIAL, '-')) as FILIAL,
-	trim(isnull(SB1.B1_COD, '-')) as PRODUTO,
-	trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
-	trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
-	trim(isnull(SB1.B1_UM, '-')) as UN,
-
-	trim(isnull(SC1.C1_NUM, '-')) as SC,
-	trim(isnull(SC1.C1_ITEM, '-')) as ITEM_SC,
+	trim(SC1.C1_FILIAL) as FILIAL,
+	trim(SB1.B1_COD) as PRODUTO,
+	trim(SB1.B1_DESC) as NOMEPRODUTO,
+	trim(SB1.B1_GRUPO) as GRUPO,
+	trim(SB1.B1_UM) as UN,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(CTT.CTT_DESC01) as CCUSTO,
+	trim(SC1.C1_NUM) as SC,
+	trim(SC1.C1_ITEM) as ITEM_SC,
+	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
+	trim(SC1.C1_OBS) as OBS_SC,
 	convert(date, SC1.C1_EMISSAO, 103) as DATA_SC,
 	substring(SC1.C1_EMISSAO, 1, 6) as PERIODO_SC,
-	trim(isnull(upper(SC1.C1_SOLICIT), '-')) as SOLICITANTE_SC,
-	trim(isnull(SC1.C1_OBS, '-')) as OBS_SC,
+	substring(SC1.C1_OP, 1, 6) as OS,
 
-	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE,
-	trim(isnull(CTT.CTT_DESC01, '-')) as CCUSTO,
-	trim(isnull(SC7.C7_ITEMCTA, '-')) as AT,
-	trim(isnull(SC7.C7_CC, '-')) as CC,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(CTT.CTT_DESC01) as CCUSTO,
+	trim(SC7.C7_ITEMCTA) as AT,
+	trim(SC7.C7_CC) as CC,
 
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
@@ -28,8 +30,6 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
-	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
-
 	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
 	datediff(day, SC1.C1_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM)) as DIASAPROV_SC,
 
@@ -40,26 +40,23 @@ select
 	SC8.C8_TOTAL as VALOR_COTADO,
 	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
 	substring(SC8.C8_EMISSAO, 1, 6) as PERIODO_COTACAO,
-	trim(isnull(FCO.A2_NOME, '-')) as NOME_FOR_COTACAO,
-	trim(isnull(FCO.A2_NREDUZ, '-')) as NOMERED_FOR_COTACAO,
+	trim(FCO.A2_NOME) as NOME_FOR_COTACAO,
+	trim(FCO.A2_NREDUZ) as NOMERED_FOR_COTACAO,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
 
-	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
-
-	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
-	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
-	trim(isnull(SC7.C7_FORNECE, '-')) as FORNECEDOR,
-	trim(isnull(SC7.C7_LOJA, '-')) as LOJA,
-	trim(isnull(FPE.A2_NOME, '-')) as NOME_FORNECEDOR,
-	trim(isnull(FPE.A2_NREDUZ, '-')) as NOMERED_FORNECEDOR,
-	trim(isnull(FPE.A2_CGC, '-')) as CNPJ,
-	trim(isnull(SC7.C7_OBS, '-')) as OBS_PC,
-	trim(isnull(SC7.C7_OBSM, '-')) as MEMO_PC,
+	trim(SC7.C7_NUM) as PEDIDO,
+	trim(SC7.C7_ITEM) as ITEM_PC,
+	trim(SC7.C7_FORNECE) as FORNECEDOR,
+	trim(SC7.C7_LOJA) as LOJA,
+	trim(FPE.A2_NOME) as NOME_FORNECEDOR,
+	trim(FPE.A2_NREDUZ) as NOMERED_FORNECEDOR,
+	trim(FPE.A2_CGC) as CNPJ,
+	trim(SC7.C7_OBS) as OBS_PC,
+	trim(SC7.C7_OBSM) as MEMO_PC,
 
 	convert(date, SC7.C7_EMISSAO, 103) as DATA_PEDIDO,
-
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
-	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE_PC,
+	trim(upper(SY1.Y1_NOME)) as SOLICITANTE_PC,
 
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -67,8 +64,6 @@ select
 		when 'R' then 'REJEITADO'
 		else 'OUTROS'
 	end as APROVACAO_PC,
-
-	/*case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,*/
 
 	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC,
 	datediff(day, SC7.C7_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM)) as DIASAPROV_PC,
@@ -108,21 +103,28 @@ select
 
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
-	convert(date, SD1.D1_EMISSAO, 103) as NF_EMI,
-	convert(date, SD1.D1_DTDIGIT, 103) as NF_DATA,
-	SD1.D1_YOS as OS_FAT,
-
+	SD1.D1_CC as NF_CC,
+	SD1.D1_ITEMCTA as NF_AT,
+	SD1.D1_ITEM as NF_ITEM,
+	SD1.D1_QUANT NF_QUANT,
+	SD1.D1_VUNIT NF_VUNIT,
+	SD1.D1_TOTAL NF_TOTAL,
+	SD1.D1_TES NF_TES,
+	SD1.D1_CUSTO NF_CUSTO,
+	SD1.D1_QTDPEDI as NF_QTDPEDI,
+	cast(SD1.D1_EMISSAO as date) as NF_EMI,
+	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
+	coalesce(nullif(SD1.D1_YOS, ''), nullif(SC7.C7_YOS, '')) as OS_PORT,
 	case when SC1.C1_OP like '%OS001' then 'OS' else 'OP' end as TIPO_SC,
 
 	STJ.TJ_ORDEM as OS_MNT,
-	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
+	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
     STJ.TJ_DTMRINI,
     STJ.TJ_DTMRFIM,
 	convert(date, STJ.TJ_DTORIGI, 103) as DATA_OS,
 	STJ.TJ_USUAINI as USR_INI,
 	STJ.TJ_USUAFIM as USR_FIM,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
-
 	SC2.C2_NUM as OP
 
 from SC1010 SC1 (nolock)
