@@ -35,6 +35,11 @@ SELECT
     VIAGEM.SAI_VIAGEM_REAL,
     VIAGEM.CHE_VIAGEM_REAL,
 
+    VIAGEM.ID_VEICULO_CM,
+    VIAGEM.ID_VEICULO_RB1,
+    VIAGEM.ID_VEICULO_RB2,
+    VIAGEM.ID_VEICULO_RB3,
+
     VIAGEM.ID_VIAGEM
 
 FROM DT6010 DT6
@@ -70,6 +75,11 @@ FROM DT6010 DT6
 
             concat(trim(DUD.DUD_FILDOC), trim(DUD.DUD_VIAGEM)) as ID_VIAGEM,
             trim(DA4010.DA4_COD) as ID_MOTORISTA,
+
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
 
             (
                 select top 1 first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
