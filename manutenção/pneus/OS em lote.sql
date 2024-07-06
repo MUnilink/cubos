@@ -1,7 +1,7 @@
 select
 	ST9.T9_CODBEM as CONTADOR,
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
-    SB1.B1_COD,
+    trim(SB1.B1_COD) as B1_COD,
 	ST9.T9_CCUSTO,
 	ST9.T9_ITEMCTA,
 	ST9.T9_SITBEM,
@@ -21,9 +21,10 @@ select
     trim(SA2.A2_NREDUZ) as NOME_FANTASIA,
     
     TR8.TR8_ORDEM,
-    TR8.TR8_MOTIVO as TR8_MOTIVO,
+    trim(TR8.TR8_MOTIVO) as TR8_MOTIVO,
     trim(ST8.T8_NOME) as MOTIVO,
     TR8.TR8_VALOR,
+    case TR8.TR8_INDREL when 1 then 'SIM' when 2 then 'NAO' else null end as REALIZADO,
     
     convert(datetime, concat(TR7.TR7_DTLOTE, ' ', TR7.TR7_HRLOTE), 103) as DATA_LOTE,
     convert(datetime, concat(TR7.TR7_DTRECI, ' ', TR7.TR7_HRRECI), 103) as DATA_RECEBIMENTO,
