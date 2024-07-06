@@ -50,8 +50,8 @@ select
     end as TIPO_INSUMO,
     
     case cast(ZC2.ZC2_TIPO as int)
-        when 2 then (select trim(SRJ010.RJ_DESC) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
-        when 7 then (select max(trim(ZA7010.ZA7_DESC)) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
+        when 2 then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
+        when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
         when 8 then null
     else
         case
@@ -104,17 +104,17 @@ select
         else 'OUTROS'
     end as STATUS_PEDIDO,
     
-    ZC2.ZC2_QTDPRV as QTD_PREV,
-    ZC2.ZC2_QTDREA as QTD_REAL,
-    ZC2.ZC2_VLUPRV as VAL_PREV,
-    ZC2.ZC2_VLUREA as VAL_REAL,
+    cast(ZC2.ZC2_QTDPRV as numeric(15, 2)) as QTD_PREV_ITEM,
+    cast(ZC2.ZC2_QTDREA as numeric(15, 2)) as QTD_REAL_ITEM,
+    cast(ZC2.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_ITEM,
+    cast(ZC2.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
     ZC2.ZC2_QTDREC as QTD_RECURSO,
     
-    ZC2.ZC2_QTDREC * ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as VLRTOT_PRE,
-    ZC2.ZC2_QTDREC * ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as VLRTOT_REA,
+    cast(ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
+    cast(ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
 
-    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
-	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS,
+    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_UNIT,
+	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_ITEM,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
