@@ -61,7 +61,6 @@ select
     end as DESC_RECURSO,
 
     case when cast(ZC2.ZC2_TIPO as int) in (1, 4, 5, 11) then (select max(trim(SAH010.AH_DESCPO)) from SB1010 (nolock) inner join SAH010 (nolock) on SAH010.D_E_L_E_T_ = '' and SAH010.AH_UNIMED = SB1010.B1_UM where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 5, 11))
-        when cast(ZC2.ZC2_TIPO as int) in (2) then 'h'
         when cast(ZC2.ZC2_TIPO as int) in (7) then 'q'
         else 'h'
     end as UN,
@@ -113,8 +112,12 @@ select
     cast(ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
     cast(ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
 
-    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_UNIT,
-	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_ITEM,
+    case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORA_UNIT_ITEM,
+	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_PROD,
+    
+    lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) as ITEM_ANT,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) and lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6))) else 0.0 end as HORA_PAD,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) and lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then ((select ZC7010.ZC7_HRIMPR from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6))) else 0.0 end as HORAS_IMPR,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
