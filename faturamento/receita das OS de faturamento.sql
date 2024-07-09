@@ -160,7 +160,10 @@ select
     CAST(COALESCE(SD2.D2_VALINS, 0) AS DECIMAL(14, 2)) AS VL_INSS_FATURAMENTO,
     CAST(COALESCE(SD2.D2_PESO * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_LIQUIDO,
     CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
-    CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO
+    CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
+
+    SD3.D3_CUSTO1 as ESTOQUE,
+    MNT.TL_CUSTO as MANUTENCAO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -207,6 +210,51 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
+    
+    left join
+    (
+        select
+            SD3010.D3_FILIAL,
+            SD3010.D3_COD,
+            SD3010.D3_YOS,
+            SD3010.D3_ESTORNO,
+            SD3010.D3_EMISSAO,
+            substring(SD3010.D3_EMISSAO, 1, 6) as PERIODO,
+            SD3010.D3_CUSTO1
+        from SD3010
+        where
+                SD3010.D_E_L_E_T_ = ''
+            and SD3010.D3_ESTORNO = 'S'
+    ) SD3
+        on ZC2.ZC2_TIPO = 4
+        and SD3.D3_FILIAL = ZC2.ZC2_FILIAL
+        and SD3.D3_YOS = ZC2.ZC2_NUM
+        and SD3.D3_COD = ZC2.ZC2_COD
+        and eomonth(SD3.D3_EMISSAO) = ZC2.ZC2_COMPET
+    
+    left join
+    (
+        select
+            STL010.TL_FILIAL,
+            STL010.TL_PLANO,
+            STL010.TL_ORDEM,
+            STJ010.TJ_CODBEM,
+            STL010.TL_DTFIM,
+            substring(STL010.TL_DTFIM, 1, 6) as PERIODO,
+            STL010.TL_CUSTO
+        from STJ010
+            inner join STL010
+                on STL010.D_E_L_E_T_ = ''
+                and STL010.TL_FILIAL = STJ010.TJ_FILIAL
+                and STL010.TL_PLANO = STJ010.TJ_PLANO
+                and STL010.TL_ORDEM = STJ010.TJ_ORDEM
+        where
+                STJ010.D_E_L_E_T_ = ''
+            and STL010.TL_SEQRELA > 0
+    ) MNT
+        on ZC2.ZC2_TIPO = 3
+        and MNT.TJ_CODBEM = ZC2.ZC2_COD
+        and eomonth(MNT.TL_DTFIM) = ZC2.ZC2_COMPET
 where
         ZC2.D_E_L_E_T_ = ''
     and substring(ZC1.ZC1_EMISSA, 1, 6) > 202309
