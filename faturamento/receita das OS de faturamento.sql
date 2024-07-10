@@ -116,8 +116,8 @@ select
 	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_PROD,
     
     lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) as ITEM_ANT,
-    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) and lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6))) else 0.0 end as HORA_PAD,
-    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) and lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then ((select ZC7010.ZC7_HRIMPR from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6))) else 0.0 end as HORAS_IMPR,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) and lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6))) else 0.0 end as HORA_PAD,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) and lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then ((select ZC7010.ZC7_HRIMPR from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6))) else 0.0 end as HORAS_IMPR,
     
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
@@ -162,8 +162,119 @@ select
     CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
 
-    SD3.D3_CUSTO1 as ESTOQUE,
-    MNT.TL_CUSTO as MANUTENCAO
+    (select sum(SD3010.D3_CUSTO1) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '' and ZC2.ZC2_TIPO = 4) as ESTOQUE,
+    (select sum(SD1010.D1_CUSTO) from SD1010 (nolock) where SD1010.D_E_L_E_T_ = '' and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL and SD1010.D1_YOS = ZC2.ZC2_NUM and SD1010.D1_COD = ZC2.ZC2_COD and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET and cast(ZC2.ZC2_TIPO as int) in (5, 11)) as COMPRAS_TAXAS,
+    
+    case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then
+    (
+        select sum(STL010.TL_CUSTO)
+        from STJ010 (nolock)
+            left join STL010 (nolock)
+                on STL010.D_E_L_E_T_ = ''
+                and STL010.TL_FILIAL = STJ010.TJ_FILIAL
+                and STL010.TL_PLANO = STJ010.TJ_PLANO
+                and STL010.TL_ORDEM = STJ010.TJ_ORDEM
+        where
+                STJ010.D_E_L_E_T_ = ''
+            and STJ010.TJ_CODBEM = ZC2.ZC2_COD
+            and eomonth(STL010.TL_DTFIM) = ZC2.ZC2_COMPET
+            and STL010.TL_SEQRELA > 0
+            and ZC2.ZC2_TIPO = 3
+    ) else 0.0 end as MANUTENCAO,
+    
+    case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then
+    (
+        select sum(SN4010.N4_VLROC1)
+        from SN4010 (nolock)
+            inner join SN3010 (nolock)
+                on SN3010.D_E_L_E_T_ = ''
+                and SN3010.N3_CBASE = SN4010.N4_CBASE
+                and SN3010.N3_ITEM = SN4010.N4_ITEM
+
+                inner join SN1010 (nolock)
+                    on SN1010.D_E_L_E_T_ = ''
+                    and SN1010.N1_CBASE = SN3010.N3_CBASE
+                    and SN1010.N1_ITEM = SN3010.N3_ITEM
+        where
+                SN4010.D_E_L_E_T_ = ''
+            and SN1010.N1_CODBEM = ZC2.ZC2_COD
+            and eomonth(SN4010.N4_DATA) = ZC2.ZC2_COMPET
+            and SN4010.N4_OCORR = 6
+            and SN4010.N4_TIPOCNT = 3
+            and ZC2.ZC2_TIPO = 6
+    ) else 0.0 end as DEPRECIACAO,
+
+    case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then
+    (
+        select sum(TS1010.TS1_VALOR)/12
+        from TS1010 (nolock)
+        inner join
+        (
+            select
+                TS1010.TS1_CODBEM,
+                TS1010.TS1_DOCTO,
+                max(TS1010.TS1_DTVENC) as TS1_DTVENC
+            from TS1010 (nolock)
+            where
+                    TS1010.D_E_L_E_T_ = ''
+                and TS1010.TS1_DOCTO in (1, 2, 3, 7)
+            group by
+                TS1010.TS1_CODBEM,
+                TS1010.TS1_DOCTO
+        ) TS1
+            on TS1010.D_E_L_E_T_ = ''
+            and TS1.TS1_DOCTO = TS1010.TS1_DOCTO
+            and TS1.TS1_CODBEM = TS1010.TS1_CODBEM
+            and TS1.TS1_DTVENC = TS1010.TS1_DTVENC
+        where
+                ZC2.ZC2_TIPO = 9
+            and TS1010.TS1_CODBEM = ZC2.ZC2_COD
+    ) else 0.0 end as DOCUMENTACAO,
+    
+    (
+        select sum(case when CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2)) else case when CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2))*-1 else 0.0 end end)
+        from CT2010 (nolock)
+            inner join ZA8010 (nolock)
+                on ZA8010.D_E_L_E_T_ = ''
+                and (CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM or CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM)
+                and (CT2010.CT2_ITEMD between ZA8010.ZA8_CTDINI and ZA8010.ZA8_CTDFIM or CT2010.CT2_ITEMC between ZA8010.ZA8_CTDINI and ZA8010.ZA8_CTDFIM)
+                and (CT2010.CT2_CCD between ZA8010.ZA8_CTTINI and ZA8010.ZA8_CTTFIM or CT2010.CT2_CCC between ZA8010.ZA8_CTTINI and ZA8010.ZA8_CTTFIM)
+
+                inner join ZA7010 (nolock)
+                    on ZA7010.D_E_L_E_T_ = ''
+                    and ZA7010.ZA7_COD = ZA8010.ZA8_COD
+        where
+                CT2010.D_E_L_E_T_ = ''
+            and ZA7010.ZA7_COD = ZC2.ZC2_COD
+            and eomonth(CT2010.CT2_DATA) = ZC2.ZC2_COMPET
+            and ZC2.ZC2_TIPO = 7
+    ) as CONTABILIDADE,
+    
+    case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_ITEM) is null then
+    (
+        select sum(ZC4010.ZC4_VLSEG)/sum(ZC4.diff)
+        from ZC4010 (nolock)
+            inner join
+                (
+                    select
+                        datediff(day, ZC4010.ZC4_DTVGIN, ZC4010.ZC4_DTVGFI)/30.0 as diff,
+                        ZC4010.ZC4_CODBEM,
+                        ZC4010.ZC4_DTVGIN,
+                        ZC4010.ZC4_DTVGFI
+                    from ZC4010 (nolock)
+                    where
+                            ZC4010.D_E_L_E_T_ = ''
+                ) ZC4
+                    on ZC4010.ZC4_CODBEM = ZC4.ZC4_CODBEM
+                    and ZC4010.ZC4_DTVGIN = ZC4.ZC4_DTVGIN
+                    and ZC4010.ZC4_DTVGFI = ZC4.ZC4_DTVGFI
+        where
+                ZC4010.D_E_L_E_T_ = ''
+            and ZC2.ZC2_TIPO = 12
+            and ZC2.ZC2_COD = ZC4010.ZC4_CODBEM
+            
+            and ZC2.ZC2_COMPET between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
+    ) else 0.0 end as SEGURO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -210,51 +321,6 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
-    
-    left join
-    (
-        select
-            SD3010.D3_FILIAL,
-            SD3010.D3_COD,
-            SD3010.D3_YOS,
-            SD3010.D3_ESTORNO,
-            SD3010.D3_EMISSAO,
-            substring(SD3010.D3_EMISSAO, 1, 6) as PERIODO,
-            SD3010.D3_CUSTO1
-        from SD3010
-        where
-                SD3010.D_E_L_E_T_ = ''
-            and SD3010.D3_ESTORNO = 'S'
-    ) SD3
-        on ZC2.ZC2_TIPO = 4
-        and SD3.D3_FILIAL = ZC2.ZC2_FILIAL
-        and SD3.D3_YOS = ZC2.ZC2_NUM
-        and SD3.D3_COD = ZC2.ZC2_COD
-        and eomonth(SD3.D3_EMISSAO) = ZC2.ZC2_COMPET
-    
-    left join
-    (
-        select
-            STL010.TL_FILIAL,
-            STL010.TL_PLANO,
-            STL010.TL_ORDEM,
-            STJ010.TJ_CODBEM,
-            STL010.TL_DTFIM,
-            substring(STL010.TL_DTFIM, 1, 6) as PERIODO,
-            STL010.TL_CUSTO
-        from STJ010
-            inner join STL010
-                on STL010.D_E_L_E_T_ = ''
-                and STL010.TL_FILIAL = STJ010.TJ_FILIAL
-                and STL010.TL_PLANO = STJ010.TJ_PLANO
-                and STL010.TL_ORDEM = STJ010.TJ_ORDEM
-        where
-                STJ010.D_E_L_E_T_ = ''
-            and STL010.TL_SEQRELA > 0
-    ) MNT
-        on ZC2.ZC2_TIPO = 3
-        and MNT.TJ_CODBEM = ZC2.ZC2_COD
-        and eomonth(MNT.TL_DTFIM) = ZC2.ZC2_COMPET
 where
         ZC2.D_E_L_E_T_ = ''
     and substring(ZC1.ZC1_EMISSA, 1, 6) > 202309
