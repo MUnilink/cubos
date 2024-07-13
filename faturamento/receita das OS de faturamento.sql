@@ -122,8 +122,9 @@ select
     trim(ZC2.ZC2_CONTEI) as CONTEINER,
     trim(ZC2.ZC2_LACRE) as LACRE,
 
-    convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
-    convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
+    cast(ZC2.ZC2_DATA as date) as DATA_ITEM,
+    cast(ZC2.ZC2_DTINI as date) as DATA_INIAPONT,
+    cast(ZC2.ZC2_DTFIM as date) as DATA_FIMAPONT,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
 
     SC6.C6_NUM as PEDIDO,
@@ -135,7 +136,7 @@ select
     SC6.C6_CC as CC_PEDIDO,
     SC6.C6_ITEMCTA as ATIVIDADE_PEDIDO,
 
-    convert(date, SD2.D2_EMISSAO, 103) as DATA_NF,
+    cast(SD2.D2_EMISSAO as date) as DATA_NF,
     substring(SD2.D2_EMISSAO, 1, 6) PERIODO_NF,
 
     SD2.D2_DOC as NF_DOC,
@@ -279,7 +280,7 @@ select
                 and ZC2.ZC2_COD = ZC4010.ZC4_CODBEM
                 and ZC2.ZC2_COMPET between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
         ) else 0.0 end
-        else 0.0
+    else 0.0
     end as CUSTO
 
 from ZC2010 ZC2 (nolock)
@@ -329,4 +330,3 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 where
         ZC2.D_E_L_E_T_ = ''
-    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202309
