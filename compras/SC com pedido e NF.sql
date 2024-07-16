@@ -82,24 +82,23 @@ select
 	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
 	month(SC7.C7_EMISSAO) as MES_PEDIDO,
 
-	case when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
-	else
-		case when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.0 then 'PRÉ-NOTA' /* LARANJA */
-		else
-			case when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
-			else
-				case when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.0 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
-				else
-					case when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
-					else
-						case when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINAÇÃO DE RESÍDUO' /* CINZA */
-						else 'OUTROS'
-						end
-					end
-				end
-			end
-		end
-	end as STATUS_COMPRA,
+	case
+		when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
+		when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
+		when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
+		when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
+		when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.00 then 'PRÉ-NOTA' /* LARANJA */
+		when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
+	else 'OUTROS' end as STATUS_PC,
+
+	case
+		when trim(SC1.C1_RESIDUO) = 'S' or trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO'
+		when SC7.C7_QUJE >= SC7.C7_QUANT then 'RECEBIMENTO TOTAL'
+		when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and SC7.C7_QUJE < SC7.C7_QUANT then 'RECEBIMENTO PARCIAL'
+		when SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUANT as numeric(15, 2)) = 0.00 then 'AGUARDADNO ENTREGA'
+		when cast(SC1.C1_QUJE as numeric(15, 2)) != 0.00 and SC1.C1_QUJE < SC1.C1_QUANT then 'SC PARCIAL'
+		when cast(SC7.C7_QUJE as numeric(15, 2)) = 0.00 then 'SC PENDENTE'
+	else 'OUTROS' end as STATUS_COMPRA,
 
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
