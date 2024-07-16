@@ -21,6 +21,7 @@ select
 
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
+	abs(SC1.C1_QUANT - SC1.C1_QUJE) as QTD_SC_PENDENTE,
 	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as C1_RESIDUO,
 
 	case SC1.C1_APROV
@@ -73,6 +74,7 @@ select
 	trim(SE4.E4_DESCRI) as CONDPGTO,
 	SC7.C7_QUANT as QTD_PC_PEDIDA,
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
+	abs(SC7.C7_QUANT - SC7.C7_QUJE) as QTD_PC_PENDENTE,
 	SC7.C7_PRECO as PRECO,
 	SC7.C7_TOTAL as TOTAL,
 
@@ -155,8 +157,8 @@ from SC1010 SC1 (nolock)
 
 		left join SA2010 FPE (nolock)
 			on FPE.D_E_L_E_T_ = ''
-			and FPE.A2_COD = SC7.C7_FORNECE
-			and FPE.A2_LOJA = SC7.C7_LOJA
+			and FPE.A2_COD = isnull(nullif(SC1.C1_FORNECE, ''), SC7.C7_FORNECE)
+			and FPE.A2_LOJA = isnull(nullif(SC1.C1_LOJA, ''), SC7.C7_LOJA)
 		left join SD1010 SD1 (nolock)
 			on SD1.D_E_L_E_T_ = ''
 			and SD1.D1_FILIAL = SC7.C7_FILIAL
