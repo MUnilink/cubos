@@ -21,10 +21,23 @@ select
 		end
 	end as TL_CUSTO,
 
-	concat(STL.TL_DTINICI, ' ', replace(STL.TL_HOINICI, ':', '')) as TL_DTINICI,
-	concat(STL.TL_DTFIM, ' ', replace(STL.TL_HOFIM, ':', '')) as TL_DTINFIM,
-	convert(date, STJ.TJ_DTORIGI, 103) as TJ_DTORIGI,
+	convert(
+        datetime,
+        case isdate(concat(substring(STL.TL_HOINICI, 1, 2), ':', substring(STL.TL_HOINICI, 3, 2)))
+            when 1 then concat(STL.TL_DTINICI, ' ', replace(STL.TL_HOINICI, ':', ''))
+            else concat(STL.TL_DTINICI, ' ', '08:00')
+        end, 113
+    ) as TL_DTINICI,
+
+	convert(
+        datetime,
+        case isdate(concat(substring(STL.TL_HOFIM, 1, 2), ':', substring(STL.TL_HOFIM, 3, 2)))
+            when 1 then concat(STL.TL_DTFIM, ' ', replace(STL.TL_HOFIM, ':', ''))
+            else concat(STL.TL_DTFIM, ' ', '08:00')
+        end, 113
+    ) as TL_DTINFIM,
 	
+	cast(STJ.TJ_DTORIGI as date) as TJ_DTORIGI,
 	STJ.TJ_POSCONT,
 	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
 	STJ.TJ_CUSTMDO,
@@ -74,6 +87,7 @@ select
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
 	*/
 
+	ST9.T9_NOME,
 	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
 	else
 		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18') then ST1.T1_SALARIO
@@ -98,8 +112,8 @@ select
 	end as TL_UNI,
 	STL.TL_CUSTO as CUSTO_MNT,
 
-	convert(date, STL.TL_DTINICI, 103) as DTINI_APP,
-	convert(date, STL.TL_DTFIM, 103) as DTFIM_APP,
+	cast(STL.TL_DTINICI as date) as DTINI_APP,
+	cast(STL.TL_DTFIM as date) as DTFIM_APP,
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
 	ST9.T9_CODFAMI as FAMILIA,
