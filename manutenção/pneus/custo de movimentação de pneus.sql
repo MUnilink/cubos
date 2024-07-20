@@ -9,8 +9,8 @@ select
     
     trim(TQS.TQS_CODBEM) as CM_PNEU,
     trim(TQT.TQT_DESMED) as CM_MEDIDA,
-    convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as CM_ENT_PNEU,
-    convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) as CM_SAI_PNEU,
+    case when nullif(STZ.TZ_ORDEM, '') is not null then convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) else null end as CM_ENT_PNEU,
+    case when nullif(STZ.TZ_ORDEM, '') is not null then convert(datetime, concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI), 113) else null end as CM_SAI_PNEU,
     case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as CM_MOV_PNEU,
 
     PNSR.PNEU as SR_PNEU,
@@ -38,7 +38,7 @@ from STZ010 STZ (nolock)
                 trim(ST9010.T9_CODBEM) as ESTRUTURA2,
                 trim(TQS010.TQS_CODBEM) as PNEU,
                 trim(TQT010.TQT_DESMED) as MEDIDA,
-                convert(datetime, concat(STZ010.TZ_DATAMOV, ' ', isnull(nullif(STZ010.TZ_HORAENT, ''), '00:00')), 113) as ENT_PNEU,
+                case when concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')) > eomonth(PNSR.ENT_PNEU) concat(STZ010.TZ_DATAMOV, ' ', isnull(nullif(STZ010.TZ_HORAENT, ''), '00:00') then concat(STZ010.TZ_DATAMOV, ' ', isnull(nullif(STZ010.TZ_HORAENT, ''), '00:00')) else eomonth(PNSR.ENT_PNEU) as ENT_PNEU,
                 convert(datetime, concat(STZ010.TZ_DATASAI, ' ', STZ010.TZ_HORASAI), 113) as SAI_PNEU,
                 STZ010.TZ_TIPOMOV as TIPOMOV
 
@@ -64,14 +64,14 @@ from STZ010 STZ (nolock)
             and
             (
                 (
-                        PNSR.ENT_PNEU >= concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00'))
-                    and PNSR.ENT_PNEU <= case STZ.TZ_TIPOMOV when 'E' then getdate() else concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) end
-                ) /* entrada do PNEU na SR deve ter acontecido depois do início do atrelamento e antes do fim do atrelamento, ou */
+                        PNSR.ENT_PNEU >= concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')) /* se pneu entra após atrelamento */
+                    and PNSR.ENT_PNEU <= case when PNSR.ENT_PNEU >= concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) then PNSR.ENT_PNEU else eomonth(PNSR.ENT_PNEU) end /* se pneu entra antes do desatrelamento */
+                )
                 or
                 (
-                        PNSR.SAI_PNEU >= concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00'))
-                    and PNSR.SAI_PNEU <= case STZ.TZ_TIPOMOV when 'E' then getdate() else concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) end
-                ) /* ou saída do PNEU na SR deve ter acontecido depois do início do atrelamento e antes do fim do atrelamento */
+                        PNSR.SAI_PNEU >= concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')) /* se pneu sai após atrelamento */
+                    and PNSR.SAI_PNEU <= case when PNSR.SAI_PNEU >= concat(STZ.TZ_DATASAI, ' ', STZ.TZ_HORASAI) then PNSR.SAI_PNEU else eomonth(PNSR.SAI_PNEU) end /* se pneu sai antes do desatrelamento */
+                )
             )
 
     left join TQS010 TQS
