@@ -10,6 +10,14 @@ select
 	convert(date, ZC4.ZC4_DTVGFI, 103) as FIM_VIG,
 	substring(ZC4.ZC4_DTVGIN, 1, 6) as PERIODO_FIM,
 	substring(ZC4.ZC4_DTVGFI, 1, 6) as PERIODO_INI,
-	cast(datediff(day, ZC4.ZC4_DTVGIN, ZC4.ZC4_DTVGFI)/365.0 as numeric(15, 5)) as ANOS
+	cast(datediff(day, ZC4.ZC4_DTVGIN, ZC4.ZC4_DTVGFI)/365.0 as numeric(15, 5)) as ANOS,
+
+	ST9.T9_STATUS as STATUS,
+	ST9.T9_CCUSTO as CCUSTO,
+	ST9.T9_ITEMCTA as ATIVIDADE,
+	ST9.T9_SITBEM as SITUACAO
 from ZC4010 ZC4 (nolock)
+	left join ST9010 ST9
+		on ST9.D_E_L_E_T_ = ''
+		and ST9.T9_CODBEM = ZC4.ZC4_CODBEM
 where ZC4.D_E_L_E_T_ = ''
