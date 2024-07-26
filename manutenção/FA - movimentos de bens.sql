@@ -26,6 +26,7 @@ select
 	case STZ.TZ_TIPOMOV when 'E' then 'ENTRADA' when 'S' then 'SAIDA' else 'OUTROS' end as TZ_TIPOMOV,
 	trim(STZ.TZ_CAUSA) as OCORRENCIA,
     
+    case when STZ.TZ_DATAMOV < '20240101' then '202312' else substring(STZ.TZ_DATAMOV, 1, 6) end as PERIODO_CUSTO,
 	cast(STZ.TZ_POSCONT as int) as CONT_ENT_COM,
     substring(STZ.TZ_DATAMOV, 1, 6) as PERIODO_ENT,
 	convert(datetime, concat(STZ.TZ_DATAMOV, ' ', isnull(nullif(STZ.TZ_HORAENT, ''), '00:00')), 113) as DTENT,
