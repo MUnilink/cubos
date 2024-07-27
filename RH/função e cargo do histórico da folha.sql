@@ -33,12 +33,16 @@ select
 	SRA.RA_HRSEMAN as HORAS_SEM,
 
 	cast(SR7.R7_DATA as date) as DATA_MUD,
-	(select max(cast(SR7010.R7_DATA as date)) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as ULT_MUD,
 	cast(concat(SRD.RD_DATARQ, '01') as date) as DATA_ARQ,
-	(select max(SR7010.R7_FUNCAO) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as COD_FUNCAO,
-	(select max(SR7010.R7_CARGO) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as COD_CARGO,
+
+	(select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) CARGO_FOLHA,
+	(select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) FUNCAO_FOLHA,
+	
+	trim(SR7.R7_FUNCAO) as COD_FUNCAO,
+	trim(SR7.R7_CARGO) as COD_CARGO,
 	trim(SR7.RJ_DESC) as FUNCAO,
-	trim(SR7.Q3_DESCSUM) as CARGO
+	trim(SR7.Q3_DESCSUM) as CARGO,
+	(select max(cast(SR7010.R7_DATA as date)) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as ULT_MUD
 
 from SRD010 SRD (nolock)
 	inner join SRV010 SRV (nolock)
@@ -71,10 +75,11 @@ from SRD010 SRD (nolock)
 			trim(SR7010.R7_TIPO) as R7_TIPO,
 			trim(SR7010.R7_FUNCAO) as R7_FUNCAO,
 			trim(SR7010.R7_CARGO) as R7_CARGO,
-			
 			trim(SRJ010.RJ_DESC) as RJ_DESC,
 			trim(SQ3010.Q3_DESCSUM) as Q3_DESCSUM,
-			trim(SX5010.X5_DESCRI) as TIPO
+			trim(SX5010.X5_DESCRI) as TIPO,
+			last_value(SR7.R7_CARGO) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_FILIAL, SR7.R7_MAT, SR7.R7_SEQ) as CARGO_FOLHA,
+			last_value(SR7.R7_FUNCAO) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_FILIAL, SR7.R7_MAT, SR7.R7_SEQ) as FUNCAO_FOLHA
 		from SR7010
 			left join SRJ010
 				on SRJ010.D_E_L_E_T_ = ''
