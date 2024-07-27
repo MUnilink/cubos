@@ -166,10 +166,10 @@ select
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
 
     case
-        when cast(ZC2.ZC2_TIPO as int) = 8 then 0.0
-        when cast(ZC2.ZC2_TIPO as int) = 4 then (select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2)) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '')
+        when cast(ZC2.ZC2_TIPO as int) = 8 and ZC2.ZC2_COMPET like '2024%' then 0.0
+        when cast(ZC2.ZC2_TIPO as int) = 4 and ZC2.ZC2_COMPET like '2024%' then (select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2)) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '')
         when cast(ZC2.ZC2_TIPO as int) in (5, 11) then (select cast(sum(SD1010.D1_CUSTO) as numeric(15, 2)) from SD1010 (nolock) where SD1010.D_E_L_E_T_ = '' and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL and SD1010.D1_YOS = ZC2.ZC2_NUM and SD1010.D1_COD = ZC2.ZC2_COD and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET)
-        when cast(ZC2.ZC2_TIPO as int) = 3 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 3 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select sum(STL010.TL_CUSTO)
             from STJ010 (nolock)
@@ -185,7 +185,7 @@ select
                 and STL010.TL_SEQRELA > 0
                 and STJ010.TJ_SERVICO not in ('PNEMOV', 'PNEROD')
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 6 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 6 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(SN4010.N4_VLROC1) as numeric(15, 2))
             from SN4010 (nolock)
@@ -205,7 +205,7 @@ select
                 and SN4010.N4_OCORR = 6
                 and SN4010.N4_TIPOCNT = 3
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 7 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 7 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(case when CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2)) else case when CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2))*-1 else 0.0 end end) as numeric(15, 2))
             from CT2010 (nolock)
@@ -224,7 +224,7 @@ select
                 and eomonth(CT2010.CT2_DATA) = ZC2.ZC2_COMPET
                 and ZC2.ZC2_TIPO = 7
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 9 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 9 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(TS1010.TS1_VALOR)/12 as numeric(15, 2))
             from TS1010 (nolock)
@@ -248,7 +248,7 @@ select
                 and TS1.TS1_DTVENC = TS1010.TS1_DTVENC
             where TS1010.TS1_CODBEM = ZC2.ZC2_COD
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 10 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 10 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(TQN010.TQN_VALTOT) as numeric(15, 2))
             from TQN010
@@ -257,7 +257,7 @@ select
                 and TQN010.TQN_FROTA = ZC2.ZC2_COD
                 and eomonth(TQN010.TQN_DTABAS) = ZC2.ZC2_COMPET
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 12 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 12 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(ZC4010.ZC4_VLSEG)/sum(ZC4.VALOR_ANUAL)/12.0 as numeric(15, 2))
             from ZC4010 (nolock)
@@ -280,7 +280,7 @@ select
                 and ZC2.ZC2_COD = ZC4010.ZC4_CODBEM
                 and ZC2.ZC2_COMPET between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 13 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 13 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select sum(ZC6010.ZC6_CUSTO)
             from ZC6010
@@ -289,7 +289,7 @@ select
                 and ZC6010.ZC6_ANOMES = substring(ZC2.ZC2_COMPET, 1, 6)
                 and (ZC6010.ZC6_BEMPAI = ZC2.ZC2_COD or ZC6010.ZC6_BEMPA2 = ZC2.ZC2_COD)
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 2 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        when cast(ZC2.ZC2_TIPO as int) = 2 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select sum(case when SRV.RV_COD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end)
             from SRV010 SRV (nolock)
