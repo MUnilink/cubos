@@ -205,7 +205,7 @@ select
                 and SN4010.N4_OCORR = 6
                 and SN4010.N4_TIPOCNT = 3
         ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 7 then
+        when cast(ZC2.ZC2_TIPO as int) = 7 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(case when CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2)) else case when CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2))*-1 else 0.0 end end) as numeric(15, 2))
             from CT2010 (nolock)
@@ -223,7 +223,7 @@ select
                 and ZA7010.ZA7_COD = ZC2.ZC2_COD
                 and eomonth(CT2010.CT2_DATA) = ZC2.ZC2_COMPET
                 and ZC2.ZC2_TIPO = 7
-        )
+        ) else 0.0 end
         when cast(ZC2.ZC2_TIPO as int) = 9 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select cast(sum(TS1010.TS1_VALOR)/12 as numeric(15, 2))
