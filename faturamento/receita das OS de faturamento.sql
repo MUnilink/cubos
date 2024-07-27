@@ -164,7 +164,6 @@ select
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
 
     case
-        when cast(ZC2.ZC2_TIPO as int) = 2 then 0.0
         when cast(ZC2.ZC2_TIPO as int) = 8 then 0.0
         when cast(ZC2.ZC2_TIPO as int) = 4 then (select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2)) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '')
         when cast(ZC2.ZC2_TIPO as int) in (5, 11) then (select cast(sum(SD1010.D1_CUSTO) as numeric(15, 2)) from SD1010 (nolock) where SD1010.D_E_L_E_T_ = '' and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL and SD1010.D1_YOS = ZC2.ZC2_NUM and SD1010.D1_COD = ZC2.ZC2_COD and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET)
@@ -288,8 +287,25 @@ select
                 and ZC6010.ZC6_ANOMES = substring(ZC2.ZC2_COMPET, 1, 6)
                 and (ZC6010.ZC6_BEMPAI = ZC2.ZC2_COD or ZC6010.ZC6_BEMPA2 = ZC2.ZC2_COD)
         ) else 0.0 end
-    else 0.0
-    end as CUSTO
+        when cast(ZC2.ZC2_TIPO as int) = 2 then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
+        (
+            select sum(case when SRV.RV_COD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end)
+            from SRV010 SRV (nolock)
+                left join SRD010 SRD (nolock)
+                    on SRD.D_E_L_E_T_ = ''
+                    and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
+                    and SRD.RD_PD = SRV.RV_COD
+            where
+                    SRV.D_E_L_E_T_ = ''
+                and SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
+                and
+                (
+                    ZC2.ZC2_COD in (select distinct SRA010.RA_CODFUNC from SRA010 where SRA010.D_E_L_E_T_ = ''  and SRA010.RA_FILIAL = SRD.RD_FILIAL and SRA010.RA_MAT = SRD.RD_MAT) or
+                    ZC2.ZC2_COD in (select distinct SRA010.RA_CARGO from SRA010 where SRA010.D_E_L_E_T_ = ''  and SRA010.RA_FILIAL = SRD.RD_FILIAL and SRA010.RA_MAT = SRD.RD_MAT)
+                )
+                and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
+        ) else 0.0 end
+    else 0.0 end as CUSTO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
