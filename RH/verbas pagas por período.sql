@@ -2,25 +2,25 @@
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOMECMP) as NOME,
-		trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
-        trim(SRJ.RJ_DESC) as FUNCAO,
-		trim(SQ3.Q3_DESCSUM) as CARGO,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
         case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
         trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+
+		trim(SQ3.Q3_CARGO) as CARGO_FOLHA,
+		trim(SRJ.RJ_FUNCAO) as FUNCAO_FOLHA,
+		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
+		trim(SRJ.RJ_DESC) as DESC_FUNCAO,
 
 		trim(isnull(SRC.RC_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRC.RC_PD, '-')) as VERBA,
@@ -89,18 +89,17 @@
 			on SRA.D_E_L_E_T_ = ''
 			and SRA.RA_FILIAL = SRC.RC_FILIAL
 			and SRA.RA_MAT = SRC.RC_MAT
-		inner join SQB010 SQB (nolock)
-			on SQB.D_E_L_E_T_ = ''
-			and SQB.QB_DEPTO = SRC.RC_DEPTO
 
-			inner join SRJ010 SRJ (nolock)
+			left join SQB010 SQB (nolock)
+				on SQB.D_E_L_E_T_ = ''
+				and SQB.QB_DEPTO = isnull(SRC.RC_DEPTO, SRA.RA_DEPTO)
+			left join SRJ010 SRJ (nolock)
 				on SRJ.D_E_L_E_T_ = ''
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 				and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-
-				left join SQ3010 SQ3 (nolock)
-					on SQ3.D_E_L_E_T_ = ''
-					and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+			left join SQ3010 SQ3 (nolock)
+				on SQ3.D_E_L_E_T_ = ''
+				and SQ3.Q3_CARGO = SRA.RA_CARGO
 		
 		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
@@ -114,25 +113,25 @@ union
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
         trim(SRA.RA_NOMECMP) as NOME,
-		trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
-        trim(SRJ.RJ_DESC) as FUNCAO,
-		trim(SQ3.Q3_DESCSUM) as CARGO,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
         case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
         trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-
-        trim(SRJ.RJ_CODCBO) as CBO,
+        null as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+
+		(select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as CARGO_FOLHA,
+		(select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as FUNCAO_FOLHA,
+		(select trim(SQ3010.Q3_DESCSUM) from SQ3010 where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = (select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as DESC_CARGO,
+		(select trim(SRJ010.RJ_DESC) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = (select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as DESC_FUNCAO,
 
 		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRD.RD_PD, '-')) as VERBA,
@@ -181,7 +180,7 @@ union
 		SRD.RD_HORAS as HORAS,
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
-		SRJ.RJ_YHRPADR as HORAS_PADRAO,
+		null as HORAS_PADRAO,
 
 		SRD.RD_DATARQ as DATARQ,
 		SRD.RD_STATUS as STATUS_LANC,
@@ -205,14 +204,6 @@ union
 			left join SQB010 SQB (nolock)
 				on SQB.D_E_L_E_T_ = ''
 				and SQB.QB_DEPTO = isnull(SRD.RD_DEPTO, SRA.RA_DEPTO)
-			inner join SRJ010 SRJ (nolock)
-				on SRJ.D_E_L_E_T_ = ''
-				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-				and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-
-				left join SQ3010 SQ3 (nolock)
-					on SQ3.D_E_L_E_T_ = ''
-					and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 
 		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
