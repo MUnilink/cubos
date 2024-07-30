@@ -128,10 +128,69 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
-		(select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as CARGO_FOLHA,
-		(select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as FUNCAO_FOLHA,
-		(select trim(SQ3010.Q3_DESCSUM) from SQ3010 where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = (select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as DESC_CARGO,
-		(select trim(SRJ010.RJ_DESC) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = (select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as DESC_FUNCAO,
+		isnull
+		(
+			(
+				select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+			), trim(SQ3.Q3_CARGO)
+		) as CARGO_FOLHA,
+		isnull
+		(
+			(
+				select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+			), trim(SRJ.RJ_FUNCAO)
+		) as FUNCAO_FOLHA,
+		
+		isnull
+		(
+			(
+				select trim(SQ3010.Q3_DESCSUM)
+				from SQ3010
+				where
+						SQ3010.D_E_L_E_T_ = ''
+					and SQ3010.Q3_CARGO =
+					(
+						select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+						from SR7010
+						where
+								SR7010.D_E_L_E_T_ = ''
+							and SR7010.R7_FILIAL = SRD.RD_FILIAL
+							and SR7010.R7_MAT = SRD.RD_MAT
+							and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+					)
+			), trim(SQ3.Q3_DESCSUM)
+		) as DESC_CARGO,
+		isnull
+		(
+			(
+				select trim(SRJ010.RJ_DESC)
+				from SRJ010
+				where
+						SRJ010.D_E_L_E_T_ = ''
+					and SRJ010.RJ_FUNCAO =
+					(
+						select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+						from SR7010
+						where
+								SR7010.D_E_L_E_T_ = ''
+							and SR7010.R7_FILIAL = SRD.RD_FILIAL
+							and SR7010.R7_MAT = SRD.RD_MAT
+							and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+					)
+			), trim(SRJ.RJ_DESC)
+		) as DESC_FUNCAO,
 
 		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
 		trim(isnull(SRD.RD_PD, '-')) as VERBA,
@@ -204,6 +263,13 @@ union
 			left join SQB010 SQB (nolock)
 				on SQB.D_E_L_E_T_ = ''
 				and SQB.QB_DEPTO = isnull(SRD.RD_DEPTO, SRA.RA_DEPTO)
+			left join SRJ010 SRJ (nolock)
+				on SRJ.D_E_L_E_T_ = ''
+				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+				and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+			left join SQ3010 SQ3 (nolock)
+				on SQ3.D_E_L_E_T_ = ''
+				and SQ3.Q3_CARGO = SRA.RA_CARGO
 
 		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
