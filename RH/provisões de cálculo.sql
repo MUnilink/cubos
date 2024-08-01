@@ -7,9 +7,7 @@ select
 	trim(SRT.RT_VERBA) as VERBA,
 	trim(SRV.RV_DESC) as RV_DESC,
 	trim(SRV.RV_DESCDET) as RV_DESCDET,
-	trim(SRA.RA_CODFUNC) as FUNCAO,
-	trim(SRJ.RJ_DESC) as DESC_FUNCAO,
-	
+
 	trim(SRT.RT_CC) as CC,
 	trim(SRT.RT_ITEM) as ATIVIDADE,
 
@@ -20,6 +18,70 @@ select
 		when '4' then 'BASE DESCONTO'
 		else '-'
 	end as RV_TIPOCOD,
+
+	isnull
+	(
+		(
+			select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRT.RT_FILIAL
+				and SR7010.R7_MAT = SRT.RT_MAT
+				and SR7010.R7_DATA <= SRT.RT_DATACAL
+		), trim(SQ3.Q3_CARGO)
+	) as CARGO_FOLHA,
+	isnull
+	(
+		(
+			select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRT.RT_FILIAL
+				and SR7010.R7_MAT = SRT.RT_MAT
+				and SR7010.R7_DATA <= SRT.RT_DATACAL
+		), trim(SRJ.RJ_FUNCAO)
+	) as FUNCAO_FOLHA,
+	
+	isnull
+	(
+		(
+			select trim(SQ3010.Q3_DESCSUM)
+			from SQ3010
+			where
+					SQ3010.D_E_L_E_T_ = ''
+				and SQ3010.Q3_CARGO =
+				(
+					select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRT.RT_FILIAL
+						and SR7010.R7_MAT = SRT.RT_MAT
+						and SR7010.R7_DATA <= SRT.RT_DATACAL
+				)
+		), trim(SQ3.Q3_DESCSUM)
+	) as DESC_CARGO,
+	isnull
+	(
+		(
+			select trim(SRJ010.RJ_DESC)
+			from SRJ010
+			where
+					SRJ010.D_E_L_E_T_ = ''
+				and SRJ010.RJ_FUNCAO =
+				(
+					select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRT.RT_FILIAL
+						and SR7010.R7_MAT = SRT.RT_MAT
+						and SR7010.R7_DATA <= SRT.RT_DATACAL
+				)
+		), trim(SRJ.RJ_DESC)
+	) as DESC_FUNCAO,
 
 	case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 
@@ -178,6 +240,9 @@ from SRT010 SRT (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+		left join SQ3010 SQ3 (nolock)
+			on SQ3.D_E_L_E_T_ = ''
+			and SQ3.Q3_CARGO = SRA.RA_CARGO
     
 	inner join CTT010 CTT (nolock)
         on CTT.D_E_L_E_T_ = ''
