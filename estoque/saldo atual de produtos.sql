@@ -24,6 +24,5 @@ from SB9010 SB9 (nolock)
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = SB9.B9_COD
-        and SB1.B1_GRUPO like '1%'
 where
-        SB9.D_E_L_E_T_ = ''
+        SB9.B9_COD like '1%' and SB9.B9_DATA like '202312%' and SB9.D_E_L_E_T_ = ''
