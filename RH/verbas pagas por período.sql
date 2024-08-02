@@ -17,6 +17,11 @@
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
+		trim(SQ3.Q3_CARGO) as CARGO,
+		trim(SQ3.Q3_DESCSUM) as CARGO_FUNC,
+		trim(SRJ.RJ_FUNCAO) as FUNCAO,
+		trim(SRJ.RJ_DESC) as FUNCAO_FUNC,
+
 		trim(SQ3.Q3_CARGO) as CARGO_FOLHA,
 		trim(SRJ.RJ_FUNCAO) as FUNCAO_FOLHA,
 		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
@@ -127,6 +132,11 @@ union
         null as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
+
+		trim(SQ3.Q3_CARGO) as CARGO,
+		trim(SQ3.Q3_DESCSUM) as CARGO_FUNC,
+		trim(SRJ.RJ_FUNCAO) as FUNCAO,
+		trim(SRJ.RJ_DESC) as FUNCAO_FUNC,
 
 		isnull
 		(
