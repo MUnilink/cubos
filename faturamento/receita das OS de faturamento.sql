@@ -51,7 +51,7 @@ select
     end as TIPO_INSUMO,
     
     case cast(ZC2.ZC2_TIPO as int)
-        when 2 then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
+        when (2, 14) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
         when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
         when 8 then null
     else
@@ -169,7 +169,17 @@ select
     case
         when cast(ZC2.ZC2_TIPO as int) = 8 and ZC2.ZC2_COMPET like '2024%' then 0.0
         when cast(ZC2.ZC2_TIPO as int) = 4 and ZC2.ZC2_COMPET like '2024%' then (select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2)) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '')
-        when cast(ZC2.ZC2_TIPO as int) in (5, 11) then (select cast(sum(SD1010.D1_CUSTO) as numeric(15, 2)) from SD1010 (nolock) where SD1010.D_E_L_E_T_ = '' and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL and SD1010.D1_YOS = ZC2.ZC2_NUM and SD1010.D1_COD = ZC2.ZC2_COD and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET)
+        when cast(ZC2.ZC2_TIPO as int) in (5, 11) then
+        (
+            select cast(sum(SD1010.D1_CUSTO) as numeric(15, 2))
+            from SD1010 (nolock)
+            where
+                    SD1010.D_E_L_E_T_ = ''
+                and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL
+                and SD1010.D1_YOS = ZC2.ZC2_NUM
+                and SD1010.D1_COD = ZC2.ZC2_COD
+                and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET
+        )
         when cast(ZC2.ZC2_TIPO as int) = 3 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
             select sum(STL010.TL_CUSTO)
@@ -303,12 +313,32 @@ select
                 and SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
                 and
                 (
-                    ZC2.ZC2_COD in (select distinct SRA010.RA_CODFUNC from SRA010 where SRA010.D_E_L_E_T_ = ''  and SRA010.RA_FILIAL = SRD.RD_FILIAL and SRA010.RA_MAT = SRD.RD_MAT) or
-                    ZC2.ZC2_COD in (select distinct SRA010.RA_CARGO from SRA010 where SRA010.D_E_L_E_T_ = ''  and SRA010.RA_FILIAL = SRD.RD_FILIAL and SRA010.RA_MAT = SRD.RD_MAT)
+                    ZC2.ZC2_COD in
+                    (
+                        select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+                        from SR7010
+                        where
+                                SR7010.D_E_L_E_T_ = ''
+                            and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                            and SR7010.R7_MAT = SRD.RD_MAT
+                            and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+                    )
+                    or
+                    
+                    ZC2.ZC2_COD in
+                    (
+                        select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+                        from SR7010
+                        where
+                                SR7010.D_E_L_E_T_ = ''
+                            and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                            and SR7010.R7_MAT = SRD.RD_MAT
+                            and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+                    )
                 )
                 and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
         ) else 0.0 end
-    else 0.0 end *-1 as CUSTO
+    else 0.0 end as CUSTO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
