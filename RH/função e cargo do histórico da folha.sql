@@ -32,16 +32,12 @@ select
 	SRA.RA_SALARIO as SALARIO,
 	SRA.RA_HRSEMAN as HORAS_SEM,
 
-	cast(SR7.R7_DATA as date) as DATA_MUD,
 	cast(concat(SRD.RD_DATARQ, '01') as date) as DATA_ARQ,
 
-	(select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) CARGO_FOLHA,
-	(select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) FUNCAO_FOLHA,
-	
-	trim(SR7.R7_FUNCAO) as COD_FUNCAO,
-	trim(SR7.R7_CARGO) as COD_CARGO,
-	trim(SR7.RJ_DESC) as FUNCAO,
-	trim(SR7.Q3_DESCSUM) as CARGO,
+	(select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as CARGO_FOLHA,
+	(select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as FUNCAO_FOLHA,
+	(select SQ3010.Q3_DESCSUM from SQ3010 where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = (select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as DESC_CARGO,
+	(select SRJ010.RJ_DESC from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = (select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as DESC_FUNCAO,
 	(select max(cast(SR7010.R7_DATA as date)) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')) as ULT_MUD
 
 from SRD010 SRD (nolock)
@@ -64,38 +60,5 @@ from SRD010 SRD (nolock)
 	left join CTD010 CTD (nolock)
 		on CTD.D_E_L_E_T_ = ''
 		and CTD.CTD_ITEM = SRD.RD_ITEM
-	
-	left join
-	(
-		select
-			trim(SR7010.R7_FILIAL) as R7_FILIAL,
-			trim(SR7010.R7_MAT) as R7_MAT,
-			cast(SR7010.R7_DATA as date) as R7_DATA,
-			trim(SR7010.R7_SEQ) as R7_SEQ,
-			trim(SR7010.R7_TIPO) as R7_TIPO,
-			trim(SR7010.R7_FUNCAO) as R7_FUNCAO,
-			trim(SR7010.R7_CARGO) as R7_CARGO,
-			trim(SRJ010.RJ_DESC) as RJ_DESC,
-			trim(SQ3010.Q3_DESCSUM) as Q3_DESCSUM,
-			trim(SX5010.X5_DESCRI) as TIPO,
-			last_value(SR7.R7_CARGO) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_FILIAL, SR7.R7_MAT, SR7.R7_SEQ) as CARGO_FOLHA,
-			last_value(SR7.R7_FUNCAO) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_FILIAL, SR7.R7_MAT, SR7.R7_SEQ) as FUNCAO_FOLHA
-		from SR7010
-			left join SRJ010
-				on SRJ010.D_E_L_E_T_ = ''
-				and SRJ010.RJ_FILIAL = substring(SR7010.R7_FILIAL, 1, 4)
-				and SRJ010.RJ_FUNCAO = SR7010.R7_FUNCAO
-			left join SQ3010
-				on SQ3010.D_E_L_E_T_ = ''
-				and SQ3010.Q3_CARGO = SR7010.R7_CARGO
-			left join SX5010
-				on SX5010.D_E_L_E_T_ = ''
-				and SX5010.X5_TABELA = '41'
-				and SX5010.X5_CHAVE = SR7010.R7_TIPO
-		where SR7010.D_E_L_E_T_ = ''
-	) SR7
-		on SR7.R7_FILIAL = SRD.RD_FILIAL
-		and SR7.R7_MAT = SRD.RD_MAT
-		and SR7.R7_DATA <= concat(SRD.RD_DATARQ, '01')
 
 where SRA.RA_MAT = 2589 and SRD.D_E_L_E_T_ = ''
