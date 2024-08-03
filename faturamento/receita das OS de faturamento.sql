@@ -171,14 +171,12 @@ select
         when cast(ZC2.ZC2_TIPO as int) = 4 and ZC2.ZC2_COMPET like '2024%' then (select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2)) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '')
         when cast(ZC2.ZC2_TIPO as int) in (5, 11) then
         (
-            select cast(sum(SD1010.D1_CUSTO) as numeric(15, 2))
-            from SD1010 (nolock)
+            select sum(SC7010.C7_TOTAL)
+            from SC7010 (nolock)
             where
-                    SD1010.D_E_L_E_T_ = ''
-                and SD1010.D1_FILIAL = ZC2.ZC2_FILIAL
-                and SD1010.D1_YOS = ZC2.ZC2_NUM
-                and SD1010.D1_COD = ZC2.ZC2_COD
-                and eomonth(SD1010.D1_DTDIGIT) = ZC2.ZC2_COMPET
+                    SC7010.D_E_L_E_T_ = ''
+                and case when SC7010.C7_YOS = '2024/0' then right(left(SC7010.C7_OBS, 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
+                and SC7010.C7_YOSIT = ZC2.ZC2_ITEM
         )
         when cast(ZC2.ZC2_TIPO as int) = 3 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
@@ -322,9 +320,7 @@ select
                             and SR7010.R7_FILIAL = SRD.RD_FILIAL
                             and SR7010.R7_MAT = SRD.RD_MAT
                             and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-                    )
-                    or
-                    
+                    ) or
                     ZC2.ZC2_COD in
                     (
                         select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)

@@ -113,7 +113,7 @@ select
 	SD1.D1_QTDPEDI as NF_QTDPEDI,
 	SD1.D1_VALDESC as NF_VALDESC,
 	SD1.D1_SEGURO as NF_SEGURO,
-	coalesce(nullif(SD1.D1_YOS, ''), nullif(SC7.C7_YOS, '')) as OS_PORT,
+	case when SC7.C7_YOS = '2024/0' then right(left(SC7.C7_OBS, 63), 11) else coalesce(nullif(SD1.D1_YOS, ''), nullif(SC7.C7_YOS, '')) end as OS_PORT,
 	nullif(SC7.C7_YOSIT, '') as ITEMOS_PORT,
 
     CAST(COALESCE(SD1.D1_VALICM, 0) AS DECIMAL(14, 2)) AS VL_ICMS_COMPRA,
