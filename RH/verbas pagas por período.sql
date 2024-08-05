@@ -277,9 +277,10 @@ union
 				on SRJ.D_E_L_E_T_ = ''
 				and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 				and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-			left join SQ3010 SQ3 (nolock)
-				on SQ3.D_E_L_E_T_ = ''
-				and SQ3.Q3_CARGO = SRA.RA_CARGO
+
+				left join SQ3010 SQ3 (nolock)
+					on SQ3.D_E_L_E_T_ = ''
+					and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 
 		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
