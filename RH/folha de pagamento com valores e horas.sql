@@ -159,7 +159,7 @@ select
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-		) <= concat(SRD.RD_DATARQ, '01') then
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
 		(
 			select max(SR7010.R7_DATA)
 			from SR7010
@@ -189,7 +189,7 @@ select
 					and SR7010.R7_FILIAL = SRD.RD_FILIAL
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-			) <= concat(SRD.RD_DATARQ, '01') then
+			) >= concat(SRD.RD_DATARQ, '01') then
 			(
 				select max(SR7010.R7_DATA)
 				from SR7010
@@ -217,7 +217,7 @@ select
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-		) <= eomonth(concat(SRD.RD_DATARQ, '01')) then
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
 		(
 			select max(SR7010.R7_DATA)
 			from SR7010
@@ -228,7 +228,7 @@ select
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
-		else eomonth(concat(SRD.RD_DATARQ, '01')) end,
+		else concat(SRD.RD_DATARQ, '01') end,
 		eomonth(concat(SRD.RD_DATARQ, '01'))
 	) as DIAS_PRO,
 
@@ -247,7 +247,7 @@ select
 					and SR7010.R7_FILIAL = SRD.RD_FILIAL
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-			) <= eomonth(concat(SRD.RD_DATARQ, '01')) then
+			) >= concat(SRD.RD_DATARQ, '01') then
 			(
 				select max(SR7010.R7_DATA)
 				from SR7010
@@ -258,7 +258,7 @@ select
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
-			else eomonth(concat(SRD.RD_DATARQ, '01')) end,
+			else concat(SRD.RD_DATARQ, '01') end,
 			eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_PRO
