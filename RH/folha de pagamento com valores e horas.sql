@@ -131,6 +131,8 @@ select
 	) as FUNCAO_ATU,
 
     1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) as DIAS_PERIODO,
+	cast(concat(SRD.RD_DATARQ, '01') as date) as INI_PERIODO,
+	eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO,
 
     (
         select cast(max(SR7010.R7_DATA) as date)
@@ -143,8 +145,21 @@ select
             and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
     ) as MUD_FUNCAO,
 
-    datediff(day,
+    datediff
+	(
+		day,
 		concat(SRD.RD_DATARQ, '01'),
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and year(SR7010.R7_DATA) > 2022
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) <= concat(SRD.RD_DATARQ, '01') then
 		(
 			select max(SR7010.R7_DATA)
 			from SR7010
@@ -155,9 +170,44 @@ select
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
+		else concat(SRD.RD_DATARQ, '01') end
 	) as DIAS_ANT,
+	
+	SRD.RD_VALOR *
+	(
+		datediff
+		(
+			day,
+			concat(SRD.RD_DATARQ, '01'),
+			case when
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and year(SR7010.R7_DATA) > 2022
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			) <= concat(SRD.RD_DATARQ, '01') then
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and year(SR7010.R7_DATA) > 2022
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			)
+			else concat(SRD.RD_DATARQ, '01') end
+		)
+	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_ANT,
 
-	datediff(day,
+	datediff
+	(
+		day,
+		case when
 		(
 			select max(SR7010.R7_DATA)
 			from SR7010
@@ -167,9 +217,51 @@ select
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-		),
+		) <= eomonth(concat(SRD.RD_DATARQ, '01')) then
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and year(SR7010.R7_DATA) > 2022
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else eomonth(concat(SRD.RD_DATARQ, '01')) end,
 		eomonth(concat(SRD.RD_DATARQ, '01'))
-	) + 1 as DIAS_ATU
+	) as DIAS_PRO,
+
+	SRD.RD_VALOR *
+	(
+		datediff
+		(
+			day,
+			case when
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and year(SR7010.R7_DATA) > 2022
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			) <= eomonth(concat(SRD.RD_DATARQ, '01')) then
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and year(SR7010.R7_DATA) > 2022
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			)
+			else eomonth(concat(SRD.RD_DATARQ, '01')) end,
+			eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_PRO
 
 from SRD010 SRD (nolock)
 	inner join SRV010 SRV (nolock)
