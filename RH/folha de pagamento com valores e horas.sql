@@ -13,8 +13,8 @@ select
 	trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
-	trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
-	trim(isnull(SRD.RD_ROTEIR, '-')) as ROTEIRO,
+	trim(SRD.RD_PERIODO) as PERIODO,
+	trim(SRD.RD_ROTEIR) as ROTEIRO,
 
 	case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRD.RD_PD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 	SRD.RD_VALOR as VALOR,
@@ -229,9 +229,9 @@ select
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 		else concat(SRD.RD_DATARQ, '01') end,
-		eomonth(concat(SRD.RD_DATARQ, '01'))
+		dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
 	) as DIAS_PRO,
-
+	
 	SRD.RD_VALOR *
 	(
 		datediff
@@ -259,7 +259,7 @@ select
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
 			else concat(SRD.RD_DATARQ, '01') end,
-			eomonth(concat(SRD.RD_DATARQ, '01'))
+			dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
 		)
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_PRO
 
@@ -284,6 +284,7 @@ from SRD010 SRD (nolock)
 			left join SQ3010 SQ3 (nolock)
 				on SQ3.D_E_L_E_T_ = ''
 				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+	
 where
 		SRD.RD_PERIODO =:ANOMES
 	and SRD.D_E_L_E_T_ = ''
