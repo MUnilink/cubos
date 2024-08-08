@@ -38,7 +38,7 @@ FROM
 
      (SELECT SUM(RD_VALOR)
       FROM SRD010 RD
-      WHERE exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || RD.RD_COD || '%')
+      WHERE exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || RD.RD_PD || '%')
         AND RD_FILIAL = RA_FILIAL
         AND RD_MAT = RA_MAT
         AND RD_PERIODO = RFQ_PERIOD
@@ -88,8 +88,7 @@ FROM
          ORDER BY R7_DATA DESC)
       WHERE RA.D_E_L_E_T_ = ' '
         AND RA_ADMISSA <= ID
-        AND (RA_DEMISSA = ' '
-             OR RA_DEMISSA >= ID)
+        AND (RA_DEMISSA = ' ' OR RA_DEMISSA >= ID)
         AND RA_PROCES = RFQ_PROCES) A
    INNER JOIN SRJ010 RJ ON RJ_FILIAL = SUBSTRING(RA_FILIAL, 1, 4)
    AND RJ_FUNCAO = FUNCAO
@@ -102,20 +101,6 @@ FROM
    INNER JOIN SQ3010 Q3 ON Q3_FILIAL = RJ_FILIAL
    AND Q3_CARGO = RJ_CARGO
    AND Q3.D_E_L_E_T_ = ' '
-   WHERE CCUSTO IN ('305',
-                    '304')
-   GROUP BY RA_FILIAL,
-            RA_MAT,
-            RA_NOME,
-            RA_ADMISSA,
-            RA_DEMISSA,
-            RFQ_PERIOD,
-            RFQ_DTINI,
-            RFQ_DTFIM,
-            RA_HRSMES,
-            CCUSTO,
-            CTT_DESC01,
-            FUNCAO,
-            RJ_DESC,
-            Q3_CARGO,
-            Q3_DESCSUM) B
+   WHERE CCUSTO IN ('305', '304')
+   GROUP BY RA_FILIAL, RA_MAT, RA_NOME, RA_ADMISSA, RA_DEMISSA, RFQ_PERIOD, RFQ_DTINI, RFQ_DTFIM, RA_HRSMES, CCUSTO, CTT_DESC01, FUNCAO, RJ_DESC, Q3_CARGO, Q3_DESCSUM) B
+  
