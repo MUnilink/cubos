@@ -23,9 +23,16 @@ select
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
-    trim(DEV.A1_COD) as A1_COD,
-    trim(DEV.A1_LOJA) as A1_LOJA,
-    trim(DEV.A1_NOME) as CLIENTE,
+    
+    trim(DEV.A1_COD) as DEV_COD,
+    trim(DEV.A1_LOJA) as DEV_LOJA,
+    trim(DEV.A1_NOME) as CLI_DEVEDOR,
+    trim(REM.A1_COD) as REM_COD,
+    trim(REM.A1_LOJA) as REM_LOJA,
+    trim(REM.A1_NOME) as CLI_ORIGEM,
+    trim(DES.A1_COD) as DES_COD,
+    trim(DES.A1_LOJA) as DES_LOJA,
+    trim(DES.A1_NOME) as CLI_DESTINO,
 
 /*
     OPERAÇÕES
@@ -319,6 +326,16 @@ from DTQ010 DTQ (nolock)
                 and DEV.A1_COD = DT6.DT6_CLIDEV
                 and DEV.A1_LOJA = DT6.DT6_LOJDEV
                 and DEV.D_E_L_E_T_ = ' '
+            left join SA1010 REM
+                ON REM.A1_FILIAL = '      '
+                AND REM.A1_COD = DT6.DT6_CLIREM
+                AND REM.A1_LOJA = DT6.DT6_LOJREM
+                AND REM.D_E_L_E_T_ = ' '
+            left join SA1010 DES
+                ON DES.A1_FILIAL = '      '
+                AND DES.A1_COD = DT6.DT6_CLIDES
+                AND DES.A1_LOJA = DT6.DT6_LOJDES
+                AND DES.D_E_L_E_T_ = ' '
 
         LEFT JOIN DUY010 DUYORI
             ON DUYORI.DUY_FILIAL = DT6_FILIAL
