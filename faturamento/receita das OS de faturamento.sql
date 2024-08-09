@@ -50,16 +50,12 @@ select
         else 'OUTROS'
     end as TIPO_INSUMO,
     
-    case cast(ZC2.ZC2_TIPO as int)
-        when (2, 14) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
-        when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
-        when 8 then null
-    else
-        case
-            when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11))
-            when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
-        else null end
-    end as DESC_RECURSO,
+    case
+        when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11))
+        when cast(ZC2.ZC2_TIPO as int) in (2, 14) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (2, 14))
+        when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
+        when cast(ZC2.ZC2_TIPO as int) = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
+    else null end as DESC_RECURSO,
 
     case when cast(ZC2.ZC2_TIPO as int) in (1, 4, 5, 11) then (select max(trim(SAH010.AH_DESCPO)) from SB1010 (nolock) inner join SAH010 (nolock) on SAH010.D_E_L_E_T_ = '' and SAH010.AH_UNIMED = SB1010.B1_UM where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 5, 11))
         when cast(ZC2.ZC2_TIPO as int) in (7) then 'q'
@@ -308,97 +304,6 @@ select
                     ZC6010.D_E_L_E_T_ = ''
                 and ZC6010.ZC6_ANOMES = substring(ZC2.ZC2_COMPET, 1, 6)
                 and (ZC6010.ZC6_BEMPAI = ZC2.ZC2_COD or ZC6010.ZC6_BEMPA2 = ZC2.ZC2_COD)
-        ) else 0.0 end
-        when cast(ZC2.ZC2_TIPO as int) = 2 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
-        (
-            select sum
-            (
-                case when SRD.RD_PD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
-                (
-                    datediff
-                    (
-                        day,
-                        concat(SRD.RD_DATARQ, '01'),
-                        case when
-                        (
-                            select max(SR7010.R7_DATA)
-                            from SR7010
-                            where
-                                    SR7010.D_E_L_E_T_ = ''
-                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                                and SR7010.R7_MAT = SRD.RD_MAT
-                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-                        ) >= concat(SRD.RD_DATARQ, '01') then
-                        (
-                            select max(SR7010.R7_DATA)
-                            from SR7010
-                            where
-                                    SR7010.D_E_L_E_T_ = ''
-                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                                and SR7010.R7_MAT = SRD.RD_MAT
-                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-                        )
-                        else concat(SRD.RD_DATARQ, '01') end
-                    )
-                ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_ANT */
-                +
-                case when SRD.RD_PD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
-                (
-                    datediff
-                    (
-                        day,
-                        case when
-                        (
-                            select max(SR7010.R7_DATA)
-                            from SR7010
-                            where
-                                    SR7010.D_E_L_E_T_ = ''
-                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                                and SR7010.R7_MAT = SRD.RD_MAT
-                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-                        ) >= concat(SRD.RD_DATARQ, '01') then
-                        (
-                            select max(SR7010.R7_DATA)
-                            from SR7010
-                            where
-                                    SR7010.D_E_L_E_T_ = ''
-                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                                and SR7010.R7_MAT = SRD.RD_MAT
-                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-                        )
-                        else concat(SRD.RD_DATARQ, '01') end,
-                        dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
-                    )
-                ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_PRO */
-            )
-            from SRD010 SRD (nolock)
-            where
-                    SRD.D_E_L_E_T_ = ''
-                and SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
-                and
-                (
-                    ZC2.ZC2_COD in
-                    (
-                        select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-                        from SR7010
-                        where
-                                SR7010.D_E_L_E_T_ = ''
-                            and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                            and SR7010.R7_MAT = SRD.RD_MAT
-                            and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-                    ) or
-                    ZC2.ZC2_COD in
-                    (
-                        select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-                        from SR7010
-                        where
-                                SR7010.D_E_L_E_T_ = ''
-                            and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                            and SR7010.R7_MAT = SRD.RD_MAT
-                            and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-                    )
-                )
-                and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRD.RD_PD || '%')
         ) else 0.0 end
     else 0.0 end as CUSTO
 
