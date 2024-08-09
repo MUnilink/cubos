@@ -168,15 +168,26 @@ select
 
     case
         when cast(ZC2.ZC2_TIPO as int) = 8 and ZC2.ZC2_COMPET like '2024%' then 0.0
-        when cast(ZC2.ZC2_TIPO as int) = 4 and ZC2.ZC2_COMPET like '2024%' then (select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2)) from SD3010 (nolock) where SD3010.D_E_L_E_T_ = '' and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL and SD3010.D3_YOS = ZC2.ZC2_NUM and SD3010.D3_COD = ZC2.ZC2_COD and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET and SD3010.D3_ESTORNO = '')
-        when cast(ZC2.ZC2_TIPO as int) in (5, 11) then
+        when cast(ZC2.ZC2_TIPO as int) = 4 and ZC2.ZC2_COMPET like '2024%' then
+        (
+            select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2))
+            from SD3010 (nolock)
+            where
+                    SD3010.D3_YOS = ZC2.ZC2_NUM
+                and eomonth(SD3010.D3_EMISSAO) = ZC2.ZC2_COMPET
+                and SD3010.D3_ESTORNO = ''
+                and SD3010.D3_FILIAL = ZC2.ZC2_FILIAL
+                and SD3010.D3_COD = ZC2.ZC2_COD
+                and SD3010.D_E_L_E_T_ = ''
+        )
+        when cast(ZC2.ZC2_TIPO as int) in (5, 11) and ZC2.ZC2_COMPET like '2024%' then
         (
             select sum(SC7010.C7_TOTAL)
             from SC7010 (nolock)
             where
-                    SC7010.D_E_L_E_T_ = ''
-                and case when SC7010.C7_YOS = '2024/0' then right(left(SC7010.C7_OBS, 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
+                    case when SC7010.C7_YOS = '2024/0' then right(left(SC7010.C7_OBS, 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
                 and SC7010.C7_YOSIT = ZC2.ZC2_ITEM
+                and SC7010.D_E_L_E_T_ = ''
         )
         when cast(ZC2.ZC2_TIPO as int) = 3 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
@@ -300,14 +311,69 @@ select
         ) else 0.0 end
         when cast(ZC2.ZC2_TIPO as int) = 2 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then
         (
-            select sum(case when SRV.RV_COD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end)
-            from SRV010 SRV (nolock)
-                left join SRD010 SRD (nolock)
-                    on SRD.D_E_L_E_T_ = ''
-                    and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
-                    and SRD.RD_PD = SRV.RV_COD
+            select sum
+            (
+                case when SRD.RD_PD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
+                (
+                    datediff
+                    (
+                        day,
+                        concat(SRD.RD_DATARQ, '01'),
+                        case when
+                        (
+                            select max(SR7010.R7_DATA)
+                            from SR7010
+                            where
+                                    SR7010.D_E_L_E_T_ = ''
+                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                and SR7010.R7_MAT = SRD.RD_MAT
+                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                        ) >= concat(SRD.RD_DATARQ, '01') then
+                        (
+                            select max(SR7010.R7_DATA)
+                            from SR7010
+                            where
+                                    SR7010.D_E_L_E_T_ = ''
+                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                and SR7010.R7_MAT = SRD.RD_MAT
+                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                        )
+                        else concat(SRD.RD_DATARQ, '01') end
+                    )
+                ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_ANT */
+                +
+                case when SRD.RD_PD in (440, 445) then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
+                (
+                    datediff
+                    (
+                        day,
+                        case when
+                        (
+                            select max(SR7010.R7_DATA)
+                            from SR7010
+                            where
+                                    SR7010.D_E_L_E_T_ = ''
+                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                and SR7010.R7_MAT = SRD.RD_MAT
+                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                        ) >= concat(SRD.RD_DATARQ, '01') then
+                        (
+                            select max(SR7010.R7_DATA)
+                            from SR7010
+                            where
+                                    SR7010.D_E_L_E_T_ = ''
+                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                and SR7010.R7_MAT = SRD.RD_MAT
+                                and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                        )
+                        else concat(SRD.RD_DATARQ, '01') end,
+                        dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+                    )
+                ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_PRO */
+            )
+            from SRD010 SRD (nolock)
             where
-                    SRV.D_E_L_E_T_ = ''
+                    SRD.D_E_L_E_T_ = ''
                 and SRD.RD_PERIODO = substring(ZC2.ZC2_COMPET, 1, 6)
                 and
                 (
@@ -332,7 +398,7 @@ select
                             and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
                     )
                 )
-                and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%')
+                and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRD.RD_PD || '%')
         ) else 0.0 end
     else 0.0 end as CUSTO
 
