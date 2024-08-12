@@ -20,7 +20,7 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_ITEM) as ITEM,
     ZC2.ZC2_COMPET as COMPETENCIA,
-    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD2.D2_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
     trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
     ZC3.ZC3_QTD as QTD_RATEIO,
@@ -65,6 +65,10 @@ from ZC2010 ZC2
         on SB1.D_E_L_E_T_ = ' '
         and SB1.B1_FILIAL = '      '
         and SB1.B1_COD = ZC2.ZC2_COD
+
+        left join SAH010 SAH
+            on SAH.D_E_L_E_T_ = ''
+            and SAH.AH_UNIMED = SB1.B1_UM
         
     left join ZC3010 ZC3
         on ZC3.D_E_L_E_T_ = ''
@@ -82,23 +86,21 @@ from ZC2010 ZC2
                 on SC6.D_E_L_E_T_ = ''
                 and SC6.C6_FILIAL = SC5.C5_FILIAL
                 and SC6.C6_NUM = SC5.C5_NUM
+                and SC6.C6_YOS = SC5.C5_YOS
 
-            left join SD2010 SD2
-                on SD2.D_E_L_E_T_ = ''
-                and SD2.D2_FILIAL = SC5.C5_FILIAL
-                and SD2.D2_PEDIDO = SC5.C5_NUM
+                left join SD2010 SD2
+                    on SD2.D_E_L_E_T_ = ''
+                    and SD2.D2_FILIAL = SC6.C6_FILIAL
+                    and SD2.D2_PEDIDO = SC6.C6_NUM
+                    and SD2.D2_ITEMPV = SC6.C6_ITEM
 
-                left join SF2010 SF2
-                    on SF2.D_E_L_E_T_= ' '
-                    and SF2.F2_FILIAL = SD2.D2_FILIAL
-                    and SF2.F2_CLIENTE = SD2.D2_CLIENTE
-                    and SF2.F2_LOJA = SD2.D2_LOJA
-                    and SF2.F2_DOC = SD2.D2_DOC
-                    and SF2.F2_SERIE = SD2.D2_SERIE
-            
-            left join SAH010 SAH
-                on SAH.D_E_L_E_T_ = ''
-                and SAH.AH_UNIMED = SD2.D2_UM
+                    left join SF2010 SF2
+                        on SF2.D_E_L_E_T_= ' '
+                        and SF2.F2_FILIAL = SD2.D2_FILIAL
+                        and SF2.F2_CLIENTE = SD2.D2_CLIENTE
+                        and SF2.F2_LOJA = SD2.D2_LOJA
+                        and SF2.F2_DOC = SD2.D2_DOC
+                        and SF2.F2_SERIE = SD2.D2_SERIE
 where
         ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZC2.D_E_L_E_T_ = ''
