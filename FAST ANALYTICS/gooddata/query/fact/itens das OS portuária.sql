@@ -4,8 +4,8 @@ select
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
-    concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
-    concat('SF2', trim(SF2.F2_FILIAL), trim(SF2.F2_CLIENTE), trim(SF2.F2_LOJA), trim(SF2.F2_DOC), trim(SF2.F2_SERIE)) as ID_NF, 
+    concat(trim(SC6.C6_FILIAL), trim(SC6.C6_NUM)) as ID_PEDIDODEVENDA,
+    concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF, 
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
@@ -76,31 +76,18 @@ from ZC2010 ZC2
         and ZC3.ZC3_NUM = ZC2.ZC2_NUM
         and ZC3.ZC3_ITEM = ZC2.ZC2_ITEM
     
-        left join SC5010 SC5
-            on SC5.D_E_L_E_T_ = ''
-            and SC5.C5_FILIAL = ZC3.ZC3_FILIAL
-            and SC5.C5_NUM = ZC3.ZC3_PEDIDO
-            and SC5.C5_YOS = ZC3.ZC3_NUM
+        left join SC6010 SC6
+            on SC6.D_E_L_E_T_ = ''
+            and SC6.C6_FILIAL = ZC3.ZC3_FILIAL
+            and SC6.C6_NUM = ZC3.ZC3_PEDIDO
+            and SC6.C6_YOS = ZC3.ZC3_NUM
+            and SC6.C6_YITOS = ZC3.ZC3_ITEM
 
-            left join SC6010 SC6
-                on SC6.D_E_L_E_T_ = ''
-                and SC6.C6_FILIAL = SC5.C5_FILIAL
-                and SC6.C6_NUM = SC5.C5_NUM
-                and SC6.C6_YOS = SC5.C5_YOS
-
-                left join SD2010 SD2
-                    on SD2.D_E_L_E_T_ = ''
-                    and SD2.D2_FILIAL = SC6.C6_FILIAL
-                    and SD2.D2_PEDIDO = SC6.C6_NUM
-                    and SD2.D2_ITEMPV = SC6.C6_ITEM
-
-                    left join SF2010 SF2
-                        on SF2.D_E_L_E_T_= ' '
-                        and SF2.F2_FILIAL = SD2.D2_FILIAL
-                        and SF2.F2_CLIENTE = SD2.D2_CLIENTE
-                        and SF2.F2_LOJA = SD2.D2_LOJA
-                        and SF2.F2_DOC = SD2.D2_DOC
-                        and SF2.F2_SERIE = SD2.D2_SERIE
+            left join SD2010 SD2
+                on SD2.D_E_L_E_T_= ' '
+                and SD2.D2_FILIAL = SC6.C6_FILIAL
+                and SD2.D2_PEDIDO = SC6.C6_NUM
+                and SD2.D2_ITEMPV = SC6.C6_ITEM
 where
         ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZC2.D_E_L_E_T_ = ''
