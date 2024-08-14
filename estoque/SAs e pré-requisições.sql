@@ -7,14 +7,11 @@ select
     SCP.CP_QUANT as QTD_SOLICTADA,
     SCP.CP_QUJE as QTD_ATENDIDA,
 
-    case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
-    else
-        case when SCP.CP_QUJE = 0.0 then 'PENDENTE'
-        else
-            case when SCP.CP_QUANT > SCP.CP_QUJE then 'PAR. ATENDIDA'
-            else 'OUTROS'
-            end
-        end
+    case
+        when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
+        when SCP.CP_QUJE = 0.0 then 'PENDENTE'
+        when SCP.CP_QUANT > SCP.CP_QUJE then 'PAR. ATENDIDA'
+        else 'OUTROS'
     end as SA_ATENDIDA,
 
     SD3.D3_OP,
