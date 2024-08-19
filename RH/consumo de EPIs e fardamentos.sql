@@ -19,24 +19,24 @@ select
     SD3.D3_DOC,
     SD3.D3_TM,
     SD3.D3_CF,
-    SD3.D3_CC,
-    SD3.D3_ITEMCTA,
-    convert(date, SD3.D3_EMISSAO, 103) as D3_EMISSAO,
-    SD3.D3_LOCALIZ,
-    upper(trim(SD3.D3_USUARIO)) as D3_USUARIO,
+    SD3.D3_LOCALIZ as ENDERECO,
+    SD3.D3_CC as CC,
+    SD3.D3_ITEMCTA as ATIVIDADE,
+    cast(SD3.D3_EMISSAO as date) as DT_ATENDIMENTO,
+    substring(SD3.D3_EMISSAO, 1, 6) as PERIODO_ATENDIMENTO,
+    (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SD3.D3_USUARIO) as ATENDIDA_POR,
     SD3.D3_NUMSEQ,
-    SD3.D3_ESTORNO,
-        
-    trim(SB1.B1_COD) as B1_COD,
-    trim(SB1.B1_DESC) as B1_DESC,
-    trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
+    SD3.D3_ESTORNO AS ESTORNO,
+
+    trim(SB1.B1_COD) as PRODUTO,
+    trim(SB1.B1_DESC) as DESC_PRODUTO,
+    trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
     
-    convert(date, SCP.CP_EMISSAO, 103) as DATA_SA,
-    substring(SCP.CP_EMISSAO, 1, 6) as PERIODO,
-    SCP.CP_USER,
-    SCP.CP_CODSOLI,
-    SCP.CP_NUMSC,
-    SCP.CP_ITSC
+    cast(SCP.CP_EMISSAO as date) as DATA_SA,
+    substring(SCP.CP_EMISSAO, 1, 6) as PERIODO_SA,
+    (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_CODSOLI) as SOLICITANTE,
+    SCP.CP_NUMSC as SC,
+    SCP.CP_ITSC as SC_ITEM
 
 from SCP010 SCP (nolock)
     inner join SB1010 SB1 (nolock)
