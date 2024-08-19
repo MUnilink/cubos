@@ -24,7 +24,7 @@ select
     SD3.D3_ITEMCTA as ATIVIDADE,
     cast(SD3.D3_EMISSAO as date) as DT_ATENDIMENTO,
     substring(SD3.D3_EMISSAO, 1, 6) as PERIODO_ATENDIMENTO,
-    (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SD3.D3_USUARIO) as ATENDIDA_POR,
+    upper(SD3.D3_USUARIO) as ATENDIDA_POR,
     SD3.D3_NUMSEQ,
     SD3.D3_ESTORNO AS ESTORNO,
 
@@ -36,7 +36,8 @@ select
     substring(SCP.CP_EMISSAO, 1, 6) as PERIODO_SA,
     (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_CODSOLI) as SOLICITANTE,
     SCP.CP_NUMSC as SC,
-    SCP.CP_ITSC as SC_ITEM
+    SCP.CP_ITSC as SC_ITEM,
+    trim(SCP.CP_OBS) as OBS
 
 from SCP010 SCP (nolock)
     inner join SB1010 SB1 (nolock)
