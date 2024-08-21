@@ -50,10 +50,11 @@ from
       and RT2.RT_VERBA = '830'
       and RT2.RT_DATABAS <> ' '
       and RT2.D_E_L_E_T_ = ' '
-      and RT2.RT_DATACAL = SRT.RT_DATACAL
+      and RT2.RT_DATACAL = SRT.RT_DATACAL and RT2.RT_TIPPROV in ('1', '2')
 
   where
         SRT.RT_FILIAL = '010102'
+    and SRT.RT_TIPPROV in ('2', '3')
     and substring(SRT.RT_DATACAL, 1, 6) =:ANOMES
     and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRT.RT_VERBA || '%')
     and SRT.D_E_L_E_T_ = ' '

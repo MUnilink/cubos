@@ -39,7 +39,7 @@ SELECT RA_FILIAL,
                                          INNER JOIN SRV010 RV
                                                  ON RV_FILIAL = '0101 '
                                                     AND RV_COD = RD_PD
-                                                    AND RV_TIPOCOD IN ( '1', '3' )
+                                                    AND RV_TIPOCOD IN ( '1', '3','4' )
                                                     AND RV.D_E_L_E_T_ = ' '
                                   WHERE  RD_PD IN ( '224', '255', '336', '371',
                                                     '020', '113', '344', '039',
@@ -61,7 +61,7 @@ SELECT RA_FILIAL,
                                                                             INNER JOIN SRV010 RV
                                                                                     ON RV_FILIAL = '0101 '
                                                                                        AND RV_COD = RD_PD
-                                                                                       AND RV_TIPOCOD IN ( '2', '4' )
+                                                                                       AND RV_TIPOCOD IN ( '2')
                                                                                        AND RV.D_E_L_E_T_ = ' '
                                                                      WHERE  RD_PD IN ( '224', '255', '336', '371',
                                                                                        '020', '113', '344', '039',
