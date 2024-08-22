@@ -112,7 +112,19 @@ SELECT
     SC7.C7_QUANT as QTD_SOLICITADA,
     SC7.C7_QUJE as QTD_ATENDIDA,
     SC7.C7_PRECO as VALOR_UNITARIO,
-    SC7.C7_TOTAL as VALOR_TOTAL
+    SC7.C7_TOTAL as VALOR_TOTAL,
+
+    cast(coalesce(SC7.C7_VALICM, 0) as numeric(14, 2)) as VL_PC_ICMS,
+    cast(coalesce(SC7.C7_VALIPI, 0) as numeric(14, 2)) as VL_PC_IPI,
+    cast(coalesce(SC7.C7_VALFRE, 0) as numeric(14, 2)) as VL_PC_FRETE_NF,
+    cast(coalesce(SC7.C7_DESPESA, 0) as numeric(14, 2)) as VL_PC_DESPESA,
+    cast(coalesce(SC7.C7_VALIMP6, 0) as numeric(14, 2)) as VL_PC_PIS,
+    cast(coalesce(SC7.C7_VALIMP5, 0) as numeric(14, 2)) as VL_PC_COFINS,
+    cast(coalesce(SC7.C7_VALISS, 0) as numeric(14, 2)) as VL_PC_ISS,
+    cast(coalesce(SC7.C7_ICMSRET, 0) as numeric(14, 2)) as VL_PC_ICMS_SUBST,
+    cast(coalesce(SC7.C7_DESC, 0) as numeric(12, 2)) as VL_PC_DESCONTO,
+    cast(coalesce(SC7.C7_VALINS, 0) as numeric(14, 2)) as VL_PC_INSS,
+	cast(coalesce(SC7.C7_SEGURO, 0) as numeric(14, 2)) as VL_PC_SEGURO
 
 FROM SC7010 SC7
     left join SB1010 SB1
