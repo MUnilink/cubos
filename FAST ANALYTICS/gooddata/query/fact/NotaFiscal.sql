@@ -81,10 +81,10 @@ from SD2010 SD2
         ON A3_FILIAL = '      '
         AND A3_COD = SF2.F2_VEND1
         AND SA3.D_E_L_E_T_ = ' '
-    LEFT JOIN CTD010 CTD
-        ON CTD_FILIAL = '      '
-        AND CTD_ITEM = SD2.D2_ITEMCC
-        AND CTD.D_E_L_E_T_ = ' '
+    left join CTD010 CTD
+        on CTD.CTD_FILIAL = '      '
+        and CTD.CTD_ITEM = SD2.D2_ITEMCC
+        and CTD.D_E_L_E_T_ = ' '
     left join CTT010 CTT
         on CTT.D_E_L_E_T_ = ''
         and CTT.CTT_FILIAL = substring(SD2.D2_FILIAL, 1, 4)

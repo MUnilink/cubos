@@ -8,6 +8,8 @@ select
     'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
     'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_TES, ' ')), ' '), '|') AS BK_TES,
     case when  SA1.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' '))+RTRIM(COALESCE(SA1.A1_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     
     concat(trim(ZC2.ZC2_FILIAL), trim(ZC2.ZC2_NUM)) as ID_OSPORTUARIA,
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
@@ -38,6 +40,13 @@ from SC5010 SC5
         ON C6_FILIAL = C5_FILIAL
         AND C6_NUM = C5_NUM
         AND SC6.D_E_L_E_T_ = ' '
+
+        left join ZC2010 ZC2 (nolock)
+            on ZC2.D_E_L_E_T_ = ''
+            and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+            and ZC2.ZC2_NUM = SC6.C6_YOS
+            and ZC2.ZC2_ITEM = SC6.C6_YITOS
+    
     INNER JOIN SF4010 SF4
         ON F4_FILIAL = '      '
         AND SC6.C6_TES = SF4.F4_CODIGO
@@ -91,18 +100,20 @@ from SC5010 SC5
         ON SC9.C9_PEDIDO = SC6.C6_NUM
         AND SC9.C9_PRODUTO = SC6.C6_PRODUTO
         AND SC9.C9_ITEM = SC6.C6_ITEM
-        AND SC9.C9_FILIAL = SC5.C5_FILIAL
-    
-    left join ZC2010 ZC2 (nolock)
-        on ZC2.D_E_L_E_T_ = ''
-        and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
-        and ZC2.ZC2_NUM = SC6.C6_YOS
-        and ZC2.ZC2_ITEM = SC6.C6_YITOS
-            
-        left join SD2010 SD2
-            on SD2.D_E_L_E_T_ = ''
-            and SD2.D2_FILIAL = SC5.C5_FILIAL
-            and SD2.D2_PEDIDO = SC5.C5_NUM
+        AND SC9.C9_FILIAL = SC6.C6_FILIAL
+
+    left join SD2010 SD2
+        on SD2.D_E_L_E_T_ = ''
+        and SD2.D2_FILIAL = SC5.C5_FILIAL
+        and SD2.D2_PEDIDO = SC5.C5_NUM
+    left join CTD010 CTD
+        on CTD.CTD_FILIAL = '      '
+        and CTD.CTD_ITEM = SC6.C6_ITEMCTA
+        and CTD.D_E_L_E_T_ = ' '
+    left join CTT010 CTT
+        on CTT.D_E_L_E_T_ = ''
+        and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
+        and CTT.CTT_CUSTO = SC6.C6_CCUSTO
 where
         SC5.C5_TIPO = 'N'
     and SC5.D_E_L_E_T_ = ''

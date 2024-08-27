@@ -5,9 +5,11 @@ select
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
     concat(trim(SC6.C6_FILIAL), trim(SC6.C6_NUM)) as ID_PEDIDODEVENDA,
-    concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF, 
+    concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF,
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
 
@@ -89,6 +91,14 @@ from ZC2010 ZC2
                 and SD2.D2_FILIAL = SC6.C6_FILIAL
                 and SD2.D2_PEDIDO = SC6.C6_NUM
                 and SD2.D2_ITEMPV = SC6.C6_ITEM
+            left join CTD010 CTD
+                on CTD.CTD_FILIAL = '      '
+                and CTD.CTD_ITEM = SC6.C6_ITEMCTA
+                and CTD.D_E_L_E_T_ = ' '
+            left join CTT010 CTT
+                on CTT.D_E_L_E_T_ = ''
+                and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
+                and CTT.CTT_CUSTO = SC6.C6_CCUSTO
 where
-        ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        ZC2.ZC2_DATA BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZC2.D_E_L_E_T_ = ''
