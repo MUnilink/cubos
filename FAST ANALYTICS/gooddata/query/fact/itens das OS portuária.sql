@@ -21,7 +21,7 @@
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
-        ZC2.ZC2_COMPET as COMPETENCIA,
+        ZC2.ZC2_DATA as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
         trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
