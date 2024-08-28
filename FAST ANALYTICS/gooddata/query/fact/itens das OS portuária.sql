@@ -5,7 +5,9 @@
         'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
         concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
         concat(trim(SC6.C6_FILIAL), trim(SC6.C6_NUM)) as ID_PEDIDODEVENDA,
-        concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF,
+        concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NFS,
+        null as ID_NFE,
+        null as ID_PEDIDO,
         'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
         'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
         'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
@@ -35,12 +37,12 @@
         cast(ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
         cast(ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
         case when ZC2.ZC2_TOTAL > 99999999 then 99999999 else ZC2.ZC2_TOTAL end as VALOR_TOTAL,
-        case when ZC2.ZC2_QTDREC > 99999999 then 99999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
+        ZC2.ZC2_QTDREC as QTD_RECURSO,
         
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
 
-    from ZC2010 ZC2
+    from ZC2010 ZC2 (nolock)
         inner join ZC1010 ZC1
             on ZC1.D_E_L_E_T_ = ''
             and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
@@ -111,7 +113,9 @@ union
         'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
         concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
         concat(trim(SC6.C6_FILIAL), trim(SC6.C6_NUM)) as ID_PEDIDODEVENDA,
-        concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF,
+        concat('SD2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NFS,
+        concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NFE,
+        concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
         'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
         'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
         'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
@@ -119,7 +123,7 @@ union
         concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
 
-        case when cast(ZC2.ZC2_TIPO as int) in (4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
+        case when cast(ZC2.ZC2_TIPO as int) in (4, 5, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
         case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13)) else null end as COD_DA3,
         case when cast(ZC2.ZC2_TIPO as int) in (2, 14) then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (2, 14)) else null end as COD_SRJ,
         case cast(ZC2.ZC2_TIPO as int) when 7 then (select concat(trim(ZA7010.ZA7_FILIAL), trim(ZA7010.ZA7_COD)) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7) else null end as COD_ZA7,
@@ -146,7 +150,7 @@ union
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
 
-    from ZC2010 ZC2
+    from ZC2010 ZC2 (nolock)
         inner join ZC1010 ZC1
             on ZC1.D_E_L_E_T_ = ''
             and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
@@ -156,10 +160,6 @@ union
                 on SA1.D_E_L_E_T_ = ''
                 and SA1.A1_COD = ZC1.ZC1_CODSA1
                 and SA1.A1_LOJA = ZC1.ZC1_LOJSA1
-            left join SA2010 SA2
-                on SA2.D_E_L_E_T_ = ''
-                and SA2.A2_COD = ZC1.ZC1_DESPA
-                and SA2.A2_LOJA = ZC1.ZC1_LJDESP
             left join SED010 SED
                 on SED.D_E_L_E_T_ = ''
                 and SED.ED_CODIGO = ZC1.ZC1_NATURE
@@ -205,6 +205,22 @@ union
                     on CTT.D_E_L_E_T_ = ''
                     and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
                     and CTT.CTT_CUSTO = SC6.C6_CCUSTO
+        
+        left join SC7010 SC7
+            on SC7.D_E_L_E_T_ = ''
+            and SC7.C7_FILIAL = ZC2.ZC2_FILIAL
+            and case when SC7.C7_YOS = '2024/0' then right(left(SC7.C7_OBS, 63), 11) else nullif(SC7.C7_YOS, '') end = ZC2.ZC2_NUM
+            and SC7.C7_YOSIT = ZC2.ZC2_ITEM
+
+            left join SD1010 SD1
+                on SD1.D_E_L_E_T_ = ''
+                and SD1.D1_FILIAL = SC7.C7_FILIAL
+                and SD1.D1_PEDIDO = SC7.C7_NUM
+                and SD1.D1_ITEMPC = SC7.C7_ITEM
+            left join SA2010 SA2
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = SC7.C7_FORNECE
+                and SA2.A2_LOJA = SC7.C7_LOJA
     where
             ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
         and ZC2.ZC2_COMPET > '202312'
