@@ -1,5 +1,4 @@
     select distinct
-        concat(trim(ZC2.ZC2_TIPO), trim(ZC2.ZC2_COD)) as ID_RECURSO,
         cast(ZC2.ZC2_TIPO as int) as TIPO_ITEM,
         trim(ZC2.ZC2_COD) as RECURSO,
         case
@@ -19,4 +18,4 @@
     from ZC2010 ZC2
     where ZC2.D_E_L_E_T_ = ''
 
-union select null, null, null, null, null
+union select null, null, null, null
