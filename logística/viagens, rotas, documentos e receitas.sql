@@ -132,6 +132,7 @@ select
     DTC.DTC_VALOR,
     DTC.DTC_PESO,
     DTC.DTC_PESLIQ,
+    trim(SB1.B1_DESC) as NFCLI_PRODUTO,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
@@ -363,6 +364,10 @@ from DTQ010 DTQ (nolock)
             and DTC.DTC_FILORI = DT6.DT6_FILDOC
             and DTC.DTC_DOC = DT6.DT6_DOC
             and DTC.DTC_SERIE = DT6.DT6_SERIE
+
+            left join SB1010 SB1 (nolock)
+                on SB1.D_E_L_E_T_ = ''
+                and SB1.B1_COD = DTC.DTC_CODPRO
     
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
