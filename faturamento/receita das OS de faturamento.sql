@@ -32,6 +32,7 @@ select
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
     
+    case ZC2.ZC2_TIPO as TIPO,
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
         when 2 then 'FOLHA'
@@ -51,7 +52,7 @@ select
     end as TIPO_INSUMO,
     
     case
-        when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11))
+        when cast(ZC2.ZC2_TIPO as int) in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 5, 11))
         when cast(ZC2.ZC2_TIPO as int) in (2, 14) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (2, 14))
         when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
         when cast(ZC2.ZC2_TIPO as int) = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
@@ -306,6 +307,8 @@ select
                 and ZC6010.ZC6_ANOMES = substring(ZC2.ZC2_COMPET, 1, 6)
                 and (ZC6010.ZC6_BEMPAI = ZC2.ZC2_COD or ZC6010.ZC6_BEMPA2 = ZC2.ZC2_COD)
         ) else 0.0 end
+        when cast(ZC2.ZC2_TIPO as int) = 2 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)) else 0.0 end
+        when cast(ZC2.ZC2_TIPO as int) = 14 and ZC2.ZC2_COMPET like '2024%' then case when lag(ZC2.ZC2_ITEM, 1, null) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_COMPET, ZC2.ZC2_TIPO, ZC2.ZC2_COD order by ZC2.ZC2_ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.ZC2_COD and ZC7010.ZC7_COMPET = substring(ZC2.ZC2_COMPET, 1, 6)) else 0.0 end
     else 0.0 end as CUSTO
 
 from ZC2010 ZC2 (nolock)
