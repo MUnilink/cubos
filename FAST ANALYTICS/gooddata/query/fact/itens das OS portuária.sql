@@ -127,7 +127,7 @@ union
         
         case
             when cast(ZC2.ZC2_TIPO as int) = 4 then concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_COD))
-            when cast(ZC2.ZC2_TIPO as int) = 11 then concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_COD))
+            when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_YFORNE))
             else trim(ZC2.ZC2_TIPO)
         end as ID_RECURSO,
 
