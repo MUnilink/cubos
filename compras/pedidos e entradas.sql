@@ -27,8 +27,30 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
-	(select top 1 cast(SCR010.CR_DATALIB as date) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
-	datediff(day, SC1.C1_EMISSAO, (select top 1 cast(SCR010.CR_DATALIB as date) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM)) as DIASAPROV_SC,
+	(
+		select top 1 cast(SCR010.CR_DATALIB as date)
+		from SCR010
+		where
+				SCR010.D_E_L_E_T_ = ''
+			and nullif(SCR010.CR_LIBAPRO, '') is not null
+			and SCR010.CR_TIPO = 'SC'
+			and SCR010.CR_FILIAL = SC1.C1_FILIAL
+			and SCR010.CR_NUM = SC1.C1_NUM
+	) as DATAAPROV_SC,
+	
+	datediff(day,
+		SC1.C1_EMISSAO,
+		(
+			select top 1 cast(SCR010.CR_DATALIB as date)
+			from SCR010
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and nullif(SCR010.CR_LIBAPRO, '') is not null
+				and SCR010.CR_TIPO = 'SC'
+				and SCR010.CR_FILIAL = SC1.C1_FILIAL
+				and SCR010.CR_NUM = SC1.C1_NUM
+		)
+	) as DIASAPROV_SC,
 
 	SC8.C8_NUM as COTACAO,
     SC8.C8_ITEM as ITEM_COTA,
@@ -36,7 +58,20 @@ select
 	SC8.C8_PRECO as PRECO_COTADO,
 	SC8.C8_TOTAL as VALOR_COTADO,
 	cast(SC8.C8_EMISSAO as date) as DATA_COTACAO,
-	datediff(day, (select top 1 cast(SCR010.CR_DATALIB as date) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
+	
+	datediff(day,
+		(
+			select top 1 cast(SCR010.CR_DATALIB as date)
+			from SCR010
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and nullif(SCR010.CR_LIBAPRO, '') is not null
+				and SCR010.CR_TIPO = 'SC'
+				and SCR010.CR_FILIAL = SC1.C1_FILIAL
+				and SCR010.CR_NUM = SC1.C1_NUM
+		),
+		SC7.C7_EMISSAO
+	) as DIASAPROV_SC_CO,
 
 	trim(SC7.C7_NUM) as PEDIDO,
 	trim(SC7.C7_ITEM) as ITEM_PC,
@@ -60,8 +95,29 @@ select
 		else 'OUTROS'
 	end as APROVACAO_PC,
 
-	(select top 1 cast(SCR010.CR_DATALIB as date) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC,
-	datediff(day, SC7.C7_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM)) as DIASAPROV_PC,
+	(
+		select top 1 cast(SCR010.CR_DATALIB as date)
+		from SCR010
+		where
+				SCR010.D_E_L_E_T_ = ''
+			and nullif(SCR010.CR_LIBAPRO, '') is not null
+			and SCR010.CR_TIPO = 'PC'
+			and SCR010.CR_FILIAL = SC7.C7_FILIAL
+			and SCR010.CR_NUM = SC7.C7_NUM
+	) as DATAAPROV_PC,
+	
+	datediff(day,
+		SC7.C7_EMISSAO,
+		(
+			select top 1 convert(date, SCR010.CR_DATALIB, 103)
+			from SCR010
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and SCR010.CR_LIBAPRO is not null
+				and SCR010.CR_TIPO = 'PC'
+				and SCR010.CR_FILIAL = SC7.C7_FILIAL
+				and SCR010.CR_NUM = SC7.C7_NUM)
+	) as DIASAPROV_PC,
 
 	SC7.C7_COND as COND,
 	trim(SE4.E4_DESCRI) as CONDPGTO,
@@ -100,7 +156,20 @@ select
 	cast(SD1.D1_EMISSAO as date) as NF_EMI,
 	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
 	substring(SD1.D1_DTDIGIT, 1, 6) as NF_PERIODO,
-	datediff(day, (select top 1 cast(SCR010.CR_DATALIB as date) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM), SD1.D1_DTDIGIT) as DIASAPROV_PC_NF,
+	
+	datediff(day,
+		(
+			select top 1 cast(SCR010.CR_DATALIB as date)
+			from SCR010
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and SCR010.CR_LIBAPRO is not null
+				and SCR010.CR_TIPO = 'PC'
+				and SCR010.CR_FILIAL = SC7.C7_FILIAL
+				and SCR010.CR_NUM = SC7.C7_NUM
+		),
+		SD1.D1_DTDIGIT
+	) as DIASAPROV_PC_NF,
 	
 	SD1.D1_CC as NF_CC,
 	SD1.D1_ITEMCTA as NF_AT,
