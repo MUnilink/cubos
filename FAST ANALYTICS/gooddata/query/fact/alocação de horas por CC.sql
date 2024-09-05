@@ -1,38 +1,19 @@
 select
-    ZC7.ZC7_CODIGO as ENTIDADE,
-    ZC7.ZC7_CC as CC,
-    ZC7.ZC7_COMPET as COMPETENCIA,
-    ZC7.ZC7_ORIGEM as TABELA,
     case when ZC7.ZC7_ORIGEM = 'SQ3' then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC7.ZC7_CODIGO) and ZC7.ZC7_ORIGEM = 'SQ3') else null end as COD_DA3,
     case when ZC7.ZC7_ORIGEM = 'ST9' then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC7.ZC7_CODIGO) and ZC7.ZC7_ORIGEM = 'ST9') else null end as COD_SRJ,
-    cast(ZC7.ZC7_HRPAD as numeric(15, 2)) as HORA_PAD,
-    cast(ZC7.ZC7_HRPROD as numeric(15, 2)) as HORA_PROD,
-    cast(ZC7.ZC7_HRIMPR as numeric(15, 2)) as HORA_IMPR,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC7.ZC7_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
+    concat(ZC7.ZC7_COMPET, '01') as COMPETENCIA,
     
     ZC2.ID_RECURSO,
     ZC2.TIPO,
+    
+    ZC7.ZC7_HRPAD,
+    ZC7.ZC7_HRPROD,
+    ZC7.ZC7_HRIMPR,
     ZC2.QTD_REAL_ITEM,
     ZC2.VAL_REAL_ITEM,
     ZC2.QTD_RECURSO,
     ZC2.VALOR_TOTAL,
-
-    case ZC2.TIPO
-        when 1 then 'RECEITA'
-        when 2 then 'FOLHA'
-        when 3 then 'MANUTENÇÃO'
-        when 4 then 'MATERIAIS'
-        when 5 then 'COMPRAS'
-        when 6 then 'DEPRECIAÇÃO'
-        when 7 then 'CONTABILIDADE'
-        when 8 then 'DESPESAS FINANCEIRAS'
-        when 9 then 'OUTROS CUSTOS - TAXAS'
-        when 10 then 'COMBUSTIVEL'
-        when 11 then 'SERVIÇOS TOMADOS'
-        when 12 then 'SEGURO'
-        when 13 then 'PNEUS'
-        when 14 then 'PROVISÕES'
-        else 'OUTROS'
-    end as TIPO_INSUMO,
 
     cast
     (
@@ -134,17 +115,21 @@ from ZC7010 ZC7
             left(ZC2010.ZC2_COMPET, 6) as PERIODO,
             ZC2010.ZC2_COD as ENTIDADE,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
-            trim(ZC2.ZC2_TIPO) as ID_RECURSO
+            trim(ZC2010.ZC2_TIPO) as ID_RECURSO
         from ZC2010
-        where 
+        where
                 ZC2010.ZC2_COMPET > '20231231'
             and cast(ZC2010.ZC2_TIPO as int) > 1
             and ZC2010.D_E_L_E_T_ = ''
         group by ZC2010.ZC2_COD, ZC2010.ZC2_TIPO, ZC2010.ZC2_COMPET
     ) ZC2
-    on ZC2.PERIODO = ZC7.ZC7_COMPET
-    and ZC2.ENTIDADE = ZC7.ZC7_CODIGO
-    and ZC7.ZC7_CC = 305
+        on ZC2.PERIODO = ZC7.ZC7_COMPET
+        and ZC2.ENTIDADE = ZC7.ZC7_CODIGO
+        and ZC7.ZC7_CC = 305
+
+    left join CTT010 CTT
+        on CTT.D_E_L_E_T_ = ''
+        and CTT.CTT_CUSTO = ZC7.ZC7_CC
 where
-        eomonth(concat(ZC7.ZC7_COMPET, '01')) BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        concat(ZC7.ZC7_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZC7.D_E_L_E_T_ = ''
