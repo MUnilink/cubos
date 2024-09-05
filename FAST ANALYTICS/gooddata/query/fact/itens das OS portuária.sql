@@ -107,14 +107,14 @@ union
         'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
         'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
         concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
-        null as ID_PEDIDODEVENDA,
-        null as ID_NFS,
+        PV.ID_PEDIDODEVENDA,
+        PV.ID_NFS,
         concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NFE,
         concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
         'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
         'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
-        (select max('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|')) from SC6010 where SC6010.D_E_L_E_T_ = '' and SC6010.C6_FILIAL = ZC2.ZC2_FILIAL and SC6010.C6_YOS = ZC2.ZC2_NUM) AS BK_ITEM_CONTABIL,
-        (select max('P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE('0101', ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|')) from SC6010 where SC6010.D_E_L_E_T_ = '' and SC6010.C6_FILIAL = ZC2.ZC2_FILIAL and SC6010.C6_YOS = ZC2.ZC2_NUM) AS BK_CENTRO_DE_CUSTO,
+        PV.BK_ITEM_CONTABIL,
+        PV.BK_CENTRO_DE_CUSTO,
         concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
         
@@ -136,7 +136,7 @@ union
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
         null as ITEM_RATEIO,
-        null as QTD_RATEIO,
+        PV.QTD as QTD_RATEIO,
         null as PERC_RATEIO,
         
         case when ZC2.ZC2_QTDPRV > 99999999 then 99999999 else ZC2.ZC2_QTDPRV end as QTD_PREV,
@@ -195,8 +195,38 @@ union
                 on SA2.D_E_L_E_T_ = ''
                 and SA2.A2_COD = SC7.C7_FORNECE
                 and SA2.A2_LOJA = SC7.C7_LOJA
+        
+        left join
+        (
+            select
+                SC6010.C6_FILIAL as FILIAL,
+                SC6010.C6_YOS as OS,
+                concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
+                concat('SD2', trim(SD2010.D2_FILIAL), trim(SD2010.D2_CLIENTE), trim(SD2010.D2_LOJA), trim(SD2010.D2_DOC), trim(SD2010.D2_SERIE)) as ID_NFS,
+                'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
+                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CCUSTO, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+                1 as QTD
+            from SC6010
+                left join SD2010
+                    on SD2010.D_E_L_E_T_= ' '
+                    and SD2010.D2_FILIAL = SC6010.C6_FILIAL
+                    and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                    and SD2010.D2_ITEMPV = SC6010.C6_ITEM
+                left join CTD010
+                    on CTD010.CTD_FILIAL = '      '
+                    and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
+                    and CTD010.D_E_L_E_T_ = ' '
+                left join CTT010
+                    on CTT010.D_E_L_E_T_ = ''
+                    and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
+                    and CTT010.CTT_CUSTO = SC6010.C6_CCUSTO
+            where
+                    SC6010.D_E_L_E_T_ = ''
+        ) PV
+            on PV.FILIAL = ZC2.ZC2_FILIAL
+            and PV.OS = ZC2.ZC2_NUM
     where
             ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-        and ZC2.ZC2_COMPET > '202312'
+        and ZC2.ZC2_COMPET > '20231201'
         and cast(ZC2.ZC2_TIPO as int) != 1
         and ZC2.D_E_L_E_T_ = ''
