@@ -25,12 +25,12 @@
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
-        ZC2.ZC2_DATA as COMPETENCIA,
+        eomonth(ZC2.ZC2_DATA) as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
-        trim(ZC3.ZC3_ITEM) as ITEM_RATEIO,
-        ZC3.ZC3_QTD as QTD_RATEIO,
-        ZC3.ZC3_PECRAT as PERC_RATEIO,
+        null as ITEM_RATEIO,
+        null as QTD_RATEIO,
+        null as PERC_RATEIO,
         
         case when ZC2.ZC2_QTDPRV > 99999999 then 99999999 else ZC2.ZC2_QTDPRV end as QTD_PREV,
         case when ZC2.ZC2_QTDREA > 99999999 then 99999999 else ZC2.ZC2_QTDREA end as QTD_REAL,
@@ -76,33 +76,26 @@
             left join SAH010 SAH
                 on SAH.D_E_L_E_T_ = ''
                 and SAH.AH_UNIMED = SB1.B1_UM
-            
-        left join ZC3010 ZC3
-            on ZC3.D_E_L_E_T_ = ''
-            and ZC3.ZC3_FILIAL = ZC2.ZC2_FILIAL
-            and ZC3.ZC3_NUM = ZC2.ZC2_NUM
-            and ZC3.ZC3_ITEM = ZC2.ZC2_ITEM
         
-            left join SC6010 SC6
-                on SC6.D_E_L_E_T_ = ''
-                and SC6.C6_FILIAL = ZC3.ZC3_FILIAL
-                and SC6.C6_NUM = ZC3.ZC3_PEDIDO
-                and SC6.C6_YOS = ZC3.ZC3_NUM
-                and SC6.C6_YITOS = ZC3.ZC3_ITEM
+        left join SC6010 SC6
+            on SC6.D_E_L_E_T_ = ''
+            and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
+            and SC6.C6_YOS = ZC2.ZC2_NUM
+            and SC6.C6_YITOS = ZC2.ZC2_ITEM
 
-                left join SD2010 SD2
-                    on SD2.D_E_L_E_T_= ' '
-                    and SD2.D2_FILIAL = SC6.C6_FILIAL
-                    and SD2.D2_PEDIDO = SC6.C6_NUM
-                    and SD2.D2_ITEMPV = SC6.C6_ITEM
-                left join CTD010 CTD
-                    on CTD.CTD_FILIAL = '      '
-                    and CTD.CTD_ITEM = SC6.C6_ITEMCTA
-                    and CTD.D_E_L_E_T_ = ' '
-                left join CTT010 CTT
-                    on CTT.D_E_L_E_T_ = ''
-                    and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
-                    and CTT.CTT_CUSTO = SC6.C6_CCUSTO
+            left join SD2010 SD2
+                on SD2.D_E_L_E_T_= ' '
+                and SD2.D2_FILIAL = SC6.C6_FILIAL
+                and SD2.D2_PEDIDO = SC6.C6_NUM
+                and SD2.D2_ITEMPV = SC6.C6_ITEM
+            left join CTD010 CTD
+                on CTD.CTD_FILIAL = '      '
+                and CTD.CTD_ITEM = SC6.C6_ITEMCTA
+                and CTD.D_E_L_E_T_ = ' '
+            left join CTT010 CTT
+                on CTT.D_E_L_E_T_ = ''
+                and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
+                and CTT.CTT_CUSTO = SC6.C6_CCUSTO
     where
             cast(ZC2.ZC2_TIPO as int) = 1
         and ZC2.D_E_L_E_T_ = ''
@@ -138,7 +131,7 @@ union
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
-        ZC2.ZC2_COMPET as COMPETENCIA,
+        eomonth(ZC2.ZC2_COMPET) as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
         null as ITEM_RATEIO,
