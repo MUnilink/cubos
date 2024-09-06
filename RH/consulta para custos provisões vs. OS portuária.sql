@@ -1,78 +1,77 @@
-select *,
-  case
-    when PROV.RT_DFERVEN != 0 and PROV.RT_TIPPROV = '1' then PROV.VALOR / (PROV.RT_DFERVEN / 2.5)
-    when PROV.RT_DFERPRO != 0 and PROV.RT_TIPPROV = '2' then PROV.VALOR / (PROV.RT_DFERPRO / 2.5)
-    when PROV.RT_AVOS13S != 0 and PROV.RT_TIPPROV = '3' then PROV.VALOR / PROV.RT_AVOS13S
-    else 0.0
-  end as VALOR_AVO
-from
-(
-  select
-    RJ_CARGO,
-    ZC7_CODIGO,
-    ZC7_ORIGEM,
-    ZC7_CC,
-    ZC7_COMPET,
-    ZC7_HRPAD,
-    ZC7_HRPROD,
-    ZC7_HRIMPR,
-    SRT.RT_TIPPROV,
-    RT2.RT_DFERVEN,
-    RT2.RT_DFERPRO,
-    RT2.RT_AVOS13S,
-    SRT.RT_VERBA,
-    SRT.RT_MAT,
-    sum(SRT.RT_VALOR) as VALOR
-
-  from SRT010 SRT
-    
-    inner join SRA010 SRA
-      on RA_FILIAL = '010102'
-      and RA_MAT = SRT.RT_MAT
-      and SRA.D_E_L_E_T_ = ' '
-    
-    inner join SRJ010 RJ
-      on RJ_FILIAL = Substring(RA_FILIAL, 1, 4)
-      and RJ_FUNCAO = RA_CODFUNC
-      and RJ_CARGO <> ' '
-      and RJ.D_E_L_E_T_ = ' '
-    
-    inner join ZC7010 ZC7
-      on ZC7_ORIGEM = 'SQ3'
-      and ZC7.D_E_L_E_T_ = ' '
-      and ZC7_CC = '305'
-      and ZC7_CODIGO = RJ_CARGO
-    
-    inner join SRT010 RT2
-      on RT2.RT_FILIAL = RA_FILIAL
-      and RT2.RT_MAT = RA_MAT
-      and RT2.RT_TIPPROV = '1'
-      and RT2.RT_VERBA = '830'
-      and RT2.RT_DATABAS <> ' '
-      and RT2.D_E_L_E_T_ = ' '
-      and RT2.RT_DATACAL = SRT.RT_DATACAL and RT2.RT_TIPPROV in ('1', '2')
-
-  where
-        SRT.RT_FILIAL = '010102'
-    and SRT.RT_TIPPROV in ('2', '3')
-    and substring(SRT.RT_DATACAL, 1, 6) =:ANOMES
-    and exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRT.RT_VERBA || '%')
-    and SRT.D_E_L_E_T_ = ' '
-    and SRT.RT_CC = '305'
-    and SRA.D_E_L_E_T_ = ' '
-  group by
-    RJ_CARGO,
-    ZC7_CODIGO,
-    ZC7_ORIGEM,
-    ZC7_CC,
-    ZC7_COMPET,
-    ZC7_HRPAD,
-    ZC7_HRPROD,
-    ZC7_HRIMPR,
-    SRT.RT_TIPPROV,
-    RT2.RT_DFERVEN,
-    RT2.RT_DFERPRO,
-    RT2.RT_AVOS13S,
-    SRT.RT_VERBA,
-    SRT.RT_MAT
-) PROV
+SELECT B.*,
+       CASE
+         WHEN B.RT_DFERVEN != 0
+              AND B.RT_TIPPROV = '1' THEN B.VALOR / ( B.RT_DFERVEN / 2.5 )
+         WHEN B.RT_DFERPRO != 0
+              AND B.RT_TIPPROV = '2' THEN B.VALOR / ( B.RT_DFERPRO / 2.5 )
+         WHEN B.RT_AVOS13S != 0
+              AND B.RT_TIPPROV = '3' THEN B.VALOR / B.RT_AVOS13S
+         ELSE 0.0
+       END AS VALOR_AVO
+FROM   (SELECT RJ_CARGO,
+               ZC7_CODIGO,
+               ZC7_ORIGEM,
+               ZC7_CC,
+               ZC7_COMPET,
+               ZC7_HRPAD,
+               ZC7_HRPROD,
+               ZC7_HRIMPR,
+               SRT.RT_TIPPROV,
+               RT2.RT_DFERVEN,
+               RT2.RT_DFERPRO,
+               RT2.RT_AVOS13S,
+               Sum(SRT.RT_VALOR) AS VALOR
+        FROM   SRT010 SRT
+               INNER JOIN SRA010 SRA
+                       ON RA_FILIAL = '010102'
+                          AND RA_MAT = SRT.RT_MAT
+                          AND SRA.D_E_L_E_T_ = ' '
+               INNER JOIN SRJ010 RJ
+                       ON RJ_FILIAL = Substring(RA_FILIAL, 1, 4)
+                          AND RJ_FUNCAO = RA_CODFUNC
+                          AND RJ_CARGO <> ' '
+                          AND RJ.D_E_L_E_T_ = ' '
+               INNER JOIN ZC7010 ZC7
+                       ON ZC7_ORIGEM = 'SQ3'
+                          AND ZC7_COMPET = '202401'
+                          AND ZC7.D_E_L_E_T_ = ' '
+                          AND ZC7_CC = '305'
+                          AND ZC7_CODIGO = RJ_CARGO
+               INNER JOIN SRT010 RT2
+                       ON RT2.RT_FILIAL = RA_FILIAL
+                          AND RT2.RT_MAT = RA_MAT
+                          AND RT2.RT_TIPPROV IN ( '1', '2' )
+                          AND RT2.RT_VERBA = '830'
+                          AND RT2.RT_DATABAS <> ' '
+                          AND RT2.D_E_L_E_T_ = ' '
+                          AND RT2.RT_DATACAL = SRT.RT_DATACAL
+        WHERE  SRT.RT_FILIAL = '010102'
+               AND SRT.RT_TIPPROV IN ( '2', '3' )
+               AND Substring(SRT.RT_DATACAL, 1, 6) = '202401'
+               AND SRT.RT_VERBA IN ( '224', '255', '336', '371',
+                                     '020', '113', '344', '039',
+                                     '030', '029', '749', '719',
+                                     '796', '738', '800', '962',
+                                     '950', '955', '960', '961',
+                                     '817', '830', '845', '442',
+                                     '440', '441', '444', '446',
+                                     '591', '038', '025', '051',
+                                     '134', '170', '171', '172',
+                                     '173', '371', '445', '739',
+                                     '831', '832', '833', '834',
+                                     '846', '847', '848' )
+               AND SRT.D_E_L_E_T_ = ' '
+               AND SRT.RT_CC = '305'
+               AND SRA.D_E_L_E_T_ = ' '
+        GROUP  BY RJ_CARGO,
+                  ZC7_CODIGO,
+                  ZC7_ORIGEM,
+                  ZC7_CC,
+                  ZC7_COMPET,
+                  ZC7_HRPAD,
+                  ZC7_HRPROD,
+                  ZC7_HRIMPR,
+                  SRT.RT_TIPPROV,
+                  RT2.RT_DFERVEN,
+                  RT2.RT_DFERPRO,
+                  RT2.RT_AVOS13S) B 
