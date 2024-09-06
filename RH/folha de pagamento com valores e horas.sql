@@ -110,7 +110,6 @@ select
 			from SR7010
 			where
 					SR7010.D_E_L_E_T_ = ''
-                and year(SR7010.R7_DATA) > 2022
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
@@ -123,7 +122,6 @@ select
 			from SR7010
 			where
 					SR7010.D_E_L_E_T_ = ''
-                and year(SR7010.R7_DATA) > 2022
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -139,12 +137,12 @@ select
         from SR7010
         where
                 SR7010.D_E_L_E_T_ = ''
-            and year(SR7010.R7_DATA) > 2022
             and SR7010.R7_FILIAL = SRD.RD_FILIAL
             and SR7010.R7_MAT = SRD.RD_MAT
             and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
     ) as MUD_FUNCAO,
 
+	case when SRD.RD_PD = 20 then else 
     datediff
 	(
 		day,
@@ -155,7 +153,6 @@ select
 			from SR7010
 			where
 					SR7010.D_E_L_E_T_ = ''
-				and year(SR7010.R7_DATA) > 2022
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -165,7 +162,6 @@ select
 			from SR7010
 			where
 					SR7010.D_E_L_E_T_ = ''
-				and year(SR7010.R7_DATA) > 2022
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -185,7 +181,6 @@ select
 				from SR7010
 				where
 						SR7010.D_E_L_E_T_ = ''
-					and year(SR7010.R7_DATA) > 2022
 					and SR7010.R7_FILIAL = SRD.RD_FILIAL
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -195,7 +190,6 @@ select
 				from SR7010
 				where
 						SR7010.D_E_L_E_T_ = ''
-					and year(SR7010.R7_DATA) > 2022
 					and SR7010.R7_FILIAL = SRD.RD_FILIAL
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -213,7 +207,6 @@ select
 			from SR7010
 			where
 					SR7010.D_E_L_E_T_ = ''
-				and year(SR7010.R7_DATA) > 2022
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -223,7 +216,6 @@ select
 			from SR7010
 			where
 					SR7010.D_E_L_E_T_ = ''
-				and year(SR7010.R7_DATA) > 2022
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -243,7 +235,6 @@ select
 				from SR7010
 				where
 						SR7010.D_E_L_E_T_ = ''
-					and year(SR7010.R7_DATA) > 2022
 					and SR7010.R7_FILIAL = SRD.RD_FILIAL
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -253,7 +244,6 @@ select
 				from SR7010
 				where
 						SR7010.D_E_L_E_T_ = ''
-					and year(SR7010.R7_DATA) > 2022
 					and SR7010.R7_FILIAL = SRD.RD_FILIAL
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
@@ -284,7 +274,6 @@ from SRD010 SRD (nolock)
 			left join SQ3010 SQ3 (nolock)
 				on SQ3.D_E_L_E_T_ = ''
 				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
-	
 where
 		SRD.RD_PERIODO =:ANOMES
 	and SRD.D_E_L_E_T_ = ''
