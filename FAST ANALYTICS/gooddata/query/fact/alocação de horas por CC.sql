@@ -1,19 +1,19 @@
 select
-    case when ZC7.ZC7_ORIGEM = 'SQ3' then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC7.ZC7_CODIGO) and ZC7.ZC7_ORIGEM = 'SQ3') else null end as COD_DA3,
-    case when ZC7.ZC7_ORIGEM = 'ST9' then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC7.ZC7_CODIGO) and ZC7.ZC7_ORIGEM = 'ST9') else null end as COD_SRJ,
+    case when ZC7.ZC7_ORIGEM = 'ST9' then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC7.ZC7_CODIGO)) else null end as COD_DA3,
+    case when ZC7.ZC7_ORIGEM = 'SQ3' then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC7.ZC7_CODIGO)) else null end as COD_SRJ,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC7.ZC7_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     concat(ZC7.ZC7_COMPET, '01') as COMPETENCIA,
     
     ZC2.ID_RECURSO,
     ZC2.TIPO,
     
-    ZC7.ZC7_HRPAD,
-    ZC7.ZC7_HRPROD,
-    ZC7.ZC7_HRIMPR,
-    ZC2.QTD_REAL_ITEM,
-    ZC2.VAL_REAL_ITEM,
-    ZC2.QTD_RECURSO,
-    ZC2.VALOR_TOTAL,
+    isnull(ZC7.ZC7_HRPAD, 0.0) as ZC7_HRPAD,
+    isnull(ZC7.ZC7_HRPROD, 0.0) as ZC7_HRPROD,
+    isnull(ZC7.ZC7_HRIMPR, 0.0) as ZC7_HRIMPR,
+    isnull(ZC2.QTD_REAL_ITEM, 0.0) as QTD_REAL_ITEM,
+    isnull(ZC2.VAL_REAL_ITEM, 0.0) as VAL_REAL_ITEM,
+    isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
+    isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
 
     cast
     (
@@ -113,7 +113,7 @@ from ZC7010 ZC7
             cast(sum(ZC2010.ZC2_QTDREC) as numeric(15, 2)) as QTD_RECURSO,
             cast(sum(ZC2010.ZC2_TOTAL) as numeric(15, 2)) as VALOR_TOTAL,
             concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
-            ZC2010.ZC2_COD as ENTIDADE,
+            trim(ZC2010.ZC2_COD) as ENTIDADE,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_TIPO) as ID_RECURSO
         from ZC2010
@@ -123,8 +123,8 @@ from ZC7010 ZC7
             and ZC2010.D_E_L_E_T_ = ''
         group by ZC2010.ZC2_COD, ZC2010.ZC2_TIPO, ZC2010.ZC2_COMPET
     ) ZC2
-        on ZC2.PERIODO = ZC7.ZC7_COMPET
-        and ZC2.ENTIDADE = ZC7.ZC7_CODIGO
+        on ZC2.PERIODO = concat(ZC7.ZC7_COMPET, '01')
+        and ZC2.ENTIDADE = trim(ZC7.ZC7_CODIGO)
         and ZC7.ZC7_CC = 305
 
     left join CTT010 CTT
