@@ -25,7 +25,7 @@
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
-        eomonth(ZC2.ZC2_DATA) as COMPETENCIA,
+        concat(left(ZC2.ZC2_COMPET, 6), '01') as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
         null as ITEM_RATEIO,
@@ -97,7 +97,7 @@
                 and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
                 and CTT.CTT_CUSTO = SC6.C6_CCUSTO
     where
-            ZC2.ZC2_DATA BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+            concat(left(ZC2.ZC2_COMPET, 6), '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
         and cast(ZC2.ZC2_TIPO as int) = 1
         and ZC2.D_E_L_E_T_ = ''
 union
@@ -132,7 +132,7 @@ union
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
-        eomonth(ZC2.ZC2_COMPET) as COMPETENCIA,
+        concat(left(ZC2.ZC2_COMPET, 6), '01') as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
         null as ITEM_RATEIO,
@@ -226,7 +226,7 @@ union
             on PV.FILIAL = ZC2.ZC2_FILIAL
             and PV.OS = ZC2.ZC2_NUM
     where
-            ZC2.ZC2_COMPET BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
-        and ZC2.ZC2_COMPET > '20231201'
+            concat(left(ZC2.ZC2_COMPET, 6), '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        and concat(left(ZC2.ZC2_COMPET, 6), '01') > '20231201'
         and cast(ZC2.ZC2_TIPO as int) != 1
         and ZC2.D_E_L_E_T_ = ''

@@ -112,13 +112,13 @@ from ZC7010 ZC7
             cast(sum(ZC2010.ZC2_VLUREA) as numeric(15, 2)) as VAL_REAL_ITEM,
             cast(sum(ZC2010.ZC2_QTDREC) as numeric(15, 2)) as QTD_RECURSO,
             cast(sum(ZC2010.ZC2_TOTAL) as numeric(15, 2)) as VALOR_TOTAL,
-            left(ZC2010.ZC2_COMPET, 6) as PERIODO,
+            concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
             ZC2010.ZC2_COD as ENTIDADE,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_TIPO) as ID_RECURSO
         from ZC2010
         where
-                ZC2010.ZC2_COMPET > '20231231'
+                concat(left(ZC2010.ZC2_COMPET, 6), '01') > '20231231'
             and cast(ZC2010.ZC2_TIPO as int) > 1
             and ZC2010.D_E_L_E_T_ = ''
         group by ZC2010.ZC2_COD, ZC2010.ZC2_TIPO, ZC2010.ZC2_COMPET
