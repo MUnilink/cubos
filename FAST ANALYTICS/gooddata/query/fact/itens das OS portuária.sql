@@ -11,7 +11,7 @@
         'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
         'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
         'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
-        'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
+        'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
         concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
         
@@ -95,7 +95,7 @@
             left join CTT010 CTT
                 on CTT.D_E_L_E_T_ = ''
                 and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
-                and CTT.CTT_CUSTO = SC6.C6_CCUSTO
+                and CTT.CTT_CUSTO = SC6.C6_CC
     where
             concat(left(ZC2.ZC2_COMPET, 6), '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
         and cast(ZC2.ZC2_TIPO as int) = 1
@@ -204,7 +204,7 @@ union
                 concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
                 concat('SD2', trim(SD2010.D2_FILIAL), trim(SD2010.D2_CLIENTE), trim(SD2010.D2_LOJA), trim(SD2010.D2_DOC), trim(SD2010.D2_SERIE)) as ID_NFS,
                 'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
-                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CCUSTO, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
                 1 as QTD
             from SC6010
                 left join SD2010
@@ -219,7 +219,7 @@ union
                 left join CTT010
                     on CTT010.D_E_L_E_T_ = ''
                     and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
-                    and CTT010.CTT_CUSTO = SC6010.C6_CCUSTO
+                    and CTT010.CTT_CUSTO = SC6010.C6_CC
             where
                     SC6010.D_E_L_E_T_ = ''
         ) PV
