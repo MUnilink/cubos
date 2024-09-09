@@ -15,7 +15,7 @@ select
     isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
     isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
 
-    cast
+    isnull
     (
         case
             when ZC2.TIPO = 3 then
@@ -101,7 +101,7 @@ select
                     and ZC7.ZC7_CODIGO = ZC4010.ZC4_CODBEM
                     and eomonth(concat(ZC7.ZC7_COMPET, '01')) between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
             )
-        else 0.0 end as numeric(15, 2)
+        else 0.0 end, 0.0
     ) as CUSTO
 
 from ZC7010 ZC7
