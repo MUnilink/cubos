@@ -11,7 +11,7 @@
         'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
         'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
         'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
-        'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
+        'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
         concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
         
@@ -69,8 +69,8 @@
                 and DA0.DA0_CODTAB = ZC1.ZC1_TABPRC
         
         left join SB1010 SB1
-            on SB1.D_E_L_E_T_ = ' '
-            and SB1.B1_FILIAL = '      '
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_FILIAL = ''
             and SB1.B1_COD = ZC2.ZC2_COD
 
             left join SAH010 SAH
@@ -84,18 +84,18 @@
             and SC6.C6_YITOS = ZC2.ZC2_ITEM
 
             left join SD2010 SD2
-                on SD2.D_E_L_E_T_= ' '
+                on SD2.D_E_L_E_T_= ''
                 and SD2.D2_FILIAL = SC6.C6_FILIAL
                 and SD2.D2_PEDIDO = SC6.C6_NUM
                 and SD2.D2_ITEMPV = SC6.C6_ITEM
             left join CTD010 CTD
-                on CTD.CTD_FILIAL = '      '
+                on CTD.CTD_FILIAL = ''
                 and CTD.CTD_ITEM = SC6.C6_ITEMCTA
-                and CTD.D_E_L_E_T_ = ' '
+                and CTD.D_E_L_E_T_ = ''
             left join CTT010 CTT
                 on CTT.D_E_L_E_T_ = ''
                 and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
-                and CTT.CTT_CUSTO = SC6.C6_CCUSTO
+                and CTT.CTT_CUSTO = SC6.C6_CC
     where
             cast(ZC2.ZC2_TIPO as int) = 1
         and ZC2.D_E_L_E_T_ = ''
@@ -203,22 +203,22 @@ union
                 concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
                 concat('SD2', trim(SD2010.D2_FILIAL), trim(SD2010.D2_CLIENTE), trim(SD2010.D2_LOJA), trim(SD2010.D2_DOC), trim(SD2010.D2_SERIE)) as ID_NFS,
                 'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
-                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CCUSTO, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
                 1 as QTD
             from SC6010
                 left join SD2010
-                    on SD2010.D_E_L_E_T_= ' '
+                    on SD2010.D_E_L_E_T_= ''
                     and SD2010.D2_FILIAL = SC6010.C6_FILIAL
                     and SD2010.D2_PEDIDO = SC6010.C6_NUM
                     and SD2010.D2_ITEMPV = SC6010.C6_ITEM
                 left join CTD010
-                    on CTD010.CTD_FILIAL = '      '
+                    on CTD010.CTD_FILIAL = ''
                     and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
-                    and CTD010.D_E_L_E_T_ = ' '
+                    and CTD010.D_E_L_E_T_ = ''
                 left join CTT010
                     on CTT010.D_E_L_E_T_ = ''
                     and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
-                    and CTT010.CTT_CUSTO = SC6010.C6_CCUSTO
+                    and CTT010.CTT_CUSTO = SC6010.C6_CC
             where
                     SC6010.D_E_L_E_T_ = ''
         ) PV

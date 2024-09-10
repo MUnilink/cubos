@@ -15,6 +15,16 @@ select
     isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
     isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
 
+    ZC2.BK_FILIAL,
+    ZC2.BK_CLIENTE,
+    ZC2.BK_FORNECEDOR,
+    ZC2.ID_OSPORTUARIA,
+    ZC2.ID_PEDIDODEVENDA,
+    ZC2.ID_NFS,
+    ZC2.BK_NAT_FINANCEIRA,
+    ZC2.BK_CONDICAO_DE_PAGAMENTO,
+    ZC2.BK_ITEM_CONTABIL,
+    
     isnull
     (
         case
@@ -108,20 +118,82 @@ from ZC7010 ZC7
     left join
     (
         select
-            cast(sum(ZC2010.ZC2_QTDREA) as numeric(15, 2)) as QTD_REAL_ITEM,
-            cast(sum(ZC2010.ZC2_VLUREA) as numeric(15, 2)) as VAL_REAL_ITEM,
-            cast(sum(ZC2010.ZC2_QTDREC) as numeric(15, 2)) as QTD_RECURSO,
-            cast(sum(ZC2010.ZC2_TOTAL) as numeric(15, 2)) as VALOR_TOTAL,
+            cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as QTD_REAL_ITEM,
+            cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
+            cast(ZC2010.ZC2_QTDREC as numeric(15, 2)) as QTD_RECURSO,
+            cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as VALOR_TOTAL,
             concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
             trim(ZC2010.ZC2_COD) as ENTIDADE,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
-            trim(ZC2010.ZC2_TIPO) as ID_RECURSO
+            trim(ZC2010.ZC2_TIPO) as ID_RECURSO,
+
+            CASE WHEN ZC1010.ZC1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZC1010.ZC1_FILIAL AS CHAR (6)) END AS BK_FILIAL,
+            'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1010.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1010.A1_COD, ' '))+RTRIM(COALESCE(SA1010.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
+            'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2010.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2010.A2_COD, ' '))+RTRIM(COALESCE(SA2010.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
+            concat(trim(ZC1010.ZC1_FILIAL), trim(ZC1010.ZC1_NUM)) as ID_OSPORTUARIA,
+            'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED010.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED010.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
+            'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4010.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4010.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
+            PV.FILIAL,
+            PV.OS,
+            PV.ID_PEDIDODEVENDA,
+            PV.ID_NFS,
+            PV.BK_ITEM_CONTABIL,
+            PV.BK_CENTRO_DE_CUSTO
+            
         from ZC2010
+            inner join ZC1010
+                on ZC1010.D_E_L_E_T_ = ''
+                and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+
+                left join SA1010
+                    on SA1010.D_E_L_E_T_ = ''
+                    and SA1010.A1_COD = ZC1010.ZC1_CODSA1
+                    and SA1010.A1_LOJA = ZC1010.ZC1_LOJSA1
+                left join SA2010
+                    on SA2010.D_E_L_E_T_ = ''
+                    and SA2010.A2_COD = ZC1010.ZC1_DESPA
+                    and SA2010.A2_LOJA = ZC1010.ZC1_LJDESP
+                left join SED010
+                    on SED010.D_E_L_E_T_ = ''
+                    and SED010.ED_CODIGO = ZC1010.ZC1_NATURE
+                left join SE4010
+                    on SE4010.D_E_L_E_T_ = ''
+                    and SE4010.E4_CODIGO = ZC1010.ZC1_COND
+
+            left join
+            (
+                select
+                    SC6010.C6_FILIAL as FILIAL,
+                    SC6010.C6_YOS as OS,
+                    concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
+                    concat('SD2', trim(SD2010.D2_FILIAL), trim(SD2010.D2_CLIENTE), trim(SD2010.D2_LOJA), trim(SD2010.D2_DOC), trim(SD2010.D2_SERIE)) as ID_NFS,
+                    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
+                    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+                    1 as QTD
+                from SC6010
+                    left join SD2010
+                        on SD2010.D_E_L_E_T_= ''
+                        and SD2010.D2_FILIAL = SC6010.C6_FILIAL
+                        and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                        and SD2010.D2_ITEMPV = SC6010.C6_ITEM
+                    left join CTD010
+                        on CTD010.CTD_FILIAL = ''
+                        and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
+                        and CTD010.D_E_L_E_T_ = ''
+                    left join CTT010
+                        on CTT010.D_E_L_E_T_ = ''
+                        and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
+                        and CTT010.CTT_CUSTO = SC6010.C6_CC
+                where
+                        SC6010.D_E_L_E_T_ = ''
+            ) PV
+                on PV.FILIAL = ZC2010.ZC2_FILIAL
+                and PV.OS = ZC2010.ZC2_NUM
         where
                 concat(left(ZC2010.ZC2_COMPET, 6), '01') > '20231231'
-            and cast(ZC2010.ZC2_TIPO as int) > 1
+            and cast(ZC2010.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 10, 12, 13)
             and ZC2010.D_E_L_E_T_ = ''
-        group by ZC2010.ZC2_COD, ZC2010.ZC2_TIPO, ZC2010.ZC2_COMPET
     ) ZC2
         on ZC2.PERIODO = concat(ZC7.ZC7_COMPET, '01')
         and ZC2.ENTIDADE = trim(ZC7.ZC7_CODIGO)

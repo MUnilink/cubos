@@ -69,8 +69,8 @@
                 and DA0.DA0_CODTAB = ZC1.ZC1_TABPRC
         
         left join SB1010 SB1
-            on SB1.D_E_L_E_T_ = ' '
-            and SB1.B1_FILIAL = '      '
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_FILIAL = ''
             and SB1.B1_COD = ZC2.ZC2_COD
 
             left join SAH010 SAH
@@ -84,14 +84,14 @@
             and SC6.C6_YITOS = ZC2.ZC2_ITEM
 
             left join SD2010 SD2
-                on SD2.D_E_L_E_T_= ' '
+                on SD2.D_E_L_E_T_= ''
                 and SD2.D2_FILIAL = SC6.C6_FILIAL
                 and SD2.D2_PEDIDO = SC6.C6_NUM
                 and SD2.D2_ITEMPV = SC6.C6_ITEM
             left join CTD010 CTD
-                on CTD.CTD_FILIAL = '      '
+                on CTD.CTD_FILIAL = ''
                 and CTD.CTD_ITEM = SC6.C6_ITEMCTA
-                and CTD.D_E_L_E_T_ = ' '
+                and CTD.D_E_L_E_T_ = ''
             left join CTT010 CTT
                 on CTT.D_E_L_E_T_ = ''
                 and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
@@ -208,14 +208,14 @@ union
                 1 as QTD
             from SC6010
                 left join SD2010
-                    on SD2010.D_E_L_E_T_= ' '
+                    on SD2010.D_E_L_E_T_= ''
                     and SD2010.D2_FILIAL = SC6010.C6_FILIAL
                     and SD2010.D2_PEDIDO = SC6010.C6_NUM
                     and SD2010.D2_ITEMPV = SC6010.C6_ITEM
                 left join CTD010
-                    on CTD010.CTD_FILIAL = '      '
+                    on CTD010.CTD_FILIAL = ''
                     and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
-                    and CTD010.D_E_L_E_T_ = ' '
+                    and CTD010.D_E_L_E_T_ = ''
                 left join CTT010
                     on CTT010.D_E_L_E_T_ = ''
                     and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
