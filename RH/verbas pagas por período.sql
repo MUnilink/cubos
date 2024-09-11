@@ -27,10 +27,10 @@
 		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
 		trim(SRJ.RJ_DESC) as DESC_FUNCAO,
 
-		trim(isnull(SRC.RC_PERIODO, '-')) as PERIODO,
-		trim(isnull(SRC.RC_PD, '-')) as VERBA,
-		trim(isnull(SRC.RC_SEQ, '-')) as SEQ,
-		trim(isnull(SRC.RC_ROTEIR, '-')) as ROTEIRO,
+		trim(SRC.RC_PERIODO) as PERIODO,
+		trim(SRC.RC_PD) as VERBA,
+		trim(SRC.RC_SEQ) as SEQ,
+		trim(SRC.RC_ROTEIR) as ROTEIRO,
 		
 		case when SRC.RC_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
@@ -60,20 +60,21 @@
 		case SRV.RV_COD
 			when '183' then 'VALOR A RECEBER'
 			when '999' then 'VALOR A RECEBER'
-		else SRV.RV_DESCDET end as DESC_VERBA2,
+		else trim(SRV.RV_DESCDET) end as DESC_VERBA2,
 
 		case trim(SRV.RV_TIPOCOD)
 			when '1' then 'PROVENTO'
 			when '2' then 'DESCONTO'
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
-			else 'OUTROS'
+			else '-'
 		end as TIPO_VERBA,
 
 		SRC.RC_VALOR as VALOR,
 		SRC.RC_HORAS as HORAS,
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
+		SRA.RA_HRSMES as HORAS_MES,
 		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
 		null as DATARQ,
@@ -82,7 +83,6 @@
 		null as IR,
 		null as FGTS,
 
-		case when lag(SRC.RC_MAT, 1, 0) over (partition by SRC.RC_FILIAL, SRC.RC_PERIODO, SRC.RC_MAT order by SRC.R_E_C_N_O_) = 0 then SRA.RA_HRSMES else 0 end as HORAS_MES,
 		case when lag(SRC.RC_MAT, 1, 0) over (partition by SRC.RC_FILIAL, SRC.RC_PERIODO, SRC.RC_MAT order by SRC.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
 
 	from SRC010 SRC (nolock)
@@ -202,10 +202,10 @@ union
 			), trim(SRJ.RJ_DESC)
 		) as DESC_FUNCAO,
 
-		trim(isnull(SRD.RD_PERIODO, '-')) as PERIODO,
-		trim(isnull(SRD.RD_PD, '-')) as VERBA,
-		trim(isnull(SRD.RD_SEQ, '-')) as SEQ,
-		trim(isnull(SRD.RD_ROTEIR, '-')) as ROTEIRO,
+		trim(SRD.RD_PERIODO) as PERIODO,
+		trim(SRD.RD_PD) as VERBA,
+		trim(SRD.RD_SEQ) as SEQ,
+		trim(SRD.RD_ROTEIR) as ROTEIRO,
 		
 		case when SRD.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
 		else
@@ -235,7 +235,7 @@ union
 		case SRV.RV_COD
 			when '183' then 'VALOR A RECEBER'
 			when '999' then 'VALOR A RECEBER'
-		else SRV.RV_DESCDET end as DESC_VERBA2,
+		else trim(SRV.RV_DESCDET) end as DESC_VERBA2,
 
 		case trim(SRV.RV_TIPOCOD)
 			when '1' then 'PROVENTO'
@@ -249,6 +249,7 @@ union
 		SRD.RD_HORAS as HORAS,
 		SRA.RA_SALARIO as SALARIO,
 		SRA.RA_HRSEMAN as HORAS_SEM,
+		SRA.RA_HRSMES as HORAS_MES,
 		null as HORAS_PADRAO,
 
 		SRD.RD_DATARQ as DATARQ,
@@ -257,7 +258,6 @@ union
 		SRD.RD_IR as IR,
 		SRD.RD_FGTS as FGTS,
 
-		case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then SRA.RA_HRSMES else 0 end as HORAS_MES,
 		case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
 
 	from SRD010 SRD (nolock)
