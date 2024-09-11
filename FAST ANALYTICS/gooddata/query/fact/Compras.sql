@@ -122,7 +122,7 @@ SELECT
     cast(SC7.C7_VALIMP5 as numeric(14, 2)) as VL_PC_COFINS,
     cast(SC7.C7_VALISS as numeric(14, 2)) as VL_PC_ISS,
     cast(SC7.C7_ICMSRET as numeric(14, 2)) as VL_PC_ICMS_SUBST,
-    cast(SC7.C7_DESC as numeric(12, 2)) as VL_PC_DESCONTO,
+    cast(SC7.C7_VLDESC as numeric(12, 2)) as VL_PC_DESCONTO,
     cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
 	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO
 
