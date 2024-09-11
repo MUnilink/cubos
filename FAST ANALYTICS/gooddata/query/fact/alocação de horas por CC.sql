@@ -118,11 +118,12 @@ from ZC7010 ZC7
     left join
     (
         select
-            cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as QTD_REAL_ITEM,
-            cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
-            cast(ZC2010.ZC2_QTDREC as numeric(15, 2)) as QTD_RECURSO,
-            cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as VALOR_TOTAL,
+            sum(cast(ZC2010.ZC2_QTDREA as numeric(15, 2))) as QTD_REAL_ITEM,
+            sum(cast(ZC2010.ZC2_VLUREA as numeric(15, 2))) as VAL_REAL_ITEM,
+            sum(cast(ZC2010.ZC2_QTDREC as numeric(15, 2))) as QTD_RECURSO,
+            sum(cast(ZC2010.ZC2_TOTAL as numeric(15, 2))) as VALOR_TOTAL,
             concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
+            sum(PV.QTD) as QTD_PV,
             trim(ZC2010.ZC2_COD) as ENTIDADE,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_TIPO) as ID_RECURSO,
@@ -194,6 +195,28 @@ from ZC7010 ZC7
                 concat(left(ZC2010.ZC2_COMPET, 6), '01') > '20231231'
             and cast(ZC2010.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 10, 12, 13)
             and ZC2010.D_E_L_E_T_ = ''
+        group by
+            ZC2010.ZC2_COD,
+            ZC2010.ZC2_TIPO,
+            ZC1010.ZC1_FILIAL,
+            ZC2010.ZC2_COMPET,
+            SA1010.A1_FILIAL,
+            SA1010.A1_COD,
+            SA1010.A1_LOJA,
+            SA2010.A2_FILIAL,
+            SA2010.A2_COD,
+            SA2010.A2_LOJA,
+            ZC1010.ZC1_NUM,
+            SED010.ED_FILIAL,
+            SED010.ED_CODIGO,
+            SE4010.E4_FILIAL,
+            SE4010.E4_CODIGO,
+            PV.FILIAL,
+            PV.OS,
+            PV.ID_PEDIDODEVENDA,
+            PV.ID_NFS,
+            PV.BK_ITEM_CONTABIL,
+            PV.BK_CENTRO_DE_CUSTO
     ) ZC2
         on ZC2.PERIODO = concat(ZC7.ZC7_COMPET, '01')
         and ZC2.ENTIDADE = trim(ZC7.ZC7_CODIGO)
