@@ -201,7 +201,17 @@ select
 	" GROUP BY RA_CODFUNC "
 	" )
 */
-
+	(
+		select sum()
+		from SRT010 RT2
+			on RT2.RT_FILIAL = SRT.RT_FILIAL
+			and RT2.RT_MAT = SRT.RT_MAT
+			and RT2.RT_TIPPROV = '1'
+			and RT2.RT_VERBA = '830'
+			and RT2.RT_DATABAS <> ' '
+			and RT2.D_E_L_E_T_ = ' '
+			and RT2.RT_DATACAL = SRT.RT_DATACAL
+	)
 	SRT.RT_VALOR as PROV_ACUMULADA,
 	SRT.RT_DFERPRO as AVO_FERPRO,
 	SRT.RT_AVOS13S as AVOS_13,
@@ -250,8 +260,5 @@ from SRT010 SRT (nolock)
     inner join CTD010 CTD (nolock)
         on CTD.D_E_L_E_T_ = ''
         and CTD.CTD_ITEM = SRT.RT_ITEM
-/*
-	left join SRT010 RT2 ON RT2.RT_FILIAL = SRA.RA_FILIAL AND RT2.RT_MAT = SRA.RA_MAT AND RT2.RT_TIPPROV = '1' AND RT2.RT_VERBA = '830' AND RT2.RT_DATABAS <> ' '  AND RT2.D_E_L_E_T_ = ' ' AND RT2.RT_DATACAL = SRT.RT_DATACAL
-*/
 where
         SRT.D_E_L_E_T_ = ''
