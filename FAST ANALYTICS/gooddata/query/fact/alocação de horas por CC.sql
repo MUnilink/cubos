@@ -14,6 +14,8 @@ select
     isnull(ZC2.VAL_REAL_ITEM, 0.0) as VAL_REAL_ITEM,
     isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
     isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
+    ZC2.QTD_PV as QTD_PV,
+    ZC2.RATEIO,
 
     ZC2.BK_FILIAL,
     ZC2.BK_CLIENTE,
@@ -123,7 +125,7 @@ from ZC7010 ZC7
             sum(cast(ZC2010.ZC2_QTDREC as numeric(15, 2))) as QTD_RECURSO,
             sum(cast(ZC2010.ZC2_TOTAL as numeric(15, 2))) as VALOR_TOTAL,
             concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
-            sum(PV.QTD) as QTD_PV,
+            count(PV.PV_ITEM) as QTD_PV,
             trim(ZC2010.ZC2_COD) as ENTIDADE,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_TIPO) as ID_RECURSO,
@@ -135,7 +137,6 @@ from ZC7010 ZC7
             'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED010.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED010.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
             'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4010.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4010.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
             PV.FILIAL,
-            PV.OS,
             PV.ID_PEDIDODEVENDA,
             PV.ID_NFS,
             PV.BK_ITEM_CONTABIL,
@@ -171,7 +172,7 @@ from ZC7010 ZC7
                     concat('SD2', trim(SD2010.D2_FILIAL), trim(SD2010.D2_CLIENTE), trim(SD2010.D2_LOJA), trim(SD2010.D2_DOC), trim(SD2010.D2_SERIE)) as ID_NFS,
                     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
                     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
-                    1 as QTD
+                    SC6010.C6_ITEM as PV_ITEM
                 from SC6010
                     left join SD2010
                         on SD2010.D_E_L_E_T_= ''
@@ -196,6 +197,7 @@ from ZC7010 ZC7
             and cast(ZC2010.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 10, 12, 13)
             and ZC2010.D_E_L_E_T_ = ''
         group by
+            ZC1010.ZC1_NUM,
             ZC2010.ZC2_COD,
             ZC2010.ZC2_TIPO,
             ZC1010.ZC1_FILIAL,
@@ -206,7 +208,6 @@ from ZC7010 ZC7
             SA2010.A2_FILIAL,
             SA2010.A2_COD,
             SA2010.A2_LOJA,
-            ZC1010.ZC1_NUM,
             SED010.ED_FILIAL,
             SED010.ED_CODIGO,
             SE4010.E4_FILIAL,
