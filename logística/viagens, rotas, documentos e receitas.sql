@@ -3,14 +3,15 @@ select
     DTQ.DTQ_VIAGEM,
     DT6.DT6_DOC,
     DT6.DT6_SERIE,
-    convert(date, DT6.DT6_DATEMI, 103) as DT6_DATEMI,
+    left(DT6.DT6_DATEMI, 6) as PERIODO_CTE,
+    cast(DT6.DT6_DATEMI as date) as DT6_DATEMI,
     DA8.DA8_DESC,
     DTQ.DTQ_KMVGE,
 
-    REG_COL.DUY_EST as UF_COLETA,
-	REG_COL.DUY_DESCRI as MUN_COLETA,
-	REG_ENT.DUY_EST as UF_ENTREGA,
-	REG_ENT.DUY_DESCRI as MUN_ENTREGA,
+    trim(REG_COL.DUY_EST) as UF_COLETA,
+	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
+	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
+	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
     
     DTQ.DTQ_DATGER,
     DTQ.DTQ_DATFEC,
@@ -39,8 +40,8 @@ select
     01 – INICIO DE VIAGEM
     05 – CHEGADA NO CLIENTE
     06 -  SAIDA DO CLIENTE
-    09 – CHEGADA NO PORTO (No TMS essa macro é apontada como chegada no cliente{porto})
-    10 – SAIDA DO PORTO (No TMS essa macro é apontada como saída no cliente{porto})
+    09 – CHEGADA NO PORTO - no TMS essa macro é apontada como chegada de cliente {porto}
+    10 – SAIDA DO PORTO - no TMS essa macro é apontada como saída de cliente {porto}
     07 – FIM DE VIAGEM
 
     OCORRÊNCIA
