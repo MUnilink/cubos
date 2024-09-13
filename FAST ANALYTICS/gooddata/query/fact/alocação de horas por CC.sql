@@ -14,8 +14,6 @@ select
     isnull(ZC2.VAL_REAL_ITEM, 0.0) as VAL_REAL_ITEM,
     isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
     isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
-    ZC2.QTD_PV as QTD_PV,
-    ZC2.RATEIO,
 
     ZC2.BK_FILIAL,
     ZC2.BK_CLIENTE,
@@ -90,6 +88,15 @@ select
                     and TS1.TS1_DTVENC = TS1010.TS1_DTVENC
                 where TS1010.TS1_CODBEM = ZC7.ZC7_CODIGO
             )
+            when ZC2.TIPO = 10 then
+            (
+                select cast(sum(TQN010.TQN_VALTOT) as numeric(15, 2))
+                from TQN010
+                where
+                        TQN010.D_E_L_E_T_ = ''
+                    and TQN010.TQN_FROTA = ZC7.ZC7_CODIGO
+                    and left(TQN010.TQN_DTABAS, 6) = ZC7.ZC7_COMPET
+            )
             when ZC2.TIPO = 12 then
             (
                 select sum(ZC4010.ZC4_VLSEG)/sum(ZC4.VALOR_ANUAL)/12.0
@@ -113,6 +120,15 @@ select
                     and ZC7.ZC7_CODIGO = ZC4010.ZC4_CODBEM
                     and eomonth(concat(ZC7.ZC7_COMPET, '01')) between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
             )
+            when ZC2.TIPO = 13 then
+            (
+                select sum(ZC6010.ZC6_CUSTO)
+                from ZC6010
+                where
+                        ZC6010.D_E_L_E_T_ = ''
+                    and ZC6010.ZC6_ANOMES = left(ZC7.ZC7_COMPET, 6)
+                    and (ZC6010.ZC6_BEMPAI = ZC7.ZC7_CODIGO or ZC6010.ZC6_BEMPA2 = ZC7.ZC7_CODIGO)
+            )
         else 0.0 end, 0.0
     ) as CUSTO
 
@@ -125,10 +141,9 @@ from ZC7010 ZC7
             sum(cast(ZC2010.ZC2_QTDREC as numeric(15, 2))) as QTD_RECURSO,
             sum(cast(ZC2010.ZC2_TOTAL as numeric(15, 2))) as VALOR_TOTAL,
             concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
-            count(PV.PV_ITEM) as QTD_PV,
             trim(ZC2010.ZC2_COD) as ENTIDADE,
-            cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_TIPO) as ID_RECURSO,
+            cast(ZC2010.ZC2_TIPO as int) as TIPO,
 
             CASE WHEN ZC1010.ZC1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZC1010.ZC1_FILIAL AS CHAR (6)) END AS BK_FILIAL,
             'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1010.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1010.A1_COD, ' '))+RTRIM(COALESCE(SA1010.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
@@ -168,12 +183,12 @@ from ZC7010 ZC7
                 select
                     SC6010.C6_FILIAL as FILIAL,
                     SC6010.C6_YOS as OS,
+                    SC6010.C6_ITEM as PV_ITEM,
+                    SD2010.D2_ITEM as NF_ITEM,
                     concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
                     concat('SD2', trim(SD2010.D2_FILIAL), trim(SD2010.D2_CLIENTE), trim(SD2010.D2_LOJA), trim(SD2010.D2_DOC), trim(SD2010.D2_SERIE)) as ID_NFS,
                     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
-                    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
-                    SC6010.C6_ITEM as PV_ITEM
-                from SC6010
+                    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO                from SC6010
                     left join SD2010
                         on SD2010.D_E_L_E_T_= ''
                         and SD2010.D2_FILIAL = SC6010.C6_FILIAL
