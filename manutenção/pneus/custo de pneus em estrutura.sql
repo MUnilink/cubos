@@ -46,5 +46,6 @@ from ZC5010 ZC5 (nolock)
     left join ZC6010 ZC6 (nolock)
         on ZC6.D_E_L_E_T_ = ''
         and ZC6.ZC6_PNEU = ZC5.ZC5_PNEU
+		and ZC6.ZC6_ANOMES = ZC5.ZC5_ANOMES
 where
 		ZC5.D_E_L_E_T_ = ''
