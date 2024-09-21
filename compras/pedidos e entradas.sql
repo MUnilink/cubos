@@ -81,8 +81,8 @@ select
 	trim(SA2.A2_NREDUZ) as NOMERED_FORNECEDOR,
 	trim(SA2.A2_CGC) as CNPJ,
 	trim(SA2.A2_EST) as UF,
-	trim(SC7.C7_OBS) as OBS_PC,
-	trim(SC7.C7_OBSM) as MEMO_PC,
+	replace(replace(SC7.C7_OBS, char(10), ''), char(13), '') as OBS_PC,
+	replace(replace(SC7.C7_OBSM, char(10), ''), char(13), '') as MEMO_PC,
 
 	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
@@ -182,8 +182,9 @@ select
 	SD1.D1_QTDPEDI as NF_QTDPEDI,
 	SD1.D1_VALDESC as NF_VALDESC,
 	SD1.D1_SEGURO as NF_SEGURO,
-	case when SC7.C7_YOS = '2024/0' then right(left(SC7.C7_OBS, 63), 11) else coalesce(nullif(SD1.D1_YOS, ''), nullif(SC7.C7_YOS, '')) end as OS_PORT,
-	nullif(SC7.C7_YOSIT, '') as ITEMOS_PORT,
+
+	case when trim(SC7.C7_YOS) = '2024/0' then right(left(replace(replace(SC7.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7.C7_YOS end as OS_PORT,
+	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT,
 
     cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
     cast(SC7.C7_VALIPI as numeric(14, 2)) as VL_PC_IPI,
