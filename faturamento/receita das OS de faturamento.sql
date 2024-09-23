@@ -32,7 +32,7 @@ select
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
     
-    case ZC2.ZC2_TIPO as TIPO,
+    ZC2.ZC2_TIPO as TIPO,
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
         when 2 then 'FOLHA'
@@ -142,6 +142,7 @@ select
 
     SD2.D2_DOC as NF_DOC,
     SD2.D2_SERIE as NF_SERIE,
+    SD2.D2_ITEM as NF_ITEM,
     SD2.D2_LOCAL as ARMAZEM,
     SD2.D2_TES as TM,
     SD2.D2_CF as CF,
@@ -183,7 +184,7 @@ select
             select sum(SC7010.C7_TOTAL)
             from SC7010 (nolock)
             where
-                    case when SC7010.C7_YOS = '2024/0' then right(left(SC7010.C7_OBS, 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
+                    case when trim(SC7010.C7_YOS) = '2024/0' then right(left(replace(replace(SC7010.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
                 and SC7010.C7_YOSIT = ZC2.ZC2_ITEM
                 and SC7010.D_E_L_E_T_ = ''
         )
