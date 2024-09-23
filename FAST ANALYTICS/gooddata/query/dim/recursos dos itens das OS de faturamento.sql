@@ -1,6 +1,6 @@
     select distinct
         cast(ZC2.ZC2_TIPO as int) as TIPO_ITEM,
-        case when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_YFORNE)) else concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_COD)) end as ID_RECURSO,
+        case when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_YFORNE)) else concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_COD)) end as ID_RECURSO,
 
         case
             when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_YFORNE)), ' ', (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11)))
