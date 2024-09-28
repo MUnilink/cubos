@@ -145,7 +145,7 @@ from ZC7010 ZC7
             
             concat(left(ZC2010.ZC2_COMPET, 6), '01') as PERIODO,
             trim(ZC2010.ZC2_COD) as ENTIDADE,
-            concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_COD)) as ID_RECURSO,
+            concat(trim(ZC2010.ZC2_TIPO), ' ', trim(ZC2010.ZC2_COD)) as ID_RECURSO,
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
 
             CASE WHEN ZC1010.ZC1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZC1010.ZC1_FILIAL AS CHAR (6)) END AS BK_FILIAL,
@@ -201,13 +201,14 @@ from ZC7010 ZC7
 
         left join
         (
-            select distinct
+            select
                 SC6010.C6_FILIAL as FILIAL,
                 SC6010.C6_YOS as OS,
                 concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
                 concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
                 'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
-                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO
+                'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+                sum(cast(SD2010.D2_VALBRUT as numeric(15, 2))) as VALOR_NF
             from SC6010
                 left join SD2010
                     on SD2010.D_E_L_E_T_= ''
@@ -233,6 +234,19 @@ from ZC7010 ZC7
                     and CTT010.CTT_CUSTO = SC6010.C6_CC
             where
                     SC6010.D_E_L_E_T_ = ''
+            group by
+                SC6010.C6_FILIAL,
+                SC6010.C6_YOS,
+                SC6010.C6_NUM,
+                SF2010.F2_FILIAL,
+                SF2010.F2_CLIENTE,
+                SF2010.F2_LOJA,
+                SF2010.F2_DOC,
+                SF2010.F2_SERIE,
+                CTD010.CTD_FILIAL,
+                SC6010.C6_ITEMCTA,
+                CTT010.CTT_FILIAL,
+                SC6010.C6_CC
         ) PV
             on PV.FILIAL = ZC2.FILIAL
             and PV.OS = ZC2.OS
