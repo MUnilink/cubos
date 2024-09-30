@@ -4,6 +4,7 @@
         case
             when cast(ZC2.ZC2_TIPO as int) = 4 then concat(trim(ZC2.ZC2_TIPO), '-', (select max(trim(SB1010.B1_YCTCUST)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 4)) /* madeira 320601001 */
             when cast(ZC2.ZC2_TIPO as int) in (5, 11) and ZC2.ZC2_YFORNE in (52, 4997) then concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_YFORNE))
+            when cast(ZC2.ZC2_TIPO as int) = 7 then concat(trim(ZC2.ZC2_TIPO), '-', trim(ZC2.ZC2_COD))
             else trim(ZC2.ZC2_TIPO)
         end as VARIAVEL_REC,
 
