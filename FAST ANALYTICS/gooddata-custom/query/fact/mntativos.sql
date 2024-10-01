@@ -2,31 +2,29 @@ select
 	trim(STL.TL_SEQRELA) as TL_SEQRELA,
 	STL.TL_QUANTID,
 
-	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
-	else
-		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18', 'T19', 'T20', 'T21') then ST1.T1_SALARIO * STL.TL_QUANTID
-		else
-			case when STL.TL_TIPOREG = 'M' and substring(STL.TL_DTINICI, 1, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-				then
-				(
-					select avg(STL010.TL_CUSTO)
-					from STL010
-					where
-							STL010.D_E_L_E_T_ = ''
-						and STL010.TL_CODIGO = STL.TL_CODIGO
-						and substring(STL010.TL_DTINICI, 1, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-				)
-			else STL.TL_CUSTO
-			end
-		end
+	case
+		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
+		when STL.TL_TIPOREG = 'M' and trim(STL.TL_CODIGO) like 'T%' then ST1.T1_SALARIO * STL.TL_QUANTID
+		when STL.TL_TIPOREG = 'M' and left(STL.TL_DTINICI, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') then
+		(
+			select avg(STL010.TL_CUSTO)
+			from STL010
+			where
+					STL010.D_E_L_E_T_ = ''
+				and STL010.TL_CODIGO = STL.TL_CODIGO
+				and left(STL010.TL_DTINICI, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
+		)
+		else STL.TL_CUSTO
 	end as TL_CUSTO,
 
-	trim(STL.TL_DTINICI) as TL_DTINICI,
-	trim(STL.TL_DTFIM) as TL_DTFIM,
-	trim(STJ.TJ_DTORIGI) as TJ_DTORIGI,
+	STL.TL_DTINICI as DTINI_APP,
+	STL.TL_DTFIM as DTFIM_APP,
+	STJ.TJ_DTORIGI as DATA_INIOS,
+	STJ.TJ_DTPRFIM as DATA_FIMOS,
+	STJ.TJ_TERMINO as OS_ENCERRADA,
 
 	STJ.TJ_POSCONT,
-	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
+	case when left(ST9.T9_DTCOMPR, 6) = left(STL.TL_DTINICI, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
 	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
 
 	trim(STL.TL_CODIGO) as INSUMO,
@@ -57,6 +55,7 @@ select
 	trim(SB1.B1_GRUPO) as B1_GRUPO,
 	trim(SB1.B1_COD) as B1_COD,
 	trim(SA2.A2_COD) + trim(SA2.A2_LOJA) as ID_FORNECEDOR,
+	
 	trim(STL.TL_PLANO) as TI_PLANO,
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
@@ -114,6 +113,6 @@ from STJ010 STJ
 			and ST1.T1_CODFUNC = STL.TL_CODIGO
 where
 		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STL.D_E_L_E_T_ = ''
 	and STL.TL_SEQRELA > 0
 	and year(STJ.TJ_DTORIGI) between 2019 and 2029
+	and STL.D_E_L_E_T_ = ''

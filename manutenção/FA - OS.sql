@@ -1,54 +1,35 @@
 select
-	STL.TL_SEQRELA,
+	trim(STL.TL_SEQRELA) as TL_SEQRELA,
 	STL.TL_QUANTID,
 
-	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
-	else
-		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17') then ST1.T1_SALARIO * STL.TL_QUANTID
-		else
-			case when STL.TL_TIPOREG = 'M' and substring(STL.TL_DTINICI, 1, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-				then
-				(
-					select avg(STL010.TL_CUSTO)
-					from STL010
-					where
-							STL010.D_E_L_E_T_ = ''
-						and STL010.TL_CODIGO = STL.TL_CODIGO
-						and substring(STL010.TL_DTINICI, 1, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-				)
-			else STL.TL_CUSTO
-			end
-		end
+	case
+		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
+		when STL.TL_TIPOREG = 'M' and trim(STL.TL_CODIGO) like 'T%' then ST1.T1_SALARIO * STL.TL_QUANTID
+		when STL.TL_TIPOREG = 'M' and left(STL.TL_DTINICI, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') then
+		(
+			select avg(STL010.TL_CUSTO)
+			from STL010
+			where
+					STL010.D_E_L_E_T_ = ''
+				and STL010.TL_CODIGO = STL.TL_CODIGO
+				and left(STL010.TL_DTINICI, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
+		)
+		else STL.TL_CUSTO
 	end as TL_CUSTO,
 
-	convert(
-        datetime,
-        case isdate(concat(substring(STL.TL_HOINICI, 1, 2), ':', substring(STL.TL_HOINICI, 3, 2)))
-            when 1 then concat(STL.TL_DTINICI, ' ', replace(STL.TL_HOINICI, ':', ''))
-            else concat(STL.TL_DTINICI, ' ', '08:00')
-        end, 113
-    ) as TL_DTINICI,
+	STL.TL_DTINICI as DTINI_APP,
+	STL.TL_DTFIM as DTFIM_APP,
+	STJ.TJ_DTORIGI as DATA_INIOS,
+	STJ.TJ_DTPRFIM as DATA_FIMOS,
+	STJ.TJ_TERMINO as OS_ENCERRADA,
 
-	convert(
-        datetime,
-        case isdate(concat(substring(STL.TL_HOFIM, 1, 2), ':', substring(STL.TL_HOFIM, 3, 2)))
-            when 1 then concat(STL.TL_DTFIM, ' ', replace(STL.TL_HOFIM, ':', ''))
-            else concat(STL.TL_DTFIM, ' ', '08:00')
-        end, 113
-    ) as TL_DTINFIM,
-	
-	cast(STJ.TJ_DTORIGI as date) as TJ_DTORIGI,
 	STJ.TJ_POSCONT,
-	case when substring(ST9.T9_DTCOMPR, 1, 6) = substring(STL.TL_DTINICI, 1, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
-	STJ.TJ_CUSTMDO,
-	STJ.TJ_CUSTMAT,
-	STJ.TJ_CUSTMAA,
-	STJ.TJ_CUSTMAS,
-	STJ.TJ_CUSTTER,
+	case when left(ST9.T9_DTCOMPR, 6) = left(STL.TL_DTINICI, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
+	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
 
-	trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
-	trim(isnull(STL.TL_LOCAL, '-')) as ARMAZEM,
-	
+	trim(STL.TL_CODIGO) as INSUMO,
+	trim(STL.TL_LOCAL) as ARMAZEM,
+
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
 		when 'E' then 'MÃO-DE-OBRA'
@@ -65,55 +46,48 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
 
-	trim(isnull(STJ.TJ_ORDEM, '-')) as TJ_ORDEM,
-	trim(isnull(STL.TL_TAREFA, '-')) as TL_TAREFA,
-	trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
-	trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
-	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
-	trim(isnull(ST1.T1_CODFUNC, '-')) as T1_CODFUNC,
-
-	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
-	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
-	trim(isnull(SA2.A2_COD + SA2.A2_LOJA, '-')) as ID_FORNECEDOR,
-	trim(isnull(STI.TI_PLANO, '-')) as TI_PLANO,
-	trim(isnull(STJ.TJ_FILIAL, '-')) as COD_FILIAL,
-	trim(isnull(ST4.T4_SERVICO, '-')) as T4_SERVICO,
-	trim(isnull(STJ.TJ_CCUSTO, '-')) as CC,
-	trim(isnull(STJ.TJ_YITMCT, '-')) as ATIVIDADE,
-	ST1.T1_SALARIO,
-	SB1.B1_UPRC,
+	trim(STJ.TJ_ORDEM) as TJ_ORDEM,
+	trim(STL.TL_TAREFA) as T5_TAREFA,
+	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
+	trim(SH4.H4_CODIGO) as H4_CODIGO,
+	trim(ST0.T0_ESPECIA) as T0_ESPECIA,
+	trim(ST1.T1_CODFUNC) as T1_CODFUNC,
+	trim(SB1.B1_GRUPO) as B1_GRUPO,
+	trim(SB1.B1_COD) as B1_COD,
+	trim(SA2.A2_COD) + trim(SA2.A2_LOJA) as ID_FORNECEDOR,
+	
+	trim(STL.TL_PLANO) as TI_PLANO,
+	trim(STL.TL_FILIAL) as COD_FILIAL,
+	trim(STJ.TJ_SERVICO) as T4_SERVICO,
+	trim(STJ.TJ_CCUSTO) as CC,
+	trim(STJ.TJ_YITMCT) as ATIVIDADE,
+	null as B1_UPRC,
+	null as T1_SALARIO,
 
 	/*
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
 	*/
 
 	ST9.T9_NOME,
-	case when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
-	else
-		case when trim(STL.TL_CODIGO) in ('T05', 'T12', 'T15', 'T16', 'T17', 'T18') then ST1.T1_SALARIO
-		else
-			case when STL.TL_QUANTID != 0.0 and STL.TL_TIPOREG = 'M' and substring(STL.TL_DTINICI, 1, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-				then
-				(
-					select avg(STL010.TL_CUSTO)
-					from STL010
-					where
-							STL010.D_E_L_E_T_ = ''
-						and STL010.TL_CODIGO = STL.TL_CODIGO
-						and substring(STL010.TL_DTINICI, 1, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-				) / STL.TL_QUANTID
-			else
-				case when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID
-				else
-					0.0
-				end
-			end
-		end
+	case
+		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
+		when STL.TL_TIPOREG = 'M' and trim(STL.TL_CODIGO) like 'T%' then ST1.T1_SALARIO * STL.TL_QUANTID
+		when STL.TL_TIPOREG = 'M' and left(STL.TL_DTINICI, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') then
+		(
+			select avg(STL010.TL_CUSTO)
+			from STL010
+			where
+					STL010.D_E_L_E_T_ = ''
+				and STL010.TL_CODIGO = STL.TL_CODIGO
+				and left(STL010.TL_DTINICI, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
+		) / STL.TL_QUANTID
+		when STL.TL_QUANTID != 0.0 then STL.TL_CUSTO / STL.TL_QUANTID
+	else 0.0
 	end as TL_UNI,
+	
 	STL.TL_CUSTO as CUSTO_MNT,
-
-	cast(STL.TL_DTINICI as date) as DTINI_APP,
-	cast(STL.TL_DTFIM as date) as DTFIM_APP,
+	cast(STL.TL_DTINICI as date) as DATAINI_APP,
+	cast(STL.TL_DTFIM as date) as DATAFIM_APP,
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
 	ST9.T9_CODFAMI as FAMILIA,
@@ -226,4 +200,5 @@ from STJ010 STJ (nolock)
 			and STI.TI_FILIAL = STL.TL_FILIAL
 			and STI.TI_PLANO = STL.TL_PLANO
 where
-		STL.D_E_L_E_T_ = ''
+		year(STJ.TJ_DTORIGI) between 2019 and 2029
+	and STL.D_E_L_E_T_ = ''
