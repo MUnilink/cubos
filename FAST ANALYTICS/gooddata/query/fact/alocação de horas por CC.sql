@@ -14,6 +14,7 @@ select
     isnull(ZC2.VAL_REAL_ITEM, 0.0) as VAL_REAL_ITEM,
     isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
     isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
+    isnull(PV.VALOR_NF, 0.0) as VALOR_FAT,
     
     ZC2.BK_FILIAL,
     ZC2.BK_CLIENTE,
