@@ -95,6 +95,34 @@ select
 		else 'OUTROS'
 	end as APROVACAO_PC,
 
+    (
+        select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
+        from SCR010 SCR
+            inner join SAK010
+                on SAK010.D_E_L_E_T_ = ''
+                and SAK010.AK_COD = SCR.CR_LIBAPRO
+        where
+                SCR.D_E_L_E_T_ = ''
+            and SCR.CR_FILIAL = SC7.C7_FILIAL
+            and SCR.CR_NUM = SC7.C7_NUM
+            and SCR.CR_STATUS < 6
+            and SCR.CR_NIVEL =
+            (
+                select max(SCR010.CR_NIVEL)
+                from SCR010 (nolock)
+                where
+                        SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = 'PC'
+                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                    and SCR010.CR_TIPO = SCR.CR_TIPO
+                    and SCR010.CR_NUM = SCR.CR_NUM
+                group by
+                    SCR010.CR_FILIAL,
+                    SCR010.CR_TIPO,
+                    SCR010.CR_NUM
+            )
+    ) as BK_APROVADOR,
+
 	(
 		select top 1 cast(SCR010.CR_DATALIB as date)
 		from SCR010
@@ -118,6 +146,37 @@ select
 				and SCR010.CR_FILIAL = SC7.C7_FILIAL
 				and SCR010.CR_NUM = SC7.C7_NUM)
 	) as DIASAPROV_PC,
+
+	(
+		select cast(max(SCR010.CR_NIVEL) as int)
+		from SCR010 (nolock)
+		where
+				SCR010.D_E_L_E_T_ = ''
+			and SCR010.CR_TIPO = 'PC'
+			and SCR010.CR_FILIAL = SC7.C7_FILIAL
+            and SCR010.CR_NUM = SC7.C7_NUM
+	) as NUM_NIVEL,
+
+	(
+		select SCR.CR_USERLIB
+		from SCR010 SCR (nolock)
+		where
+				SCR.D_E_L_E_T_ = ''
+			and SCR.CR_TIPO = 'PC'
+			and SCR.CR_FILIAL = SC7.C7_FILIAL
+			and SCR.CR_NUM = SC7.C7_NUM
+			and SCR.CR_NIVEL =
+		(
+			select max(SCR010.CR_NIVEL)
+			from SCR010 (nolock)
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and SCR010.CR_TIPO = SCR.CR_TIPO
+				and SCR010.CR_FILIAL = SCR.CR_FILIAL
+				and SCR010.CR_NUM = SCR.CR_NUM
+				and SCR010.CR_STATUS = '3'
+		)
+	) as APROVADOR,
 
 	SC7.C7_COND as COND,
 	trim(SE4.E4_DESCRI) as CONDPGTO,
