@@ -1,5 +1,12 @@
 select
+    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
+    lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.NUM_OS, ZC2.ITEM) as ITEM_ANT,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_PAD,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORAS_IMPR,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_OPE,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 304 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_TMS,
+    
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC2.PORTO) as DESC_PORTO,
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC2.NAVIO) as DESC_NAVIO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC2.TABELA_PRECO) as TABELA_PRECO,
@@ -30,12 +37,6 @@ select
     DES.A2_LOJA as DESP_LOJA,
     DES.A2_CGC as DESP_CNPJ,
     trim(DES.A2_NOME) as DESPACHANTE,
-    
-    lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.NUM_OS, ZC2.ITEM) as ITEM_ANT,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_PAD,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORAS_IMPR,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_OPE,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 304 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_TMS,
 
     SC6.C6_NUM as PEDIDO,
     SC6.C6_ITEM as ITEM_PEDIDO,
@@ -75,8 +76,8 @@ select
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
 
     case
-        when ZC2.TIPO = 8 and ZC2.PERIODO like '2024%' then 0.0
-        when ZC2.TIPO = 4 and ZC2.PERIODO like '2024%' then
+        when ZC2.TIPO = 8 and left(ZC2.PERIODO, 4) = 2024 then 0.0
+        when ZC2.TIPO = 4 and left(ZC2.PERIODO, 4) = 2024 then
         (
             select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2))
             from SD3010 (nolock)
@@ -88,7 +89,7 @@ select
                 and SD3010.D3_COD = ZC2.INSUMO
                 and SD3010.D_E_L_E_T_ = ''
         )
-        when ZC2.TIPO in (5, 11) and ZC2.PERIODO like '2024%' then
+        when ZC2.TIPO in (5, 11) and left(ZC2.PERIODO, 4) = 2024 then
         (
             select sum(SC7010.C7_TOTAL)
             from SC7010 (nolock)
@@ -97,7 +98,7 @@ select
                 and SC7010.C7_YOSIT = ZC2.ITEM
                 and SC7010.D_E_L_E_T_ = ''
         )
-        when ZC2.TIPO = 3 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 3 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select sum(STL010.TL_CUSTO)
             from STJ010 (nolock)
@@ -113,7 +114,7 @@ select
                 and STL010.TL_SEQRELA > 0
                 and STJ010.TJ_SERVICO not in ('PNEMOV', 'PNEROD')
         ) else 0.0 end
-        when ZC2.TIPO = 6 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 6 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select cast(sum(SN4010.N4_VLROC1) as numeric(15, 2))
             from SN4010 (nolock)
@@ -133,7 +134,7 @@ select
                 and SN4010.N4_OCORR = 6
                 and SN4010.N4_TIPOCNT = 3
         ) else 0.0 end
-        when ZC2.TIPO = 7 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 7 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select cast(sum(case when CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2)) else case when CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2))*-1 else 0.0 end end) as numeric(15, 2))
             from CT2010 (nolock)
@@ -152,7 +153,7 @@ select
                 and eomonth(CT2010.CT2_DATA) = ZC2.PERIODO
                 and ZC2.TIPO = 7
         ) else 0.0 end
-        when ZC2.TIPO = 9 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 9 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select cast(sum(TS1010.TS1_VALOR)/12 as numeric(15, 2))
             from TS1010 (nolock)
@@ -176,7 +177,7 @@ select
                 and TS1.TS1_DTVENC = TS1010.TS1_DTVENC
             where TS1010.TS1_CODBEM = ZC2.INSUMO
         ) else 0.0 end
-        when ZC2.TIPO = 10 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 10 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select cast(sum(TQN010.TQN_VALTOT) as numeric(15, 2))
             from TQN010
@@ -185,7 +186,7 @@ select
                 and TQN010.TQN_FROTA = ZC2.INSUMO
                 and eomonth(TQN010.TQN_DTABAS) = ZC2.PERIODO
         ) else 0.0 end
-        when ZC2.TIPO = 12 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 12 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select cast(sum(ZC4010.ZC4_VLSEG)/sum(ZC4.VALOR_ANUAL)/12.0 as numeric(15, 2))
             from ZC4010 (nolock)
@@ -208,17 +209,17 @@ select
                 and ZC2.INSUMO = ZC4010.ZC4_CODBEM
                 and ZC2.PERIODO between ZC4.ZC4_DTVGIN and ZC4.ZC4_DTVGFI
         ) else 0.0 end
-        when ZC2.TIPO = 13 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        when ZC2.TIPO = 13 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
         (
             select sum(ZC6010.ZC6_CUSTO)
-            from ZC6010
+            from ZC6010 (nolock)
             where
                     ZC6010.D_E_L_E_T_ = ''
                 and ZC6010.ZC6_ANOMES = substring(ZC2.PERIODO, 1, 6)
                 and (ZC6010.ZC6_BEMPAI = ZC2.INSUMO or ZC6010.ZC6_BEMPA2 = ZC2.INSUMO)
         ) else 0.0 end
-        when ZC2.TIPO = 2 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6)) else 0.0 end
-        when ZC2.TIPO = 14 and ZC2.PERIODO like '2024%' then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6)) else 0.0 end
+        when ZC2.TIPO = 2 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6)) else 0.0 end
+        when ZC2.TIPO = 14 and left(ZC2.PERIODO, 4) = 2024 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6)) else 0.0 end
     else 0.0 end as CUSTO
 
 from
@@ -233,7 +234,7 @@ from
             left(ZC1010.ZC1_NUM, 4) as ANO_OS,
             left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
             cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
-            left(ZC2010.ZC2_COMPET, 6) as PERIODO,
+            ZC2010.ZC2_COMPET as PERIODO,
 
             case ZC1010.ZC1_STATUS
                 when 1 then 'ABERTA'
@@ -316,12 +317,14 @@ from
             cast(ZC2010.ZC2_QTDPRV as numeric(15, 2)) * cast(ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
             cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) * cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
             cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as VALOR_TOTAL,
+            
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
         from ZC2010 (nolock)
             left join ZC1010 (nolock)
                 on ZC1010.D_E_L_E_T_ = ''
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+        where ZC2010.D_E_L_E_T_ = ''
     ) ZC2
 
         left join SA1010 DEV (nolock)
