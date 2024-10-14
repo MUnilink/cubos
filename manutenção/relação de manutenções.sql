@@ -1,4 +1,4 @@
-select
+select distinct
     trim(STF.TF_CODBEM) as EQUIPAMENTO,
     trim(ST4.T4_SERVICO) as SERVICO,
     trim(ST4.T4_NOME) as DESC_SERVICO,
@@ -30,26 +30,63 @@ select
     trim(ST5.T5_DESCRIC) as DESC_TAREFA,
 
     trim(TQR.TQR_DESMOD) as MODELO,
-    trim(ST7.T7_NOME) as FABRICANTE
+    trim(ST7.T7_NOME) as FABRICANTE,
 
-from ST5010 ST5 (nolock)
+    STG.TG_TIPOREG as TIPO,
+    STG.TG_CODIGO as CODIGO,
+    
+    case STG.TG_TIPOREG
+        when 'M' then trim(ST1.T1_NOME)
+		when 'E' then trim(ST0.T0_NOME)
+		when 'P' then trim(SB1.B1_DESC)
+		when 'T' then trim(SA2.A2_NOME)
+		else 'OUTROS'
+	end as DESC_INSUMO,
+    
+    STG.TG_QUANREC,
+    STG.TG_QUANTID,
+    STG.TG_UNIDADE as UN
+
+from STF010 STF (nolock)
     inner join ST4010 ST4 (nolock)
-		on ST4.D_E_L_E_T_ = ''
-		and ST4.T4_SERVICO = ST5.T5_SERVICO
-        
-        inner join STF010 STF (nolock)
-            on STF.D_E_L_E_T_ = ''
-            and STF.TF_SERVICO = ST4.T4_SERVICO
+        on STF.D_E_L_E_T_ = ''
+        and STF.TF_SERVICO = ST4.T4_SERVICO
+
+        left join ST5010 ST5 (nolock)
+            on ST5.D_E_L_E_T_ = ''
+            and ST5.T5_SERVICO = ST4.T4_SERVICO
+
+    left join STG010 STG (nolock)
+        on STG.D_E_L_E_T_ = ''
+        and STG.TG_CODBEM = STF.TF_CODBEM
+        and STG.TG_SERVICO = STF.TF_SERVICO
+        and STG.TG_SEQRELA = STF.TF_SEQRELA
+
+        left join SA2010 SA2 (nolock)
+            on SA2.D_E_L_E_T_ = ''
+            and SA2.A2_COD = STG.TG_CODIGO
+        left join SB1010 SB1 (nolock)
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_COD = STG.TG_CODIGO
+        left join SH4010 SH4 (nolock)
+            on SH4.D_E_L_E_T_ = ''
+            and SH4.H4_CODIGO = STG.TG_CODIGO
+        left join ST0010 ST0 (nolock)
+            on ST0.D_E_L_E_T_ = ''
+            and ST0.T0_ESPECIA = STG.TG_CODIGO
+        left join ST1010 ST1 (nolock)
+            on ST1.D_E_L_E_T_ = ''
+            and ST1.T1_CODFUNC = STG.TG_CODIGO
+
+    left join ST9010 ST9 (nolock)
+        on ST9.D_E_L_E_T_ = ''
+        and ST9.T9_CODBEM = STF.TF_CODBEM
+    
+        left join TQR010 TQR (nolock)
+            on TQR.D_E_L_E_T_ = ''
+            and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
             
-            inner join ST9010 ST9 (nolock)
-                on ST9.D_E_L_E_T_ = ''
-                and ST9.T9_CODBEM = STF.TF_CODBEM
-            
-                inner join TQR010 TQR (nolock)
-                    on TQR.D_E_L_E_T_ = ''
-                    and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
-                    
-                    inner join ST7010 ST7 (nolock)
-                        on ST7.D_E_L_E_T_ = ''
-                        and TQR.TQR_FABRIC = ST7.T7_FABRICA
+            left join ST7010 ST7 (nolock)
+                on ST7.D_E_L_E_T_ = ''
+                and TQR.TQR_FABRIC = ST7.T7_FABRICA
 where ST5.D_E_L_E_T_ = ''
