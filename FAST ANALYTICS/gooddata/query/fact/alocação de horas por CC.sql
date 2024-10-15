@@ -6,12 +6,19 @@ select
     
     ZC2.ID_RECURSO,
     ZC2.TIPO,
+    ZG1.ZG1_TIPO,
     
     isnull(ZC7.ZC7_HRPAD, 0.0) as ZC7_HRPAD,
     isnull(ZC7.ZC7_HRPROD, 0.0) as ZC7_HRPROD,
     isnull(ZC7.ZC7_HRIMPR, 0.0) as ZC7_HRIMPR,
     isnull(ZC2.QTD_REAL_ITEM, 0.0) as QTD_REAL_ITEM,
     isnull(ZC2.VAL_REAL_ITEM, 0.0) as VAL_REAL_ITEM,
+    
+    isnull(ZG1.ZG1_VLTOTL, 0.0) as ZG1_VLTOTL,
+    isnull(ZG1.ZG1_VLHORA, 0.0) as ZG1_VLHORA,
+    isnull(ZG1.ZG1_VLIMPR, 0.0) as ZG1_VLIMPR,
+    isnull(ZG1.ZG1_VLPROD, 0.0) as ZG1_VLPROD,
+    
     isnull(ZC2.QTD_RECURSO, 0.0) as QTD_RECURSO,
     isnull(ZC2.VALOR_TOTAL, 0.0) as VALOR_TOTAL,
     isnull(PV.VALOR_NF, 0.0) as VALOR_FAT,
@@ -134,6 +141,16 @@ select
     ) as CUSTO
 
 from ZC7010 ZC7
+    left join CTT010 CTT
+        on CTT.D_E_L_E_T_ = ''
+        and CTT.CTT_CUSTO = ZC7.ZC7_CC
+    left join ZG1010 ZG1
+        on ZG1.D_E_L_E_T_ = ''
+        and ZG1.ZG1_CODIGO = ZC7.ZC7_CODIGO
+        and ZG1.ZG1_COMPET = ZC7.ZC7_COMPET
+        and ZG1.ZG1_TABELA = ZC7.ZC7_ORIGEM
+        and ZG1.ZG1_ATIVO = 'S'
+    
     left join
     (
         select
@@ -177,7 +194,7 @@ from ZC7010 ZC7
                     and SE4010.E4_CODIGO = ZC1010.ZC1_COND
         where
                 concat(left(ZC2010.ZC2_COMPET, 6), '01') > '20231231'
-            and cast(ZC2010.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 10, 12, 13)
+            and cast(ZC2010.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 10, 12, 13, 15, 16)
             and ZC2010.D_E_L_E_T_ = ''
         group by
             ZC1010.ZC1_NUM,
@@ -252,9 +269,6 @@ from ZC7010 ZC7
             on PV.FILIAL = ZC2.FILIAL
             and PV.OS = ZC2.OS
 
-    left join CTT010 CTT
-        on CTT.D_E_L_E_T_ = ''
-        and CTT.CTT_CUSTO = ZC7.ZC7_CC
 where
         concat(ZC7.ZC7_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZC7.D_E_L_E_T_ = ''
