@@ -289,5 +289,5 @@ union
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
-			substring(SRD.RD_PERIODO, 1, 4) > 2022
+			left(SRD.RD_PERIODO, 6) =:ANOMES
 		and SRD.D_E_L_E_T_ = ''
