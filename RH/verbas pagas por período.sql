@@ -18,41 +18,14 @@
         trim(SRA.RA_CIC) as CPF,
 
 		trim(SQ3.Q3_CARGO) as CARGO,
-		trim(SQ3.Q3_DESCSUM) as CARGO_FUNC,
-		trim(SRJ.RJ_FUNCAO) as FUNCAO,
-		trim(SRJ.RJ_DESC) as FUNCAO_FUNC,
-
-		trim(SQ3.Q3_CARGO) as CARGO_FOLHA,
-		trim(SRJ.RJ_FUNCAO) as FUNCAO_FOLHA,
 		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
+		trim(SRJ.RJ_FUNCAO) as FUNCAO,
 		trim(SRJ.RJ_DESC) as DESC_FUNCAO,
 
 		trim(SRC.RC_PERIODO) as PERIODO,
 		trim(SRC.RC_PD) as VERBA,
 		trim(SRC.RC_SEQ) as SEQ,
 		trim(SRC.RC_ROTEIR) as ROTEIRO,
-		
-		case when SRC.RC_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
-		else
-			case when SRC.RC_PD in ('029', '111', '113') then '03 Hora Extra'
-			else
-				case when SRC.RC_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
-				else
-					case when SRC.RC_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
-					else
-						case when SRC.RC_PD in ('845', '846') then '06 13º Salário'
-						else
-							case when SRC.RC_PD in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
-							else
-								case when SRC.RC_PD in ('830', '831', '832') then '08 Férias'
-								else '01 N/A Custo'
-								end
-							end
-						end
-					end
-				end
-			end
-		end as CONTA,
 
 		case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 		
@@ -134,100 +107,14 @@ union
         trim(SRA.RA_CIC) as CPF,
 
 		trim(SQ3.Q3_CARGO) as CARGO,
-		trim(SQ3.Q3_DESCSUM) as CARGO_FUNC,
+		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
 		trim(SRJ.RJ_FUNCAO) as FUNCAO,
-		trim(SRJ.RJ_DESC) as FUNCAO_FUNC,
-
-		isnull
-		(
-			(
-				select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-				from SR7010
-				where
-						SR7010.D_E_L_E_T_ = ''
-					and SR7010.R7_FILIAL = SRD.RD_FILIAL
-					and SR7010.R7_MAT = SRD.RD_MAT
-					and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-			), trim(SQ3.Q3_CARGO)
-		) as CARGO_FOLHA,
-		isnull
-		(
-			(
-				select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-				from SR7010
-				where
-						SR7010.D_E_L_E_T_ = ''
-					and SR7010.R7_FILIAL = SRD.RD_FILIAL
-					and SR7010.R7_MAT = SRD.RD_MAT
-					and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-			), trim(SRJ.RJ_FUNCAO)
-		) as FUNCAO_FOLHA,
-		
-		isnull
-		(
-			(
-				select trim(SQ3010.Q3_DESCSUM)
-				from SQ3010
-				where
-						SQ3010.D_E_L_E_T_ = ''
-					and SQ3010.Q3_CARGO =
-					(
-						select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-					)
-			), trim(SQ3.Q3_DESCSUM)
-		) as DESC_CARGO,
-		isnull
-		(
-			(
-				select trim(SRJ010.RJ_DESC)
-				from SRJ010
-				where
-						SRJ010.D_E_L_E_T_ = ''
-					and SRJ010.RJ_FUNCAO =
-					(
-						select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
-					)
-			), trim(SRJ.RJ_DESC)
-		) as DESC_FUNCAO,
+		trim(SRJ.RJ_DESC) as DESC_FUNCAO,
 
 		trim(SRD.RD_PERIODO) as PERIODO,
 		trim(SRD.RD_PD) as VERBA,
 		trim(SRD.RD_SEQ) as SEQ,
 		trim(SRD.RD_ROTEIR) as ROTEIRO,
-		
-		case when SRD.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
-		else
-			case when SRD.RD_PD in ('029', '111', '113') then '03 Hora Extra'
-			else
-				case when SRD.RD_PD in ('038', '711', '719', '738', '749', '796') then '04 Benefícios'
-				else
-					case when SRD.RD_PD in ('739', '759', '760', '800', '817', '950', '955', '960', '961', '962') then '05 Encargos Sociais'
-					else
-						case when SRD.RD_PD in ('845', '846') then '06 13º Salário'
-						else
-							case when SRD.RD_PD in ('833', '834', '847', '848') then '07 Encargos Sociais (13º e Férias)'
-							else
-								case when SRD.RD_PD in ('830', '831', '832') then '08 Férias'
-								else '01 N/A Custo'
-								end
-							end
-						end
-					end
-				end
-			end
-		end as CONTA,
 
 		case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
 		
@@ -289,5 +176,5 @@ union
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
-			left(SRD.RD_PERIODO, 6) =:ANOMES
+			left(SRD.RD_PERIODO, 4) > 2021
 		and SRD.D_E_L_E_T_ = ''
