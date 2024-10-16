@@ -1,6 +1,12 @@
 select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
+    
+    case
+        when ZC2.TIPO = 15 then (select ZG1010.ZG1_VLIMPR from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = concat(ZG1010.ZG1_COMPET, '01') and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = 15)
+        when ZC2.TIPO = 16 then (select ZG1010.ZG1_VLIMPR from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = concat(ZG1010.ZG1_COMPET, '01') and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = 16)
+    else ZC2.QTDxVALORUNI end as VALOR_TOTAL,
+    
     lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.NUM_OS, ZC2.ITEM) as ITEM_ANT,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_PAD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORAS_IMPR,
@@ -9,7 +15,7 @@ select
     
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC2.PORTO) as DESC_PORTO,
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC2.NAVIO) as DESC_NAVIO,
-    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC2.TABELA_PRECO) as TABELA_PRECO,
+    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC2.TABELADEPRECO) as DESC_TABPRECO,
     
     case
         when ZC2.TIPO in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = ZC2.INSUMO and ZC2.TIPO in (1, 4, 5, 11))
@@ -278,7 +284,7 @@ from
             
             trim(ZC1010.ZC1_PORTO) as PORTO,
             trim(ZC1010.ZC1_NAVIO) as NAVIO,
-            trim(ZC1010.ZC1_TABPRC) as TABELA_PRECO,
+            trim(ZC1010.ZC1_TABPRC) as TABELADEPRECO,
             trim(ZC1010.ZC1_VIAGEM) as VIAGEM_PORT,
             trim(ZC2010.ZC2_CONTEI) as CONTEINER,
             trim(ZC2010.ZC2_LACRE) as LACRE,
@@ -287,7 +293,7 @@ from
             cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAPONT,
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
-            case ZC2010.ZC2_TIPO
+            case cast(ZC2010.ZC2_TIPO as int)
                 when 1 then 'RECEITA'
                 when 2 then 'FOLHA'
                 when 3 then 'MANUTENÇÃO'
@@ -316,7 +322,7 @@ from
             
             cast(ZC2010.ZC2_QTDPRV as numeric(15, 2)) * cast(ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
             cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) * cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
-            cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as VALOR_TOTAL,
+            cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
             
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
         from ZC2010 (nolock)
