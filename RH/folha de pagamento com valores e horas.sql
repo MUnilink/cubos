@@ -279,7 +279,121 @@ select
 
 	case
 		when SRD.RD_CC = 305 and SRD.RD_ITEM = 32 then
-			220.0 * datediff(
+			220.0 *
+			datediff
+			(
+				day,
+				concat(SRD.RD_DATARQ, '01'),
+				case when
+				(
+					select max(SR7010.R7_DATA)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
+				(
+					select max(SR7010.R7_DATA)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				)
+				else concat(SRD.RD_DATARQ, '01') end
+			) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
+		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 and
+			(
+				isnull
+				(
+					(
+						select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+						from SR7010
+						where
+								SR7010.D_E_L_E_T_ = ''
+							and SR7010.R7_FILIAL = SRD.RD_FILIAL
+							and SR7010.R7_MAT = SRD.RD_MAT
+							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+					), trim(SRJ.RJ_FUNCAO)
+				) = 740
+			or
+				isnull
+				(
+					(
+						select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+						from SR7010
+						where
+								SR7010.D_E_L_E_T_ = ''
+							and SR7010.R7_FILIAL = SRD.RD_FILIAL
+							and SR7010.R7_MAT = SRD.RD_MAT
+							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+					), trim(SQ3.Q3_CARGO)
+				) = 8
+			)
+			then
+				150.0 *
+				datediff
+				(
+					day,
+					concat(SRD.RD_DATARQ, '01'),
+					case when
+					(
+						select max(SR7010.R7_DATA)
+						from SR7010
+						where
+								SR7010.D_E_L_E_T_ = ''
+							and SR7010.R7_FILIAL = SRD.RD_FILIAL
+							and SR7010.R7_MAT = SRD.RD_MAT
+							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+					) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
+					(
+						select max(SR7010.R7_DATA)
+						from SR7010
+						where
+								SR7010.D_E_L_E_T_ = ''
+							and SR7010.R7_FILIAL = SRD.RD_FILIAL
+							and SR7010.R7_MAT = SRD.RD_MAT
+							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+					)
+					else concat(SRD.RD_DATARQ, '01') end
+				) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
+		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 then
+			180.0 *
+			datediff
+			(
+				day,
+				concat(SRD.RD_DATARQ, '01'),
+				case when
+				(
+					select max(SR7010.R7_DATA)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
+				(
+					select max(SR7010.R7_DATA)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				)
+				else concat(SRD.RD_DATARQ, '01') end
+			) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
+	else 0.0 end as HORAS_ANT,
+
+	case
+		when SRD.RD_CC = 305 and SRD.RD_ITEM = 32 then
+			220.0 *
+			datediff
+			(
 				day,
 				case when
 				(
@@ -332,7 +446,9 @@ select
 				) = 8
 			)
 			then
-				150.0 * datediff(
+				150.0 *
+				datediff
+				(
 					day,
 					case when
 					(
@@ -357,7 +473,9 @@ select
 					dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
 				) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
 		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 then
-			180.0 * datediff(
+			180.0 *
+			datediff
+			(
 				day,
 				case when
 				(
