@@ -3,9 +3,12 @@ select
     ZC2.*,
     
     case
-        when ZC2.TIPO = 15 then (select ZG1010.ZG1_VLIMPR from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = concat(ZG1010.ZG1_COMPET, '01') and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = 15)
-        when ZC2.TIPO = 16 then (select ZG1010.ZG1_VLIMPR from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = concat(ZG1010.ZG1_COMPET, '01') and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = 16)
+        when ZC2.TIPO = 15 then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = 15)
+        when ZC2.TIPO = 16 then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = 16)
     else ZC2.QTDxVALORUNI end as VALOR_TOTAL,
+    
+    (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) as CUSTO_IMPR,
+    (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) as CUSTO_PROD,
     
     lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.NUM_OS, ZC2.ITEM) as ITEM_ANT,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_PAD,
@@ -19,8 +22,8 @@ select
     
     case
         when ZC2.TIPO in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = ZC2.INSUMO and ZC2.TIPO in (1, 4, 5, 11))
-        when ZC2.TIPO in (2, 14) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = ZC2.INSUMO and ZC2.TIPO in (2, 14))
-        when ZC2.TIPO in (3, 6, 9, 10, 12, 13) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = ZC2.INSUMO and ZC2.TIPO in (3, 6, 9, 10, 12, 13))
+        when ZC2.TIPO in (2, 14, 15) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = ZC2.INSUMO and ZC2.TIPO in (2, 14))
+        when ZC2.TIPO in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = ZC2.INSUMO and ZC2.TIPO in (3, 6, 9, 10, 12, 13))
         when ZC2.TIPO = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = ZC2.INSUMO and ZC2.TIPO = 7)
     else null end as DESC_RECURSO,
 
@@ -163,20 +166,20 @@ select
         (
             select cast(sum(TS1010.TS1_VALOR)/12 as numeric(15, 2))
             from TS1010 (nolock)
-            inner join
-            (
-                select
-                    TS1010.TS1_CODBEM,
-                    TS1010.TS1_DOCTO,
-                    max(TS1010.TS1_DTVENC) as TS1_DTVENC
-                from TS1010 (nolock)
-                where
-                        TS1010.D_E_L_E_T_ = ''
-                    and TS1010.TS1_DOCTO in (1, 2, 3, 7)
-                group by
-                    TS1010.TS1_CODBEM,
-                    TS1010.TS1_DOCTO
-            ) TS1
+                inner join
+                (
+                    select
+                        TS1010.TS1_CODBEM,
+                        TS1010.TS1_DOCTO,
+                        max(TS1010.TS1_DTVENC) as TS1_DTVENC
+                    from TS1010 (nolock)
+                    where
+                            TS1010.D_E_L_E_T_ = ''
+                        and TS1010.TS1_DOCTO in (1, 2, 3, 7)
+                    group by
+                        TS1010.TS1_CODBEM,
+                        TS1010.TS1_DOCTO
+                ) TS1
                 on TS1010.D_E_L_E_T_ = ''
                 and TS1.TS1_DOCTO = TS1010.TS1_DOCTO
                 and TS1.TS1_CODBEM = TS1010.TS1_CODBEM
