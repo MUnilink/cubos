@@ -3,11 +3,8 @@ select
     ZC2.*,
     
     ZC2.QTDxVALORUNI as VALOR_TOTAL,
-    
-    (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) as CUSTO_IMPR,
-    (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) as CUSTO_PROD,
-    
-    lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.NUM_OS, ZC2.ITEM) as ITEM_ANT,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and left(ZC2.PERIODO, 6) = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_PROD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_PAD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORAS_IMPR,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6))) else 0.0 end as HORA_OPE,
@@ -237,6 +234,7 @@ from
             cast(substring(ZC1010.ZC1_NUM, 6, 10) as int) as OS,
             ZC2010.ZC2_FILORI as FILORI,
             ZC2010.ZC2_ITEM as ITEM,
+            lag(ZC2010.ZC2_ITEM, 1, null) over(partition by ZC2010.ZC2_FILIAL, ZC2010.ZC2_COMPET, ZC2010.ZC2_COD order by ZC2010.ZC2_FILIAL, ZC2010.ZC2_COMPET, ZC2010.ZC2_NUM, ZC2010.ZC2_ITEM) as ITEM_ANT,
             left(ZC1010.ZC1_NUM, 4) as ANO_OS,
             left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
             cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
@@ -293,6 +291,12 @@ from
             cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAPONT,
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
+            case cast(ZC2010.ZC2_TIPO as int)
+                when 15 then 'IMPRODUTIVO'
+                when 16 then 'IMPRODUTIVO'
+                else 'PRODUTIVO'
+            end as TIPO_CUSTO,
+            
             case cast(ZC2010.ZC2_TIPO as int)
                 when 1 then 'RECEITA'
                 when 2 then 'FOLHA'
