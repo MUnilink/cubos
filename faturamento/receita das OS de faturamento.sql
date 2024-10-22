@@ -5,10 +5,10 @@ select
     ZC2.QTDxVALORUNI as VALOR_TOTAL,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_PROD,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO)) else 0.0 end as HORA_PAD,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO)) else 0.0 end as HORAS_IMPR,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO)) else 0.0 end as HORA_OPE,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then ((select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 304 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO)) else 0.0 end as HORA_TMS,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_PAD,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORAS_IMPR,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_OPE,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 304 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_TMS,
     
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC2.PORTO) as DESC_PORTO,
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC2.NAVIO) as DESC_NAVIO,
@@ -205,8 +205,8 @@ select
                                 ZC4010.D_E_L_E_T_ = ''
                     ) ZC4
                         on ZC4010.ZC4_CODBEM = ZC4.ZC4_CODBEM
-                        and ZC4010.ZC4_DTVGIN = ZC4.ZC4_DTVGIN
-                        and ZC4010.ZC4_DTVGFI = ZC4.ZC4_DTVGFI
+                        and ZC4010.ZC4_DTVGIN = ZC4.INI_VIG
+                        and ZC4010.ZC4_DTVGFI = ZC4.FIM_VIG
             where
                     ZC4010.D_E_L_E_T_ = ''
                 and ZC2.INSUMO = ZC4010.ZC4_CODBEM
