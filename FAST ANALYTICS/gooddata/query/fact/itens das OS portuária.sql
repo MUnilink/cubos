@@ -39,7 +39,8 @@
         cast(ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
         cast(ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
         case when ZC2.ZC2_TOTAL > 99999999 then 99999999 else ZC2.ZC2_TOTAL end as VALOR_TOTAL,
-        ZC2.ZC2_QTDREC as QTD_RECURSO,
+        0.0 as VALOR_IMPRO,
+        case when ZC2.ZC2_QTDREC > 99999999 then 99999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
         
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS
@@ -141,7 +142,40 @@ union
         case when ZC2.ZC2_VLUREA > 99999999 then 99999999 else ZC2.ZC2_VLUREA end as VAL_REAL,
         cast(ZC2.ZC2_QTDPRV * ZC2.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
         cast(ZC2.ZC2_QTDREA * ZC2.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
-        case when ZC2.ZC2_TOTAL > 99999999 then 99999999 else ZC2.ZC2_TOTAL end as VALOR_TOTAL,
+        case when cast(ZC2.ZC2_TIPO as int) < 15 and ZC2.ZC2_TOTAL < 99999999 then ZC2.ZC2_TOTAL else 0.0 end as VALOR_TOTAL,
+
+        isnull
+        (
+            (
+                select sum(ZG1.ZG1_VLIMPR)/
+                    isnull
+                    (
+                        (
+                            select nullif(sum(ZC2010.ZC2_TOTAL), 0)
+                            from ZC2010 (nolock)
+                            where
+                                    ZC2010.D_E_L_E_T_ = ''
+                                and ZC2010.ZC2_FILIAL = ZG1.ZG1_FILORI
+                                and ZC2010.ZC2_COD = ZG1.ZG1_CODIGO
+                                and left(ZC2010.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
+                                and ZC2010.ZC2_TIPO = case when ZG1.ZG1_TIPO in (2, 14) then 15 when ZG1.ZG1_TIPO in (3, 6, 9, 12) then 16 else 0 end
+                        ), 1
+                    )
+                from ZG1010 ZG1 (nolock)
+                where
+                        ZG1.D_E_L_E_T_ = ''
+                    and ZG1.ZG1_FILORI = ZC2.ZC2_FILIAL
+                    and ZG1.ZG1_COMPET = left(ZC2.ZC2_COMPET, 6)
+                    and ZG1.ZG1_CODIGO = ZC2.ZC2_COD
+                    and ZG1.ZG1_TIPO = ZC2.ZC2_TIPO
+                group by
+                    ZG1.ZG1_FILORI,
+                    ZG1.ZG1_COMPET,
+                    ZG1.ZG1_CODIGO,
+                    ZG1.ZG1_TIPO
+            ) , 0.0
+        ) * ZC2.ZC2_TOTAL as VALOR_IMPRO,
+        
         case when ZC2.ZC2_QTDREC > 99999999 then 99999999 else ZC2.ZC2_QTDREC end as QTD_RECURSO,
         
         case isdate(ZC2.ZC2_HRINI) when 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_APONT,
