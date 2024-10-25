@@ -1,38 +1,6 @@
 select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
-
-    isnull
-    (
-        (
-            select sum(ZG1.ZG1_VLIMPR)/
-                isnull
-                (
-                    (
-                        select nullif(sum(ZC2010.ZC2_TOTAL), 0)
-                        from ZC2010 (nolock)
-                        where
-                                ZC2010.D_E_L_E_T_ = ''
-                            and ZC2010.ZC2_FILIAL = ZG1.ZG1_FILORI
-                            and ZC2010.ZC2_COD = ZG1.ZG1_CODIGO
-                            and left(ZC2010.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
-                            and ZC2010.ZC2_TIPO = case when ZG1.ZG1_TIPO in (2, 14) then 15 when ZG1.ZG1_TIPO in (3, 6, 9, 12) then 16 else 0 end
-                    ), 1
-                )
-            from ZG1010 ZG1 (nolock)
-            where
-                    ZG1.D_E_L_E_T_ = ''
-                and ZG1.ZG1_FILORI = ZC2.FILIAL
-                and ZG1.ZG1_COMPET = ZC2.PERIODO
-                and ZG1.ZG1_CODIGO = ZC2.INSUMO
-                and ZG1.ZG1_TIPO = ZC2.TIPO
-            group by
-                ZG1.ZG1_FILORI,
-                ZG1.ZG1_COMPET,
-                ZG1.ZG1_CODIGO,
-                ZG1.ZG1_TIPO
-        ) , 0.0
-    ) * ZC2.QTDxVALORUNI as VALOR_IMPRO,
     
     ZC2.QTDxVALORUNI as VALOR_TOTAL,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
