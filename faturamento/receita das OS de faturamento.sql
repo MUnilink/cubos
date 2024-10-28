@@ -1,6 +1,7 @@
 select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
+    (select max(ST9010.T9_CCUSTO) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
     
     ZC2.QTDxVALORUNI as VALOR_TOTAL,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
