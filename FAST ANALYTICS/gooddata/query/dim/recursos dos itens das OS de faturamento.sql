@@ -13,7 +13,7 @@
 
         case
             when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_YFORNE))
-            when cast(ZC2.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 12) then concat(trim(ZC2.ZC2_TIPO), 'p', trim(ZC2.ZC2_COD))
+            when cast(ZC2.ZC2_TIPO as int) in (2, 14, 3, 6, 9, 12) then concat(trim(ZC2.ZC2_TIPO), ' p', trim(ZC2.ZC2_COD))
             else concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_COD))
         end as ID_RECURSO,
         
