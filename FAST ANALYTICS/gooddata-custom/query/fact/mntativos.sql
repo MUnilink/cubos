@@ -46,6 +46,7 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
 
+	trim(STJ.TJ_TIPO) as CARAC_TIPO,
 	trim(STJ.TJ_ORDEM) as TJ_ORDEM,
 	trim(STL.TL_TAREFA) as T5_TAREFA,
 	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
