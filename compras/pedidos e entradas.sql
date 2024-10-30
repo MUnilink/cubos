@@ -158,8 +158,11 @@ select
 	) as NUM_NIVEL,
 
 	(
-		select SCR.CR_USERLIB
-		from SCR010 SCR (nolock)
+		select upper(trim(max(SAK010.AK_LOGIN)))
+        from SCR010
+            inner join SAK010
+                on SAK010.D_E_L_E_T_ = ''
+                and SAK010.AK_COD = SCR010.CR_LIBAPRO
 		where
 				SCR.D_E_L_E_T_ = ''
 			and SCR.CR_TIPO = 'PC'
