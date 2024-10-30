@@ -32,16 +32,73 @@ SELECT
     SC7.C7_EMISSAO as DTEPED,
     SC7.C7_DATPRF as DTPREV,
     SC1.C1_EMISSAO as DTEORD,
+
+    (
+        select max(coalesce(SCR.CR_DATALIB, ''))
+        from SCR010 SCR
+        where
+            SCR.D_E_L_E_T_ = ''
+        and nullif(SCR.CR_LIBAPRO, '') is not null
+        and SCR.CR_STATUS < 6
+        and SCR.CR_TIPO = 'SC'
+        and SCR.CR_NUM = SC1.C1_NUM
+        and SCR.CR_NIVEL =
+        (
+            select max(SCR010.CR_NIVEL)
+            from SCR010 (nolock)
+            where
+                    SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'SC'
+                and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                and SCR010.CR_TIPO = SCR.CR_TIPO
+                and SCR010.CR_NUM = SCR.CR_NUM
+            group by
+                SCR010.CR_FILIAL,
+                SCR010.CR_TIPO,
+                SCR010.CR_NUM
+        )
+    ) as DATAAPROV_SC, /* data aprovação SC */
+    (
+        select max(coalesce(SCR.CR_DATALIB, ''))
+        from SCR010 SCR
+        where
+            SCR.D_E_L_E_T_ = ''
+        and nullif(SCR.CR_LIBAPRO, '') is not null
+        and SCR.CR_STATUS < 6
+        and SCR.CR_TIPO = 'PC'
+        and SCR.CR_NUM = SC7.C7_NUM
+        and SCR.CR_NIVEL =
+        (
+            select max(SCR010.CR_NIVEL)
+            from SCR010 (nolock)
+            where
+                    SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'PC'
+                and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                and SCR010.CR_TIPO = SCR.CR_TIPO
+                and SCR010.CR_NUM = SCR.CR_NUM
+            group by
+                SCR010.CR_FILIAL,
+                SCR010.CR_TIPO,
+                SCR010.CR_NUM
+        )
+    ) as DATAAPROV_PC, /* data aprovação PC */
     
-    CASE WHEN (COALESCE(SC7.C7_DATPRF, ' ') = ' ') or (SC7.C7_DATPRF = NULL)
-            or (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ') or (SD1.D1_DTDIGIT = NULL)
+    case when
+            (COALESCE(SC7.C7_DATPRF, ' ') = ' ')
+            or (SC7.C7_DATPRF = NULL)
+            or (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ')
+            or (SD1.D1_DTDIGIT = NULL)
             or (SD1.D1_DTDIGIT > SC7.C7_DATPRF)
-            then 0
+        then 0
         else datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF)
     end as QTD_DIAS_ADIANTADO,
     
-    CASE WHEN (COALESCE(SC7.C7_DATPRF, ' ') = ' ') or (SC7.C7_DATPRF = NULL)
-            or (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ') or (SD1.D1_DTDIGIT = NULL)
+    case when
+            (COALESCE(SC7.C7_DATPRF, ' ') = ' ')
+            or (SC7.C7_DATPRF = NULL)
+            or (COALESCE(SD1.D1_DTDIGIT, ' ') = ' ')
+            or (SD1.D1_DTDIGIT = NULL)
             or (SC7.C7_DATPRF > SD1.D1_DTDIGIT)
         then 0
         else datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT)
