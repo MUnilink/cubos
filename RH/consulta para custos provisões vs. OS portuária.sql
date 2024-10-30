@@ -35,7 +35,6 @@ FROM   (SELECT RJ_CARGO,
                           AND RJ.D_E_L_E_T_ = ' '
                INNER JOIN ZC7010 ZC7
                        ON ZC7_ORIGEM = 'SQ3'
-                          AND ZC7_COMPET =:ANOMES
                           AND ZC7.D_E_L_E_T_ = ' '
                           AND ZC7_CC = '305'
                           AND ZC7_CODIGO = RJ_CARGO
@@ -49,7 +48,7 @@ FROM   (SELECT RJ_CARGO,
                           AND RT2.RT_DATACAL = SRT.RT_DATACAL
         WHERE  SRT.RT_FILIAL = '010102'
                AND SRT.RT_TIPPROV IN ( '2', '3' )
-               AND Substring(SRT.RT_DATACAL, 1, 6) = '202401'
+               AND Substring(SRT.RT_DATACAL, 1, 6) =:ANOMES
                AND SRT.RT_VERBA IN ( '224', '255', '336', '371',
                                      '020', '113', '344', '039',
                                      '030', '029', '749', '719',
