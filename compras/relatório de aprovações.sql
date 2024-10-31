@@ -45,7 +45,7 @@
 
         cast(SCR.CR_NIVEL as int) as NIVEL,
         case DBM.DBM_APROV when 1 then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = DBM.DBM_USER) else '' end as APROVADOR,
-        case DBM.DBM_APROV when 3 then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = DBM.DBM_USER) else '' end as RECUSA_POR,
+        null as RECUSA_POR,
         cast(SCR.CR_DATALIB as date) as DATAAPROV
     
     from SCP010 SCP (nolock)
