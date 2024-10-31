@@ -45,7 +45,19 @@
 
         cast(SCR.CR_NIVEL as int) as NIVEL,
         case DBM.DBM_APROV when 1 then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = DBM.DBM_USER) else '' end as APROVADOR,
-        null as RECUSA_POR,
+        case when SCR.CR_NIVEL =
+            (
+                select max(SCR010.CR_NIVEL)
+                from SCR010 (nolock)
+                where
+                        SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = SCR.CR_TIPO
+                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                    and SCR010.CR_NUM = SCR.CR_NUM
+                    and SCR010.CR_STATUS in (6, 7)
+            ) then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO)
+            else null
+        end as RECUSA_POR,
         cast(SCR.CR_DATALIB as date) as DATAAPROV
     
     from SCP010 SCP (nolock)
@@ -122,29 +134,31 @@ union
 
         cast(SCR.CR_NIVEL as int) as NIVEL,
         case when SCR.CR_NIVEL =
-        (
-            select max(SCR010.CR_NIVEL)
-            from SCR010 (nolock)
-            where
-                    SCR010.D_E_L_E_T_ = ''
-                and SCR010.CR_TIPO = SCR.CR_TIPO
-                and SCR010.CR_FILIAL = SCR.CR_FILIAL
-                and SCR010.CR_NUM = SCR.CR_NUM
-                and SCR010.CR_STATUS in (3, 5)
-        ) then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO) else null
+            (
+                select max(SCR010.CR_NIVEL)
+                from SCR010 (nolock)
+                where
+                        SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = SCR.CR_TIPO
+                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                    and SCR010.CR_NUM = SCR.CR_NUM
+                    and SCR010.CR_STATUS in (3, 5)
+            ) then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO)
+            else null 
         end as APROVADOR,
 
         case when SCR.CR_NIVEL =
-        (
-            select max(SCR010.CR_NIVEL)
-            from SCR010 (nolock)
-            where
-                    SCR010.D_E_L_E_T_ = ''
-                and SCR010.CR_TIPO = SCR.CR_TIPO
-                and SCR010.CR_FILIAL = SCR.CR_FILIAL
-                and SCR010.CR_NUM = SCR.CR_NUM
-                and SCR010.CR_STATUS in (6, 7)
-        ) then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO) else null
+            (
+                select max(SCR010.CR_NIVEL)
+                from SCR010 (nolock)
+                where
+                        SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = SCR.CR_TIPO
+                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                    and SCR010.CR_NUM = SCR.CR_NUM
+                    and SCR010.CR_STATUS in (6, 7)
+            ) then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO)
+            else null
         end as RECUSA_POR,
         cast(SCR.CR_DATALIB as date) as DATAAPROV
 
