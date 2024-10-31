@@ -1,5 +1,6 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
+    concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NF,
     concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
     concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACAO,
     case when SC1.C1_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SC1.C1_FILIAL as char (6)) end as BK_FILIAL,
@@ -9,6 +10,7 @@ SELECT
     'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC1.C1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
     'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SY1.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SY1.Y1_COD, ' ')), ' '), '|') AS BK_COMPRADOR,
     'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU.ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU.ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
+    'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SF1.F1_COND, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,    
     case
@@ -24,15 +26,65 @@ SELECT
     SC1.C1_NUM as SC,
     COALESCE(SC1.C1_EMISSAO, ' ') as DATA,
     COALESCE(SC1.C1_DATPRF, ' ') as DTENTR,
+    SC7.C7_EMISSAO as PC_DATA,
+    SD1.D1_DTDIGIT as NF_DATA,
 
-    (select max(coalesce(SCR010.CR_DATALIB, '')) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC, /* data aprovação SC */
-    (select max(coalesce(SCR010.CR_DATALIB, '')) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC, /* data aprovação PC */
+    (
+        select max(coalesce(SCR.CR_DATALIB, ''))
+        from SCR010 SCR
+        where
+            SCR.D_E_L_E_T_ = ''
+        and nullif(SCR.CR_LIBAPRO, '') is not null
+        and SCR.CR_STATUS < 6
+        and SCR.CR_TIPO = 'SC'
+        and SCR.CR_NUM = SC1.C1_NUM
+        and SCR.CR_NIVEL =
+        (
+            select max(SCR010.CR_NIVEL)
+            from SCR010 (nolock)
+            where
+                    SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'SC'
+                and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                and SCR010.CR_TIPO = SCR.CR_TIPO
+                and SCR010.CR_NUM = SCR.CR_NUM
+            group by
+                SCR010.CR_FILIAL,
+                SCR010.CR_TIPO,
+                SCR010.CR_NUM
+        )
+    ) as DATAAPROV_SC, /* data aprovação SC */
+    (
+        select max(coalesce(SCR.CR_DATALIB, ''))
+        from SCR010 SCR
+        where
+            SCR.D_E_L_E_T_ = ''
+        and nullif(SCR.CR_LIBAPRO, '') is not null
+        and SCR.CR_STATUS < 6
+        and SCR.CR_TIPO = 'PC'
+        and SCR.CR_NUM = SC7.C7_NUM
+        and SCR.CR_NIVEL =
+        (
+            select max(SCR010.CR_NIVEL)
+            from SCR010 (nolock)
+            where
+                    SCR010.D_E_L_E_T_ = ''
+                and SCR010.CR_TIPO = 'PC'
+                and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                and SCR010.CR_TIPO = SCR.CR_TIPO
+                and SCR010.CR_NUM = SCR.CR_NUM
+            group by
+                SCR010.CR_FILIAL,
+                SCR010.CR_TIPO,
+                SCR010.CR_NUM
+        )
+    ) as DATAAPROV_PC, /* data aprovação PC */
     
     SC1.C1_QUANT as QTD_SOLICITADA,
     SC1.C1_QUJE as QTD_ATENDIDA,
     SC1.C1_PRECO as VALOR_UNITARIO,
     SC1.C1_TOTAL as VALOR_TOTAL,
-    SC1.C1_OBS as OBS_SC
+    trim(SC1.C1_OBS) as OBS_SC
 
 FROM SC1010 SC1
     left join SB1010 SB1
@@ -52,11 +104,6 @@ FROM SC1010 SC1
         on CTT.D_E_L_E_T_ = ' '
         and CTT.CTT_FILIAL = SUBSTRING(SC1.C1_FILIAL, 1, 4)
         and CTT.CTT_CUSTO = SC1.C1_CC
-    left join SY1010 SY1
-        on SY1.Y1_FILIAL = SUBSTRING(SC1.C1_FILIAL, 1, 2)
-        and SY1.Y1_USER = SC1.C1_USER
-        and SY1.Y1_COD not in (1, 6, 11)
-    
     left join ACV010 ACV
         on ACV.D_E_L_E_T_ = ' '
         and ACV.ACV_FILIAL = SUBSTRING(SC1.C1_FILIAL, 1, 4)
@@ -76,6 +123,28 @@ FROM SC1010 SC1
         and SC7.C7_FILIAL = SC1.C1_FILIAL
         and SC7.C7_NUMSC = SC1.C1_NUM
         and SC7.C7_ITEMSC = SC1.C1_ITEM
+
+        left join SD1010 SD1
+			on SD1.D_E_L_E_T_ = ''
+			and SD1.D1_FILIAL = SC7.C7_FILIAL
+			and SD1.D1_PEDIDO = SC7.C7_NUM
+			and SD1.D1_ITEMPC = SC7.C7_ITEM
+        
+            left join SF1010 SF1
+                on SF1.F1_FILIAL = SD1.D1_FILIAL
+                and SF1.F1_DOC = SD1.D1_DOC
+                and SF1.F1_SERIE = SD1.D1_SERIE
+                and SF1.F1_FORNECE = SD1.D1_FORNECE
+                and SF1.F1_LOJA = SD1.D1_LOJA
+                and SF1.D_E_L_E_T_ = ' '
+		
+        left join SE4010 SE4
+			on SE4.D_E_L_E_T_ = ''
+			and SE4.E4_CODIGO = SC7.C7_COND
+		left join SY1010 SY1
+			on SY1.Y1_COD not in (1, 6, 11)
+			and SY1.Y1_USER = SC7.C7_USER
+    
     left join SAH010 SAH
         on SAH.D_E_L_E_T_ = ' '
         and SAH.AH_FILIAL = '      '
