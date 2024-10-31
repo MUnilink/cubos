@@ -24,7 +24,6 @@ select
 	STJ.TJ_TERMINO as OS_ENCERRADA,
 
 	STJ.TJ_POSCONT,
-	case when left(ST9.T9_DTCOMPR, 6) = left(STL.TL_DTINICI, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
 	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
 
 	trim(STL.TL_CODIGO) as INSUMO,
@@ -61,9 +60,7 @@ select
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
-	trim(STJ.TJ_YITMCT) as ATIVIDADE,
-	null as B1_UPRC,
-	null as T1_SALARIO
+	trim(STJ.TJ_YITMCT) as ATIVIDADE
 
 from STJ010 STJ
 	inner join ST9010 ST9
