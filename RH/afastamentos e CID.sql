@@ -20,20 +20,22 @@ select
 	trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
 	
-	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-	convert(date, SRA.RA_DEMISSA, 103) as DEMISSAO,
-	convert(date, SRA.RA_DTFIMCT, 103) as FIM_CONTRATO,
+	cast(SRA.RA_NASC as date) as NASCIMENTO,
+	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+	cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
 	
-	SR8.R8_CID as CID,
+	trim(SR8.R8_CID) as CID,
 	TMR.TMR_DOENCA as DESCRICAO,
+	(select upper(trim(RCM010.RCM_DESCRI)) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
 
 	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	
-	cast(convert(date, SR8.R8_DATAINI, 103) as varchar) as INI_AFASTAMENTO,
-	SR8.R8_DURACAO as DUR_AFASTAMENTO,
-	case when SR8.R8_DATAFIM is not null then cast(convert(date, SR8.R8_DATAFIM, 103) as varchar) else '' end as FIM_AFASTAMENTO,
+	cast(SR8.R8_DATA as date) as DATA,
+	cast(SR8.R8_DATAINI as date) as INI_AFASTAMENTO,
+	cast(SR8.R8_DATAFIM as date) as FIM_AFASTAMENTO,
+	SR8.R8_DURACAO as DURACAO,
 	left(SR8.R8_PER, 6) as PERIODO
 
 from SR8010 SR8 (nolock)
@@ -46,20 +48,20 @@ from SR8010 SR8 (nolock)
 		and SR8.R8_MAT = SRA.RA_MAT
 		and SR8.R8_FILIAL = SRA.RA_FILIAL
 
-		inner join CTT010 CTT (nolock)
+		left join CTT010 CTT (nolock)
 			on CTT.D_E_L_E_T_ = ''
-			and left(SRA.RA_FILIAL, 6) = CTT.CTT_FILIAL
+			and left(SRA.RA_FILIAL, 4) = CTT.CTT_FILIAL
 			and SRA.RA_CC = CTT.CTT_CUSTO
-		inner join SQB010 SQB (nolock)
+		left join SQB010 SQB (nolock)
 			on SQB.D_E_L_E_T_ = ''
-			and SQB.QB_FILIAL = left(SRA.RA_FILIAL, 6)
+			and SQB.QB_FILIAL = left(SRA.RA_FILIAL, 4)
 			and SQB.QB_DEPTO = SRA.RA_DEPTO
-		inner join CTD010 CTD (nolock)
+		left join CTD010 CTD (nolock)
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRA.RA_ITEM
-		inner join SRJ010 SRJ (nolock)
+		left join SRJ010 SRJ (nolock)
 			on SRJ.D_E_L_E_T_ = ''
-			and SRJ.RJ_FILIAL = left(SRA.RA_FILIAL, 6)
+			and SRJ.RJ_FILIAL = left(SRA.RA_FILIAL, 4)
 			and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 
 			left join SQ3010 SQ3 (nolock)
