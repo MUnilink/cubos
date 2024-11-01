@@ -27,7 +27,7 @@
 		trim(SRC.RC_SEQ) as SEQ,
 		trim(SRC.RC_ROTEIR) as ROTEIRO,
 
-		case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when SRV.RV_YCPOR then 'POR' when SRV.RV_YCTMS then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -113,7 +113,7 @@ union
 		trim(SRD.RD_SEQ) as SEQ,
 		trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-		case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRV.RV_COD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when SRV.RV_YCPOR then 'POR' when SRV.RV_YCTMS then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
