@@ -45,9 +45,6 @@
 
 		SRC.RC_VALOR as VALOR,
 		SRC.RC_HORAS as HORAS,
-		SRA.RA_SALARIO as SALARIO,
-		SRA.RA_HRSEMAN as HORAS_SEM,
-		SRA.RA_HRSMES as HORAS_MES,
 		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
 		null as DATARQ,
@@ -134,9 +131,6 @@ union
 
 		SRD.RD_VALOR as VALOR,
 		SRD.RD_HORAS as HORAS,
-		SRA.RA_SALARIO as SALARIO,
-		SRA.RA_HRSEMAN as HORAS_SEM,
-		SRA.RA_HRSMES as HORAS_MES,
 		null as HORAS_PADRAO,
 
 		SRD.RD_DATARQ as DATARQ,
@@ -176,5 +170,5 @@ union
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
-			left(SRD.RD_PERIODO, 4) > 2021
+			datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 7
 		and SRD.D_E_L_E_T_ = ''
