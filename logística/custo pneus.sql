@@ -17,6 +17,7 @@ select
         when '11300051' then 40000
         when '11300048' then 60000
         when '11300056' then 40000
+        when '11300098' then 120000
         else 0
     end as km
 
