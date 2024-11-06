@@ -29,8 +29,7 @@ select
 	trim(SQ3.Q3_DESCSUM) as CARGO,
 	lag(trim(SQ3.Q3_DESCSUM), 1, null) over (partition by SR7.R7_FILIAL, SR7.R7_MAT order by SR7.R7_DATA) as CARGO_ANTERIOR,
     trim(SRJ.RJ_CODCBO) as CBO,
-	
-    SRA.RA_SALARIO as SALARIO,
+	SR3.R3_VALOR as SALARIO,
 	SRA.RA_HRSEMAN as HORAS_SEM
 
 from SR7010 SR7 (nolock)
@@ -38,6 +37,9 @@ from SR7010 SR7 (nolock)
         on SRJ.D_E_L_E_T_ = ''
         and SRJ.RJ_FILIAL = substring(SR7.R7_FILIAL, 1, 4)
         and SRJ.RJ_FUNCAO = SR7.R7_FUNCAO
+	left join SQ3010 SQ3 (nolock)
+		on SQ3.D_E_L_E_T_ = ''
+		and SQ3.Q3_CARGO = SR7.R7_CARGO
 	inner join SRA010 SRA (nolock)
 		on SRA.D_E_L_E_T_ = ''
 		and SRA.RA_FILIAL = SR7.R7_FILIAL
@@ -53,8 +55,11 @@ from SR7010 SR7 (nolock)
             on SQB.D_E_L_E_T_ = ''
             and SQB.QB_DEPTO = SRA.RA_DEPTO
 	
-	left join SQ3010 SQ3 (nolock)
-		on SQ3.D_E_L_E_T_ = ''
-		and SQ3.Q3_CARGO = SR7.R7_CARGO
+	left join SR3010 SR3 (nolock)
+		on SR3.D_E_L_E_T_ = ''
+		and SR3.R3_FILIAL = SR7.R7_FILIAL
+		and SR3.R3_MAT = SR7.R7_MAT
+		and SR3.R3_DATA = SR7.R7_DATA
+		and SR3.R3_TIPO = SR7.R7_TIPO
 
 where SR7.D_E_L_E_T_ = ''
