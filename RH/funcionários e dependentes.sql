@@ -3,14 +3,30 @@ select
 	trim(SRA.RA_MAT) as MATRICULA,
 	trim(SRA.RA_MAT) as contador,
 	trim(SRA.RA_NOMECMP) as NOME,
+	trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
-	trim(SRA.RA_MAE) as NOME_MAE,
-	trim(SRA.RA_PAI) as NOME_PAI,
-	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
+	trim(SRJ.RJ_DESC) as FUNCAO,
+	trim(SQ3.Q3_CARGO) as COD_CARGO,
+	trim(SQ3.Q3_DESCSUM) as CARGO,
+	
+	trim(CTT.CTT_CUSTO) as COD_CC,
+	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
+	trim(CTD.CTD_ITEM) as COD_ITEM,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(SQB.QB_DEPTO) as DEPTO,
+    trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+	
+	cast(SRA.RA_NASC as date) as NASCIMENTO,
+	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+	cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	trim(SRA.RA_SITFOLH) as SITUACAO,
+	
 	trim(SRA.RA_RG) as RG,
 	trim(SRA.RA_DTRGEXP) as RG_DATAEXP,
 	trim(SRA.RA_RGUF) as RG_UFEXP,
@@ -28,17 +44,8 @@ select
 
 	trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 	
-	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
-	trim(SRJ.RJ_DESC) as FUNCAO,
-	trim(SQ3.Q3_CARGO) as COD_CARGO,
-	trim(SQ3.Q3_DESCSUM) as CARGO,
-	trim(CTT.CTT_CUSTO) as COD_CC,
-	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-	trim(CTD.CTD_ITEM) as COD_ITEM,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
-	trim(SQB.QB_DEPTO) as DEPTO,
-    trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	trim(SRA.RA_MAE) as NOME_MAE,
+	trim(SRA.RA_PAI) as NOME_PAI,
 
 	case when SRB.RB_NOME is not null then 'DEP' else case when RHM.RHM_NOME is not null then 'AGG' else 'NAO' end end as TEM_DEPAGG,
 
@@ -96,10 +103,5 @@ from SRA010 SRA (nolock)
 	inner join CTD010 CTD (nolock)
 		on CTD.D_E_L_E_T_ = ''
 		and CTD.CTD_ITEM = SRA.RA_ITEM
-	inner join RHR010 RHR (nolock)
-		on RHR.RHR_FILIAL = SRA.RA_FILIAL
-		and RHR.RHR_MAT = SRA.RA_MAT
-		and year(RHR.RHR_DATA) = 2023
-		and month(RHR.RHR_DATA) = 11
 where
 		SRA.D_E_L_E_T_ = ''

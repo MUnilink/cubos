@@ -1,37 +1,40 @@
 select
 	trim(SRA.RA_FILIAL) as FILIAL,
 	trim(SRA.RA_MAT) as MATRICULA,
+	trim(SRA.RA_MAT) as contador,
 	trim(SRA.RA_NOMECMP) as NOME,
-	trim(SRJ.RJ_DESC) as FUNCAO,
-	trim(SQ3.Q3_DESCSUM) as CARGO,
 	trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
-	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
-	trim(CTT.CTT_CUSTO) as CC,
-	trim(CTT.CTT_DESC01) as CCUSTO,
-	trim(CTD.CTD_ITEM) as ITCT,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
-	trim(SQB.QB_DEPTO) as DEPTO,
-	trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
 	trim(SRA.RA_CIC) as CPF,
-	convert(date, SRA.RA_NASC, 103) as NASCIMENTO,
-	convert(date, SRA.RA_DEMISSA, 103) as DEMISSAO,
+	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
+	trim(SRJ.RJ_DESC) as FUNCAO,
+	trim(SQ3.Q3_CARGO) as COD_CARGO,
+	trim(SQ3.Q3_DESCSUM) as CARGO,
 	
-	substring(SRA.RA_DEMISSA, 1, 6) as PERIODO_DEMISSAO,
-	substring(SRA.RA_ADMISSA, 1, 6) as PERIODO_ADMISSAO
+	trim(CTT.CTT_CUSTO) as COD_CC,
+	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
+	trim(CTD.CTD_ITEM) as COD_ITEM,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(SQB.QB_DEPTO) as DEPTO,
+    trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+	
+	cast(SRA.RA_NASC as date) as NASCIMENTO,
+	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+	cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	trim(SRA.RA_SITFOLH) as SITUACAO,
+	left(SRA.RA_DEMISSA, 6) as PERIODO_DEMISSAO,
+	left(SRA.RA_ADMISSA, 6) as PERIODO_ADMISSAO
 
 from SRA010 SRA (nolock)
-	inner join SQB010 SQB (nolock)
+	left join SQB010 SQB (nolock)
 		on SQB.D_E_L_E_T_ = ''
 		and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 		and SQB.QB_DEPTO = SRA.RA_DEPTO
-	inner join SRJ010 SRJ (nolock)
+	left join SRJ010 SRJ (nolock)
 		on SRJ.D_E_L_E_T_ = ''
 		and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 		and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
