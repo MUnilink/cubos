@@ -12,7 +12,7 @@ SELECT
     'P |01|ACU010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ACU.ACU_FILIAL, ' '))+'|'+RTRIM(COALESCE(ACU.ACU_COD, ' ')), ' '), '|') AS BK_FAMILIA_COMERCIAL,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SF1.F1_COND, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     
-    case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,    
+    case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     case
         when (SC1.C1_QUJE > 0) and (SC1.C1_QUJE < SC1.C1_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
         when (SC1.C1_QUJE >= SC1.C1_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
@@ -22,6 +22,34 @@ SELECT
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC1.C1_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
     'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SBM.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(SC1.C1_APROV, ' ')), ' '), '|') AS DESCRICAO_APROVCOMPRA,
+
+    (
+        select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
+        from SCR010 SCR
+            inner join SAK010
+                on SAK010.D_E_L_E_T_ = ''
+                and SAK010.AK_COD = SCR.CR_LIBAPRO
+        where
+                SCR.D_E_L_E_T_ = ''
+            and SCR.CR_FILIAL = SC7.C7_FILIAL
+            and SCR.CR_NUM = SC7.C7_NUM
+            and SCR.CR_STATUS < 6
+            and SCR.CR_NIVEL =
+            (
+                select max(SCR010.CR_NIVEL)
+                from SCR010 (nolock)
+                where
+                        SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = 'PC'
+                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                    and SCR010.CR_TIPO = SCR.CR_TIPO
+                    and SCR010.CR_NUM = SCR.CR_NUM
+                group by
+                    SCR010.CR_FILIAL,
+                    SCR010.CR_TIPO,
+                    SCR010.CR_NUM
+            )
+    ) as BK_APROVADOR,
     
     SC1.C1_NUM as SC,
     COALESCE(SC1.C1_EMISSAO, ' ') as DATA,
