@@ -95,7 +95,7 @@ select
 		when trim(SC1.C1_RESIDUO) = 'S' or trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO'
 		when SC7.C7_QUJE >= SC7.C7_QUANT then 'RECEBIMENTO TOTAL' /* e quando o pedido é totalmente atendido com solicitação parcialmente atendida?? */
 		when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and SC7.C7_QUJE < SC7.C7_QUANT then 'RECEBIMENTO PARCIAL'
-		when SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUJE as numeric(15, 2)) = 0.00 then 'AGUARDANDO ENTREGA'
+		when SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUJE as numeric(15, 2)) = 0.00 then 'SC EM PEDIDO'
 		when cast(SC1.C1_QUJE as numeric(15, 2)) != 0.00 and SC1.C1_QUJE < SC1.C1_QUANT then 'SC PARCIAL'
 		when cast(SC1.C1_QUJE as numeric(15, 2)) = 0.00 then 'SC PENDENTE'
 	else 'OUTROS' end as STATUS_COMPRA,
@@ -105,11 +105,11 @@ select
 	SD1.D1_CC as NF_CC,
 	SD1.D1_ITEMCTA as NF_AT,
 	SD1.D1_ITEM as NF_ITEM,
-	SD1.D1_QUANT NF_QUANT,
-	SD1.D1_VUNIT NF_VUNIT,
-	SD1.D1_TOTAL NF_TOTAL,
-	SD1.D1_TES NF_TES,
-	SD1.D1_CUSTO NF_CUSTO,
+	SD1.D1_QUANT as NF_QUANT,
+	SD1.D1_VUNIT as NF_VUNIT,
+	SD1.D1_TOTAL as NF_TOTAL,
+	SD1.D1_TES as NF_TES,
+	SD1.D1_CUSTO as NF_CUSTO,
 	SD1.D1_QTDPEDI as NF_QTDPEDI,
 	cast(SD1.D1_EMISSAO as date) as NF_EMI,
 	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
