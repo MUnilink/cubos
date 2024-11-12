@@ -16,7 +16,7 @@ SELECT *,
      AND TQN_DTABAS >= DATA_FIM
      AND D_E_L_E_T_ = ' '
      AND TQN_CODCOM = '001'
-   ORDER BY TQN_DTABAS DESC) HODOM_FIM
+   ORDER BY TQN_DTABAS asc) HODOM_FIM
 FROM
   (SELECT T9.T9_CODBEM COD_PNEU,
           T9.T9_NOME NOME_PNEU,
@@ -27,20 +27,20 @@ FROM
           TZ_DATAMOV,
           TZ_DATASAI,
           CASE
-              WHEN SUBSTRING(TZ_DATAMOV, 1, 6) < '202403' THEN '20240301'
+              WHEN SUBSTRING(TZ_DATAMOV, 1, 6) < '202407' THEN '20240701'
               ELSE TZ_DATAMOV
           END AS DATA_INI,
           CASE
-              WHEN SUBSTRING(TZ_DATASAI, 1, 6) > '202403'
-                   OR TZ_DATASAI = ' ' THEN '20240331'
+              WHEN SUBSTRING(TZ_DATASAI, 1, 6) > '202407'
+                   OR TZ_DATASAI = ' ' THEN '20240731'
               ELSE TZ_DATASAI
           END AS DATA_FIM
    FROM ST9010 T9
    INNER JOIN STZ010 TZ ON TZ_FILIAL = ' '
    AND TZ_CODBEM = T9.T9_CODBEM
    AND TZ.D_E_L_E_T_ = ' '
-   AND ('202403' BETWEEN TZ_DATAMOV AND TZ_DATASAI
-        OR (SUBSTRING(TZ_DATAMOV, 1, 6) <= '202403'
+   AND ('202407' BETWEEN TZ_DATAMOV AND TZ_DATASAI
+        OR (SUBSTRING(TZ_DATAMOV, 1, 6) <= '202407'
             AND TZ_DATASAI = ' '))
    INNER JOIN ST9010 T92 ON T92.T9_FILIAL = ' '
    AND T92.T9_CODBEM = TZ_BEMPAI
@@ -79,18 +79,18 @@ FROM
         AND TQN_DTABAS >= DATA_FIM2
         AND D_E_L_E_T_ = ' '
         AND TQN_CODCOM = '001'
-      ORDER BY TQN_DTABAS DESC) HODOM_FIM
+      ORDER BY TQN_DTABAS asc) HODOM_FIM
    FROM
      (SELECT TZ2.TZ_DATAMOV DATA2,
              TZ2.TZ_BEMPAI COD_PAI2,
              T93.T9_NOME NOME_PAI2,
              CASE
-                 WHEN SUBSTRING(TZ2.TZ_DATAMOV, 1, 6) < '202403' THEN '20240301'
+                 WHEN SUBSTRING(TZ2.TZ_DATAMOV, 1, 6) < '202407' THEN '20240701'
                  ELSE TZ2.TZ_DATAMOV
              END AS DATA_INI2,
              CASE
-                 WHEN SUBSTRING(TZ2.TZ_DATASAI, 1, 6) > '202403'
-                      OR TZ2.TZ_DATASAI = ' ' THEN '20240331'
+                 WHEN SUBSTRING(TZ2.TZ_DATASAI, 1, 6) > '202407'
+                      OR TZ2.TZ_DATASAI = ' ' THEN '20240731'
                  ELSE TZ2.TZ_DATASAI
              END AS DATA_FIM2,
              COD_PNEU,
@@ -113,20 +113,20 @@ FROM
                 TZ.TZ_DATAMOV,
                 TZ.TZ_DATASAI,
                 CASE
-                    WHEN SUBSTRING(TZ.TZ_DATAMOV, 1, 6) < '202403' THEN '20240301'
+                    WHEN SUBSTRING(TZ.TZ_DATAMOV, 1, 6) < '202407' THEN '20240701'
                     ELSE TZ_DATAMOV
                 END AS DATA_INI,
                 CASE
-                    WHEN SUBSTRING(TZ.TZ_DATASAI, 1, 6) > '202403'
-                         OR TZ.TZ_DATASAI = ' ' THEN '20240331'
+                    WHEN SUBSTRING(TZ.TZ_DATASAI, 1, 6) > '202407'
+                         OR TZ.TZ_DATASAI = ' ' THEN '20240731'
                     ELSE TZ.TZ_DATASAI
                 END AS DATA_FIM
          FROM ST9010 T9
          INNER JOIN STZ010 TZ ON TZ.TZ_FILIAL = ' '
          AND TZ.TZ_CODBEM = T9.T9_CODBEM
          AND TZ.D_E_L_E_T_ = ' '
-         AND ('202403' BETWEEN TZ.TZ_DATAMOV AND TZ.TZ_DATASAI
-              OR (SUBSTRING(TZ.TZ_DATAMOV, 1, 6) <= '202403'
+         AND ('202407' BETWEEN TZ.TZ_DATAMOV AND TZ.TZ_DATASAI
+              OR (SUBSTRING(TZ.TZ_DATAMOV, 1, 6) <= '202407'
                   AND TZ.TZ_DATASAI = ' '))
          INNER JOIN ST9010 T92 ON T92.T9_FILIAL = ' '
          AND T92.T9_CODBEM = TZ.TZ_BEMPAI
