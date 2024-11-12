@@ -20,7 +20,7 @@ select
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
 	abs(SC1.C1_QUANT - SC1.C1_QUJE) as QTD_SC_PENDENTE,
-	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as C1_RESIDUO,
+	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as SC_ELIM,
 
 	case SC1.C1_APROV
 		when 'B' then 'PENDENTE'
@@ -54,7 +54,7 @@ select
 	trim(SC7.C7_OBSM) as MEMO_PC,
 
 	convert(date, SC7.C7_EMISSAO, 103) as DATA_PEDIDO,
-	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
+	left(SC7.C7_EMISSAO, 6) as PERIODO_PC,
 	trim(upper(SY1.Y1_NOME)) as SOLICITANTE_PC,
 
 	case SC7.C7_CONAPRO
@@ -75,12 +75,7 @@ select
 	abs(SC7.C7_QUANT - SC7.C7_QUJE) as QTD_PC_PENDENTE,
 	SC7.C7_PRECO as PRECO,
 	SC7.C7_TOTAL as TOTAL,
-
-	year(SC1.C1_EMISSAO) as ANO_SOLICITA,
-	month(SC1.C1_EMISSAO) as MES_SOLICITA,
-
-	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
-	month(SC7.C7_EMISSAO) as MES_PEDIDO,
+	case SC7.C7_RESIDUO when 'S' then 'ELIMINADA' else '' end as PC_ELIM,
 
 	case
 		when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
@@ -113,6 +108,8 @@ select
 	SD1.D1_QTDPEDI as NF_QTDPEDI,
 	cast(SD1.D1_EMISSAO as date) as NF_EMI,
 	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
+	left(SD1.D1_EMISSAO, 6) as NF_MESEMIT,
+	left(SD1.D1_DTDIGIT, 6) as NF_PERIODO,
 	coalesce(nullif(SD1.D1_YOS, ''), nullif(SC7.C7_YOS, '')) as OS_PORT,
 	case when SC1.C1_OP like '%OS001' then 'OS' else 'OP' end as TIPO_SC,
 
