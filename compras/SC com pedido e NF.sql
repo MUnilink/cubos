@@ -87,12 +87,13 @@ select
 	else 'OUTROS' end as STATUS_PC,
 
 	case
-		when trim(SC1.C1_RESIDUO) = 'S' or trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO'
-		when SC7.C7_QUJE >= SC7.C7_QUANT then 'RECEBIMENTO TOTAL' /* e quando o pedido é totalmente atendido com solicitação parcialmente atendida?? */
-		when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and SC7.C7_QUJE < SC7.C7_QUANT then 'RECEBIMENTO PARCIAL'
-		when SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUJE as numeric(15, 2)) = 0.00 then 'SC EM PEDIDO'
-		when cast(SC1.C1_QUJE as numeric(15, 2)) != 0.00 and SC1.C1_QUJE < SC1.C1_QUANT then 'SC PARCIAL'
+		when trim(SC1.C1_RESIDUO) = 'S' then 'SC ELIMINADA'
+		when trim(SC7.C7_RESIDUO) = 'S' then 'PC ELIMINADO'
 		when cast(SC1.C1_QUJE as numeric(15, 2)) = 0.00 then 'SC PENDENTE'
+		when cast(SC1.C1_QUJE as numeric(15, 2)) != 0.00 and SC1.C1_QUJE < SC1.C1_QUANT then 'SC PARCIAL'
+		when SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUJE as numeric(15, 2)) = 0.00 then 'SC ATENDIDA'
+		when cast(SC1.C1_QUJE as numeric(15, 2)) != 0.00 and SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and SC7.C7_QUJE < SC7.C7_QUANT then 'RECEBIMENTO PARCIAL'
+		when cast(SC1.C1_QUJE as numeric(15, 2)) != 0.00 and SC1.C1_QUJE >= SC1.C1_QUANT and cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and SC7.C7_QUJE >= SC7.C7_QUANT then 'RECEBIMENTO TOTAL'
 	else 'OUTROS' end as STATUS_COMPRA,
 
 	SD1.D1_DOC as NF_DOC,
