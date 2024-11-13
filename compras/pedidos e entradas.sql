@@ -129,16 +129,16 @@ select
 
 	(
         select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
-        from SCR010
+         from SCR010 SCR
             inner join SAK010
                 on SAK010.D_E_L_E_T_ = ''
-                and SAK010.AK_COD = SCR010.CR_LIBAPRO
+                and SAK010.AK_COD = SCR.CR_LIBAPRO
 		where
-				SCR010.D_E_L_E_T_ = ''
-			and SCR010.CR_TIPO = 'PC'
-			and SCR010.CR_FILIAL = SC7.C7_FILIAL
-			and SCR010.CR_NUM = SC7.C7_NUM
-			and SCR010.CR_NIVEL =
+				SCR.D_E_L_E_T_ = ''
+			and SCR.CR_TIPO = 'PC'
+			and SCR.CR_FILIAL = SC7.C7_FILIAL
+			and SCR.CR_NUM = SC7.C7_NUM
+			and SCR.CR_NIVEL =
 		(
 			select max(SCR010.CR_NIVEL)
 			from SCR010 (nolock)
@@ -153,10 +153,10 @@ select
 
 	(
 		select upper(trim(max(SAK010.AK_LOGIN)))
-        from SCR010
+        from SCR010 SCR
             inner join SAK010
                 on SAK010.D_E_L_E_T_ = ''
-                and SAK010.AK_COD = SCR010.CR_LIBAPRO
+                and SAK010.AK_COD = SCR.CR_LIBAPRO
 		where
 				SCR.D_E_L_E_T_ = ''
 			and SCR.CR_TIPO = 'PC'
