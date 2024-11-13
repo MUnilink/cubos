@@ -1,21 +1,20 @@
 select
-	trim(isnull(SC1.C1_FILIAL, '-')) as FILIAL,
-	substring(SC1.C1_OP, 1, 6) as OS,
-	trim(isnull(SB1.B1_COD, '-')) as PRODUTO,
-	trim(isnull(SB1.B1_DESC, '-')) as NOMEPRODUTO,
-	trim(isnull(SB1.B1_GRUPO, '-')) as GRUPO,
-	trim(isnull(SB1.B1_UM, '-')) as UN,
-
-	trim(isnull(CTD.CTD_DESC01, '-')) as ATIVIDADE,
-	trim(isnull(CTT.CTT_DESC01, '-')) as CC,
-
-	trim(isnull(SC1.C1_NUM, '-')) as SC,
-	trim(isnull(SC1.C1_ITEM, '-')) as ITEM_SC,
-	convert(date, SC1.C1_EMISSAO, 103) as DATA_SC,
+	trim(SC7.C7_FILIAL) as FILIAL,
+	trim(SB1.B1_COD) as PRODUTO,
+	trim(SB1.B1_DESC) as NOMEPRODUTO,
+	trim(SB1.B1_GRUPO) as GRUPO,
+	trim(SB1.B1_UM) as UN,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(CTT.CTT_DESC01) as CCUSTO,
+	trim(SC7.C7_ITEMCTA) as AT,
+	trim(SC7.C7_CC) as CC,
+	trim(SC1.C1_NUM) as SC,
+	trim(SC1.C1_ITEM) as ITEM_SC,
+	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
+	cast(SC1.C1_EMISSAO as date) as DATA_SC,
 	substring(SC1.C1_EMISSAO, 1, 6) as PERIODO_SC,
-	trim(isnull(upper(SC1.C1_SOLICIT), '-')) as SOLICITANTE_SC,
-	trim(isnull(SC1.C1_OBS, '-')) as OBS_SC,
-
+	substring(SC1.C1_OP, 1, 6) as OS,
+	
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
 	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as C1_RESIDUO,
@@ -27,40 +26,26 @@ select
 		else 'OUTROS'
 	end as SITAPR_SC,
 
-	concat(SC1.C1_FILIAL, SC1.C1_NUM, SC1.C1_ITEM) as ID_SC,
-
-	/*case when year(APRSC1.CR_DATALIB) = 1900 then datediff(day, SC1.C1_EMISSAO, getdate()) else datediff(day, SC1.C1_EMISSAO, APRSC1.CR_DATALIB) end as DIAS_SC_APRSC,*/
-
-	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM) as DATAAPROV_SC,
-	datediff(day, SC1.C1_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM)) as DIASAPROV_SC,
-
 	SC8.C8_NUM as COTACAO,
     SC8.C8_ITEM as ITEM_COTA,
 	SC8.C8_QUANT as QTD_COTADA,
 	SC8.C8_PRECO as PRECO_COTADO,
 	SC8.C8_TOTAL as VALOR_COTADO,
-	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
-	trim(isnull(FCO.A2_NOME, '-')) as NOME_FOR_COTACAO,
-	trim(isnull(FCO.A2_NREDUZ, '-')) as NOMERED_FOR_COTACAO,
-	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
+	cast(SC8.C8_EMISSAO as date) as DATA_COTACAO,
 
-	concat(SC8.C8_FILIAL, SC8.C8_NUM, SC8.C8_ITEM) as ID_CO,
+	trim(SC7.C7_NUM) as PEDIDO,
+	trim(SC7.C7_ITEM) as ITEM_PC,
+	trim(SC7.C7_FORNECE) as FORNECEDOR,
+	trim(SC7.C7_LOJA) as LOJA,
+	trim(SA2.A2_NOME) as NOME_FORNECEDOR,
+	trim(SA2.A2_CGC) as CNPJ,
+	trim(SA2.A2_EST) as UF,
+	trim(replace(replace(SC7.C7_OBS, char(10), ''), char(13), '')) as OBS_PC,
+	trim(replace(replace(SC7.C7_OBSM, char(10), ''), char(13), '')) as MEMO_PC,
 
-	/*case when year(SC7.C7_EMISSAO) = 1900 then datediff(day, APRSC1.CR_DATALIB, getdate()) else datediff(day, APRSC1.CR_DATALIB, SC7.C7_EMISSAO) end as DIAS_APRSC_PC,*/
-
-	trim(isnull(SC7.C7_NUM, '-')) as PEDIDO,
-	trim(isnull(SC7.C7_ITEM, '-')) as ITEM_PC,
-	trim(isnull(SC7.C7_FORNECE, '-')) as FORNECEDOR,
-	trim(isnull(SC7.C7_LOJA, '-')) as LOJA,
-	trim(isnull(FPE.A2_NOME, '-')) as NOME_FORNECEDOR,
-	trim(isnull(FPE.A2_NREDUZ, '-')) as NOMERED_FORNECEDOR,
-	trim(isnull(FPE.A2_CGC, '-')) as CNPJ,
-	trim(isnull(SC7.C7_OBS, '-')) as OBS_PC,
-	trim(isnull(SC7.C7_OBSM, '-')) as MEMO_PC,
-
-	convert(date, SC7.C7_EMISSAO, 103) as DATA_PEDIDO,
+	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
-	trim(isnull(upper(SY1.Y1_NOME), '-')) as SOLICITANTE_PC,
+	trim(upper(SY1.Y1_NOME)) as SOLICITANTE_PC,
 
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -69,96 +54,122 @@ select
 		else 'OUTROS'
 	end as APROVACAO_PC,
 
-	case when concat(SC7.C7_FILIAL, SC7.C7_NUM, SC7.C7_ITEM) = '' then 0 else 1 end as ID_PC,
-
-	/*case when year(APRSC7.CR_DATALIB) = 1900 then datediff(day, SC7.C7_EMISSAO, getdate()) else datediff(day, SC7.C7_EMISSAO, APRSC7.CR_DATALIB) end as DIAS_PC_APRPC,*/
-
-	(select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM) as DATAAPROV_PC,
-	datediff(day, SC7.C7_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM)) as DIASAPROV_PC,
-	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM), SD1.D1_DTDIGIT) as DIASAPROV_PC_NF,
-
 	SC7.C7_COND as COND,
 	trim(SE4.E4_DESCRI) as CONDPGTO,
 	SC7.C7_QUANT as QTD_PC_PEDIDA,
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
-	SC7.C7_PRECO as PRECO,
-	SC7.C7_TOTAL as TOTAL,
+	SC7.C7_PRECO as PC_PRECO,
+	SC7.C7_TOTAL as PC_TOTAL,
 
-	year(SC1.C1_EMISSAO) as ANO_SOLICITA,
-	month(SC1.C1_EMISSAO) as MES_SOLICITA,
-
-	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
-	month(SC7.C7_EMISSAO) as MES_PEDIDO,
-
-	case when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
-	else
-		case when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.0 then 'PRÉ-NOTA' /* LARANJA */
-		else
-			case when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
-			else
-				case when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.0 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
-				else
-					case when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
-					else
-						case when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINAÇÃO DE RESÍDUO' /* CINZA */
-						else 'OUTROS'
-						end
-					end
-				end
-			end
-		end
-	end as STATUS_COMPRA,
+	case
+		when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
+		when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
+		when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
+		when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
+		when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.00 then 'PRÉ-NOTA' /* LARANJA */
+		when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
+	else 'OUTROS' end as STATUS_COMPRA,
 
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
-	convert(datetime, SD1.D1_EMISSAO, 103) as NF_EMI,
-	convert(datetime, SD1.D1_DTDIGIT, 103) as NF_DATA,
+	cast(SD1.D1_EMISSAO as date) as NF_EMI,
+	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
+	substring(SD1.D1_DTDIGIT, 1, 6) as NF_PERIODO,
 	
-	case when concat(SD1.D1_FILIAL, SD1.D1_DOC, SD1.D1_ITEM) = '' then 0 else 1 end as ID_NF
+	datediff(day,
+		(
+			select top 1 cast(SCR010.CR_DATALIB as date)
+			from SCR010
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and SCR010.CR_LIBAPRO is not null
+				and SCR010.CR_TIPO = 'PC'
+				and SCR010.CR_FILIAL = SC7.C7_FILIAL
+				and SCR010.CR_NUM = SC7.C7_NUM
+		),
+		SD1.D1_DTDIGIT
+	) as DIASAPROV_PC_NF,
+	
+	SD1.D1_CC as NF_CC,
+	SD1.D1_ITEMCTA as NF_AT,
+	SD1.D1_ITEM as NF_ITEM,
+	SD1.D1_QUANT NF_QUANT,
+	SD1.D1_VUNIT NF_VUNIT,
+	SD1.D1_TOTAL NF_TOTAL,
+	SD1.D1_TES NF_TES,
+	SD1.D1_CUSTO NF_CUSTO,
+	SD1.D1_VALDESC as NF_VALDESC,
 
-from SC1010 SC1 (nolock)
-	inner join SB1010 SB1 (nolock)
-		on SB1.D_E_L_E_T_ = ''
-		and SB1.B1_COD = SC1.C1_PRODUTO
+    cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
+    cast(SC7.C7_VALIPI as numeric(14, 2)) as VL_PC_IPI,
+    cast(SC7.C7_VALFRE as numeric(14, 2)) as VL_PC_FRETE_NF,
+    cast(SC7.C7_DESPESA as numeric(14, 2)) as VL_PC_DESPESA,
+    cast(SC7.C7_VALIMP6 as numeric(14, 2)) as VL_PC_PIS,
+    cast(SC7.C7_VALIMP5 as numeric(14, 2)) as VL_PC_COFINS,
+    cast(SC7.C7_VALISS as numeric(14, 2)) as VL_PC_ISS,
+    cast(SC7.C7_ICMSRET as numeric(14, 2)) as VL_PC_ICMS_SUBST,
+    cast(SC7.C7_DESC as numeric(12, 2)) as VL_PC_DESCONTO,
+    cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
+	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO,
+	cast(SC7.C7_QUANT as numeric(13, 3)) as QTD_ITEM_PC,
+
+    cast(SD1.D1_VALICM as numeric(14, 2)) as VL_NFENT_ICMS,
+    cast(SD1.D1_VALIPI as numeric(14, 2)) as VL_NFENT_IPI,
+    cast(SD1.D1_VALFRE as numeric(14, 2)) as VL_NFENT_FRETE_NF,
+    cast(SD1.D1_DESPESA as numeric(14, 2)) as VL_NFENT_DESPESA,
+    cast(SD1.D1_VALIMP6 as numeric(14, 2)) as VL_NFENT_PIS,
+    cast(SD1.D1_VALIMP5 as numeric(14, 2)) as VL_NFENT_COFINS,
+    cast(SD1.D1_VALISS as numeric(14, 2)) as VL_NFENT_ISS,
+    cast(SD1.D1_ICMSRET as numeric(14, 2)) as VL_NFENT_ICMS_SUBST,
+    cast(SD1.D1_DESC as numeric(12, 2)) as VL_NFENT_DESCONTO,
+    cast(SD1.D1_VALIRR as numeric(14, 2)) as VL_NFENT_IRF,
+    cast(SD1.D1_VALINS as numeric(14, 2)) as VL_NFENT_INSS,
+	cast(SD1.D1_SEGURO as numeric(14, 2)) as VL_NFENT_SEGURO,
+	cast(SD1.D1_PESO * SD1.D1_QUANT as numeric(12, 4)) as PESO_LIQUIDO_NFENT,
+
+	case when trim(SC7.C7_YOS) = '2024/0' then right(left(replace(replace(SC7.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7.C7_YOS end as OS_PORT,
+	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT
+
+from SC7010 SC7 (nolock)
 	left join SC8010 SC8 (nolock)
 		on SC8.D_E_L_E_T_ = ''
-		and SC8.C8_FILIAL = SC1.C1_FILIAL
-		and SC8.C8_NUMSC = SC1.C1_NUM
-		and SC8.C8_ITEMSC = SC1.C1_ITEM
+		and SC8.C8_FILIAL = SC7.C7_FILIAL
+		and SC8.C8_NUM = SC7.C7_NUM
+		and SC8.C8_ITEM = SC7.C7_ITEM
 
-		left join SA2010 FCO (nolock)
-			on FCO.D_E_L_E_T_ = ''
-			and FCO.A2_COD = SC8.C8_FORNECE
-			and FCO.A2_LOJA = SC8.C8_LOJA
+		left join SC1010 SC1 (nolock)
+			on SC1.D_E_L_E_T_ = ''
+			and isnull(SC8.C8_FILIAL, SC7.C7_FILIAL) = SC1.C1_FILIAL
+			and isnull(SC8.C8_NUMSC, SC7.C7_NUMSC) = SC1.C1_NUM
+			and isnull(SC8.C8_ITEMSC, SC7.C7_ITEMSC) = SC1.C1_ITEM
 
-	left join SC7010 SC7 (nolock)
-		on SC7.D_E_L_E_T_ = ''
-		and SC7.C7_FILIAL = SC1.C1_FILIAL
-		and SC7.C7_NUMSC = SC1.C1_NUM
-		and SC7.C7_ITEMSC = SC1.C1_ITEM
+	left join SB1010 SB1 (nolock)
+		on SB1.D_E_L_E_T_ = ''
+		and SB1.B1_COD = SC7.C7_PRODUTO
 
-		left join SA2010 FPE (nolock)
-			on FPE.D_E_L_E_T_ = ''
-			and FPE.A2_COD = SC7.C7_FORNECE
-			and FPE.A2_LOJA = SC7.C7_LOJA
-		left join SD1010 SD1 (nolock)
-			on SD1.D_E_L_E_T_ = ''
-			and SD1.D1_FILIAL = SC7.C7_FILIAL
-			and SD1.D1_PEDIDO = SC7.C7_NUM
-			and SD1.D1_ITEMPC = SC7.C7_ITEM
-		left join SE4010 SE4 (nolock)
-			on SE4.D_E_L_E_T_ = ''
-			and SE4.E4_CODIGO = SC7.C7_COND
-		left join SY1010 SY1 (nolock)
-			on SY1.D_E_L_E_T_ = ''
-			and SY1.Y1_USER = SC7.C7_USER
+		inner join SBM010 SBM (nolock)
+			on (SBM.BM_GRUPO in (2301) or SBM.BM_GRUPO like '1%')
+			and SBM.D_E_L_E_T_ = ''
+			and SBM.BM_GRUPO = SB1.B1_GRUPO
 
+	inner join SA2010 SA2 (nolock)
+		on SA2.D_E_L_E_T_ = ''
+		and SA2.A2_COD = SC7.C7_FORNECE
+		and SA2.A2_LOJA = SC7.C7_LOJA
+	left join SE4010 SE4 (nolock)
+		on SE4.D_E_L_E_T_ = ''
+		and SE4.E4_CODIGO = SC7.C7_COND
+	left join SY1010 SY1 (nolock)
+		on SY1.Y1_USER = SC7.C7_USER
 	left join CTT010 CTT (nolock)
 		on CTT.D_E_L_E_T_ = ''
-		and CTT.CTT_CUSTO = SC1.C1_CC
+		and CTT.CTT_CUSTO = SC7.C7_CC
 	left join CTD010 CTD (nolock)
 		on CTD.D_E_L_E_T_ = ''
-		and CTD.CTD_ITEM = SC1.C1_ITEMCTA
-where 
-		SC1.D_E_L_E_T_ = ''
-	and year(SC1.C1_EMISSAO) > 2021
+		and CTD.CTD_ITEM = SC7.C7_ITEMCTA
+	left join SD1010 SD1 (nolock)
+		on SD1.D_E_L_E_T_ = ''
+		and SD1.D1_FILIAL = SC7.C7_FILIAL
+		and SD1.D1_PEDIDO = SC7.C7_NUM
+		and SD1.D1_ITEMPC = SC7.C7_ITEM
+where SC7.D_E_L_E_T_ = ''
