@@ -5,8 +5,8 @@
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-        case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
-        case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+		case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+		trim(SRA.RA_SITFOLH) as SITUACAO,
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
         trim(CTD.CTD_ITEM) as ITCT,
@@ -27,7 +27,7 @@
 		trim(SRC.RC_SEQ) as SEQ,
 		trim(SRC.RC_ROTEIR) as ROTEIRO,
 
-		case when SRV.RV_YCPOR then 'POR' when SRV.RV_YCTMS then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when nullif(SRV.RV_YCPOR, '') is not null then 'POR' when nullif(SRV.RV_YCTMS, '') is not null then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -91,8 +91,8 @@ union
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-        case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
-        case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+		case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+		trim(SRA.RA_SITFOLH) as SITUACAO,
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
         trim(CTD.CTD_ITEM) as ITCT,
@@ -113,7 +113,7 @@ union
 		trim(SRD.RD_SEQ) as SEQ,
 		trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-		case when SRV.RV_YCPOR then 'POR' when SRV.RV_YCTMS then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when nullif(SRV.RV_YCPOR, '') is not null then 'POR' when nullif(SRV.RV_YCTMS, '') is not null then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
