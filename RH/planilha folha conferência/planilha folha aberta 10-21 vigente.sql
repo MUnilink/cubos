@@ -1547,7 +1547,7 @@ from
         ) as Observações_da_Folha_de_Enc_Mensal_2a_QUINZENA
 
     from SRA010 (nolock)
-        inner join SRC010 as FOLHA (nolock)
+        inner join SRC010 FOLHA (nolock)
             on FOLHA.D_E_L_E_T_ = ''
             and SRA010.RA_FILIAL = FOLHA.RC_FILIAL
             and SRA010.RA_MAT = FOLHA.RC_MAT

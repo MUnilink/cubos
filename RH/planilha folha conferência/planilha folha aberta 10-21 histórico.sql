@@ -1547,11 +1547,12 @@ from
         ) as Observações_da_Folha_de_Enc_Mensal_2a_QUINZENA
 
     from SRA010 (nolock)
-        inner join SRD010 as FOLHA (nolock)
+        inner join SRD010 FOLHA (nolock)
             on FOLHA.D_E_L_E_T_ = ''
             and SRA010.RA_FILIAL = FOLHA.RD_FILIAL
             and SRA010.RA_MAT = FOLHA.RD_MAT
             and trim(FOLHA.RD_MAT) not in ('003264', '003263')
+            and datediff(month, concat(FOLHA.RD_DATARQ, '01'), getdate()) < 7
 
             inner join CTT010 (nolock)
                 on CTT010.D_E_L_E_T_ = ''
@@ -1567,7 +1568,6 @@ from
 
     where SRA010.D_E_L_E_T_ = ''
 ) as FOLHA_ABERTA
-where FOLHA_ABERTA.PERIODO > 202212
 group by
     FOLHA_ABERTA.FILIAL,
     FOLHA_ABERTA.DATA_ADMISSAO,

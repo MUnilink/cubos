@@ -440,7 +440,9 @@ from
         inner join CTT010 (nolock)
             on CTT010.D_E_L_E_T_ = ''
             and FOLHA.RD_CC = CTT010.CTT_CUSTO
-    where FOLHA.D_E_L_E_T_ = ''
+    where
+            datediff(month, concat(FOLHA.RD_DATARQ, '01'), getdate()) < 7
+        and FOLHA.D_E_L_E_T_ = ''
         
 ) as FOLHA_RESUMO
 group by
