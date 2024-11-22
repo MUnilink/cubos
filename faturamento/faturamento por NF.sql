@@ -7,16 +7,16 @@ SELECT
     SD2.D2_TIPO AS TIPO_NF,
     SD2.D2_ORIGLAN AS ORIGEM_NF,
     
-    convert(date, SF2.F2_EMISSAO, 103) as DATA_NF,
-    substring(SF2.F2_EMISSAO, 1, 6) PERIODO_NF,
+    cast(SF2.F2_EMISSAO as date) as DATA_NF,
+    left(SF2.F2_EMISSAO, 6) as PERIODO_NF,
     SF2.F2_ESPECIE as ESPECIE_NF,
     case SF2.F2_SERIE when '003' then 'EST' when '100' then 'EST' else 'FAT' end as MODULO,
 
     SF2.F2_TPFRETE AS TIPO_DE_FRETE,
     trim(SF3.F3_DESCRET) as MSG_NFE,
     trim(SF3.F3_OBSERV) as OBS_NFE,
-    substring(SF3.F3_DTCANC, 1, 6) as PERIODO_CANCELAMENTO,
-    convert(date, SF3.F3_DTCANC, 103) as DATA_CANCELAMENTO,
+    left(SF3.F3_DTCANC, 6) as PERIODO_CANCELAMENTO,
+    cast(SF3.F3_DTCANC as date) as DATA_CANCELAMENTO,
     
     trim(SD2.D2_COD) as PRODUTO,
     trim(SB1.B1_DESC) as DESC_PRODUTO,
@@ -29,7 +29,8 @@ SELECT
     trim(CFOP.X5_DESCRI) as DESC_CFOP,
     
     trim(SA1.A1_TIPO) as TIPO_CLIENTE,
-    trim(SF2.F2_CLIENTE) as BK_CLIENTE,
+    SF2.F2_CLIENTE as NUM_CLI,
+    SF2.F2_LOJA as LOJA_CLI,
     trim(SA1.A1_NOME) as CLIENTE,
 
     trim(SC6.C6_NUM) as PEDIDO,
@@ -42,30 +43,29 @@ SELECT
     SC6.C6_PRCVEN as PRECO_PEDIDO,
     SC6.C6_VALOR as VALOR_PEDIDO,
 
-    SF2.F2_VALBRUT as VALOR_BRUTO,
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
-    CAST(COALESCE(SD2.D2_VALBRUT, 0) AS DECIMAL(14, 2)) AS VL_FATURAMENTO_TOTAL,
-    CAST(COALESCE(SD2.D2_VALICM, 0) AS DECIMAL(14, 2)) AS VL_ICMS_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_VALIPI, 0) AS DECIMAL(14, 2)) AS VL_IPI_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_VALFRE, 0) AS DECIMAL(14, 2)) AS VL_FRETE_NF,
-    CAST(COALESCE(SD2.D2_DESPESA, 0) AS DECIMAL(14, 2)) AS VL_DESPESA,
-    CAST(COALESCE(SD2.D2_TOTAL, 0) AS DECIMAL(14, 2)) AS VL_FATURAMENTO_MERCADORIA,
-    CAST(COALESCE(SD2.D2_VALIMP6, 0) AS DECIMAL(14, 2)) AS VL_PIS_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_VALIMP5, 0) AS DECIMAL(14, 2)) AS VL_COFINS_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_VALISS, 0) AS DECIMAL(14, 2)) AS VL_ISS_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_ICMSRET, 0) AS DECIMAL(14, 2)) AS VL_ICMS_SUBST_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_DESCON, 0) AS DECIMAL(12, 2)) AS VL_DESCONTO_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_VALIRRF, 0) AS DECIMAL(14, 2)) AS VL_IRF_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_VALINS, 0) AS DECIMAL(14, 2)) AS VL_INSS_FATURAMENTO,
-    CAST(COALESCE(SD2.D2_PESO * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_LIQUIDO,
+    cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
+    cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2)) as VL_ICMS_FATURAMENTO,
+    cast(coalesce(SD2.D2_VALIPI, 0) as decimal(14, 2)) as VL_IPI_FATURAMENTO,
+    cast(coalesce(SD2.D2_VALFRE, 0) as decimal(14, 2)) as VL_FRETE_NF,
+    cast(coalesce(SD2.D2_DESPESA, 0) as decimal(14, 2)) as VL_DESPESA,
+    cast(coalesce(SD2.D2_TOTAL, 0) as decimal(14, 2)) as VL_FATURAMENTO_MERCADORIA,
+    cast(coalesce(SD2.D2_VALIMP6, 0) as decimal(14, 2)) as VL_PIS_FATURAMENTO,
+    cast(coalesce(SD2.D2_VALIMP5, 0) as decimal(14, 2)) as VL_COFINS_FATURAMENTO,
+    cast(coalesce(SD2.D2_VALISS, 0) as decimal(14, 2)) as VL_ISS_FATURAMENTO,
+    cast(coalesce(SD2.D2_ICMSRET, 0) as decimal(14, 2)) as VL_ICMS_SUBST_FATURAMENTO,
+    cast(coalesce(SD2.D2_DESCON, 0) as decimal(12, 2)) as VL_DESCONTO_FATURAMENTO,
+    cast(coalesce(SD2.D2_VALIRRF, 0) as decimal(14, 2)) as VL_IRF_FATURAMENTO,
+    cast(coalesce(SD2.D2_VALINS, 0) as decimal(14, 2)) as VL_INSS_FATURAMENTO,
+    cast(coalesce(SD2.D2_PRUNIT, 0) as decimal(16, 4)) as VL_UNITARIO,
+    cast(coalesce(SD2.D2_SEGURO, 0) as decimal(14, 2)) as VL_SEGURO,
+    cast(coalesce(SD2.D2_PESO * SD2.D2_QUANT, 0) as decimal(12, 4)) as PESO_LIQUIDO,
     1 AS contador,
-    CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
-    CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
     
     trim(ZC2.ZC2_NUM) as OS_PORTUARIA,
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
-    substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
+    left(ZC1.ZC1_EMISSA, 6) as PERIODO_OS,
+    cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
     trim(ZC2.ZC2_ITEM) as ITEMOS,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO_OS,
@@ -94,51 +94,60 @@ SELECT
         else 'OUTROS'
     end as STATUS_PEDIDO,
 
-    DUD.DUD_VIAGEM as VIAGEM_TMS
+    DUD.DUD_VIAGEM as VIAGEM_TMS,
+    cast(DT6.DT6_DATEMI as date) as DATA_CTE,
+    DT6.DT6_VALFRE as VL_CTE,
+    DT6.DT6_VALIMP as VL_CTEIMP,
+    DT6.DT6_VALTOT as VL_CTETOTAL,
+    DT6.DT6_VALMER as VL_MERCAD,
+    DTC.DTC_NUMNFC as NUM_NFCLI,
+    DTC.DTC_SERNFC as SER_NFCLI,
+    DTC.DTC_VALOR as VALOR_NFCLI,
+    trim(DTC.DTC_CODPRO) as PROD_NFCLI,
+    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DTC.DTC_CODPRO) as DESC_PRNFCLI,
+    
+    trim(SE1.E1_PREFIXO) as PREFIXO,
+    trim(SE1.E1_TIPO) as TIPO_TIT,
+    SE1.E1_NATUREZ as NUM_NAT,
+    SE1.E1_NFELETR as NUM_NFELETR,
+    cast(coalesce(SE1.E1_VALOR, 0) as decimal(15, 2)) as VALOR_TIT,
+    (select trim(SED010.ED_DESCRIC) from SED010 (nolock) where SED010.D_E_L_E_T_ = '' and SED010.ED_CODIGO = SE1.E1_NATUREZ) as NATUREZA
 
-FROM SD2010 SD2
-    INNER JOIN SF2010 SF2 (nolock)
-        ON F2_FILIAL = D2_FILIAL
-        AND F2_CLIENTE = D2_CLIENTE
-        AND F2_LOJA = D2_LOJA
-        AND F2_DOC = D2_DOC
-        AND F2_SERIE = D2_SERIE
-        AND SF2.D_E_L_E_T_= ' '
+from SD2010 SD2
+    inner join SF2010 SF2 (nolock)
+        on SF2.F2_FILIAL = SD2.D2_FILIAL
+        and SF2.F2_CLIENTE = SD2.D2_CLIENTE
+        and SF2.F2_LOJA = SD2.D2_LOJA
+        and SF2.F2_DOC = SD2.D2_DOC
+        and SF2.F2_SERIE = SD2.D2_SERIE
+        and SF2.D_E_L_E_T_= ' '
 
-        LEFT JOIN SA1010 SA1 (nolock)
-            ON A1_FILIAL = '      '
-            AND SA1.A1_COD = SF2.F2_CLIENTE
-            AND SA1.A1_LOJA = SF2.F2_LOJA
-            AND SA1.D_E_L_E_T_= ' '
-
+        left join SA1010 SA1 (nolock)
+            on SA1.D_E_L_E_T_= ''
+            and SA1.A1_COD = SF2.F2_CLIENTE
+            and SA1.A1_LOJA = SF2.F2_LOJA
         left join SF3010 SF3 (nolock)
             on SF3.D_E_L_E_T_ = ''
             and SF3.F3_CLIEFOR = SF2.F2_CLIENTE
             and SF3.F3_LOJA = SF2.F2_LOJA
             and SF3.F3_NFISCAL = SF2.F2_DOC
             and SF3.F3_SERIE = SF2.F2_SERIE
-
-    INNER JOIN SB1010 SB1 (nolock)
-        ON B1_FILIAL = '      '
-        AND SB1.B1_COD = SD2.D2_COD
-        AND SB1.D_E_L_E_T_= ' '
-    INNER JOIN SF4010 SF4 (nolock)
-        ON F4_FILIAL = '      '
-        AND SF4.F4_CODIGO = SD2.D2_TES
-        AND SF4.D_E_L_E_T_ = ' '
-    LEFT JOIN SBM010 SBM (nolock)
-        ON BM_FILIAL = '      '
-        AND BM_GRUPO = B1_GRUPO
-        AND SBM.D_E_L_E_T_ = ' '
-    LEFT JOIN SA3010 SA3 (nolock)
-        ON A3_FILIAL = '      '
-        AND A3_COD = F2_VEND1
-        AND SA3.D_E_L_E_T_ = ' '
-    LEFT JOIN SX5010 CFOP (nolock)
-        ON X5_FILIAL = '      '
-        AND X5_TABELA = '13'
-        AND X5_CHAVE = D2_CF
-        AND CFOP.D_E_L_E_T_ = ' '
+        
+    left join SB1010 SB1 (nolock)
+        on SB1.D_E_L_E_T_= ''
+        and SB1.B1_COD = SD2.D2_COD
+    
+        left join SBM010 SBM (nolock)
+            on SBM.D_E_L_E_T_ = ''
+            and SBM.BM_GRUPO = SB1.B1_GRUPO
+    
+    left join SF4010 SF4 (nolock)
+        on SF4.D_E_L_E_T_ = ''
+        and SF4.F4_CODIGO = SD2.D2_TES
+    left join SX5010 CFOP (nolock)
+        on CFOP.D_E_L_E_T_ = ''
+        and CFOP.X5_TABELA = '13'
+        and CFOP.X5_CHAVE = SD2.D2_CF
     
     left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
@@ -169,6 +178,18 @@ FROM SD2010 SD2
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
 
+            left join SE1010 SE1 (nolock)
+                on SE1.D_E_L_E_T_ = ''
+                and SE1.E1_FILIAL = DT6.DT6_FILDOC
+                and SE1.E1_CLIENTE = DT6.DT6_CLIDEV
+                and SE1.E1_LOJA = DT6.DT6_LOJDEV
+                and SE1.E1_NUM = DT6.DT6_DOC
+                and SE1.E1_PREFIXO = DT6.DT6_SERIE
+            left join DTC010 DTC (nolock)
+                on DTC.D_E_L_E_T_ = ''
+                and DTC.DTC_FILORI = DT6.DT6_FILDOC
+                and DTC.DTC_DOC = DT6.DT6_DOC
+                and DTC.DTC_SERIE = DT6.DT6_SERIE
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
