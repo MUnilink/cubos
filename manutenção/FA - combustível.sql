@@ -14,15 +14,8 @@ select
 	trim(TQN.TQN_CCUSTO) as CC,
 	trim(TQN.TQN_YITMCT) as ATIVIDADE,
 	trim(TQM.TQM_NOMCOM) as COMBUSTIVEL,
-	(
-		select avg(SD1010.D1_VUNIT)
-		from SD1010
-		where
-				SD1010.D_E_L_E_T_ = ''
-			and SD1010.D1_COD = '11100008'
-			and SD1010.D1_TES = 42
-			and substring(SD1010.D1_DTDIGIT, 1, 6) = substring(TQN.TQN_DTABAS, 1, 6)
-	) as VALOR_COMPRA,
+	(select sum(SD1010.D1_TOTAL) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6))/
+	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6)) as VALOR_COMPRA,
 	
 	substring(TQN.TQN_DTABAS, 1, 6) as PERIODO_TQN,
 	convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
