@@ -1,4 +1,4 @@
-select
+select distinct
     'P |01|01' AS BK_EMPRESA,
     CASE WHEN ZC1.ZC1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZC1.ZC1_FILIAL AS CHAR (6)) END AS BK_FILIAL,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
@@ -82,5 +82,5 @@ from ZE3010 ZE3
             on PV.FILIAL = ZC1.ZC1_FILIAL
             and PV.OS = ZC1.ZC1_NUM
 where
-        ZE3.D_E_L_E_T_ = ''
-    and ZE3.ZE3_ORIGEM = 'POR'
+        concat(left(ZE3.ZE3_COMPET, 6), '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+    and ZE3.D_E_L_E_T_ = ''
