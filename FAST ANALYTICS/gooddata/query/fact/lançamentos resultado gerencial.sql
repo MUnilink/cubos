@@ -14,7 +14,7 @@ select distinct
     PV.BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
 	ZE3.ZE3_NUM as FILNUM,
-    ZE3.ZE3_COMPET as PERIODO,
+    concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE3.ZE3_ITEMPL as CONTAROP,
     ZE3.ZE3_VALOR as VALOR
 from ZE3010 ZE3
@@ -82,5 +82,5 @@ from ZE3010 ZE3
             on PV.FILIAL = ZC1.ZC1_FILIAL
             and PV.OS = ZC1.ZC1_NUM
 where
-        concat(left(ZE3.ZE3_COMPET, 6), '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        concat(ZE3.ZE3_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZE3.D_E_L_E_T_ = ''
