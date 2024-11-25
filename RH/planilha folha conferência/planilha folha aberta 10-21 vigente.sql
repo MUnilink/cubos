@@ -72,7 +72,10 @@ select
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_ATS, 0.0)) as 'Primeira Parcela 13° - Ad. tempo serviço',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_maternidade, 0.0)) as 'Primeira Parcela 13° - sal. maternidade',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_alimenticia, 0.0)) as 'Primeira Parcela 13° - pensão alimentícia',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_valor_FGTS, 0.0)) as 'Primeira Parcela 13° - base FGTS',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_valor_baseFGTS, 0.0)) as 'Primeira Parcela 13° - valor FGTS',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_totaismedia, 0.0)) as 'Primeira Parcela 13° - totais média',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_valor_liquido_bas, 0.0)) as 'Primeira Parcela 13° - líquido a receber',
     
     sum(isnull(FOLHA_ABERTA.Segunda_13_provento, 0.0) - isnull(FOLHA_ABERTA.Segunda_13_desconto, 0.0)) as 'Segunda Parcela 13° - Valor a pagar',
     max(isnull(FOLHA_ABERTA.Segunda_13_avos, 0.0)) as 'Segunda Parcela 13° - Avos',
@@ -1229,6 +1232,42 @@ from
                     and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRC010.RC_PD = SRV010.RV_COD
             where
+                    SRC010.RC_PD in ('746')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
+                and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRC010.RC_PD = FOLHA.RC_PD
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+        ) as Primeira_13_valor_baseFGTS,
+        (
+            select sum(SRC010.RC_VALOR)
+            from SRC010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRC010.RC_PD = SRV010.RV_COD
+            where
+                    SRC010.RC_PD in ('756')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
+                and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRC010.RC_PD = FOLHA.RC_PD
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+        ) as Primeira_13_valor_FGTS,
+        (
+            select sum(SRC010.RC_VALOR)
+            from SRC010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRC010.RC_PD = SRV010.RV_COD
+            where
                     SRC010.RC_PD in ('009', '010', '768', '769', '770')
                 and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                 and SRC010.D_E_L_E_T_ = ''
@@ -1239,6 +1278,24 @@ from
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
                 and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Primeira_13_valor_totaismedia,
+        (
+            select sum(SRC010.RC_VALOR)
+            from SRC010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRC010.RC_PD = SRV010.RV_COD
+            where
+                    SRC010.RC_PD in ('182')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
+                and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRC010.RC_PD = FOLHA.RC_PD
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+        ) as Primeira_13_valor_liquido_bas,
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
