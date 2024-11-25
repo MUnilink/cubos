@@ -1,19 +1,19 @@
 select
 	ZD3.ZD3_LITROS,
-	(select sum(SD1010.D1_TOTAL) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6))/
-	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6)) as ZD3_VLUNI,
+	(select sum(SD1010.D1_TOTAL) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(ZD3.ZD3_DATA, 6))/
+	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(ZD3.ZD3_DATA, 6)) as ZD3_VLUNI,
 	
 	ZD3.ZD3_HODOM,
 	ZD3.ZD3_KMRD,
 	ZD3.ZD3_KML,
 	ZD3.ZD3_TOTAL,
-	trim(isnull(ZD3.ZD3_DATA, '-')) as ZD3_DATA,
+	trim(ZD3.ZD3_DATA) as ZD3_DATA,
 
-	trim(isnull(TQI.TQI_TANQUE, '-')) as TQI_TANQUE,
-	trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-	trim(isnull(TQM.TQM_CODCOM, '-')) as TQM_CODCOM,
-	trim(isnull(ZD3.TQN_CCUSTO, '-')) as TQN_CCUSTO,
-	isnull(ZD3.TQN_YITMCT, '-') as TQN_YITMCT
+	trim(TQI.TQI_TANQUE) as TQI_TANQUE,
+	trim(ST9.T9_CODBEM) as T9_CODBEM,
+	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
+	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
+	ZD3.TQN_YITMCT as TQN_YITMCT
 from
 	(
 		select
@@ -27,7 +27,7 @@ from
 			ZD30.ZD3_TOTAL,
 			ZD30.ZD3_TANQUE,
 			ZD30.ZD3_COMB,
-			substring(ZD30.ZD3_DATA, 1, 8) as ZD3_DATA,
+			left(ZD30.ZD3_DATA, 8) as ZD3_DATA,
 			ZD30.ZD3_KML,
 			ZD30.ZD3_KMRD,
 
