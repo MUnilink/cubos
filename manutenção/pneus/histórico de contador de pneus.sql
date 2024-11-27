@@ -1,7 +1,7 @@
 select
     trim(ST9.T9_CODBEM) as PNEU,
 	SB1.B1_COD as PRODUTO,
-	ST9.T9_CCUSTO as CC,
+	STP.TP_CCUSTO as CC,
 	ST9.T9_ITEMCTA as ATIVIDADE,
     ST9.T9_LOCPAD as ARMAZEM,
 	ST9.T9_SITBEM as SITUACAO,
@@ -21,11 +21,6 @@ select
 	ST9.T9_ITEMCTA as ATIVIDADE,
 	ST9.T9_ESTRUTU as APLICADO,
 
-	TQX.TQX_SULCOO as SULCO_ORI,
-	TQX.TQX_KMESPO as CONTADOR_ESP,
-	TQX.TQX_XTBAND as BANDA_CUSTO,
-	trim(ST7.T7_NOME) as FABRICANTE,
-
 	TQS.TQS_KMOR,
 	TQS.TQS_KMR1,
 	TQS.TQS_KMR2,
@@ -34,7 +29,7 @@ select
 	TQS.TQS_KMR5,
 	TQS.TQS_KMR6,
 	TQS.TQS_KMR7,
-	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT
+	TQS.TQS_KMOR + TQS.TQS_KMR1 + TQS.TQS_KMR2 + TQS.TQS_KMR3 + TQS.TQS_KMR4 + TQS.TQS_KMR5 + TQS.TQS_KMR6 + TQS.TQS_KMR7 as kmTOT,
 	
     STP.TP_POSCONT as CONTADOR,
 	STP.TP_ACUMCON as CONT_ACUM,
@@ -44,6 +39,7 @@ select
 	STP.TP_HORA as HORA,
 	first_value(STP.TP_POSCONT) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_CONT,
 	first_value(STP.TP_ACUMCON) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_ACUM
+
 from STP010 STP (nolock)
     inner join TQS010 TQS (nolock)
         on TQS.D_E_L_E_T_ = ''
@@ -51,7 +47,11 @@ from STP010 STP (nolock)
 	
         inner join ST9010 ST9 (nolock)
             on ST9.D_E_L_E_T_ = ''
-            and ST9.T9_CODBEM = STP.TP_CODBEM
+            and ST9.T9_CODBEM = TQS.TQS_CODBEM
+
+            left join TQY010 TQY
+                on TQY.D_E_L_E_T_ = ''
+                and TQY.TQY_STATUS = ST9.T9_STATUS
 
         left join SA2010 SA2
 			on SA2.D_E_L_E_T_ = ''
@@ -60,21 +60,10 @@ from STP010 STP (nolock)
     left join TQT010 TQT
         on TQT.D_E_L_E_T_ = ''
         and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-    
-        left join TQX010 TQX
-            on TQX.D_E_L_E_T_ = ''
-            and TQX.TQX_MEDIDA = TQT.TQT_MEDIDA
-
-            left join TQR010 TQR
-                on TQR.D_E_L_E_T_ = ''
-                and TQR.TQR_TIPMOD = TQX.TQX_TIPMOD
-            
-                left join ST7010 ST7
-                    on ST7.D_E_L_E_T_ = ''
-                    and ST7.T7_FABRICA = TQR.TQR_FABRIC
         
         left join SB1010 SB1
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
 where
-		ST9.D_E_L_E_T_ = ''
+        ST9.T9_CATBEM = 3
+	and STP.D_E_L_E_T_ = ''
