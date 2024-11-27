@@ -37,6 +37,11 @@ select
 	cast(STP.TP_DTORIGI as date) as DATA_ORI,
 	cast(STP.TP_DTLEITU as date) as DATA_LEI,
 	STP.TP_HORA as HORA,
+    
+	cast(first_value(nullif(STP.TP_DTORIGI, '')) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as date) as MIN_DATA_ORI,
+	cast(first_value(nullif(STP.TP_DTLEITU, '')) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as date) as MIN_DATA_LEI,
+    first_value(STP.TP_TIPOLAN) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_TIPO,
+	first_value(STP.TP_HORA) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_HORA,
 	first_value(STP.TP_POSCONT) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_CONT,
 	first_value(STP.TP_ACUMCON) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_ACUM
 
