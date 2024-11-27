@@ -13,10 +13,9 @@ select distinct
     PV.BK_ITEM_CONTABIL,
     PV.BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
-	ZE3.ZE3_NUM as FILNUM,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
-    ZE3.ZE3_ITEMPL as CONTAROP,
-    ZE3.ZE3_VALOR as VALOR
+    ZE2.ZE2_COD as CONTAROP,
+    isnull(ZE3.ZE3_VALOR, 0.0) as VALOR
 from ZE3010 ZE3
     inner join ZE2010 ZE2
         on ZE2.D_E_L_E_T_ = ''
