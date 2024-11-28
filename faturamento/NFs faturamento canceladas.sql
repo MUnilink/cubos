@@ -9,6 +9,7 @@ SELECT
     SF2.F2_TPFRETE AS TIPO_FRETE,
     SD2.D2_TIPO AS DOC_TIPO,
     SD2.D2_ORIGLAN AS ORIGEM_LANC,
+    
 
     trim(SF3.F3_DESCRET) as MSG_NFE,
     trim(SF3.F3_OBSERV) as OBS,
@@ -16,6 +17,11 @@ SELECT
     
     trim(SD2.D2_COD) as PRODUTO,
     trim(SB1.B1_DESC) as DESC_PRODUTO,
+    trim(ZC1.ZC1_NUM) as OS_PORTUARIA,
+    substring(ZC1.ZC1_NUM, 6, 10) as OS,
+    left(ZC1.ZC1_EMISSA, 6) as PERIODO_OS,
+    cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
+    trim(ZC2.ZC2_ITEM) as ITEMOS,
     
     trim(SB1.B1_GRUPO) as GRUPO_PRODUTO,
     trim(SBM.BM_DESC) as DESC_GRUPOPROD,
@@ -54,42 +60,56 @@ SELECT
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO
 from SF3010 SF3 (nolock)
     inner join SF2010 SF2 (nolock)
-        on SF2.F2_SERIE NOT IN ('003', '100')
+        on SF2.F2_SERIE not in ('003', '100')
         and SF2.F2_CLIENTE = SF3.F3_CLIEFOR
         and SF2.F2_LOJA = SF3.F3_LOJA
         and SF2.F2_DOC = SF3.F3_NFISCAL
         and SF2.F2_SERIE = SF3.F3_SERIE
 
         left join SD2010 SD2 (nolock)
-            on SD2.D2_FILIAL = SF2.F2_FILIAL
+            on SD2.D2_TIPO not in ('B', 'D')
+            and SD2.D2_FILIAL = SF2.F2_FILIAL
             and SD2.D2_CLIENTE = SF2.F2_CLIENTE
             and SD2.D2_LOJA = SF2.F2_LOJA
             and SD2.D2_DOC = SF2.F2_DOC
             and SD2.D2_SERIE = SF2.F2_SERIE
-            and SD2.D2_TIPO NOT IN ('B', 'D')
 
+            left join SC6010 SC6 (nolock)
+                on SC6.D_E_L_E_T_ = ''
+                and SC6.C6_FILIAL = SD2.D2_FILIAL
+                and SC6.C6_NUM = SD2.D2_PEDIDO
+                and SC6.C6_ITEM = SD2.D2_ITEMPV
+                
+                left join ZC2010 ZC2 (nolock)
+                    on ZC2.D_E_L_E_T_ = ''
+                    and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+                    and ZC2.ZC2_NUM = SC6.C6_YOS
+                    and ZC2.ZC2_ITEM = SC6.C6_YITOS
+
+                    left join ZC1010 ZC1 (nolock)
+                        on ZC1.D_E_L_E_T_ = ''
+                        and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+                        and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+            
             left join SB1010 SB1 (nolock)
-                ON B1_FILIAL = '      '
-                AND SB1.B1_COD = SD2.D2_COD
-                AND SB1.D_E_L_E_T_= ' '
+                on SB1.D_E_L_E_T_= ''
+                and SB1.B1_COD = SD2.D2_COD
+            
+                left join SBM010 SBM (nolock)
+                    on SBM.D_E_L_E_T_ = ''
+                    and SBM.BM_GRUPO = SB1.B1_GRUPO
+            
             left join SF4010 SF4 (nolock)
-                ON F4_FILIAL = '      '
-                AND SF4.F4_CODIGO = SD2.D2_TES
-                AND SF4.D_E_L_E_T_ = ' '
-            LEFT JOIN SX5010 CFOP (nolock)
-                ON X5_FILIAL = '      '
-                AND X5_TABELA = '13'
-                AND X5_CHAVE = D2_CF
-                AND CFOP.D_E_L_E_T_ = ' '
+                on SF4.D_E_L_E_T_ = ''
+                and SF4.F4_CODIGO = SD2.D2_TES
+            left join SX5010 CFOP (nolock)
+                on CFOP.D_E_L_E_T_ = ''
+                and CFOP.X5_TABELA = '13'
+                and CFOP.X5_CHAVE = SD2.D2_CF
         
-        LEFT JOIN SA1010 SA1 (nolock)
-            ON A1_FILIAL = '      '
-            AND SA1.A1_COD = SF2.F2_CLIENTE
-            AND SA1.A1_LOJA = SF2.F2_LOJA
-            AND SA1.D_E_L_E_T_= ' '
-        LEFT JOIN SBM010 SBM (nolock)
-            ON BM_FILIAL = '      '
-            AND BM_GRUPO = B1_GRUPO
-            AND SBM.D_E_L_E_T_ = ' '
-WHERE
+        left join SA1010 SA1 (nolock)
+            on SA1.D_E_L_E_T_= ''
+            and SA1.A1_COD = SF2.F2_CLIENTE
+            and SA1.A1_LOJA = SF2.F2_LOJA
+where
         SF3.D_E_L_E_T_ = ''
