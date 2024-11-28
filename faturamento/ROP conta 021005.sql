@@ -21,9 +21,16 @@ from SF3010 SF3
                 on SC6.C6_FILIAL = SD2.D2_FILIAL
                 and SC6.C6_NUM = SD2.D2_PEDIDO
                 and SC6.C6_ITEM = SD2.D2_ITEMPV
+
+                inner join ZC2010 ZC2
+                    on ZC2.D_E_L_E_T_ = ''
+                    and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+                    and ZC2.ZC2_NUM = SC6.C6_YOS
+                    and ZC2.ZC2_ITEM = SC6.C6_YITOS
 where
         SF3.D_E_L_E_T_ = ''
     and nullif(SF3.F3_DTCANC, '') is not null
+    and left(SF3.F3_DTCANC, 6) = '"+cCompt+"' and SF2.F2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 group by
     SF2.F2_FILIAL,
     SC6.C6_YOS
