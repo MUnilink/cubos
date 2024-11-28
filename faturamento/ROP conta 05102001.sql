@@ -16,6 +16,7 @@ where
         SB1.B1_YCTCUST = '320601001'
     and SD3.D3_ESTORNO = ''
     and SD3.D_E_L_E_T_ = ''
+    and left(SD3.D3_EMISSAO, 6) = '"+cCompt+"' and SD3.D3_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 group by
     SD3.D3_FILIAL,
     ZC2.ZC2_NUM

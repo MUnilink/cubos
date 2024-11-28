@@ -15,6 +15,7 @@ from SC7010 SC7
 where
         cast(SC7.C7_FORNECE as int) = 52
     and SC7.D_E_L_E_T_ = ''
+    and left(SC7.C7_EMISSAO, 6) = '"+cCompt+"' and SC7.C7_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 group by
     SC7.C7_FILIAL,
     ZC2.ZC2_NUM
