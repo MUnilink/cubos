@@ -10,6 +10,7 @@ select
 	ST9.T9_STATUS as STATUS,
     trim(TQY.TQY_DESTAT) as DESC_STATUS,
     ST9.T9_CONTACU as CONT_ACUM,
+    ST9.T9_TEMCONT as TIPO_CONT,
 
 	ST9.T9_VALCPA as T9_VALCPA,
 	cast(ST9.T9_DTCOMPR as date) as DATA_COMPRA,
@@ -37,13 +38,20 @@ select
 	cast(STP.TP_DTORIGI as date) as DATA_ORI,
 	cast(STP.TP_DTLEITU as date) as DATA_LEI,
 	STP.TP_HORA as HORA,
-    
-	cast(first_value(nullif(STP.TP_DTORIGI, '')) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as date) as MIN_DATA_ORI,
-	cast(first_value(nullif(STP.TP_DTLEITU, '')) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as date) as MIN_DATA_LEI,
+
+	first_value(cast(nullif(STP.TP_DTORIGI, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_DATA_ORI,
+	first_value(cast(nullif(STP.TP_DTLEITU, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_DATA_LEI,
     first_value(STP.TP_TIPOLAN) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_TIPO,
 	first_value(STP.TP_HORA) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_HORA,
 	first_value(STP.TP_POSCONT) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_CONT,
-	first_value(STP.TP_ACUMCON) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_ACUM
+	first_value(STP.TP_ACUMCON) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_ACUM,
+	
+	first_value(cast(nullif(STP.TP_DTORIGI, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU desc, STP.TP_HORA desc) as MAX_DATA_ORI,
+	first_value(cast(nullif(STP.TP_DTLEITU, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU desc, STP.TP_HORA desc) as MAX_DATA_LEI,
+    first_value(STP.TP_TIPOLAN) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU desc, STP.TP_HORA desc) as MAX_TIPO,
+	first_value(STP.TP_HORA) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU desc, STP.TP_HORA desc) as MAX_HORA,
+	first_value(STP.TP_POSCONT) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU desc, STP.TP_HORA desc) as MAX_CONT,
+	first_value(STP.TP_ACUMCON) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU desc, STP.TP_HORA desc) as MAX_ACUM
 
 from STP010 STP (nolock)
     inner join TQS010 TQS (nolock)
