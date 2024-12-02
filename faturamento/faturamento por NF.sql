@@ -105,6 +105,10 @@ SELECT
     DTC.DTC_VALOR as VALOR_NFCLI,
     trim(DTC.DTC_CODPRO) as PROD_NFCLI,
     (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DTC.DTC_CODPRO) as DESC_PRNFCLI,
+    trim(REG_COL.DUY_EST) as UF_COLETA,
+	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
+	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
+	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
     
     trim(SE1.E1_PREFIXO) as PREFIXO,
     trim(SE1.E1_TIPO) as TIPO_TIT,
@@ -190,6 +194,14 @@ from SD2010 SD2
                 and DTC.DTC_FILORI = DT6.DT6_FILDOC
                 and DTC.DTC_DOC = DT6.DT6_DOC
                 and DTC.DTC_SERIE = DT6.DT6_SERIE
+            left join DUY010 REG_COL (nolock)
+                on REG_COL.D_E_L_E_T_ = ''
+                and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
+                and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
+            left join DUY010 REG_ENT (nolock)
+                on REG_ENT.D_E_L_E_T_ = ''
+                and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
+                and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
