@@ -222,8 +222,99 @@ select
                 and ZC6010.ZC6_ANOMES = ZC2.PERIODO
                 and (ZC6010.ZC6_BEMPAI = ZC2.INSUMO or ZC6010.ZC6_BEMPA2 = ZC2.INSUMO)
         ) else 0.0 end
-        when ZC2.TIPO = 2 and left(ZC2.PERIODO, 4) > 2023 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6)) else 0.0 end
-        when ZC2.TIPO = 14 and left(ZC2.PERIODO, 4) > 2023 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = substring(ZC2.PERIODO, 1, 6)) else 0.0 end
+        when ZC2.TIPO = 2 and left(ZC2.PERIODO, 4) > 2023 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then
+        (
+            select sum(FOLHA.VALOR)
+            from
+            (
+                select
+                    SRD.RD_VALOR,
+                    SRD.RD_VALOR *
+                    (
+                        datediff
+                        (
+                            day,
+                            concat(SRD.RD_DATARQ, '01'),
+                            case when
+                            (
+                                select max(SR7010.R7_DATA)
+                                from SR7010
+                                where
+                                        SR7010.D_E_L_E_T_ = ''
+                                    and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                    and SR7010.R7_MAT = SRD.RD_MAT
+                                    and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                            ) >= concat(SRD.RD_DATARQ, '01') then
+                            (
+                                select max(SR7010.R7_DATA)
+                                from SR7010
+                                where
+                                        SR7010.D_E_L_E_T_ = ''
+                                    and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                    and SR7010.R7_MAT = SRD.RD_MAT
+                                    and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                            )
+                            else concat(SRD.RD_DATARQ, '01') end
+                        )
+                    ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_ANT */
+                    +
+                    SRD.RD_VALOR *
+                    (
+                        datediff
+                        (
+                            day,
+                            case when
+                            (
+                                select max(SR7010.R7_DATA)
+                                from SR7010
+                                where
+                                        SR7010.D_E_L_E_T_ = ''
+                                    and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                    and SR7010.R7_MAT = SRD.RD_MAT
+                                    and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                            ) >= concat(SRD.RD_DATARQ, '01') then
+                            (
+                                select max(SR7010.R7_DATA)
+                                from SR7010
+                                where
+                                        SR7010.D_E_L_E_T_ = ''
+                                    and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                    and SR7010.R7_MAT = SRD.RD_MAT
+                                    and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                            )
+                            else concat(SRD.RD_DATARQ, '01') end,
+                            dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+                        )
+                    ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR, /* VALOR_ANT */
+                    (
+                        select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+                        from SR7010
+                        where
+                                SR7010.D_E_L_E_T_ = ''
+                            and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                            and SR7010.R7_MAT = SRD.RD_MAT
+                            and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+                    ) as CARGO_FOLHA,
+                    SRD.RD_FILIAL,
+                    SRD.RD_MAT,
+                    SRD.RD_DATARQ
+                from SRD010 SRD
+                where
+                        exists
+                        (
+                            select nullif(SR7010.R7_DATA, '')
+                            from SR7010
+                            where
+                                    SR7010.D_E_L_E_T_ = ''
+                                and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                                and SR7010.R7_MAT = SRD.RD_MAT
+                                and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+                        )
+                    and SRD.D_E_L_E_T_ = ''
+            ) FOLHA
+            where concat(FOLHA.RD_FILIAL, FOLHA.RD_DATARQ, FOLHA.CARGO_FOLHA) = concat(ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO)
+        ) else 0.0 end
+        when ZC2.TIPO = 14 and left(ZC2.PERIODO, 4) > 2023 then case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZC7010.ZC7_CUSTO) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end
     else 0.0 end as CUSTO
 
 from
@@ -239,7 +330,7 @@ from
             left(ZC1010.ZC1_NUM, 4) as ANO_OS,
             left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
             cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
-            left(ZC2010.ZC2_COMPET, 6) as PERIODO,
+            left(isnull(nullif(ZC2010.ZC2_COMPET, ''), '20231231'), 6) as PERIODO,
 
             case ZC1010.ZC1_STATUS
                 when 1 then 'ABERTA'
@@ -335,7 +426,9 @@ from
                 on ZC1010.D_E_L_E_T_ = ''
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
-        where ZC2010.D_E_L_E_T_ = ''
+        where
+                left(ZC2010.ZC2_COMPET, 4) > 2023
+            and ZC2010.D_E_L_E_T_ = ''
     ) ZC2
 
         left join SA1010 DEV (nolock)
