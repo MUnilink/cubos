@@ -43,6 +43,29 @@ SELECT
     SC6.C6_PRCVEN as PRECO_PEDIDO,
     SC6.C6_VALOR as VALOR_PEDIDO,
 
+    case
+        /* LP 610-001 */
+        when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF = '08' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
+        when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
+        /* LP 610-040 */
+        when trim(CFOP.X5_CHAVE) = 5359 then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        /* LP 610-600 */
+        when trim(CFOP.X5_CHAVE) = 5932 and SD2.D2_TES = '509' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        when trim(CFOP.X5_CHAVE) = 5932 and SD2.D2_TES != '509' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        /* LP 610-010 */
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /* LP 610-020 */
+        when trim(CFOP.X5_CHAVE) in (5352, 5353) and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) in (5352, 5353) and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /* LP 610-030 */
+        when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES not in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+    else null end as LP_CRE,
+
+    concat(trim(SA1.A1_CONTA), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SA1.A1_CONTA)) as LP_DEB,
+
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
     cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
     cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2)) as VL_ICMS_FATURAMENTO,
