@@ -17,10 +17,10 @@ select
 		else STL.TL_CUSTO
 	end as TL_CUSTO,
 
-	STL.TL_DTINICI as DTINI_APP,
-	STL.TL_DTFIM as DTFIM_APP,
-	STJ.TJ_DTORIGI as DATA_INIOS,
-	STJ.TJ_DTPRFIM as DATA_FIMOS,
+	cast(STL.TL_DTINICI as date) as DTINI_APP,
+	cast(STL.TL_DTFIM as date) as DTFIM_APP,
+	cast(STJ.TJ_DTORIGI as date) as DATA_INIOS,
+	cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
 
 	STJ.TJ_POSCONT,
@@ -91,17 +91,17 @@ select
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
 	ST9.T9_CODFAMI as FAMILIA,
-	trim(isnull(TT9.TT9_DESCRI, '-')) as T5_TAREFA,
-	trim(isnull(STJ.TJ_USUARIO, '-')) as TJ_USUAINI,
-	trim(isnull(STJ.TJ_USUAFIM, '-')) as TJ_USUAFIM,
+	trim(TT9.TT9_DESCRI) as T5_TAREFA,
+	trim(STJ.TJ_USUARIO) as TJ_USUAINI,
+	trim(STJ.TJ_USUAFIM) as TJ_USUAFIM,
 	STJ.TJ_SERVICO,
 	STJ.TJ_POSCONT as CONTADOR_ATUAL,
 	STJ.TJ_HORACO1 as HORA_CONT,
 	lag(STJ.TJ_POSCONT) over(partition by STJ.TJ_CODBEM order by STJ.TJ_DTORIGI, STJ.TJ_HORACO1) as CONTADOR_ANTERIOR,
 
-	trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
-	trim(isnull(SB1.B1_COD, '-')) as B1_COD,
-	trim(isnull(SB1.B1_DESC, '-')) as B1_DESC,
+	trim(SB1.B1_GRUPO) as B1_GRUPO,
+	trim(SB1.B1_COD) as B1_COD,
+	trim(SB1.B1_DESC) as B1_DESC,
 	substring(STL.TL_DTFIM, 1, 6) as PERIODO,
 	substring(STJ.TJ_DTORIGI, 1, 6) as PERIODO_OS,
 	SCP.CP_NUM as SA,
