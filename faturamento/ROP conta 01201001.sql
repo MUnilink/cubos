@@ -1,7 +1,7 @@
 select
     SD2.D2_FILIAL as FILIAL,
-    trim(ZC1.ZC1_NUM) as NUM,
-    cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as TOTAL
+    DUD.DUD_VIAGEM as NUM,
+    sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
     inner join SF2010 SF2 (nolock)
@@ -28,22 +28,17 @@ from SD2010 SD2
         and CFOP.X5_TABELA = '13'
         and CFOP.X5_CHAVE = SD2.D2_CF
     
-    inner join SC6010 SC6 (nolock)
+    left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
         and SC6.C6_FILIAL = SD2.D2_FILIAL
         and SC6.C6_NUM = SD2.D2_PEDIDO
         and SC6.C6_ITEM = SD2.D2_ITEMPV
         
-        inner join ZC2010 ZC2 (nolock)
-            on ZC2.D_E_L_E_T_ = ''
-            and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
-            and ZC2.ZC2_NUM = SC6.C6_YOS
-            and ZC2.ZC2_ITEM = SC6.C6_YITOS
-
-            inner join ZC1010 ZC1 (nolock)
-                on ZC1.D_E_L_E_T_ = ''
-                and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
-                and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+    inner join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILDOC = SD2.D2_FILIAL
+        and DUD.DUD_DOC = SD2.D2_DOC
+        and DUD.DUD_SERIE = SD2.D2_SERIE
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
@@ -70,3 +65,6 @@ where
             when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
         else null end
     = '310101001'
+    and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and DUD.DUD_FILDOC between '"+cFilIni+"' and '"+cFilFim+"'
+
+group by SD2.D2_FILIAL, DUD.DUD_VIAGEM
