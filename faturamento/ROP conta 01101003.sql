@@ -1,7 +1,7 @@
 select
     SD2.D2_FILIAL as FILIAL,
-    trim(ZC1.ZC1_NUM) as NUM,
-    cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as TOTAL
+    ZC1.ZC1_NUM as NUM,
+    sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
     inner join SF2010 SF2 (nolock)
@@ -70,3 +70,6 @@ where
             when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
         else null end
     = '310102003'
+    and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
+
+group by SD2.D2_FILIAL, ZC1.ZC1_NUM
