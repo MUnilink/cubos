@@ -13,6 +13,9 @@ select
 	convert(date, SC1.C1_EMISSAO, 103) as DATA_SC,
 	substring(SC1.C1_EMISSAO, 1, 6) as PERIODO_SC,
 	substring(SC1.C1_OP, 1, 6) as OS,
+	trim(FORSC.C1_FORNECE) as FORNE_SC,
+	trim(FORSC.C1_LOJA) as FORNE_SC,
+	trim(FORSC.A2_NOME) as FORNE_SC,
 
 	trim(SC7.C7_ITEMCTA) as AT,
 	trim(SC7.C7_CC) as CC,
@@ -39,17 +42,16 @@ select
 	SC8.C8_TOTAL as VALOR_COTADO,
 	convert(date, SC8.C8_EMISSAO, 103) as DATA_COTACAO,
 	substring(SC8.C8_EMISSAO, 1, 6) as PERIODO_COTACAO,
-	trim(FCO.A2_NOME) as NOME_FOR_COTACAO,
-	trim(FCO.A2_NREDUZ) as NOMERED_FOR_COTACAO,
+	trim(FORCO.A2_COD) as FORNE_COT,
+	trim(FORCO.A2_LOJA) as FORNE_COT,
+	trim(FORCO.A2_NOME) as FORNE_COT,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and SCR010.CR_LIBAPRO is not null and SCR010.CR_TIPO = 'SC' and SCR010.CR_NUM = SC1.C1_NUM), SC7.C7_EMISSAO) as DIASAPROV_SC_CO,
 
 	trim(SC7.C7_NUM) as PEDIDO,
 	trim(SC7.C7_ITEM) as ITEM_PC,
-	trim(SC7.C7_FORNECE) as FORNECEDOR,
-	trim(SC7.C7_LOJA) as LOJA,
-	trim(FPE.A2_NOME) as NOME_FORNECEDOR,
-	trim(FPE.A2_NREDUZ) as NOMERED_FORNECEDOR,
-	trim(FPE.A2_CGC) as CNPJ,
+	trim(FORPC.C7_FORNECE) as FORNE_PC,
+	trim(FORPC.C7_LOJA) as FORNE_PC,
+	trim(FORPC.A2_NOME) as FORNE_PC,
 	trim(SC7.C7_OBS) as OBS_PC,
 	trim(SC7.C7_OBSM) as MEMO_PC,
 
@@ -140,10 +142,10 @@ from SC1010 SC1 (nolock)
 		and SC8.C8_NUMSC = SC1.C1_NUM
 		and SC8.C8_ITEMSC = SC1.C1_ITEM
 
-		left join SA2010 FCO (nolock)
-			on FCO.D_E_L_E_T_ = ''
-			and FCO.A2_COD = SC8.C8_FORNECE
-			and FCO.A2_LOJA = SC8.C8_LOJA
+		left join SA2010 FORCO (nolock)
+			on FORCO.D_E_L_E_T_ = ''
+			and FORCO.A2_COD = SC8.C8_FORNECE
+			and FORCO.A2_LOJA = SC8.C8_LOJA
 
 	left join SC7010 SC7 (nolock)
 		on SC7.D_E_L_E_T_ = ''
@@ -151,10 +153,10 @@ from SC1010 SC1 (nolock)
 		and SC7.C7_NUMSC = SC1.C1_NUM
 		and SC7.C7_ITEMSC = SC1.C1_ITEM
 
-		left join SA2010 FPE (nolock)
-			on FPE.D_E_L_E_T_ = ''
-			and FPE.A2_COD = isnull(nullif(SC1.C1_FORNECE, ''), SC7.C7_FORNECE)
-			and FPE.A2_LOJA = isnull(nullif(SC1.C1_LOJA, ''), SC7.C7_LOJA)
+		left join SA2010 FORPC (nolock)
+			on FORPC.D_E_L_E_T_ = ''
+			and FORPC.A2_COD = SC7.C7_FORNECE
+			and FORPC.A2_LOJA = SC7.C7_LOJA
 		left join SD1010 SD1 (nolock)
 			on SD1.D_E_L_E_T_ = ''
 			and SD1.D1_FILIAL = SC7.C7_FILIAL
@@ -166,11 +168,15 @@ from SC1010 SC1 (nolock)
 		left join SY1010 SY1 (nolock)
 			on SY1.D_E_L_E_T_ = ''
 			and SY1.Y1_USER = SC7.C7_USER
-	
+
+	left join SA2010 FORSC (nolock)
+		on FORSC.D_E_L_E_T_ = ''
+		and FORSC.A2_COD = SC1.C1_FORNECE
+		and FORSC.A2_LOJA = SC1.C1_LOJA
 	left join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''
 		and STJ.TJ_FILIAL = SC1.C1_FILIAL
-		and concat(STJ.TJ_ORDEM, 'OS') = substring(SC1.C1_OP, 1, 8)
+		and concat(STJ.TJ_ORDEM, 'OS') = left(SC1.C1_OP, 8)
 		and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP')
 	left join SC2010 SC2 (nolock)
 		on SC2.D_E_L_E_T_ = ''
