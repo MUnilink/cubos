@@ -1,7 +1,7 @@
 select
     SD2.D2_FILIAL as FILIAL,
     DUD.DUD_VIAGEM as NUM,
-    SC6.C6_CC as CC,
+    SD2.D2_CCUSTO as CC,
     sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
@@ -68,4 +68,4 @@ where
     = '310101002'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and DUD.DUD_FILDOC between '"+cFilIni+"' and '"+cFilFim+"'
 
-group by SD2.D2_FILIAL, DUD.DUD_VIAGEM
+group by SD2.D2_FILIAL, DUD.DUD_VIAGEM, SD2.D2_CCUSTO

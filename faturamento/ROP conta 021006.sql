@@ -18,6 +18,4 @@ from SD2010 SD2
 where
         SD2.D_E_L_E_T_ = ''
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-group by
-    SD2.D2_FILIAL,
-    SC6.C6_YOS
+group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC

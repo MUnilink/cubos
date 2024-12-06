@@ -32,6 +32,4 @@ where
         SF3.D_E_L_E_T_ = ''
     and nullif(SF3.F3_DTCANC, '') is not null
     and left(SF3.F3_DTCANC, 6) = '"+cCompt+"' and SF2.F2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-group by
-    SF2.F2_FILIAL,
-    SC6.C6_YOS
+group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC
