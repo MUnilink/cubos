@@ -1,6 +1,7 @@
 select
     SF2.F2_FILIAL as FILIAL,
     SC6.C6_YOS as NUM,
+    SC6.C6_CC as CC,
     sum(cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 from SF3010 SF3
     inner join SF2010 SF2

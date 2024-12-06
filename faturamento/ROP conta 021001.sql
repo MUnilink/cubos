@@ -1,6 +1,7 @@
 select
     SD2.D2_FILIAL as FILIAL,
     SC6.C6_YOS as NUM,
+    SC6.C6_CC as CC,
     sum(cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2))) as TOTAL
 from SD2010 SD2
     inner join SC6010 SC6

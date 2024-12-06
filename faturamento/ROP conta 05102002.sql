@@ -1,6 +1,7 @@
 select
     SD3.D3_FILIAL as FILIAL,
     ZC2.ZC2_NUM as NUM,
+    SD3.D3_CC as CC,
     sum(cast(coalesce(SD3.D3_CUSTO1, 0) as decimal (14, 2))) as TOTAL
 from SD3010 SD3
     inner join ZC2010 ZC2

@@ -1,6 +1,7 @@
 select
     SC7.C7_FILIAL as FILIAL,
     ZC2.ZC2_NUM as NUM,
+    SD3.D3_CC as CC,
 	sum(cast(coalesce(SD1.D1_TOTAL, 0) as decimal (14, 2))) as TOTAL
 from SC7010 SC7
 	left join SD1010 SD1

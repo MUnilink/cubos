@@ -1,6 +1,7 @@
 select
     SD2.D2_FILIAL as FILIAL,
     DUD.DUD_VIAGEM as NUM,
+    SC6.C6_CC as CC,
     sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2

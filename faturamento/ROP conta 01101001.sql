@@ -1,6 +1,7 @@
 select
     SD2.D2_FILIAL as FILIAL,
-    ZC1.ZC1_NUM as NUM,
+    ZC1.ZC1_N UM as NUM,
+    SC6.C6_CC as CC,
     sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
@@ -71,5 +72,4 @@ where
         else null end
     = '310102001'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-
 group by SD2.D2_FILIAL, ZC1.ZC1_NUM
