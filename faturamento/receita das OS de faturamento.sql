@@ -3,7 +3,7 @@ select
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
     
-    ZC2.QTDxVALORUNI as VALOR_TOTAL,
+    ZC2.QTDxVALORUNI as VALOR_PROD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLPROD) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_PROD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_PAD,
@@ -302,7 +302,7 @@ select
                 where
                         exists
                         (
-                            select nullif(SR7010.R7_DATA, '')
+                            select *
                             from SR7010
                             where
                                     SR7010.D_E_L_E_T_ = ''
@@ -310,6 +310,7 @@ select
                                 and SR7010.R7_MAT = SRD.RD_MAT
                                 and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
                         )
+                    and exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCPOR, '') is not null and SRV010.RV_COD = SRD.RD_PD /* nullif(SRV.RV_YCTMS, '') */)
                     and SRD.D_E_L_E_T_ = ''
             ) FOLHA
             where concat(FOLHA.RD_FILIAL, FOLHA.RD_DATARQ, FOLHA.CARGO_FOLHA) = concat(ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO)
@@ -416,11 +417,12 @@ from
             cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
             
+            cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as HORAS_PROD,
             cast(ZC2010.ZC2_QTDPRV as numeric(15, 2)) * cast(ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
             cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) * cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
             cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
-            
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
+        
         from ZC2010 (nolock)
             left join ZC1010 (nolock)
                 on ZC1010.D_E_L_E_T_ = ''
