@@ -469,3 +469,5 @@ from
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
+
+where left(ZC2.PERIODO, 6) =:PERIODO_CUSTO
