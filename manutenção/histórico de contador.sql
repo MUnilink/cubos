@@ -13,6 +13,7 @@ select
 	STP.TP_TIPOLAN as TIPO,
 	cast(STP.TP_DTORIGI as date) as DATA_ORI,
 	cast(STP.TP_DTLEITU as date) as DATA_LEI,
+	left(STP.TP_DTLEITU, 6) as PERIODO,
 	STP.TP_HORA as HORA,
 
 	first_value(cast(nullif(STP.TP_DTORIGI, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_DATA_ORI,
