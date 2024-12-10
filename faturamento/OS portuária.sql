@@ -6,8 +6,7 @@ select
     ZC2.ZC2_ITEM as ITEM,
     substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
     substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
-    ZC2.R_E_C_N_O_,
+    cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
     
     convert
     (
@@ -51,13 +50,8 @@ select
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     ZC1.ZC1_TABPRC as TABELADEPRECO,
     (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
-    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZA9.ZA9_CODTAX) /*and ZC2.ZC2_TIPO = 11*/) as TAXA_PORT,
-    trim(AIB.AIB_CODPRO) as COD_TAXA,
-    cast(AIB.AIB_PRCCOM as decimal(15, 2)) as TAXA_VALUNI,
-    cast(AIB.AIB_PRCCOM * ZC2.ZC2_QTDPRV as decimal(15, 2)) as TAXA_VALPRV,
-    cast(AIB.AIB_PRCCOM * ZC2.ZC2_QTDREA as decimal(15, 2)) as TAXA_VALREA,
     
-    case ZC2.ZC2_TIPO
+    case cast(ZC2.ZC2_TIPO as int)
         when 1 then 'RECEITA'
         when 2 then 'FOLHA'
         when 3 then 'MANUTENÇÃO'
@@ -72,6 +66,8 @@ select
         when 12 then 'SEGURO'
         when 13 then 'PNEUS'
         when 14 then 'PROVISÕES'
+        when 15 then 'TIPO RH IMPROD'
+        when 16 then 'TIPO MNT IMPROD'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
@@ -84,7 +80,7 @@ select
     else
         case
             when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11))
-            when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
+            when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
         else null end
     end as DESC_INSUMO,
     
@@ -135,7 +131,26 @@ select
     trim(SC6.C6_CC) as CC_PEDIDO,
     trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
     convert(date, SC6.C6_ENTREG, 103) as DATA_PEDIDO,
-    substring(SC6.C6_ENTREG, 1, 6) as PERIODO_PEDIDO
+    substring(SC6.C6_ENTREG, 1, 6) as PERIODO_PEDIDO,
+
+    TAX.A2_COD as TAX_CODIGO,
+    TAX.A2_LOJA as TAX_LOJA,
+    TAX.A2_CGC as TAX_CNPJ,
+    trim(TAX.A2_NOME) as TAXA_FOR,
+
+    (
+        select max(SD1010.D1_DOC)
+        from SD1010 (nolock)
+            left join SC7010 (nolock)
+                on SC7010.D_E_L_E_T_ = ''
+                and SC7010.C7_FILIAL = SD1010.D1_FILIAL
+                and SC7010.C7_NUM = SD1010.D1_PEDIDO
+                and SC7010.C7_ITEM = SD1010.D1_ITEMPC
+        where
+                case when trim(SC7010.C7_YOS) = '2024/0' then right(left(replace(replace(SC7010.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
+            and SC7010.C7_YOSIT = ZC2.ZC2_ITEM
+            and SD1010.D_E_L_E_T_ = ''
+    ) as TAXA_NF
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
@@ -155,7 +170,11 @@ from ZC2010 ZC2 (nolock)
             on DES.D_E_L_E_T_ = ''
             and DES.A2_COD = ZC1.ZC1_DESPA
             and DES.A2_LOJA = ZC1.ZC1_LJDESP
-
+    
+    left join SA2010 TAX (nolock)
+        on TAX.D_E_L_E_T_ = ''
+        and TAX.A2_COD = ZC2.ZC2_YFORNE
+        and TAX.A2_LOJA = ZC2.ZC2_YLOJA
     left join ST9010 ST9 (nolock)
         on ST9.D_E_L_E_T_ = ''
         and trim(ST9.T9_CODBEM) = trim(ZC2.ZC2_COD)
