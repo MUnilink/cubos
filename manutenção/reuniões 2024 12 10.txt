@@ -1,5 +1,29 @@
 REUNIÕES DE MANUTENÇÃO 10/12/2024
     - PECÉM
-pendências
+pendências:
+fornecedor Vicente (3G) precisa de dois dias para a instalação no TEREX, algo que exige liberação pelo operacional para realização;
+o motor do Liebherr está pendente de envio para recebimento previsto de cinco dias, e Wellington prevê o dia 17 para início da montagem;
+Leonardo continua cobrando os aguardos, algo que a segurança e mesmo o Adilson têm cobrado;
+Wellington diz que Marcus sugeriu a terceirização com a Royal, e Eduardo cita também a reforma do escritório Gate, já aprovada, e a Fátima diz que não será a Royal a realizá-lo (exceto pela pintura). Eduardo pede celeridade para não impactar negativamente na auditoria ISO.
+Wellington pede chamar o responsável pelos setores para reunião final do ano;
+Wellington cita que o Ari relatou a indisponibilidade do Wagner em aceitar a demora do plano de ação. Leonardo cita que a CIPP está cobrando o uso de ar condicionado das outras operadoras. Leandro diz que fez a solicitação de peças para todas as máquinas pendentes de reparo e Wellington sugere evidenciar para a CIPP;
+Leandro cita a pendência criada pelo Ítalo da primeira reunião de novembro para contenção de óleo e tinta. Diz que pediu à Fátima pequenas contenções para mitigar efeitos de derramamentos. Eduardo adiciona que existem de fato regras para armazenamento de tintas;
+Leandro diz que uma será liberada até o fim do mês e a outra até o fim do próximo mês;
+Divergência sobre quais os contêineres adequados a servir ao aguardo da operação. Naara esclarece que há dois contêineres de 40 pés que precisam de reforma, independente da necessidae de novos contêineres de aguardo, cujo tamanho de 20 pés possivelmente atenderiam. Leandro sugere adquirir contêiner para o escritório do pátio, que já necessita reposição/reforma, e levar o atual do pátio para os aguardos. Wellington cita também o contêiner avariado no terminal de contêiner. Pendente novos esclarecimentos e novas definições.
+Leandro cita um fornecedor mais próximo para realizar alguns serviços e oportunidade para alguns serviços externos levando em conta o controle dos custos de manutenção.
+Leandro cita no FCA os indicadores que não atingiram a meta, com destaque para LHM 400, RS10 e KAL06. O guindaste tem motor encaminhado, e para o motor atual a Fátima cita a baixa disponibilidade de um munck alugado para coleta desse motor, e o Wellington lembra que o espaço precisa ser atentado nessa operação;
+Leandro diz que a operação reduziu a disponibilidade das máquinas para preventivas, apesar da readequação de turmas para atendimento específico às máquinas alugadas à APM.
 
     - MATRIZ
+Felipe pede para iniciar com o problema na ativação do hodômetro para apenas abastecimento, e cita a inconsistência do último contador para o registro. Wellington a princípio concorda com o abastecimento simbólico. O problema das máquinas alugadas e do Bardella, bens sem abastecimento, seria mitigado também com abastecimento simbólico. Wellington aprova, com comunicação à Angélica.
+Wellington diz que depende de MDO predial a criação da área de guarda de peças usadas ou recuperadas;
+Lucas diz que estão pendentes roldanas, e a Maísa diz que os pedidos correspondentes foram lançados e aguardam aprovação;
+Maísa diz que precisa de sinalização de quais as solicitações são as adequadas;
+Cadastro estaria funcionando, pendente verificar a integração com o portal para que a foto do cadastro do Protheus apareça também no portal de compras;
+Lucas diz que o relatório de acompanhamento de MDO depende do status de encerramento das OS. Maísa pergunta o motivo disso, e explica que anteriormente a manutenção levantava quais as pendências das OS de manutenção.
+Custos de reparo de pneus durante as viagens, necessário entender processo e analisar adequação ao sistema;
+Lucas expõe o documento com os procedimentos para fornecedores externos que eventualmente não se adequem às melhores práticas de segurança. A Maísa pede o documento para posteriormente enviar aos fornecedores.
+Naara sugere a duplicação da permissão de entrada da recepção para a portaria, quando necessário acesso fora do horário disponível na recepção;
+Naara e Wellington discutem o desenho do caminho seguro até o almoxarifado, que tem acesso díficil pelas áreas de abastecimento e dique de lavagem.
+Lucas alega que parte dos veículos estavam indisponíveis por pendência de compra de itens, ao que a Maísa alega que nem sempre aconteceu por ciência da necessidade de compra. Lucas cita também a necessidade de contratar mecânico e auxiliar, ao que o Wellington adiciona que pediu celeridade ao RH no processo.
+No FCA Lucas diz que está acompanhando mais de perto as preventivas, para acionar a logística pela disponibilidade para a realização do serviço e evitar problemas nas viagens e nas programações futuras. Diz também que os serviços externos são constantes em sistemas de molas, e que ter um moleiro reduziria a necessidade de serviços de terceiros, além de capacitação de MDO para serviços de ar condicionado, e Leandro diz que pessoal do Pecém também está em aprendizado.
