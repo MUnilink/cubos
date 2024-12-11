@@ -133,6 +133,11 @@ select
     convert(date, SC6.C6_ENTREG, 103) as DATA_PEDIDO,
     substring(SC6.C6_ENTREG, 1, 6) as PERIODO_PEDIDO,
 
+    SD2.D2_DOC as FAT_DOC,
+    SD2.D2_SERIE as FAT_SERIE,
+    SD2.D2_ITEM as FAT_ITEM,
+    cast(SD2.D2_QUANT as numeric(15, 2)) as FAT_QUANT,
+
     TAX.A2_COD as TAX_CODIGO,
     TAX.A2_LOJA as TAX_LOJA,
     TAX.A2_CGC as TAX_CNPJ,
@@ -201,6 +206,12 @@ from ZC2010 ZC2 (nolock)
         and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
         and SC6.C6_YOS = ZC2.ZC2_NUM
         and SC6.C6_YITOS = ZC2.ZC2_ITEM
+
+        left join SD2010 SD2 (nolock)
+            on SD2.D_E_L_E_T_ = ''
+            and SD2.D2_FILIAL = SC6.C6_FILIAL
+            and SD2.D2_PEDIDO = SC6.C6_NUM
+            and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
         ZC2.D_E_L_E_T_ = ''
