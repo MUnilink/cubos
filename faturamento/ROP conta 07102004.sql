@@ -2,7 +2,7 @@ select
     ZG1.ZG1_FILORI as FILIAL,
     ZC2.ZC2_NUM as NUM,
     '305' as CC,
-    sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as VALOR
+    sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as TOTAL
 from ZC2010 ZC2 (nolock)
     inner join
     (
@@ -26,7 +26,7 @@ from ZC2010 ZC2 (nolock)
         from ZG1010 G1 (nolock)
         where G1.D_E_L_E_T_ = '' and G1.ZG1_TIPO = '9'
     ) ZG1
-        on left(isnull(nullif(ZC2.ZC2_COMPET, ''), '20231231'), 6) = ZG1.ZG1_COMPET
+        on left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
         and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
 where
         ZC2.D_E_L_E_T_ = ''
