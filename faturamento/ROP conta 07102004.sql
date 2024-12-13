@@ -24,11 +24,11 @@ from ZC2010 ZC2 (nolock)
                 and ZG1010.ZG1_CODIGO = G1.ZG1_CODIGO
             ) as VL_RIMP
         from ZG1010 G1 (nolock)
-        where G1.D_E_L_E_T_ = '' and G1.ZG1_TIPO = '2'
+        where G1.D_E_L_E_T_ = '' and G1.ZG1_TIPO = '9'
     ) ZG1
         on left(isnull(nullif(ZC2.ZC2_COMPET, ''), '20231231'), 6) = ZG1.ZG1_COMPET
         and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
 where
         ZC2.D_E_L_E_T_ = ''
-    and ZC2.ZC2_TIPO = '15'
+    and ZC2.ZC2_TIPO = '16'
 group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM
