@@ -31,4 +31,5 @@ from ZC2010 ZC2 (nolock)
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_TIPO = '15'
+    and left(ZC2.ZC2_COMPET, 6) = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM
