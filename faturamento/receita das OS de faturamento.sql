@@ -1,11 +1,44 @@
 select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
+    
+    case when ZC2.TIPO = 
+    (
+        select sum(ZG1.ZG1_VLIMPR/G1.TOTAL_IMPR)
+        from ZG1010 ZG1 (nolock)
+            inner join
+            (
+                select
+                    ZG1010.ZG1_FILORI,
+                    ZG1010.ZG1_COMPET,
+                    ZG1010.ZG1_CODIGO,
+                    sum(ZG1010.ZG1_VLIMPR) as TOTAL_IMPR
+                from ZG1010 (nolock)
+                where
+                        ZG1010.D_E_L_E_T_ = ''
+                    and ZG1010.ZG1_VLIMPR != 0
+                group by
+                    ZG1010.ZG1_FILORI,
+                    ZG1010.ZG1_COMPET,
+                    ZG1010.ZG1_CODIGO
+            ) G1
+                on G1.ZG1_FILORI = ZG1.ZG1_FILORI
+                and G1.ZG1_COMPET = ZG1.ZG1_COMPET
+                and G1.ZG1_CODIGO = ZG1.ZG1_CODIGO
+        where
+                ZG1.D_E_L_E_T_ = ''
+            and ZG1.ZG1_FILORI = ZC2.FILIAL
+            and ZG1.ZG1_COMPET = ZC2.PERIODO
+            and cast(ZG1.ZG1_TIPO as int) = ZC2.TIPO
+            and trim(ZG1.ZG1_CODIGO) = ZC2.INSUMO
+            and ZC2.TIPO in (2, 3, 6, 9, 12, 14)
+    ) * ZC2.QTDxVALORUNI as VALOR_IMPR,
+    
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
     
     ZC2.QTDxVALORUNI as VALOR_PROD,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLPROD) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_PROD,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLPROD) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_PROD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_PAD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORAS_IMPR,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_OPP,
