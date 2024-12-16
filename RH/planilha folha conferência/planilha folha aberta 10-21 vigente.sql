@@ -87,6 +87,7 @@ select
     sum(isnull(FOLHA_ABERTA.Segunda_13_media_outros, 0.0)) as 'Segunda Parcela 13° - Outros valores',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_ATS, 0.0)) as 'Segunda Parcela 13° - Ad. tempo serviço',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_maternidade, 0.0)) as 'Segunda Parcela 13° - sal. maternidade',
+    sum(isnull(FOLHA_ABERTA.Segunda_13_valor_periculosidades, 0.0)) as 'Segunda Parcela 13° - adic. risco',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_totaismedia, 0.0)) as 'Segunda Parcela 13° - totais média',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_INSS, 0.0)) as 'Segunda parcela 13° - INSS',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_IR, 0.0)) as 'Segunda parcela 13° - IR',
@@ -1492,6 +1493,24 @@ from
                 and SRC010.RC_SEQ = FOLHA.RC_SEQ
                 and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
         ) as Segunda_13_valor_maternidade,
+        (
+            select sum(SRC010.RC_VALOR)
+            from SRC010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRC010.RC_PD = SRV010.RV_COD
+            where
+                    SRC010.RC_PD in ('208')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRC010.D_E_L_E_T_ = ''
+                and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                and SRC010.RC_MAT = FOLHA.RC_MAT
+                and SRC010.RC_PD = FOLHA.RC_PD
+                and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+        ) as Segunda_13_valor_periculosidades,
         (
             select sum(SRC010.RC_VALOR)
             from SRC010 (nolock)
