@@ -15,7 +15,13 @@ select distinct
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE2.ZE2_COD as CONTAROP,
-    case when (len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) = '01') or ZE2.ZE2_COD = '04' then ZE3.ZE3_VALOR when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) like '_[2-9]' then ZE3.ZE3_VALOR*-1 else 0.0 end as VALOR
+    
+    case
+        when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
+        when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
+        when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) like '_[2-9]' then abs(ZE3.ZE3_VALOR)*-1
+    else 0.0 end as VALOR
+
 from ZE3010 ZE3
     inner join ZE2010 ZE2
         on ZE2.D_E_L_E_T_ = ''
