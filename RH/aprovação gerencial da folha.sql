@@ -8,9 +8,27 @@ select
     SRC.RC_SEQ as SEQ,
     SRC.RC_ROTEIR as ROTEIRO,
     CTT010.CTT_DESC01 as CC,
+
+    case trim(SRV.RV_TIPOCOD)
+        when '1' then 'PROVENTO'
+        when '2' then 'DESCONTO'
+        when '3' then 'BASE PROVENTO'
+        when '4' then 'BASE DESCONTO'
+        else '-'
+    end as TIPO_VERBA,
+    
     CTD010.CTD_DESC01 as ATIVIDADE,
-    SRA010.RA_NOME as NOME,
-    SRA010.RA_SITFOLH as SITUACAO,
+    trim(SRA.RA_NOMECMP) as NOME,
+    SRA.RA_SITFOLH as SITUACAO,
+    trim(SQ3.Q3_CARGO) as CARGO,
+    trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
+    trim(SRJ.RJ_FUNCAO) as FUNCAO,
+    trim(SRJ.RJ_DESC) as DESC_FUNCAO,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+    cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+
+    SRC.RC_VALOR as VALOR,
+    SRC.RC_HORAS as HORAS,
 
     case
         when SRV.RV_COD in ('029', '111', '112', '113', '344') then 'HORAS_EXTRAS'
@@ -32,15 +50,23 @@ select
         when SRV.RV_COD in ('306') then 'SEGUNDA_13_MEDIAHORAS'
         when SRV.RV_COD in ('307') then 'SEGUNDA_13_MEDIAVALOR'
         when SRV.RV_COD in ('208') then 'SEGUNDA_13_ADICRISCO'
-    else trim(coalesce(SRV.RV_DESCDET, SRV.RV_DESC, '')) end as NOME_VERBA,
-    SRC.RC_VALOR as VALOR
+    else trim(coalesce(SRV.RV_DESCDET, SRV.RV_DESC, '')) end as NOME_VERBA
 
 from SRC010 SRC (nolock)
-    inner join SRA010 (nolock)
-        on SRA010.D_E_L_E_T_ = ''
-        and SRA010.RA_FILIAL = SRC.RC_FILIAL
-        and SRA010.RA_MAT = SRC.RC_MAT
+    inner join SRA010 SRA (nolock)
+        on SRA.D_E_L_E_T_ = ''
+        and SRA.RA_FILIAL = SRC.RC_FILIAL
+        and SRA.RA_MAT = SRC.RC_MAT
         and trim(SRC.RC_MAT) not in ('003264', '003263')
+
+        left join SRJ010 SRJ (nolock)
+            on SRJ.D_E_L_E_T_ = ''
+            and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+            left join SQ3010 SQ3 (nolock)
+                on SQ3.D_E_L_E_T_ = ''
+                and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 
     left join CTD010 (nolock)
         on CTD010.D_E_L_E_T_ = ''
