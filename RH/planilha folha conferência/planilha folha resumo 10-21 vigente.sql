@@ -4,11 +4,16 @@ select
     FOLHA_RESUMO.RC_PERIODO,
     FOLHA_RESUMO.PERIODO_ANO,
     FOLHA_RESUMO.PERIODO_MES,
-    FOLHA_RESUMO.RA_NOME,
-    FOLHA_RESUMO.RC_CC,
-    FOLHA_RESUMO.CTT_DESC01,
-    FOLHA_RESUMO.CTD_DESC01,
     FOLHA_RESUMO.RC_ROTEIR as ROTEIRO,
+    FOLHA_RESUMO.ATIVIDADE,
+    FOLHA_RESUMO.NOME,
+    FOLHA_RESUMO.SITUACAO,
+    FOLHA_RESUMO.CARGO,
+    FOLHA_RESUMO.DESC_CARGO,
+    FOLHA_RESUMO.FUNCAO,
+    FOLHA_RESUMO.DESC_FUNCAO,
+    FOLHA_RESUMO.ADMISSAO,
+    FOLHA_RESUMO.DEMISSAO,
     0 as ATIVOS,
     0 as LICENCA,
     0 as DEMITIDOS,
@@ -36,6 +41,8 @@ select
     sum(FOLHA_RESUMO.SEGUNDA_13_provento) - sum(FOLHA_RESUMO.SEGUNDA_13_desconto) as SEGUNDA_13_LIQUIDO,
     sum(FOLHA_RESUMO.SEGUNDA_13_provento) as SEGUNDA_13_PROV,
     sum(FOLHA_RESUMO.SEGUNDA_13_desconto) as SEGUNDA_13_DESC,
+    sum(FOLHA_RESUMO.SEGUNDA_13_IR_seg13) as SEGUNDA_13_IR,
+    sum(FOLHA_RESUMO.SEGUNDA_13_INSS_seg13) as SEGUNDA_13_INSS,
     sum(FOLHA_RESUMO.Segunda_13_media_horas) as SEGUNDA_13_MEDIAHORAS,
     sum(FOLHA_RESUMO.Segunda_13_media_valor) as SEGUNDA_13_MEDIAVALOR,
     sum(FOLHA_RESUMO.Segunda_13_valor_periculosidades) as SEGUNDA_13_ADICRISCO
@@ -51,12 +58,16 @@ from
             FOLHA.RC_SEMANA,
             FOLHA.RC_SEQ,
             FOLHA.RC_ROTEIR,
-            CTT010.CTT_DESC01,
-            CTD010.CTD_DESC01,
-            FOLHA.RC_CC,
-            SRA010.RA_NOME,
+            CTD010.CTD_DESC01 as ATIVIDADE,
+            trim(SRA.RA_NOMECMP) as NOME,
+            SRA.RA_SITFOLH as SITUACAO,
+            trim(SQ3.Q3_CARGO) as CARGO,
+            trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
+            trim(SRJ.RJ_FUNCAO) as FUNCAO,
+            trim(SRJ.RJ_DESC) as DESC_FUNCAO,
+            cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+            cast(SRA.RA_DEMISSA as date) as DEMISSAO,
             FOLHA.RC_PROCES,
-            SRA010.RA_SITFOLH,
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
@@ -455,7 +466,41 @@ from
                         on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                         and SRC010.RC_PD = SRV010.RV_COD
                 where
-                        SRC010.RC_PD in (306)
+                        SRC010.D_E_L_E_T_ = ''
+                    and SRC010.RC_PD in ('423')
+                    and SRV010.RV_TIPOCOD = '2'
+                    and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                    and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                    and SRC010.RC_MAT = FOLHA.RC_MAT
+                    and SRC010.RC_PD = FOLHA.RC_PD
+                    and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                    and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+            ) as SEGUNDA_13_IR_seg13,
+            (
+                select sum(SRC010.RC_VALOR)
+                from SRC010 (nolock)
+                    inner join SRV010 (nolock)
+                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                        and SRC010.RC_PD = SRV010.RV_COD
+                where
+                        SRC010.D_E_L_E_T_ = ''
+                    and SRC010.RC_PD in ('403')
+                    and SRV010.RV_TIPOCOD = '2'
+                    and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                    and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                    and SRC010.RC_MAT = FOLHA.RC_MAT
+                    and SRC010.RC_PD = FOLHA.RC_PD
+                    and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                    and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+            ) as SEGUNDA_13_INSS_seg13,
+            (
+                select sum(SRC010.RC_VALOR)
+                from SRC010 (nolock)
+                    inner join SRV010 (nolock)
+                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                        and SRC010.RC_PD = SRV010.RV_COD
+                where
+                        SRC010.RC_PD in ('306')
                     and SRC010.D_E_L_E_T_ = ''
                     and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                     and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
@@ -502,19 +547,29 @@ from
             ) as Segunda_13_valor_periculosidades
 
         from SRC010 FOLHA (nolock)
-            inner join SRA010 (nolock)
-                on SRA010.D_E_L_E_T_ = ''
-                and SRA010.RA_FILIAL = FOLHA.RC_FILIAL
-                and SRA010.RA_MAT = FOLHA.RC_MAT
+            inner join SRA010 SRA (nolock)
+                on SRA.D_E_L_E_T_ = ''
+                and SRA.RA_FILIAL = FOLHA.RC_FILIAL
+                and SRA.RA_MAT = FOLHA.RC_MAT
                 and trim(FOLHA.RC_MAT) not in ('003264', '003263')
 
-                left join CTD010 (nolock)
-                    on CTD010.D_E_L_E_T_ = ''
-                    and SRA010.RA_ITEM = CTD010.CTD_ITEM
+                left join SRJ010 SRJ (nolock)
+                    on SRJ.D_E_L_E_T_ = ''
+                    and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+                    and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 
-            inner join CTT010 (nolock)
+                    left join SQ3010 SQ3 (nolock)
+                        on SQ3.D_E_L_E_T_ = ''
+                        and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+
+            left join CTD010 (nolock)
+                on CTD010.D_E_L_E_T_ = ''
+                and CTD010.CTD_ITEM = FOLHA.RC_ITEM
+            left join CTT010 (nolock)
                 on CTT010.D_E_L_E_T_ = ''
-                and FOLHA.RC_CC = CTT010.CTT_CUSTO
+                and CTT010.CTT_CUSTO = FOLHA.RC_CC
+            left join SRV010 SRV (nolock)
+                on SRV.RV_COD = FOLHA.RC_PD
         where FOLHA.D_E_L_E_T_ = ''
 ) as FOLHA_RESUMO
 group by
@@ -523,8 +578,13 @@ group by
     FOLHA_RESUMO.PERIODO_ANO,
     FOLHA_RESUMO.PERIODO_MES,
     FOLHA_RESUMO.RC_MAT,
-    FOLHA_RESUMO.RA_NOME,
-    FOLHA_RESUMO.CTT_DESC01,
-    FOLHA_RESUMO.RC_CC,
-    FOLHA_RESUMO.CTD_DESC01,
-    FOLHA_RESUMO.RC_ROTEIR
+    FOLHA_RESUMO.RC_ROTEIR,
+    FOLHA_RESUMO.ATIVIDADE,
+    FOLHA_RESUMO.NOME,
+    FOLHA_RESUMO.SITUACAO,
+    FOLHA_RESUMO.CARGO,
+    FOLHA_RESUMO.DESC_CARGO,
+    FOLHA_RESUMO.FUNCAO,
+    FOLHA_RESUMO.DESC_FUNCAO,
+    FOLHA_RESUMO.ADMISSAO,
+    FOLHA_RESUMO.DEMISSAO
