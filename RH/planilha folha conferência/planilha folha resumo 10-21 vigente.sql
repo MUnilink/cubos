@@ -40,6 +40,7 @@ select
     sum(FOLHA_RESUMO.PRIMEIRA_13) as PRIMEIRA_13,
     sum(FOLHA_RESUMO.SEGUNDA_13_provento) - sum(FOLHA_RESUMO.SEGUNDA_13_desconto) as SEGUNDA_13_LIQUIDO,
     sum(FOLHA_RESUMO.SEGUNDA_13_provento) as SEGUNDA_13_PROV,
+    sum(FOLHA_RESUMO.SEGUNDA_13_ATS) as SEGUNDA_13_ATS,
     sum(FOLHA_RESUMO.SEGUNDA_13_desconto) as SEGUNDA_13_DESC,
     sum(FOLHA_RESUMO.SEGUNDA_13_IR_seg13) as SEGUNDA_13_IR,
     sum(FOLHA_RESUMO.SEGUNDA_13_INSS_seg13) as SEGUNDA_13_INSS,
@@ -47,7 +48,8 @@ select
     sum(FOLHA_RESUMO.Segunda_13_mensindical) as SEGUNDA_13_MENSIND,
     sum(FOLHA_RESUMO.Segunda_13_media_horas) as SEGUNDA_13_MEDIAHORAS,
     sum(FOLHA_RESUMO.Segunda_13_media_valor) as SEGUNDA_13_MEDIAVALOR,
-    sum(FOLHA_RESUMO.Segunda_13_medias) as SEGUNDA_13_MEDIAS
+    sum(FOLHA_RESUMO.Segunda_13_medias) as SEGUNDA_13_MEDIAS,
+    sum(FOLHA_RESUMO.Segunda_13_avos) as SEGUNDA_13_AVOS
 from
 (
     select
@@ -448,6 +450,19 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
+                where
+                        SRC010.D_E_L_E_T_ = ''
+                    and SRC010.RC_PD in ('247')
+                    and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                    and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                    and SRC010.RC_MAT = FOLHA.RC_MAT
+                    and SRC010.RC_PD = FOLHA.RC_PD
+                    and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                    and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+            ) as SEGUNDA_13_ATS,
+            (
+                select sum(SRC010.RC_VALOR)
+                from SRC010 (nolock)
                     inner join SRV010 (nolock)
                         on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
                         and SRC010.RC_PD = SRV010.RV_COD
@@ -464,13 +479,9 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.D_E_L_E_T_ = ''
                     and SRC010.RC_PD in ('423')
-                    and SRV010.RV_TIPOCOD = '2'
                     and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                     and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                     and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -481,13 +492,9 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.D_E_L_E_T_ = ''
                     and SRC010.RC_PD in ('403')
-                    and SRV010.RV_TIPOCOD = '2'
                     and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                     and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                     and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -498,9 +505,6 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.D_E_L_E_T_ = ''
                     and SRC010.RC_PD in ('373', '374')
@@ -514,9 +518,6 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.D_E_L_E_T_ = ''
                     and SRC010.RC_PD in ('407')
@@ -530,13 +531,9 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.RC_PD in ('306')
                     and SRC010.D_E_L_E_T_ = ''
-                    and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                     and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                     and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                     and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -547,13 +544,9 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.RC_PD in ('307')
                     and SRC010.D_E_L_E_T_ = ''
-                    and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                     and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                     and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
                     and SRC010.RC_MAT = FOLHA.RC_MAT
@@ -564,13 +557,8 @@ from
             (
                 select sum(SRC010.RC_VALOR)
                 from SRC010 (nolock)
-                    inner join SRV010 (nolock)
-                        on SRV010.D_E_L_E_T_ = ''
-                        and substring(SRC010.RC_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                        and SRC010.RC_PD = SRV010.RV_COD
                 where
                         SRC010.RC_PD in ('306', '307')
-                    and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
                     and SRC010.D_E_L_E_T_ = ''
                     and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
                     and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
@@ -578,7 +566,20 @@ from
                     and SRC010.RC_PD = FOLHA.RC_PD
                     and SRC010.RC_SEQ = FOLHA.RC_SEQ
                     and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
-            ) as Segunda_13_medias
+            ) as Segunda_13_medias,
+            (
+                select sum(SRC010.RC_HORAS)
+                from SRC010 (nolock)
+                where
+                        SRC010.RC_PD in ('300')
+                    and SRC010.D_E_L_E_T_ = ''
+                    and SRC010.RC_PERIODO = FOLHA.RC_PERIODO
+                    and SRC010.RC_FILIAL = FOLHA.RC_FILIAL
+                    and SRC010.RC_MAT = FOLHA.RC_MAT
+                    and SRC010.RC_PD = FOLHA.RC_PD
+                    and SRC010.RC_SEQ = FOLHA.RC_SEQ
+                    and SRC010.RC_ROTEIR = FOLHA.RC_ROTEIR
+            ) as Segunda_13_avos
 
         from SRC010 FOLHA (nolock)
             inner join SRA010 SRA (nolock)
