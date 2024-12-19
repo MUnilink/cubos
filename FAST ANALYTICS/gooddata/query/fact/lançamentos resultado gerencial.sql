@@ -17,7 +17,7 @@ select distinct
     ZE2.ZE2_COD as CONTAROP,
     
     case
-        when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
+        when ZE2.ZE2_ORIGEM = 'F' then abs(ZE3.ZE3_VALOR)
         when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) like '_[2-9]' then abs(ZE3.ZE3_VALOR)*-1
     else 0.0 end as VALOR
