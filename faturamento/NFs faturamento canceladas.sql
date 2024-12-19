@@ -57,7 +57,28 @@ SELECT
     CAST(COALESCE(SB1.B1_PESBRU * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_BRUTO,
     1 AS QTD,
     CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
-    CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO
+    CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO,
+
+    case
+        /* LP 610-001 */
+        when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
+        when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
+        when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
+        /* LP 610-040 */
+        when trim(CFOP.X5_CHAVE) = 5359 then trim(SB1.B1_YCTREC1)
+        /* LP 610-600 */
+        when trim(CFOP.X5_CHAVE) = 5932 and SD2.D2_TES = '509' then trim(SB1.B1_YCTREC2)
+        when trim(CFOP.X5_CHAVE) = 5932 and SD2.D2_TES != '509' then trim(SB1.B1_YCTREC1)
+        /* LP 610-010 */
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then trim(SB1.B1_YCTREC1)
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
+        /* LP 610-020 */
+        when trim(CFOP.X5_CHAVE) in (5352, 5353) and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then trim(SB1.B1_YCTREC1)
+        when trim(CFOP.X5_CHAVE) in (5352, 5353) and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then trim(SB1.B1_YCTREC2)
+        /* LP 610-030 */
+        when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC1)
+        when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
+    else null end as CONTA
 from SF3010 SF3 (nolock)
     inner join SF2010 SF2 (nolock)
         on SF2.F2_SERIE not in ('003', '100')
