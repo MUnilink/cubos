@@ -16,8 +16,7 @@ SELECT RA_FILIAL,
        RJ_DESC,
        Q3_CARGO,
        Q3_DESCSUM,
-       VLR_FOLHA,
-       Round(( VLR_FOLHA * ( DIAS_VINC * 100 / DIAS_PER ) ) / 100, 2) AS VLR_FOLRAT
+       Round(( VLR_FOLHA * ( DIAS_VINC * 100 / DIAS_PER ) ) / 100, 2) AS VLR_FOLHA
 FROM   (SELECT RA_FILIAL,
                RA_MAT,
                RA_NOME,
@@ -38,7 +37,7 @@ FROM   (SELECT RA_FILIAL,
                ( (SELECT COALESCE(Sum(RD_VALOR), 0)
                   FROM   SRD010 RD
                          INNER JOIN SRV010 RV
-                                 ON RV_FILIAL = '0101 '
+                                 ON RV_FILIAL = '0101'
                                     AND RV_COD = RD_PD
                                     AND RV_TIPOCOD IN ( '1', '3', '4' )
                                     AND RV.D_E_L_E_T_ = ' '
@@ -60,7 +59,7 @@ FROM   (SELECT RA_FILIAL,
                          AND RD.D_E_L_E_T_ = ' ') - (SELECT COALESCE(Sum(RD_VALOR), 0)
                                                      FROM   SRD010 RD
                                                             INNER JOIN SRV010 RV
-                                                                    ON RV_FILIAL = '0101 '
+                                                                    ON RV_FILIAL = '0101'
                                                                        AND RV_COD = RD_PD
                                                                        AND RV_TIPOCOD IN ( '2' )
                                                                        AND RV.D_E_L_E_T_ = ' '
@@ -96,7 +95,7 @@ FROM   (SELECT RA_FILIAL,
                        INNER JOIN RFQ010 RFQ
                                ON RFQ_FILIAL = Substring(RA_FILIAL, 1, 4)
                                   AND RFQ_PROCES = '00001'
-                                  AND RFQ_PERIOD =:ANOMES
+                                  AND RFQ_PERIOD = '202409'
                                   AND RFQ.D_E_L_E_T_ = ' '
                        INNER JOIN YDATA
                                ON ID BETWEEN RFQ_DTINI AND RFQ_DTFIM
