@@ -1,6 +1,6 @@
 select
     SD2.D2_FILIAL as FILIAL,
-    ZC1.ZC1_N UM as NUM,
+    ZC1.ZC1_NUM as NUM,
     SC6.C6_CC as CC,
     sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
@@ -52,9 +52,9 @@ where
     and
         case
             /* LP 610-001 */
-            when trim(CFOP.X5_CHAVE) in ('5933', '6933') and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
-            when trim(CFOP.X5_CHAVE) in ('5933', '6933') and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
-            when trim(CFOP.X5_CHAVE) in ('5933', '6933') and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
+            when trim(CFOP.X5_CHAVE) in (5933, 6933) and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
+            when trim(CFOP.X5_CHAVE) in (5933, 6933) and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
+            when trim(CFOP.X5_CHAVE) in (5933, 6933) and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
             /* LP 610-040 */
             when trim(CFOP.X5_CHAVE) = 5359 then trim(SB1.B1_YCTREC1)
             /* LP 610-600 */
