@@ -47,9 +47,9 @@ where
     and
         case
             /* LP 610-001 */
-            when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
-            when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
-            when trim(CFOP.X5_CHAVE) = 5933 and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
+            when trim(CFOP.X5_CHAVE) in ('5933', '6933') and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
+            when trim(CFOP.X5_CHAVE) in ('5933', '6933') and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
+            when trim(CFOP.X5_CHAVE) in ('5933', '6933') and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
             /* LP 610-040 */
             when trim(CFOP.X5_CHAVE) = 5359 then trim(SB1.B1_YCTREC1)
             /* LP 610-600 */
