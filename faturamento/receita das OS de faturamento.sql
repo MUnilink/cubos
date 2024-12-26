@@ -1,36 +1,26 @@
 select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     
-    case when ZC2.TIPO = 
     (
-        select sum(ZG1.ZG1_VLIMPR/G1.TOTAL_IMPR)
-        from ZG1010 ZG1 (nolock)
-            inner join
+        select
+            case when ZG1.ZG1_HRIMPR != 0 then ZG1.ZG1_VLIMPR/
             (
-                select
-                    ZG1010.ZG1_FILORI,
-                    ZG1010.ZG1_COMPET,
-                    ZG1010.ZG1_CODIGO,
-                    sum(ZG1010.ZG1_VLIMPR) as TOTAL_IMPR
-                from ZG1010 (nolock)
+                select case when coalesce(nullif(floor(sum(ZG1010.ZG1_VLIMPR)), 0), 0) = 0 then 1 else sum(ZG1010.ZG1_VLIMPR) end
+                from ZG1010
                 where
-                        ZG1010.D_E_L_E_T_ = ''
-                    and ZG1010.ZG1_VLIMPR != 0
-                group by
-                    ZG1010.ZG1_FILORI,
-                    ZG1010.ZG1_COMPET,
-                    ZG1010.ZG1_CODIGO
-            ) G1
-                on G1.ZG1_FILORI = ZG1.ZG1_FILORI
-                and G1.ZG1_COMPET = ZG1.ZG1_COMPET
-                and G1.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                    ZG1010.ZG1_VLIMPR != 0
+                and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                and ZG1010.D_E_L_E_T_ = ''
+            ) else 0.0 end
+        from ZG1010 ZG1 (nolock)
         where
-                ZG1.D_E_L_E_T_ = ''
-            and ZG1.ZG1_FILORI = ZC2.FILIAL
-            and ZG1.ZG1_COMPET = ZC2.PERIODO
-            and cast(ZG1.ZG1_TIPO as int) = ZC2.TIPO
-            and trim(ZG1.ZG1_CODIGO) = ZC2.INSUMO
-            and ZC2.TIPO in (2, 3, 6, 9, 12, 14)
+                ZC2.TIPO = case when ZG1.ZG1_TIPO in (2, 14) then 15 when ZG1.ZG1_TIPO in (3, 6, 9, 12) then 16 else 0 end
+            and ZC2.PERIODO = ZG1.ZG1_COMPET
+            and ZC2.FILIAL = ZG1.ZG1_FILORI
+            and ZC2.INSUMO = trim(ZG1.ZG1_CODIGO)
+            and ZG1.D_E_L_E_T_ = ''
     ) * ZC2.QTDxVALORUNI as VALOR_IMPR,
     
     ZC2.*,
