@@ -1,28 +1,5 @@
 select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
-    
-    (
-        select
-            case when ZG1.ZG1_HRIMPR != 0 then ZG1.ZG1_VLIMPR/
-            (
-                select case when coalesce(nullif(floor(sum(ZG1010.ZG1_VLIMPR)), 0), 0) = 0 then 1 else sum(ZG1010.ZG1_VLIMPR) end
-                from ZG1010
-                where
-                    ZG1010.ZG1_VLIMPR != 0
-                and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-                and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-                and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-                and ZG1010.D_E_L_E_T_ = ''
-            ) else 0.0 end
-        from ZG1010 ZG1 (nolock)
-        where
-                ZC2.TIPO = case when ZG1.ZG1_TIPO in (2, 14) then 15 when ZG1.ZG1_TIPO in (3, 6, 9, 12) then 16 else 0 end
-            and ZC2.PERIODO = ZG1.ZG1_COMPET
-            and ZC2.FILIAL = ZG1.ZG1_FILORI
-            and ZC2.INSUMO = trim(ZG1.ZG1_CODIGO)
-            and ZG1.D_E_L_E_T_ = ''
-    ) * ZC2.QTDxVALORUNI as VALOR_IMPR,
-    
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
     
