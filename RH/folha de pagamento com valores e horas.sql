@@ -192,7 +192,7 @@ select
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 		else concat(SRD.RD_DATARQ, '01') end
-	) as DIAS_ANT,
+	) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end as DIAS_ANT,
 	
 	SRD.RD_VALOR *
 	(
@@ -220,7 +220,7 @@ select
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
 			else concat(SRD.RD_DATARQ, '01') end
-		)
+		) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_ANT,
 
 	datediff
@@ -524,5 +524,5 @@ from SRD010 SRD (nolock)
 				on SQ3.D_E_L_E_T_ = ''
 				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 where
-		SRD.RD_PERIODO =:ANOMES
+		SRD.RD_PERIODO =:PERIODO_FOLHA
 	and SRD.D_E_L_E_T_ = ''
