@@ -12,6 +12,7 @@ select
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_CARGO) as COD_CARGO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
+	(select concat(trim(SQ3010.Q3_CARGO), ' - ', trim(SQ3010.Q3_DESCSUM)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = SRA.RA_CARGO) as CARGO_FUNC,
 	
 	trim(CTT.CTT_CUSTO) as COD_CC,
 	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
