@@ -13,6 +13,9 @@ select
     PNE.T9_CONTACU as CONT_ACUM,
 	trim(STZ.TZ_FILIAL) as FILIAL,
 	trim(STZ.TZ_ORDEM) as OS_MOV,
+	STZ.TZ_CAUSA,
+	(select trim(ST8010.T8_NOME) from ST8010 (nolock) where ST8010.D_E_L_E_T_ = '' and ST8010.T8_CODOCOR = STZ.TZ_CAUSA) as CAUSA,
+	STZ.TZ_USUARIO as USUARIO,
 	
 	last_value(STZ.TZ_BEMPAI) over (partition by STZ.TZ_CODBEM order by STZ.TZ_CODBEM) as ESTRUTURA_ANT,
 	isnull(nullif(STZ.TZ_CONTSAI, 0), STZ.TZ_POSCONT) - STZ.TZ_POSCONT as km,
@@ -26,6 +29,7 @@ select
 	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
 	trim(isnull(STZ.TZ_HORAENT, '-')) as TZ_HORAENT,
 	trim(isnull(STZ.TZ_HORASAI, '-')) as TZ_HORASAI,
+	min(convert(datetime, concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT), 103)) over(partition by STZ.TZ_CODBEM order by STZ.TZ_CODBEM) as MIN_DATA,
 
 	TQS.TQS_KMOR,
 	TQS.TQS_KMR1,
