@@ -86,6 +86,15 @@ select
 	end as TL_UNI,
 	
 	STL.TL_CUSTO as CUSTO_MNT,
+	/*convert
+    (
+        datetime,
+        case isdate(concat(substring(STL.TL_DTINICI, 1, 2), ':', substring(STL.TL_HOINICI, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(STL.TL_DTINICI, 1, 2), ':', substring(STL.TL_HOINICI, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(STL.TL_DTINICI, ' ', '08:00')
+        end, 113
+    ) as DTINI_OS,*/
+	
 	cast(STL.TL_DTINICI as date) as DATAINI_APP,
 	cast(STL.TL_DTFIM as date) as DATAFIM_APP,
 
