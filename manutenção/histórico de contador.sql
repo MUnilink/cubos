@@ -1,6 +1,6 @@
 select
 	trim(ST9.T9_CODBEM) as EQUIPAMENTO,
-    trim(ST9.T9_CCUSTO) as CC,
+    trim(STP.TP_CCUSTO) as CC,
     trim(ST9.T9_ITEMCTA) as ITEM,
 	trim(ST9.T9_CODFAMI) as FAMILIA,
 	trim(ST9.T9_TEMCONT) as TIPO_CONT,
@@ -12,9 +12,8 @@ select
 	STP.TP_ACUMCON as CONT_ACUM,
 	STP.TP_TIPOLAN as TIPO,
 	cast(STP.TP_DTORIGI as date) as DATA_ORI,
-	cast(STP.TP_DTLEITU as date) as DATA_LEI,
+	convert(datetime, case isdate(concat(STP.TP_DTLEITU, ' ', STP.TP_HORA)) when 1 then concat(STP.TP_DTLEITU, ' ', STP.TP_HORA) else concat(STP.TP_DTLEITU, ' ', '08:00') end, 113) as DT_LEITURA,
 	left(STP.TP_DTLEITU, 6) as PERIODO,
-	STP.TP_HORA as HORA,
 
 	first_value(cast(nullif(STP.TP_DTORIGI, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_DATA_ORI,
 	first_value(cast(nullif(STP.TP_DTLEITU, '') as date)) over(partition by STP.TP_CODBEM order by STP.TP_DTLEITU, STP.TP_HORA) as MIN_DATA_LEI,
