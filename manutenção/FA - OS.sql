@@ -86,17 +86,13 @@ select
 	end as TL_UNI,
 	
 	STL.TL_CUSTO as CUSTO_MNT,
-	/*convert
-    (
-        datetime,
-        case isdate(concat(substring(STL.TL_DTINICI, 1, 2), ':', substring(STL.TL_HOINICI, 3, 2)))
-            when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(STL.TL_DTINICI, 1, 2), ':', substring(STL.TL_HOINICI, 3, 2), ':', '00')), ':  :00'), '00:00'))
-            else concat(STL.TL_DTINICI, ' ', '08:00')
-        end, 113
-    ) as DTINI_OS,*/
-	
+	case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), 113) else null end as DATAHORA_IOS,
+	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DATAHORA_FOS,
+
 	cast(STL.TL_DTINICI as date) as DATAINI_APP,
+	case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) else null end as DATAHORA_IRET,
 	cast(STL.TL_DTFIM as date) as DATAFIM_APP,
+	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) else null end as DATAHORA_FRET,	
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
 	ST9.T9_CODFAMI as FAMILIA,
@@ -131,7 +127,7 @@ select
 	STL.TL_DOC as DOC,
 	STL.TL_SDOC as SERIE,
 	STL.TL_ORIGNFE as TIPO_DOC,
-	STJ.TJ_TERMINO as OS_ENCERRADA,
+	STJ.TJ_TERMINO as TERMINO,
 
 	SD3.D3_TM as TM,
 	SD3.D3_CF as CF,
