@@ -21,6 +21,9 @@ select distinct
         when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when len(ZE2.ZE2_COD) = 8 and left(ZE2.ZE2_COD, 2) like '_[2-9]' then abs(ZE3.ZE3_VALOR)*-1
     else 0.0 end as VALOR,
+    
+    /* para validação no RM */
+
     trim(ZE2.ZE2_CLASS) as CLASSE,
 
     case
@@ -30,15 +33,13 @@ select distinct
         when len(trim(ZE2.ZE2_COD)) <= 8 then 4
         else 0
     end as NIVEL,
-    
+
     case
         when len(trim(ZE2.ZE2_COD)) = 8 then left(trim(ZE2.ZE2_COD), 5)
         when len(trim(ZE2.ZE2_COD)) = 5 then left(trim(ZE2.ZE2_COD), 3)
         when len(trim(ZE2.ZE2_COD)) = 3 then left(trim(ZE2.ZE2_COD), 2)
         else null
     end as CODSUP,
-
-    /* para validação no RM */
 
     case when len(trim(ZE2.ZE2_COD)) <= 2 then trim(ZE2.ZE2_COD) else left(trim(ZE2.ZE2_COD), 2) end as CODIGO_C1,
     case when len(trim(ZE2.ZE2_COD)) <= 3 then trim(ZE2.ZE2_COD) else left(trim(ZE2.ZE2_COD), 3) end as CODIGO_C2,

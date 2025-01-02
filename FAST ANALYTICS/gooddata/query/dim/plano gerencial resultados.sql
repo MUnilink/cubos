@@ -19,6 +19,15 @@ select
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
     trim(ZE2.ZE2_ORIGEM) as ORIGEM,
     ZE2.ZE2_MSBLQL as BLOQUEADO,
+    trim(ZE2.ZE2_CLASS) as CLASSE,
+
+    case
+        when len(trim(ZE2.ZE2_COD)) <= 2 then 1
+        when len(trim(ZE2.ZE2_COD)) <= 3 then 2
+        when len(trim(ZE2.ZE2_COD)) <= 5 then 3
+        when len(trim(ZE2.ZE2_COD)) <= 8 then 4
+        else 0
+    end as NIVEL,
     
     case
         when len(trim(ZE2.ZE2_COD)) = 8 then left(trim(ZE2.ZE2_COD), 5)
