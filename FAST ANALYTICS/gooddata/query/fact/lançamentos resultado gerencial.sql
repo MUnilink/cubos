@@ -6,8 +6,6 @@ select distinct
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
     PV.ID_PEDIDODEVENDA,
     PV.ID_NFS,
-    null as ID_NFE,
-    null as ID_PEDIDO,
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     PV.BK_ITEM_CONTABIL,
@@ -15,6 +13,7 @@ select distinct
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE2.ZE2_COD as CONTAROP,
+    ZE2.ZE2_CONTA as CONTA_CONTABIL,
     
     case
         when ZE2.ZE2_ORIGEM = 'F' then abs(ZE3.ZE3_VALOR)

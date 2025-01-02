@@ -23,7 +23,7 @@ select distinct
     else 0.0 end as VALOR,
     
     /* para validação no RM */
-
+    trim(ZE2.ZE2_CONTA) as CONTA,
     trim(ZE2.ZE2_CLASS) as CLASSE,
 
     case
