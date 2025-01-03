@@ -21,6 +21,14 @@
         case SRC.RC_PD when '999' then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRC.RC_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
+        
+        case SRC.RC_PD when '039' then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
+        case SRC.RC_PD when '353' then SRC.RC_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
+        case SRC.RC_PD when '420' then SRC.RC_VALOR when '422' then SRC.RC_VALOR when '423' then SRC.RC_VALOR else 0.0 end as IR,
+        case SRC.RC_PD when '401' then SRC.RC_VALOR when '402' then SRC.RC_VALOR when '403' then SRC.RC_VALOR else 0.0 end as INSS,
+        case SRC.RC_PD when '407' then SRC.RC_VALOR else 0.0 end as MENS_SINDICAL,
+        case SRC.RC_PD when '373' then SRC.RC_VALOR when '530' then SRC.RC_VALOR when '532' then SRC.RC_VALOR when '535' then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
+        
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(SRA.RA_NOMECMP) as NOME,
         SRA.RA_SITFOLH as SITUACAO,
@@ -83,6 +91,14 @@ union
         case SRD.RD_PD when '999' then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRD.RD_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
+        
+        case SRD.RD_PD when '039' then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
+        case SRD.RD_PD when '353' then SRD.RD_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
+        case SRD.RD_PD when '420' then SRD.RD_VALOR when '422' then SRD.RD_VALOR when '423' then SRD.RD_VALOR else 0.0 end as IR,
+        case SRD.RD_PD when '401' then SRD.RD_VALOR when '402' then SRD.RD_VALOR when '403' then SRD.RD_VALOR else 0.0 end as INSS,
+        case SRD.RD_PD when '407' then SRD.RD_VALOR else 0.0 end as MENS_SINDICAL,
+        case SRD.RD_PD when '373' then SRD.RD_VALOR when '530' then SRD.RD_VALOR when '532' then SRD.RD_VALOR when '535' then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
+        
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(SRA.RA_NOMECMP) as NOME,
         SRA.RA_SITFOLH as SITUACAO,
