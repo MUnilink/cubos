@@ -92,27 +92,31 @@ select
 	cast(STL.TL_DTINICI as date) as DATAINI_APP,
 	case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) else null end as DATAHORA_IRET,
 	cast(STL.TL_DTFIM as date) as DATAFIM_APP,
-	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) else null end as DATAHORA_FRET,	
+	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) else null end as DATAHORA_FRET,
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
+	STL.TL_SEQRELA as ITEM,
 	ST9.T9_CODFAMI as FAMILIA,
-	trim(TT9.TT9_DESCRI) as T5_TAREFA,
+	trim(TT9.TT9_DESCRI) as DESC_TAREFA,
 	trim(STJ.TJ_USUARIO) as TJ_USUAINI,
 	trim(STJ.TJ_USUAFIM) as TJ_USUAFIM,
-	STJ.TJ_SERVICO,
+	case STJ.TJ_SERVICO when 'PNEMOV' then 'PNEUS' when 'CONSEP' then 'PNEUS' when 'REFORP' then 'PNEUS' when 'PNEROD' then 'PNEUS' else 'MNT' end as TIPO_SERV,
 	STJ.TJ_POSCONT as CONTADOR_ATUAL,
 	STJ.TJ_HORACO1 as HORA_CONT,
 	lag(STJ.TJ_POSCONT) over(partition by STJ.TJ_CODBEM order by STJ.TJ_DTORIGI, STJ.TJ_HORACO1) as CONTADOR_ANTERIOR,
 
-	trim(SB1.B1_GRUPO) as B1_GRUPO,
-	trim(SB1.B1_COD) as B1_COD,
-	trim(SB1.B1_DESC) as B1_DESC,
 	substring(STL.TL_DTFIM, 1, 6) as PERIODO,
 	substring(STJ.TJ_DTORIGI, 1, 6) as PERIODO_OS,
+	STJ.TJ_TERMINO as TERMINO,
+	STJ.TJ_SITUACA as SITUACAO,
+	
 	SCP.CP_NUM as SA,
 	SCP.CP_QUANT as SA_QTD_SOLICTADA,
     SCP.CP_QUJE as SA_QTD_ATENDIDA,
 	trim(SCP.CP_SOLICIT) as SOLICITANTE_SA,
+	trim(SB1.B1_GRUPO) as B1_GRUPO,
+	trim(SB1.B1_COD) as B1_COD,
+	trim(SB1.B1_DESC) as B1_DESC,
 
     case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
     else
@@ -127,8 +131,6 @@ select
 	STL.TL_DOC as DOC,
 	STL.TL_SDOC as SERIE,
 	STL.TL_ORIGNFE as TIPO_DOC,
-	STJ.TJ_TERMINO as TERMINO,
-
 	SD3.D3_TM as TM,
 	SD3.D3_CF as CF,
 	SD3.D3_DOC as DOC,
