@@ -17,8 +17,8 @@ select
 		else STL.TL_CUSTO
 	end as TL_CUSTO,
 
-	STL.TL_DTINICI as DTINI_APP,
-	STL.TL_DTFIM as DTFIM_APP,
+	case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) else null end as DTINI_APP,
+	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) else null as DTFIM_APP,
 	STJ.TJ_DTORIGI as DATA_INIOS,
 	STJ.TJ_DTPRFIM as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
