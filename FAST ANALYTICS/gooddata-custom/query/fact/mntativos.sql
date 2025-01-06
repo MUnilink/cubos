@@ -60,7 +60,8 @@ select
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
-	trim(STJ.TJ_YITMCT) as ATIVIDADE
+	trim(STJ.TJ_YITMCT) as ATIVIDADE,
+	isnull((select nullif(SR6010.R6_HRNORMA, 0) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = ST1.T1_TURNO), case ST1.T1_CCUSTO when 302 then 220 when 303 then 180 else 0 end) as HORAS_FUNC
 
 from STJ010 STJ
 	inner join ST9010 ST9
