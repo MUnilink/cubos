@@ -18,7 +18,8 @@ select distinct
     case
         when ZE2.ZE2_ORIGEM = 'F' then abs(ZE3.ZE3_VALOR)
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
-        when left(ZE2.ZE2_COD, 2) like '_[2-9]' then abs(ZE3.ZE3_VALOR)*-1
+        when left(ZE2.ZE2_COD, 2) like '0[2-9]' then abs(ZE3.ZE3_VALOR)*-1
+        when left(ZE2.ZE2_COD, 2) like '_[1-9]' then abs(ZE3.ZE3_VALOR)*-1
     else 0.0 end as VALOR
 
 from ZE3010 ZE3
