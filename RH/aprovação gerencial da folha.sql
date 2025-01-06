@@ -17,7 +17,7 @@
             else '-'
         end as TIPO_VERBA,
         
-        case SRC.RC_PD when '020' then SRC.RC_VALOR else 0.0 end as SALARIO_BASE,
+        case SRC.RC_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
         case SRC.RC_PD when '999' then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRC.RC_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
@@ -87,7 +87,7 @@ union
             else '-'
         end as TIPO_VERBA,
         
-        case SRD.RD_PD when '020' then SRD.RD_VALOR else 0.0 end as SALARIO_BASE,
+        case SRD.RD_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
         case SRD.RD_PD when '999' then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRD.RD_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
