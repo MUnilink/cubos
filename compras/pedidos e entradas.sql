@@ -84,7 +84,8 @@ select
 
 	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
-	trim(upper(SY1.Y1_NOME)) as SOLICITANTE_PC,
+	(select trim(upper(SY1010.Y1_NOME)) from SY1010 where SY1010.Y1_COD = SC7.C7_COMPRA) as SOLICITANTE_PC,
+	trim(upper(SY1.Y1_NOME)) as DIGITACAO_PC,
 
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
