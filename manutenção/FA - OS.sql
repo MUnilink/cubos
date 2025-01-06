@@ -17,8 +17,8 @@ select
 		else STL.TL_CUSTO
 	end as TL_CUSTO,
 
-	cast(STL.TL_DTINICI as date) as DTINI_APP,
-	cast(STL.TL_DTFIM as date) as DTFIM_APP,
+	case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120) else null end as DTINI_APP,
+	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120) else null end as DTFIM_APP,
 	cast(STJ.TJ_DTORIGI as date) as DATA_INIOS,
 	cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
@@ -173,19 +173,20 @@ from STJ010 STJ (nolock)
 		left join
 		(
 			select
+				SB9010.B9_FILIAL,
+				SB9010.B9_DATA,
 				SB9010.B9_COD,
-				min(SB9010.B9_VINI1/SB9010.B9_QINI) as B9_CM,
-				min(SB9010.B9_DATA) as B9_DATA
+				(SB9010.B9_VINI1/isnull(nullif(SB9010.B9_QINI, 0), 1)) as B9_CM
 			from SB9010 (nolock)
 			where
-					SB9010.D_E_L_E_T_ = ''
-				and SB9010.B9_LOCAL = '01'
+					SB9010.B9_QINI != 0
 				and SB9010.B9_COD in ('11380003', '11380004', '11380005')
-				and SB9010.B9_QINI != 0
-			group by
-				SB9010.B9_COD
+				and SB9010.B9_LOCAL = '01'
+				and SB9010.D_E_L_E_T_ = ''
 		) ADESIVO_CUSTO
-			on ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO
+			on ADESIVO_CUSTO.B9_FILIAL = STL.TL_FILIAL
+			and left(ADESIVO_CUSTO.B9_DATA, 6) = left(STL.TL_DTFIM, 6)
+			and ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO
 		
 		left join SA2010 SA2 (nolock)
 			on SA2.D_E_L_E_T_ = ''
