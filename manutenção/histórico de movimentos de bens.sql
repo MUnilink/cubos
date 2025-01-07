@@ -12,8 +12,8 @@ select
 	trim(isnull(STZ.TZ_TIPOMOV, '-')) as TZ_TIPOMOV,
     trim(SR.T9_CCUSTO) as SR_CC,
 	trim(CM.T9_CCUSTO) as CM_CC,
-	(select top 1 last_value(TPN010.TPN_CCUSTO) over (partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STZ.TZ_CODBEM and concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC) < (concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT))) as ULT_CC,
-    (select top 1 last_value(convert(datetime, concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC), 103)) over (partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STZ.TZ_CODBEM and concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC) < (concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT))) as ULT_TRA,
+	(select top 1 last_value(TPN010.TPN_CCUSTO) over (partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STZ.TZ_BEMPAI and concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC) < (concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT))) as CC_ANT,
+    (select top 1 last_value(convert(datetime, concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC), 103)) over (partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STZ.TZ_BEMPAI and concat(TPN010.TPN_DTINIC, ' ', TPN010.TPN_HRINIC) < (concat(STZ.TZ_DATAMOV, ' ', STZ.TZ_HORAENT))) as DT_TRANSF,
 
 	substring(STZ.TZ_DATAMOV, 1, 6) as PERIODO_MOV,
 	substring(STZ.TZ_DATASAI, 1, 6) as PERIODO_SAI,
