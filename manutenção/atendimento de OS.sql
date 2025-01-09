@@ -1,23 +1,15 @@
 select
-    STL.TL_FILIAL as FIL_OS,
+    STL.TL_FILIAL as FILIAL,
     STL.TL_ORDEM as OS,
-    trim(isnull(STJ.TJ_CODBEM, '-')) as TJ_CODBEM,
-    cast(STI.TI_PLANO as int) as PLANO,
-    case STI.TI_PLANO when 0 then 'CORRETIVA' else trim(STI.TI_DESCRIC) end as NOME_PLANO,
-    
-    convert(date, STJ.TJ_DTORIGI, 103) as DATA_OS,
-	trim(isnull(STJ.TJ_USUAFIM, '-')) as USR_FIM_OS,
-    trim(isnull(STJ.TJ_TERMINO, '-')) as TERMINO,
-    substring(STL.TL_DTINICI, 1, 6) as PERIODO_OS,
-    convert(datetime, datetimefromparts(year(STL.TL_DTINICI), month(STL.TL_DTINICI), day(STL.TL_DTINICI), substring(STL.TL_HOINICI, 1, 2), substring(STL.TL_HOINICI, 4, 5), 0, 0), 113) as DATA_INI,
-	convert(datetime, datetimefromparts(year(STL.TL_DTFIM), month(STL.TL_DTFIM), day(STL.TL_DTFIM), substring(STL.TL_HOFIM, 1, 2), substring(STL.TL_HOFIM, 4, 5), 0, 0), 113) as DATA_FIM,
-
-    datediff
-        (
-            minute,
-            datetimefromparts(year(STL.TL_DTINICI), month(STL.TL_DTINICI), day(STL.TL_DTINICI), substring(STL.TL_HOINICI, 1, 2), substring(STL.TL_HOINICI, 4, 5), 0, 0),
-            datetimefromparts(year(STL.TL_DTFIM), month(STL.TL_DTFIM), day(STL.TL_DTFIM), substring(STL.TL_HOFIM, 1, 2), substring(STL.TL_HOFIM, 4, 5), 0, 0)
-        )/60.0 as HORAS_APONT,
+    trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+    cast(STJ.TJ_DTORIGI as date) as DATA_OS,
+	trim(STJ.TJ_USUAFIM) as USR_FIM,
+    trim(STJ.TJ_TERMINO) as TERMINO,
+    left(STL.TL_DTFIM, 6) as PERIODO_APP,
+    case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120) else null end as DTHINI_APP,
+    cast(STL.TL_DTINICI as date) as DATA_APP,
+	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120) else null end as DTHFIM_APP,
+    cast(STL.TL_DTFIM as date) as DATA_APP,
 	
     STL.TL_LOCAL as ARMAZEM,
 	STJ.TJ_POSCONT as CONTADOR,
@@ -40,25 +32,23 @@ select
     SCP.CP_UM as UN,
     SCP.CP_QUANT as QTD_SOLICTADA,
     SCP.CP_QUJE as QTD_ATENDIDA,
-    trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
+    trim(SB1.B1_GRUPO) as B1_GRUPO,
 
     case when STL.TL_TIPOREG = 'P' and STL.TL_DOC = '' then 'NÃO ATENDIDA'
     else
         case when STL.TL_TIPOREG = 'P' and STL.TL_DOC != '' then 'ATENDIDA'
         else
-            case when STL.TL_TIPOREG = 'M' then 'MDO'
+            case when STL.TL_TIPOREG = 'M' then 'MDO REALIZADA'
             else
                 case when STL.TL_TIPOREG = 'T' then 'EXTERNO'
                 else
-                    case when STL.TL_TIPOREG = 'E' then 'FUNÇÃO PREVISTA'
+                    case when STL.TL_TIPOREG = 'E' then 'MDO PREVISTA'
                     else 'OUTROS'
                     end
                 end
             end
         end
     end as ATENDIMENTO,
-
-    last_value(STL.TL_SEQRELA) over(partition by STJ.TJ_FILIAL, STJ.TJ_ORDEM, STL.TL_CODIGO order by STJ.TJ_FILIAL, STJ.TJ_ORDEM, STL.TL_CODIGO, STL.TL_SEQRELA) as SEQ_INSUMO,
 
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
@@ -68,7 +58,7 @@ select
 		else 'OUTROS'
 	end as TIPO_CUSTO,
 
-    trim(isnull(STL.TL_CODIGO, '-')) as INSUMO,
+    trim(STL.TL_CODIGO) as INSUMO,
 	case STL.TL_TIPOREG
 		when 'M' then trim(ST1.T1_NOME)
 		when 'E' then trim(ST0.T0_NOME)
@@ -77,18 +67,17 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
     
-    trim(isnull(ST4.T4_SERVICO, '-')) as COD_SERVICO,
-	trim(isnull(ST4.T4_NOME, '-')) as SERVICO,
-    trim(isnull(STL.TL_TAREFA, '-')) as COD_TAREFA,
-	trim(isnull(TT9.TT9_DESCRI, '-')) as TAREFA,
-	
-    trim(isnull(SH4.H4_CODIGO, '-')) as H4_CODIGO,
-	trim(isnull(ST0.T0_ESPECIA, '-')) as T0_ESPECIA,
-	trim(isnull(ST1.T1_CODFUNC, '-')) as T1_CODFUNC,
-	trim(isnull(SB1.B1_COD, '-')) as COD_PRODUTO,
-	trim(isnull(SB1.B1_DESC, '-')) as PRODUTO,
-	trim(isnull(SA2.A2_COD, '-')) as COD_FORNECEDOR,
-	trim(isnull(SA2.A2_NOME, '-')) as FORNECEDOR
+    trim(ST4.T4_SERVICO) as COD_SERVICO,
+	trim(ST4.T4_NOME) as SERVICO,
+    trim(STL.TL_TAREFA) as COD_TAREFA,
+	trim(TT9.TT9_DESCRI) as TAREFA,
+    trim(SH4.H4_CODIGO) as H4_CODIGO,
+	trim(ST0.T0_ESPECIA) as T0_ESPECIA,
+	trim(ST1.T1_CODFUNC) as T1_CODFUNC,
+	trim(SB1.B1_COD) as COD_PRODUTO,
+	trim(SB1.B1_DESC) as PRODUTO,
+	trim(SA2.A2_COD) as COD_FORNECEDOR,
+	trim(SA2.A2_NOME) as FORNECEDOR
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
@@ -96,8 +85,6 @@ from STL010 STL (nolock)
 		and STJ.TJ_ORDEM = STL.TL_ORDEM
 		and STJ.TJ_PLANO = STL.TL_PLANO
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
-        and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP', 'PNEMOV')
-        and year(STJ.TJ_DTORIGI) > 2021
 
         inner join ST4010 ST4 (nolock)
             on ST4.D_E_L_E_T_ = ''
