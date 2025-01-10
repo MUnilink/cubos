@@ -9,6 +9,17 @@ select
 	trim(STJ.TJ_USUAFIM) as USR_FIM,
     trim(STJ.TJ_USUARIO) as USR_INI,
     trim(STJ.TJ_TERMINO) as TERMINO,
+    trim(STJ.TJ_SITUACA) as SITUACAO,
+
+    cast(STI.TI_DATAPLA as date) as DATA_PLANO,
+    trim(STI.TI_DESCRIC) as NOME_PLANO,
+    
+    case STE.TE_CARACTE
+        when 'P' then 'PREVENTIVA'
+        when 'C' then 'CORRETIVA'
+        else 'OUTROS'
+    end as TIPO_MNT,
+    
     case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), 113) else null end as DTH_INIMNT,
     case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), 113) else null end as DTH_INIPAR,
 	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DTH_FIMMNT,
@@ -75,6 +86,9 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
     
+    trim(STJ.TJ_TIPO) as COD_CTIPO,
+    trim(STE.TE_TIPOMAN) as TE_TIPOMAN,
+	trim(STE.TE_NOME) as CARAC_TIPO,
     trim(ST4.T4_SERVICO) as COD_SERVICO,
 	trim(ST4.T4_NOME) as SERVICO,
     trim(STL.TL_TAREFA) as COD_TAREFA,
@@ -129,4 +143,7 @@ from STL010 STL (nolock)
         on STI.D_E_L_E_T_ = ''
         and STI.TI_FILIAL = STL.TL_FILIAL
         and STI.TI_PLANO = STL.TL_PLANO
+    left join STE010 STE (nolock)
+        on STE.D_E_L_E_T_ = ''
+        and STE.TE_TIPOMAN = STJ.TJ_TIPO
 where STL.D_E_L_E_T_ = ''
