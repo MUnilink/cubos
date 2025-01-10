@@ -6,7 +6,7 @@ select
 	trim(SRA.RA_ESTADO) as UF,
 	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
 	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
-	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+	SRA.RA_SITFOLH as SITUACAO,
 	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	trim(SRD.RD_CC) as CC,
 	trim(SRD.RD_ITEM) as ITCT,
@@ -17,7 +17,11 @@ select
 	trim(SRD.RD_PERIODO) as PERIODO,
 	trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-	case when exists (select * from SX6010 where SX6010.X6_VAR in ('UN_OSVERBA', 'UN_OSVERB1') and SX6010.X6_CONTEUD like '%' || SRD.RD_PD || '%') then 'CUSTOS' else 'OUTRAS' end as VERBA_CUSTO,
+	case
+		when exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCPOR, '') is not null and SRV010.RV_COD = SRD.RD_PD) then 'OPP'
+		when exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCTMS, '') is not null and SRV010.RV_COD = SRD.RD_PD) then 'TMS'
+	else 'OUTRAS' end as VERBA_CUSTO,
+	
 	SRD.RD_VALOR as VALOR,
 	SRD.RD_HORAS as HORAS,
 	SRA.RA_SALARIO as SALARIO,
@@ -26,7 +30,8 @@ select
 	SRD.RD_STATUS as STATUS_LANC,
 	
 	trim(SRD.RD_PD) as VERBA,
-	trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
+	trim(SRD.RD_SEQ) as SEQ,
+	trim(SRV.RV_DESC) as DESC_VERBA1,
 	case SRV.RV_COD
 		when '183' then 'VALOR A RECEBER'
 		when '999' then 'VALOR A RECEBER'
@@ -166,6 +171,25 @@ select
             and SR7010.R7_FILIAL = SRD.RD_FILIAL
             and SR7010.R7_MAT = SRD.RD_MAT
             and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			and exists
+				(
+					select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+				)
+				(
+					select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				) as FUNCAO_PRO
     ) as MUD_FUNCAO,
 
     datediff
