@@ -65,10 +65,7 @@ select
     case SB1.B1_MSBLQL when 1 then 'SIM' else 'NAO' end as BLOQUEADO,
     STG.TG_QUANTID as QTD,
     STG.TG_UNIDADE as UN,
-    STG.TG_LOCAL as ARMAZEM,  
-    SB2.B2_FILIAL as FILIAL_PROD,
-    SB2.B2_LOCAL as ARMAZEM_PROD,
-    SB2.B2_QATU as QTD_PROD
+    STG.TG_LOCAL as ARMAZEM
 
 from STJ010 STJ (nolock)
     inner join STI010 STI (nolock)
@@ -93,11 +90,10 @@ from STJ010 STJ (nolock)
             left join SB1010 SB1 (nolock)
                 on SB1.D_E_L_E_T_ = ''
                 and SB1.B1_COD = STG.TG_CODIGO
-            left join SB2010 SB2 (nolock)
-                on SB2.D_E_L_E_T_ = ''
-                and SB2.B2_COD = STG.TG_CODIGO
     
     inner join ST4010 ST4 (nolock)
 		on ST4.D_E_L_E_T_ = ''
 		and ST4.T4_SERVICO = STJ.TJ_SERVICO
-where STJ.D_E_L_E_T_ = '' and substring(STI.TI_DATAPLA, 1, 6) > '202112'
+where
+        substring(STI.TI_DATAPLA, 1, 6) > '202112'
+    and STJ.D_E_L_E_T_ = '' 
