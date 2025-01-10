@@ -3,13 +3,21 @@ select
     STL.TL_ORDEM as OS,
     trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
     cast(STJ.TJ_DTORIGI as date) as DATA_OS,
+    substring(STJ.TJ_DTORIGI, 1, 6) as PERIODO_OS,
+    ST9.T9_CODFAMI as FAMILIA,
+    cast(ST9.T9_DTBAIXA as date) as DT_BAIXA,
 	trim(STJ.TJ_USUAFIM) as USR_FIM,
+    trim(STJ.TJ_USUARIO) as USR_INI,
     trim(STJ.TJ_TERMINO) as TERMINO,
+    case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), 113) else null end as DTH_INIMNT,
+    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), 113) else null end as DTH_INIPAR,
+	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DTH_FIMMNT,
+    case when isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM), 113) else null end as DTH_FIMPAR,
+    
     left(STL.TL_DTFIM, 6) as PERIODO_APP,
-    case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120) else null end as DTHINI_APP,
-    cast(STL.TL_DTINICI as date) as DATA_APP,
-	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120) else null end as DTHFIM_APP,
     cast(STL.TL_DTFIM as date) as DATA_APP,
+    case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120) else null end as DTHINI_APP,
+	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120) else null end as DTHFIM_APP,
 	
     STL.TL_LOCAL as ARMAZEM,
 	STJ.TJ_POSCONT as CONTADOR,
@@ -89,6 +97,9 @@ from STL010 STL (nolock)
         inner join ST4010 ST4 (nolock)
             on ST4.D_E_L_E_T_ = ''
             and ST4.T4_SERVICO = STJ.TJ_SERVICO
+        inner join ST9010 ST9 (nolock)
+            on ST9.D_E_L_E_T_ = ''
+            and ST9.T9_CODBEM = STJ.TJ_CODBEM
     
     left join SCP010 SCP (nolock)
         on SCP.D_E_L_E_T_ = ''
