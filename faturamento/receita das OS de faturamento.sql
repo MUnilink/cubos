@@ -331,7 +331,7 @@ from
             left(ZC1010.ZC1_NUM, 4) as ANO_OS,
             left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
             cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
-            left(isnull(nullif(ZC2010.ZC2_COMPET, ''), '20231231'), 6) as PERIODO,
+            left(ZC2010.ZC2_COMPET, 6) as PERIODO,
 
             case ZC1010.ZC1_STATUS
                 when 1 then 'ABERTA'
@@ -384,11 +384,6 @@ from
             cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAPONT,
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
-            case cast(ZC2010.ZC2_TIPO as int)
-                when 15 then 'IMPRODUTIVO'
-                when 16 then 'IMPRODUTIVO'
-                else 'PRODUTIVO'
-            end as TIPO_CUSTO,
             
             case cast(ZC2010.ZC2_TIPO as int)
                 when 1 then 'RECEITA'
@@ -470,4 +465,4 @@ from
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
-where left(ZC2.PERIODO, 6) =:PERIODO_CUSTO
+where ZC2.PERIODO=:PERIODO_CUSTO
