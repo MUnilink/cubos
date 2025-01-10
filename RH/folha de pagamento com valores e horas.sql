@@ -54,7 +54,7 @@ select
 					SR7010.D_E_L_E_T_ = ''
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
-				and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		), trim(SQ3.Q3_CARGO)
 	) as CARGO_FOLHA,
 	isnull
@@ -66,7 +66,7 @@ select
 					SR7010.D_E_L_E_T_ = ''
 				and SR7010.R7_FILIAL = SRD.RD_FILIAL
 				and SR7010.R7_MAT = SRD.RD_MAT
-				and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		), trim(SRJ.RJ_FUNCAO)
 	) as FUNCAO_FOLHA,
 	
@@ -85,7 +85,7 @@ select
 							SR7010.D_E_L_E_T_ = ''
 						and SR7010.R7_FILIAL = SRD.RD_FILIAL
 						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 				)
 		), trim(SQ3.Q3_DESCSUM)
 	) as DESC_CARGO,
@@ -104,7 +104,7 @@ select
 							SR7010.D_E_L_E_T_ = ''
 						and SR7010.R7_FILIAL = SRD.RD_FILIAL
 						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 				)
 		), trim(SRJ.RJ_DESC)
 	) as DESC_FUNCAO,
@@ -171,7 +171,7 @@ select
             and SR7010.R7_FILIAL = SRD.RD_FILIAL
             and SR7010.R7_MAT = SRD.RD_MAT
             and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-			and exists
+			and
 				(
 					select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
 					from SR7010
@@ -181,6 +181,7 @@ select
 						and SR7010.R7_MAT = SRD.RD_MAT
 						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
 				)
+				!=
 				(
 					select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
 					from SR7010
@@ -191,8 +192,38 @@ select
 						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 				) as FUNCAO_PRO
     ) as MUD_FUNCAO,
-
-    datediff
+    
+	(
+        select cast(max(SR7010.R7_DATA) as date)
+        from SR7010
+        where
+                SR7010.D_E_L_E_T_ = ''
+            and SR7010.R7_FILIAL = SRD.RD_FILIAL
+            and SR7010.R7_MAT = SRD.RD_MAT
+            and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			and
+				(
+					select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+				)
+				!=
+				(
+					select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				) as FUNCAO_PRO
+    ) as MUD_CARGO,
+    
+	datediff
 	(
 		day,
 		concat(SRD.RD_DATARQ, '01'),
