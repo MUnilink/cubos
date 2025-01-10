@@ -27,7 +27,7 @@
 		trim(SRC.RC_SEQ) as SEQ,
 		trim(SRC.RC_ROTEIR) as ROTEIRO,
 
-		case when nullif(SRV.RV_YCPOR, '') is not null then 'POR' when nullif(SRV.RV_YCTMS, '') is not null then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when nullif(SRV.RV_YCPOR, '') is not null then 'OPP' when nullif(SRV.RV_YCTMS, '') is not null then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -113,7 +113,7 @@ union
 		trim(SRD.RD_SEQ) as SEQ,
 		trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-		case when nullif(SRV.RV_YCPOR, '') is not null then 'POR' when nullif(SRV.RV_YCTMS, '') is not null then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+		case when nullif(SRV.RV_YCPOR, '') is not null then 'OPP' when nullif(SRV.RV_YCTMS, '') is not null then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
