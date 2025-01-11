@@ -20,6 +20,8 @@ select
         else 'OUTROS'
     end as TIPO_MNT,
     
+    case STJ.TJ_SERVICO when 'PNEMOV' then 'PNEUS' when 'CONSEP' then 'PNEUS' when 'REFORP' then 'PNEUS' when 'PNEROD' then 'PNEUS' else 'MNT' end as TIPO_SERV,
+    
     case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), 113) else null end as DTH_INIMNT,
     case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), 113) else null end as DTH_INIPAR,
 	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DTH_FIMMNT,
@@ -35,6 +37,8 @@ select
     STL.TL_QUANTID as QTD_INSUMO,
     STJ.TJ_CCUSTO as CC,
     STJ.TJ_YITMCT as ATIVIDADE,
+
+    case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
     
     case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
     else
@@ -44,7 +48,7 @@ select
             else 'OUTROS'
             end
         end
-    end as APP_INSUMO,
+    end as APP_PRODUTO,
 
     SCP.CP_NUM as NUM_SA,
     SCP.CP_ITEM as ITEM_SA,
