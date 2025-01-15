@@ -18,6 +18,7 @@ select
 	trim(SRD.RD_ROTEIR) as ROTEIRO,
 
 	case
+		when SRD.RD_PD = 990 then 'REF'
 		when exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCPOR, '') is not null and SRV010.RV_COD = SRD.RD_PD) then 'OPP'
 		when exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCTMS, '') is not null and SRV010.RV_COD = SRD.RD_PD) then 'TMS'
 	else 'OUTRAS' end as VERBA_CUSTO,
@@ -222,6 +223,33 @@ select
 		else concat(SRD.RD_DATARQ, '01') end
 	) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end as DIAS_ANT,
 	
+	(SRA.RA_HRSMES * datediff
+	(
+		day,
+		concat(SRD.RD_DATARQ, '01'),
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else concat(SRD.RD_DATARQ, '01') end
+	) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end)
+	/ (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_ANT,
+	
 	SRD.RD_VALOR *
 	(
 		datediff
@@ -276,6 +304,32 @@ select
 		else concat(SRD.RD_DATARQ, '01') end,
 		dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
 	) as DIAS_PRO,
+
+	SRA.RA_HRSMES * datediff
+	(
+		day,
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else concat(SRD.RD_DATARQ, '01') end,
+		dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_PRO,
 	
 	SRD.RD_VALOR *
 	(
@@ -304,231 +358,7 @@ select
 			else concat(SRD.RD_DATARQ, '01') end,
 			dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
 		)
-	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_PRO,
-
-	case
-		when SRD.RD_CC = 305 and SRD.RD_ITEM = 32 then
-			220.0 *
-			datediff
-			(
-				day,
-				concat(SRD.RD_DATARQ, '01'),
-				case when
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				)
-				else concat(SRD.RD_DATARQ, '01') end
-			) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
-		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 and
-			(
-				isnull
-				(
-					(
-						select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					), trim(SRJ.RJ_FUNCAO)
-				) = 740
-			or
-				isnull
-				(
-					(
-						select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					), trim(SQ3.Q3_CARGO)
-				) = 8
-			)
-			then
-				150.0 *
-				datediff
-				(
-					day,
-					concat(SRD.RD_DATARQ, '01'),
-					case when
-					(
-						select max(SR7010.R7_DATA)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
-					(
-						select max(SR7010.R7_DATA)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					)
-					else concat(SRD.RD_DATARQ, '01') end
-				) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
-		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 then
-			180.0 *
-			datediff
-			(
-				day,
-				concat(SRD.RD_DATARQ, '01'),
-				case when
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				)
-				else concat(SRD.RD_DATARQ, '01') end
-			) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
-	else 0.0 end as HORAS_ANT,
-
-	case
-		when SRD.RD_CC = 305 and SRD.RD_ITEM = 32 then
-			220.0 *
-			datediff
-			(
-				day,
-				case when
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				)
-				else concat(SRD.RD_DATARQ, '01') end,
-				dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
-			) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
-		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 and
-			(
-				isnull
-				(
-					(
-						select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					), trim(SRJ.RJ_FUNCAO)
-				) = 740
-			or
-				isnull
-				(
-					(
-						select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					), trim(SQ3.Q3_CARGO)
-				) = 8
-			)
-			then
-				150.0 *
-				datediff
-				(
-					day,
-					case when
-					(
-						select max(SR7010.R7_DATA)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
-					(
-						select max(SR7010.R7_DATA)
-						from SR7010
-						where
-								SR7010.D_E_L_E_T_ = ''
-							and SR7010.R7_FILIAL = SRD.RD_FILIAL
-							and SR7010.R7_MAT = SRD.RD_MAT
-							and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-					)
-					else concat(SRD.RD_DATARQ, '01') end,
-					dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
-				) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
-		when SRD.RD_CC = 305 and SRD.RD_ITEM = 21 then
-			180.0 *
-			datediff
-			(
-				day,
-				case when
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
-				(
-					select max(SR7010.R7_DATA)
-					from SR7010
-					where
-							SR7010.D_E_L_E_T_ = ''
-						and SR7010.R7_FILIAL = SRD.RD_FILIAL
-						and SR7010.R7_MAT = SRD.RD_MAT
-						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-				)
-				else concat(SRD.RD_DATARQ, '01') end,
-				dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
-			) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))))
-	else 0.0 end as HORAS_PRO
+	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_PRO
 
 from SRD010 SRD (nolock)
 	inner join SRV010 SRV (nolock)
