@@ -230,7 +230,7 @@ select
                 select
                     SRD.RD_VALOR,
                     SRD.RD_VALOR *
-                    (
+	                (
                         datediff
                         (
                             day,
@@ -255,7 +255,7 @@ select
                                     and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
                             )
                             else concat(SRD.RD_DATARQ, '01') end
-                        )
+                        ) + case when left(SRA010.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA010.RA_DEMISSA) else 0 end
                     ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_ANT */
                     +
                     SRD.RD_VALOR *
@@ -285,7 +285,7 @@ select
                             else concat(SRD.RD_DATARQ, '01') end,
                             dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
                         )
-                    ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR, /* VALOR_ANT */
+                    ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR, /* VALOR_PRO */
                     (
                         select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
                         from SR7010
@@ -293,12 +293,16 @@ select
                                 SR7010.D_E_L_E_T_ = ''
                             and SR7010.R7_FILIAL = SRD.RD_FILIAL
                             and SR7010.R7_MAT = SRD.RD_MAT
-                            and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+                            and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
                     ) as CARGO_FOLHA,
                     SRD.RD_FILIAL,
                     SRD.RD_MAT,
                     SRD.RD_DATARQ
                 from SRD010 SRD
+                    inner join SRA010 (nolock)
+                        on SRA010.D_E_L_E_T_ = ''
+                        and SRA010.RA_FILIAL = SRD.RD_FILIAL
+                        and SRA010.RA_MAT = SRD.RD_MAT
                 where
                         exists
                         (
