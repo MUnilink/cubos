@@ -200,7 +200,7 @@ select
 	datediff
 	(
 		day,
-		concat(SRD.RD_DATARQ, '01'),
+		case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
 		case when
 		(
 			select max(SR7010.R7_DATA)
@@ -221,12 +221,13 @@ select
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 		else concat(SRD.RD_DATARQ, '01') end
-	) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end as DIAS_ANT,
+	) as DIAS_ANT,
 	
-	(SRA.RA_HRSMES * datediff
+	SRA.RA_HRSMES *
+	datediff
 	(
 		day,
-		concat(SRD.RD_DATARQ, '01'),
+		case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
 		case when
 		(
 			select max(SR7010.R7_DATA)
@@ -247,15 +248,14 @@ select
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 		else concat(SRD.RD_DATARQ, '01') end
-	) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end)
-	/ (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_ANT,
+	)/(1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_ANT,
 	
 	SRD.RD_VALOR *
 	(
 		datediff
 		(
 			day,
-			concat(SRD.RD_DATARQ, '01'),
+			case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
 			case when
 			(
 				select max(SR7010.R7_DATA)
@@ -276,7 +276,7 @@ select
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
 			else concat(SRD.RD_DATARQ, '01') end
-		) + case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA.RA_DEMISSA) else 0 end
+		)
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_ANT,
 
 	datediff
@@ -302,7 +302,7 @@ select
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 		else concat(SRD.RD_DATARQ, '01') end,
-		dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
 	) as DIAS_PRO,
 
 	SRA.RA_HRSMES * datediff
@@ -328,7 +328,7 @@ select
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
 		else concat(SRD.RD_DATARQ, '01') end,
-		dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_PRO,
 	
 	SRD.RD_VALOR *
@@ -356,7 +356,7 @@ select
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
 			else concat(SRD.RD_DATARQ, '01') end,
-			dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+			case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
 		)
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR_PRO
 

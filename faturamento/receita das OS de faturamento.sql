@@ -230,35 +230,6 @@ select
                 select
                     SRD.RD_VALOR,
                     SRD.RD_VALOR *
-	                (
-                        datediff
-                        (
-                            day,
-                            concat(SRD.RD_DATARQ, '01'),
-                            case when
-                            (
-                                select max(SR7010.R7_DATA)
-                                from SR7010
-                                where
-                                        SR7010.D_E_L_E_T_ = ''
-                                    and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                                    and SR7010.R7_MAT = SRD.RD_MAT
-                                    and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-                            ) >= concat(SRD.RD_DATARQ, '01') then
-                            (
-                                select max(SR7010.R7_DATA)
-                                from SR7010
-                                where
-                                        SR7010.D_E_L_E_T_ = ''
-                                    and SR7010.R7_FILIAL = SRD.RD_FILIAL
-                                    and SR7010.R7_MAT = SRD.RD_MAT
-                                    and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
-                            )
-                            else concat(SRD.RD_DATARQ, '01') end
-                        ) + case when left(SRA010.RA_DEMISSA, 6) = SRD.RD_DATARQ then datediff(day, concat(SRD.RD_DATARQ, '01'), SRA010.RA_DEMISSA) else 0 end
-                    ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) /* VALOR_ANT */
-                    +
-                    SRD.RD_VALOR *
                     (
                         datediff
                         (
@@ -283,7 +254,7 @@ select
                                     and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
                             )
                             else concat(SRD.RD_DATARQ, '01') end,
-                            dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01')))
+                            case when left(SRA010.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA010.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
                         )
                     ) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as VALOR, /* VALOR_PRO */
                     (
