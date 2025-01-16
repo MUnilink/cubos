@@ -20,7 +20,9 @@ select distinct
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) like '0[2-9]' then abs(ZE3.ZE3_VALOR)*-1
         when left(ZE2.ZE2_COD, 2) like '_[1-9]' then abs(ZE3.ZE3_VALOR)*-1
-    else 0.0 end as VALOR
+    else 0.0 end as VALOR,
+
+    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL
 
 from ZE3010 ZE3
     inner join ZE2010 ZE2
