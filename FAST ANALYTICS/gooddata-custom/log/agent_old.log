@@ -1,0 +1,19 @@
+17/01/25 18:56:19:627  INFO [main] (Main.java:133) - Início do processo do agent...
+
+17/01/25 18:56:19:628  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+17/01/25 18:56:20:509  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config_custom.properties): 
+
+17/01/25 18:56:20:509  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250117'
+
+17/01/25 18:56:20:509  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20200117'
+
+17/01/25 18:56:20:510  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250117'
+
+17/01/25 18:56:20:510  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+17/01/25 18:56:20:510 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+17/01/25 18:56:20:510 DEBUG [main] (Main.java:471) - No such file or directory
+17/01/25 18:56:20:510 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
