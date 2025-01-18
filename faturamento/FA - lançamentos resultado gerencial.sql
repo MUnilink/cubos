@@ -11,7 +11,7 @@ select distinct
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     PV.BK_ITEM_CONTABIL,
-    trim(ZE3.ZE3_ORIGEM) as BK_CENTRO_DE_CUSTO,
+    ZE3.ZE3_ORIGEM as BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE2.ZE2_COD as CONTAROP,
@@ -24,7 +24,7 @@ select distinct
         when left(ZE2.ZE2_COD, 2) like '_[1-9]' then abs(ZE3.ZE3_VALOR)*-1
     else 0.0 end as VALOR,
 
-    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
+    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     
     /* para validação no RM */
     trim(ZE2.ZE2_CONTA) as CONTA,
