@@ -73,4 +73,4 @@ where
     = '310102002'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 
-group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_CC
+group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_CC, SC6.C6_NUM
