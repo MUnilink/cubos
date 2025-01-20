@@ -2,7 +2,7 @@ select
     SD2.D2_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM,
     SC6.C6_CC as CC,
-    sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
+    sum(cast(coalesce(SC6.C6_VALOR, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
     inner join SF2010 SF2 (nolock)

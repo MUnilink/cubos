@@ -89,8 +89,7 @@ from ZE3010 ZE3
     
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
-        and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
-        and CTT010.CTT_CUSTO = SC6010.C6_CC
+        and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
 where
         concat(ZE3.ZE3_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZE3.D_E_L_E_T_ = ''

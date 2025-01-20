@@ -20,11 +20,12 @@ select distinct
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) like '0[2-9]' then abs(ZE3.ZE3_VALOR)*-1
         when left(ZE2.ZE2_COD, 2) like '_[1-9]' then abs(ZE3.ZE3_VALOR)*-1
-    else 0.0 end as VALOR
+    else 0.0 end as VALOR,
 
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     
     /* para validação no RM */
+    PV.BK_CENTRO_DE_CUSTO as CC_PV,
     trim(ZE2.ZE2_CONTA) as CONTA,
     trim(ZE2.ZE2_CLASS) as CLASSE,
 
@@ -130,7 +131,6 @@ from ZE3010 ZE3 (nolock)
 
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
-        and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
-        and CTT010.CTT_CUSTO = SC6010.C6_CC
+        and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
 where
         ZE3.D_E_L_E_T_ = ''
