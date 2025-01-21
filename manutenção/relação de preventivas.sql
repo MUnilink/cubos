@@ -15,6 +15,7 @@ select
     convert(date, STJ.TJ_DTMPFIM, 103) as DT_PREV_FIM,
     trim(isnull(ST4.T4_NOME, '-')) as DESC_SERVICO,
 
+    STJ.TJ_POSCONT as CONT_OS,
     STJ.TJ_SEQRELA as SEQ_OS,
     case STJ.TJ_SITUACA when 'L' then 'LIBERADA' when 'P' then 'PENDENTE' else 'CANCELADA' end as STATUS_OS,
     case STJ.TJ_SITUACA when 'L' then (select top 1 STL010.TL_NUMSA from STL010 where STL010.D_E_L_E_T_ = '' and STL010.TL_ORDEM = STJ.TJ_ORDEM and STL010.TL_FILIAL = STJ.TJ_FILIAL and STL010.TL_PLANO = STJ.TJ_PLANO) when 'C' then 999999 else 0 end as SA,
