@@ -43,7 +43,7 @@
 			else '-'
 		end as TIPO_VERBA,
 
-		SRC.RC_VALOR as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 else SRC.RC_VALOR end as VALOR,
 		SRC.RC_HORAS as HORAS,
 		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
@@ -129,7 +129,7 @@ union
 			else '-'
 		end as TIPO_VERBA,
 
-		SRD.RD_VALOR as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
 		SRD.RD_HORAS as HORAS,
 		null as HORAS_PADRAO,
 

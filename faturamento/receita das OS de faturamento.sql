@@ -229,7 +229,7 @@ select
             (
                 select
                     SRD.RD_VALOR,
-                    SRD.RD_VALOR *
+                    case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
                     (
                         datediff
                         (

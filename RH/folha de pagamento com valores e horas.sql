@@ -19,7 +19,7 @@ select
 
 	case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 	
-	SRD.RD_VALOR as VALOR,
+	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
 	SRD.RD_HORAS as HORAS,
 	SRA.RA_SALARIO as SALARIO,
 	SRA.RA_HRSEMAN as HORAS_SEM,
@@ -246,7 +246,7 @@ select
 		else concat(SRD.RD_DATARQ, '01') end
 	)/(1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_ANT,
 	
-	SRD.RD_VALOR *
+	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
 	(
 		datediff
 		(
@@ -327,7 +327,7 @@ select
 		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
 	) / (1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01')))) as HORAS_PRO,
 	
-	SRD.RD_VALOR *
+	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
 	(
 		datediff
 		(
