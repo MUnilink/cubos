@@ -1,5 +1,5 @@
 select
-	trim(STL.TL_SEQRELA) as TL_SEQRELA,
+	cast(trim(STL.TL_SEQRELA) as int) as ITEM_OS,
 	STL.TL_QUANTID,
 
 	case
@@ -22,6 +22,7 @@ select
 	STJ.TJ_DTORIGI as DATA_INIOS,
 	STJ.TJ_DTPRFIM as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
+	STJ.TJ_SITUACA as SITUACAO,
 
 	STJ.TJ_POSCONT,
 	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
@@ -113,6 +114,5 @@ from STJ010 STJ
 			and ST1.T1_CODFUNC = STL.TL_CODIGO
 where
 		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STL.TL_SEQRELA > 0
 	and year(STJ.TJ_DTORIGI) between 2019 and 2029
 	and STL.D_E_L_E_T_ = ''

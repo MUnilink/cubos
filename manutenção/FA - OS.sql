@@ -1,5 +1,5 @@
 select
-	trim(STL.TL_SEQRELA) as TL_SEQRELA,
+	cast(trim(STL.TL_SEQRELA) as int) as TL_SEQRELA,
 	STL.TL_QUANTID,
 
 	case
@@ -22,6 +22,7 @@ select
 	cast(STJ.TJ_DTORIGI as date) as DATA_INIOS,
 	cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
+	STJ.TJ_SITUACA as SITUACAO,
 
 	STJ.TJ_POSCONT,
 	case when left(ST9.T9_DTCOMPR, 6) = left(STL.TL_DTINICI, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
