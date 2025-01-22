@@ -33,12 +33,12 @@ select distinct
     ZE2.ZE2_COD as CONTAROP,
     ZE2.ZE2_CONTA as CONTA_CONTABIL,
     
-    ZE3.ZE3_VALOR as VALOR_ROP,
+    ZE3.ZE3_VALOR as VL_ORIGINAL,
     case
-        when ZE2.ZE2_ORIGEM = 'F' then abs(ZE3.ZE3_VALOR)
+        when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
-        when left(ZE2.ZE2_COD, 2) like '0[2-9]' then abs(ZE3.ZE3_VALOR)*-1
-        when left(ZE2.ZE2_COD, 2) like '_[1-9]' then abs(ZE3.ZE3_VALOR)*-1
+        when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
+        when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
     else 0.0 end as VALOR,
 
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
