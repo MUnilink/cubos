@@ -12,6 +12,8 @@ select
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_CARGO) as COD_CARGO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
+	SRA.RA_SITFOLH as SITUACAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	
 	trim(CTT.CTT_CUSTO) as COD_CC,
 	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
@@ -28,9 +30,10 @@ select
 	trim(SR8.R8_CID) as CID,
 	TMR.TMR_DOENCA as DESCRICAO,
 	(select upper(trim(RCM010.RCM_DESCRI)) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
-
-	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
-    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	
+	trim(SR8.R8_NMMED) as EMITENTE,
+	trim(SR8.R8_CRMMED) as COD_EMITENTE,
+	trim(SR8.R8_IDEOC) as CLASSE_EMITENTE,
 	
 	cast(SR8.R8_DATA as date) as DATA,
 	cast(SR8.R8_DATAINI as date) as INI_AFASTAMENTO,
