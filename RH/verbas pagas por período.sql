@@ -27,8 +27,7 @@
 		trim(SRC.RC_SEQ) as SEQ,
 		trim(SRC.RC_ROTEIR) as ROTEIRO,
 
-		SRV.RV_YCPOR as VERBA_OPP,
-		SRV.RV_YCTMS as VERBA_TMS,
+		case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD
@@ -114,8 +113,7 @@ union
 		trim(SRD.RD_SEQ) as SEQ,
 		trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-		SRV.RV_YCPOR as VERBA_OPP,
-		SRV.RV_YCTMS as VERBA_TMS,
+		case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
 		case SRV.RV_COD

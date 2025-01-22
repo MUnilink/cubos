@@ -285,7 +285,7 @@ select
                                 and SR7010.R7_MAT = SRD.RD_MAT
                                 and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
                         )
-                    and exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCPOR, '') is not null and SRV010.RV_COD = SRD.RD_PD /* nullif(SRV.RV_YCTMS, '') */)
+                    and exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and SRV010.RV_YCPOR = 'S' and SRV010.RV_COD = SRD.RD_PD)
                     and SRD.D_E_L_E_T_ = ''
             ) FOLHA
             where concat(FOLHA.RD_FILIAL, FOLHA.RD_DATARQ, FOLHA.CARGO_FOLHA) = concat(ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO)

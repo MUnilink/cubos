@@ -17,11 +17,7 @@ select
 	trim(SRD.RD_PERIODO) as PERIODO,
 	trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-	case
-		when SRD.RD_PD = 990 then 'REF'
-		when exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCPOR, '') is not null and SRV010.RV_COD = SRD.RD_PD) then 'OPP'
-		when exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and nullif(SRV010.RV_YCTMS, '') is not null and SRV010.RV_COD = SRD.RD_PD) then 'TMS'
-	else 'OUTRAS' end as VERBA_CUSTO,
+	case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 	
 	SRD.RD_VALOR as VALOR,
 	SRD.RD_HORAS as HORAS,
