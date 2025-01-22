@@ -15,7 +15,6 @@
         concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
         
-        null as ID_RECURSO,
 
         case when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
         null as COD_DA3,
@@ -96,6 +95,10 @@
                 on CTT.D_E_L_E_T_ = ''
                 and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
                 and CTT.CTT_CUSTO = SC6.C6_CC
+            left join SC5010 SC5
+                on SC5.C5_FILIAL = SC6.C6_FILIAL
+                and SC5.C5_NUM = SC6.C6_NUM
+                and SC5.D_E_L_E_T_ = ' '
     where
             cast(ZC2.ZC2_TIPO as int) = 1
         and ZC2.D_E_L_E_T_ = ''
@@ -117,7 +120,6 @@ union
         concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
         
-        case when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_YFORNE)) else concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_COD)) end as ID_RECURSO,
 
         case when cast(ZC2.ZC2_TIPO as int) in (4, 5, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
         case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13) then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13)) else null end as COD_DA3,
@@ -196,6 +198,7 @@ union
             select
                 SC6010.C6_FILIAL as FILIAL,
                 SC6010.C6_YOS as OS,
+                SC6010.C6_YITOS as ITEM_PV,
                 concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
                 concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
                 'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
@@ -229,6 +232,7 @@ union
         ) PV
             on PV.FILIAL = ZC2.ZC2_FILIAL
             and PV.OS = ZC2.ZC2_NUM
+            and PV.ITEM_PV = ZC2.ZC2_ITEM
     where
             concat(left(ZC2.ZC2_COMPET, 6), '01') > '20231201'
         and cast(ZC2.ZC2_TIPO as int) != 1
