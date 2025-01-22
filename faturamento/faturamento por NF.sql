@@ -22,6 +22,11 @@ SELECT
     trim(SB1.B1_DESC) as DESC_PRODUTO,
     trim(SB1.B1_GRUPO) as GRUPO_PRODUTO,
     trim(SBM.BM_DESC) as DESC_GRUPOPROD,
+    concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1)) as CONTA_REC1,
+    concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2)) as CONTA_REC2,
+    concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3)) as CONTA_REC3,
+    concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4)) as CONTA_REC4,
+    concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5)) as CONTA_REC5,
     
     trim(SD2.D2_TES) as TES,
     trim(SF4.F4_TEXTO) as DESC_TES,
