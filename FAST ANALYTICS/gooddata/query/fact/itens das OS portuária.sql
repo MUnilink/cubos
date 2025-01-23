@@ -23,6 +23,9 @@
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
+        cast(ZC1.ZC1_DTINI as date) as DT_INIOS,
+        cast(ZC1.ZC1_DTFIM as date) as DT_FIMOS,
+        cast(ZC2.ZC2_DTFIM as date) as DATA_APP,
         concat(left(ZC2.ZC2_COMPET, 6), '01') as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
@@ -128,6 +131,9 @@ union
 
         trim(ZC2.ZC2_COD) as INSUMO,
         trim(ZC2.ZC2_ITEM) as ITEM,
+        cast(ZC1.ZC1_DTINI as date) as DT_INIOS,
+        cast(ZC1.ZC1_DTFIM as date) as DT_FIMOS,
+        cast(ZC2.ZC2_DTFIM as date) as DATA_APP,
         concat(left(ZC2.ZC2_COMPET, 6), '01') as COMPETENCIA,
         'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
 
