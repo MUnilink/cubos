@@ -39,7 +39,7 @@ select distinct
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
-    else 0.0 end as VALOR,
+    else 0.0 end as VALOR
 
 from ZE3010 ZE3
     inner join ZE2010 ZE2
