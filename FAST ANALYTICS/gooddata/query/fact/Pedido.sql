@@ -103,7 +103,9 @@ from SC5010 SC5
         AND SC9.C9_FILIAL = SC6.C6_FILIAL
 
     left join SD2010 SD2
-        on SD2.D_E_L_E_T_ = ''
+        on SD2.D2_TIPO not in ('B', 'D')
+        and SD2.D2_SERIE not in ('003', '100')
+        and SD2.D_E_L_E_T_ = ''
         and SD2.D2_FILIAL = SC5.C5_FILIAL
         and SD2.D2_PEDIDO = SC5.C5_NUM
     left join CTD010 CTD
