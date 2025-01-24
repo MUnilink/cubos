@@ -102,7 +102,7 @@
                 and SC5.C5_NUM = SC6.C6_NUM
                 and SC5.D_E_L_E_T_ = ' '
     where
-            concat(left(SC5.C5_EMISSAO, 6), '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+            SC5.C5_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
         and cast(ZC2.ZC2_TIPO as int) = 1
         and ZC2.D_E_L_E_T_ = ''
 union
