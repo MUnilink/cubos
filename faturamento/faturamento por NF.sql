@@ -43,6 +43,8 @@ SELECT
     trim(SC6.C6_UM) as UN_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
     trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
+    cast(SC5.C5_EMISSAO as date) as DT_PEDIDO,
+    cast(SC6.C6_ENTREG as date) as DT_ITEMPV,
 
     SC6.C6_QTDVEN as QTD_PEDIDO,
     SC6.C6_PRCVEN as PRECO_PEDIDO,
@@ -197,6 +199,11 @@ from SD2010 SD2
                 on ZC1.D_E_L_E_T_ = ''
                 and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
                 and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+        
+        left join SC5010 SC5
+            on SC5.D_E_L_E_T_ = ' '
+            and SC5.C5_FILIAL = SC6.C6_FILIAL
+            and SC5.C5_NUM = SC6.C6_NUM
         
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
