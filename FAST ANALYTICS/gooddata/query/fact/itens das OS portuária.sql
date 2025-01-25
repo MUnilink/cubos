@@ -15,7 +15,7 @@ select
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
 
-    case when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
+    case when cast(ZC2.ZC2_TIPO as int) in (1, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
     case when cast(ZC2.ZC2_TIPO as int) = 3 then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13)) else null end as COD_DA3,
     case when cast(ZC2.ZC2_TIPO as int) = 2 then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (2, 14)) else null end as COD_SRJ,
     null as COD_ZA7,
@@ -78,30 +78,45 @@ from ZC2010 ZC2 (nolock)
             on SAH.D_E_L_E_T_ = ''
             and SAH.AH_UNIMED = SB1.B1_UM
     
-    left join SC6010 SC6
-        on SC6.D_E_L_E_T_ = ''
-        and SC6.C6_FILIAL = ZC2.ZC2_FILIAL
-        and SC6.C6_YOS = ZC2.ZC2_NUM
-        and SC6.C6_YITOS = ZC2.ZC2_ITEM
-
-        left join SD2010 SD2
-            on SD2.D_E_L_E_T_= ''
-            and SD2.D2_FILIAL = SC6.C6_FILIAL
-            and SD2.D2_PEDIDO = SC6.C6_NUM
-            and SD2.D2_ITEMPV = SC6.C6_ITEM
-        left join CTD010 CTD
-            on CTD.CTD_FILIAL = ''
-            and CTD.CTD_ITEM = SC6.C6_ITEMCTA
-            and CTD.D_E_L_E_T_ = ''
-        left join CTT010 CTT
-            on CTT.D_E_L_E_T_ = ''
-            and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
-            and CTT.CTT_CUSTO = SC6.C6_CC
-        left join SC5010 SC5
-            on SC5.C5_FILIAL = SC6.C6_FILIAL
-            and SC5.C5_NUM = SC6.C6_NUM
-            and SC5.D_E_L_E_T_ = ' '
+    left join
+    (
+        select distinct
+            SC6010.C6_FILIAL as FILIAL,
+            SC6010.C6_YOS as OS,
+            concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
+            concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
+            'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
+            'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+            1 as QTD
+        from SC6010
+            left join SD2010
+                on SD2010.D_E_L_E_T_= ''
+                and SD2010.D2_FILIAL = SC6010.C6_FILIAL
+                and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                and SD2010.D2_ITEMPV = SC6010.C6_ITEM
+                        
+                left join SF2010
+                    on SF2010.D_E_L_E_T_= ' '
+                    and SF2010.F2_FILIAL = SD2010.D2_FILIAL
+                    and SF2010.F2_CLIENTE = SD2010.D2_CLIENTE
+                    and SF2010.F2_LOJA = SD2010.D2_LOJA
+                    and SF2010.F2_DOC = SD2010.D2_DOC
+                    and SF2010.F2_SERIE = SD2010.D2_SERIE
+            
+            left join CTD010
+                on CTD010.CTD_FILIAL = ''
+                and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
+                and CTD010.D_E_L_E_T_ = ''
+            left join CTT010
+                on CTT010.D_E_L_E_T_ = ''
+                and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
+                and CTT010.CTT_CUSTO = SC6010.C6_CC
+        where
+                SC6010.D_E_L_E_T_ = ''
+    ) PV
+        on PV.FILIAL = ZC2.ZC2_FILIAL
+        and PV.OS = ZC2.ZC2_NUM
 where
-        SC5.C5_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        ZC1.ZC1_DTINI between <<START_DATE>> and <<FINAL_DATE>>
     and cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 11)
     and ZC2.D_E_L_E_T_ = ''
