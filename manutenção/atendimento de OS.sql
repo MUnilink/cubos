@@ -108,7 +108,14 @@ select
 	trim(SB1.B1_COD) as COD_PRODUTO,
 	trim(SB1.B1_DESC) as PRODUTO,
 	trim(SA2.A2_COD) as COD_FORNECEDOR,
-	trim(SA2.A2_NOME) as FORNECEDOR
+	trim(SA2.A2_NOME) as FORNECEDOR,
+
+    TQB.TQB_SOLICI as SS,
+    convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INISS,
+    convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCSS,
+    TQB.TQB_USUARI,
+    TQB.TQB_SOLUCA,
+    TQB.TQB_CDEXEC,
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
@@ -123,6 +130,10 @@ from STL010 STL (nolock)
         inner join ST9010 ST9 (nolock)
             on ST9.D_E_L_E_T_ = ''
             and ST9.T9_CODBEM = STJ.TJ_CODBEM
+        left join TQB010 TQB (nolock)
+            on TQB.D_E_L_E_T_ = ''
+            and TQB.TQB_FILIAL = STJ.TJ_FILIAL
+            and TQB.TQB_ORDEM = STJ.TJ_ORDEM
     
     left join SCP010 SCP (nolock)
         on SCP.D_E_L_E_T_ = ''
