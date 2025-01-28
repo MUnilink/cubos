@@ -255,6 +255,17 @@ select
 	cast(SD1.D1_SEGURO as numeric(14, 2)) as VL_NFENT_SEGURO,
 	cast(SD1.D1_PESO * SD1.D1_QUANT as numeric(12, 4)) as PESO_LIQUIDO_NFENT,
 
+	trim(SE2.E2_FILIAL) as FILIAL_TITULO,
+	trim(SE2.E2_PREFIXO) as PREFIXO,
+	trim(SE2.E2_NUM) as TITULO,
+	trim(SE2.E2_TIPO) as TIPO_TITULO,
+	cast(SE2.E2_EMISSAO as date) as DATA_TITULO,
+	cast(SE2.E2_VENCTO as date) as VENCIMENTO,
+	cast(SE2.E2_VENCREA as date) as VENCREAL,
+	cast(SE2.E2_BAIXA as date) as BAIXA,
+	SE2.E2_PARCELA as PARCELA,
+	SE2.E2_VALOR as VALOR_TITULO,
+
 	case when trim(SC7.C7_YOS) = '2024/0' then right(left(replace(replace(SC7.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7.C7_YOS end as OS_PORT,
 	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT
 
@@ -299,4 +310,13 @@ from SC7010 SC7 (nolock)
 		and SD1.D1_FILIAL = SC7.C7_FILIAL
 		and SD1.D1_PEDIDO = SC7.C7_NUM
 		and SD1.D1_ITEMPC = SC7.C7_ITEM
+		
+		left join SE2010 SE2 (nolock)
+			on trim(SE2.E2_TIPO) = 'NF'
+			and SE2.E2_FILIAL = SD1.D1_FILIAL
+			and SE2.E2_NUM = SD1.D1_DOC
+			and SE2.E2_FORNECE = SD1.D1_FORNECE
+			and SE2.E2_LOJA = SD1.D1_LOJA
+			and SE2.D_E_L_E_T_ = ''
+
 where SC7.D_E_L_E_T_ = ''
