@@ -21,8 +21,17 @@ select
     trim(SE2.E2_TITORIG) as TITULO_ORI,
     trim(SE2.E2_ORIGEM) as ORIGEM,
     cast(SE2.E2_DATALIB as date) as DT_LIBTIT,
-    trim(SE2.E2_APROVA) as APROVA_TIT,
-    trim(SE2.E2_USUALIB) as LIBERA_TIT,
+    upper(trim(SE2.E2_APROVA)) as APR_TITULO,
+    upper(trim(SE2.E2_USUALIB)) as LIB_TITULO,
+
+    trim(SE2.E2_CONTAD) as CONTA,
+    trim(SE2.E2_DEBITO) as CONTA_DEB,
+    trim(SE2.E2_CREDIT) as CONTA_CRE,
+    trim(SE2.E2_CCD) as CC_DEB,
+    trim(SE2.E2_ITEMD) as ITEMC_DEB,
+    trim(SE2.E2_CCC) as CC_CRE,
+    trim(SE2.E2_ITEMC) as ITEMC_CRE,
+
 	
     trim(SC7.C7_FILIAL) as FILIAL,
 	trim(SB1.B1_COD) as PRODUTO,
@@ -33,23 +42,7 @@ select
 	trim(CTT.CTT_DESC01) as CCUSTO,
 	trim(SC7.C7_ITEMCTA) as AT,
 	trim(SC7.C7_CC) as CC,
-	trim(SC1.C1_NUM) as SC,
-	trim(SC1.C1_ITEM) as ITEM_SC,
-	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
-	cast(SC1.C1_EMISSAO as date) as DATA_SC,
-	substring(SC1.C1_EMISSAO, 1, 6) as PERIODO_SC,
-	substring(SC1.C1_OP, 1, 6) as OS,
-	
-	SC1.C1_QUANT as QTD_SC_PEDIDA,
-	SC1.C1_QUJE as QTD_SC_ATENDIDA,
-	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as C1_RESIDUO,
-
-	case SC1.C1_APROV
-		when 'B' then 'PENDENTE'
-		when 'L' then 'APROVADO'
-		when 'R' then 'REJEITADO'
-		else 'OUTROS'
-	end as SITAPR_SC,
+	substring(SC7.C7_OP, 1, 6) as OS,
 
 	trim(SC7.C7_NUM) as PEDIDO,
 	trim(SC7.C7_ITEM) as ITEM_PC,
@@ -58,8 +51,6 @@ select
 	trim(SA2.A2_NOME) as NOME_FORNECEDOR,
 	trim(SA2.A2_CGC) as CNPJ,
 	trim(SA2.A2_EST) as UF,
-	trim(replace(replace(SC7.C7_OBS, char(10), ''), char(13), '')) as OBS_PC,
-	trim(replace(replace(SC7.C7_OBSM, char(10), ''), char(13), '')) as MEMO_PC,
 
 	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
@@ -82,8 +73,8 @@ select
 		where
 				SCR.D_E_L_E_T_ = ''
 			and SCR.CR_TIPO = 'PC'
-			and SCR.CR_FILIAL = SC7.C7_FILIAL
-			and SCR.CR_NUM = SC7.C7_NUM
+			and SCR.CR_FILIAL = SE2.E2_FILIAL
+			and SCR.CR_NUM = SE2.E2_NUM
 			and SCR.CR_NIVEL =
 		(
 			select max(SCR010.CR_NIVEL)
@@ -103,9 +94,6 @@ select
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
 	SC7.C7_PRECO as PC_PRECO,
 	SC7.C7_TOTAL as PC_TOTAL,
-
-	year(SC1.C1_EMISSAO) as ANO_SOLICITA,
-	month(SC1.C1_EMISSAO) as MES_SOLICITA,
 
 	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
 	month(SC7.C7_EMISSAO) as MES_PEDIDO,
@@ -163,31 +151,18 @@ select
 	cast(SD1.D1_PESO * SD1.D1_QUANT as numeric(12, 4)) as PESO_LIQUIDO_NFENT
 
 from SE2010 SE2 (nolock)
-	left join SB1010 SB1 (nolock)
-		on SB1.D_E_L_E_T_ = ''
-		and SB1.B1_COD = SC7.C7_PRODUTO
-
-		inner join SBM010 SBM (nolock)
-			on SBM.D_E_L_E_T_ = ''
-			and SBM.BM_GRUPO = SB1.B1_GRUPO
-
-	inner join SA2010 SA2 (nolock)
+	left join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SE2.E2_FORNECE
 		and SA2.A2_LOJA = SE2.E2_LOJA
-	left join CTT010 CTT (nolock)
-		on CTT.D_E_L_E_T_ = ''
-		and CTT.CTT_CUSTO = SC7.C7_CC
-	left join CTD010 CTD (nolock)
-		on CTD.D_E_L_E_T_ = ''
-		and CTD.CTD_ITEM = SC7.C7_ITEMCTA
 	
     left join SD1010 SD1 (nolock)
-        on SD1.D_E_L_E_T_ = ''
+        on trim(SE2.E2_TIPO) = 'NF'
         and SD1.D1_FILIAL = SE2.E2_FILIAL
         and SD1.D1_DOC = SE2.E2_NUM
         and SD1.D1_FORNECE = SE2.E2_FORNECE
         and SD1.D1_LOJA = SE2.E2_LOJA
+        and SD1.D_E_L_E_T_ = ''
 	
         left join SC7010 SC7 (nolock)
             on SC7.D_E_L_E_T_ = ''
@@ -200,5 +175,20 @@ from SE2010 SE2 (nolock)
                 and SE4.E4_CODIGO = SC7.C7_COND
             left join SY1010 SY1 (nolock)
 		        on SY1.Y1_USER = SC7.C7_USER
+        
+        left join SB1010 SB1 (nolock)
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_COD = SD1.D1_COD
+
+            left join SBM010 SBM (nolock)
+                on SBM.D_E_L_E_T_ = ''
+                and SBM.BM_GRUPO = SB1.B1_GRUPO
+        
+        left join CTT010 CTT (nolock)
+            on CTT.D_E_L_E_T_ = ''
+            and CTT.CTT_CUSTO = SD1.D1_CC
+        left join CTD010 CTD (nolock)
+            on CTD.D_E_L_E_T_ = ''
+            and CTD.CTD_ITEM = SD1.D1_ITEMCTA
 
 where SE2.D_E_L_E_T_ = ''
