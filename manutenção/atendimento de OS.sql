@@ -94,6 +94,14 @@ select
 		when 'T' then trim(SA2.A2_NOME)
 		else 'OUTROS'
 	end as DESC_INSUMO,
+
+    SH7.H7_DESCRI as TURNO_MDO,
+    case
+        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '001' then 220.0 else 0.0 end
+        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '015' then 220.0 else 0.0 end
+        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '016' then 180.0 else 0.0 end
+        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '017' then 180.0 else 0.0 end
+    else 0.0 end as HORA_PADRAO,
     
     trim(STJ.TJ_TIPO) as COD_CTIPO,
     trim(STE.TE_TIPOMAN) as TE_TIPOMAN,
@@ -115,7 +123,7 @@ select
     convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCSS,
     TQB.TQB_USUARI,
     TQB.TQB_SOLUCA,
-    TQB.TQB_CDEXEC,
+    TQB.TQB_CDEXEC
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
@@ -159,6 +167,11 @@ from STL010 STL (nolock)
         on ST1.D_E_L_E_T_ = ''
         and ST1.T1_FILIAL = STL.TL_FILIAL
         and ST1.T1_CODFUNC = STL.TL_CODIGO
+
+        left join SH7010 SH7 (nolock)
+            on SH7.D_E_L_E_T_ = ''
+            and SH7.H7_CODIGO = ST1.T1_TURNO
+    
     left join STI010 STI (nolock)
         on STI.D_E_L_E_T_ = ''
         and STI.TI_FILIAL = STL.TL_FILIAL
