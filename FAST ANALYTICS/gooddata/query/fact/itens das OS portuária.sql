@@ -24,7 +24,7 @@ select
 
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_ITEM) as ITEM,
-    cast(ZC1.ZC1_DTINI as date) as DT_INIOS,
+    cast(ZC1.ZC1_EMISSA as date) as DT_INIOS,
     cast(ZC1.ZC1_DTFIM as date) as DT_FIMOS,
     cast(ZC2.ZC2_DTFIM as date) as DATA_APP,
     left(ZC2.ZC2_COMPET, 6) as COMPETENCIA,
