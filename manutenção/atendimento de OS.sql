@@ -95,12 +95,14 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
 
-    SH7.H7_DESCRI as TURNO_MDO,
+    concat(trim(SH7.H7_CODIGO), ' - ', trim(SH7.H7_DESCRI)) as TURNO_MDO,
+    cast(ST1.T1_DTFIMDI as date) as FIM_DISP,
+    trim(ST1.T1_CCUSTO) as CC_FUNC,
     case
-        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '001' then 220.0 else 0.0 end
-        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '015' then 220.0 else 0.0 end
-        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '016' then 180.0 else 0.0 end
-        when STL.TL_TIPOREG = 'M' and ST1.T1_DTFIMDI <= STL.TL_DTFIM then case SH7.H7_CODIGO when '017' then 180.0 else 0.0 end
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '017' then 180.0
     else 0.0 end as HORA_PADRAO,
     
     trim(STJ.TJ_TIPO) as COD_CTIPO,

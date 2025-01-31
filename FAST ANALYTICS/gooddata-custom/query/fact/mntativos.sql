@@ -1,6 +1,6 @@
 select
 	cast(trim(STL.TL_SEQRELA) as int) as ITEM_OS,
-	STL.TL_QUANTID,
+	cast(STL.TL_QUANTID as numeric(15, 2)) as TL_QUANTID,
 
 	case
 		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
@@ -62,7 +62,13 @@ select
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
 	trim(STJ.TJ_YITMCT) as ATIVIDADE,
-	isnull((select nullif(SR6010.R6_HRNORMA, 0) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = ST1.T1_TURNO), case ST1.T1_CCUSTO when 302 then 220 when 303 then 180 else 0 end) as HORAS_FUNC
+	
+	case
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '017' then 180.0
+    else 0.0 end as HORAS_FUNC
 
 from STJ010 STJ
 	inner join ST9010 ST9
@@ -112,6 +118,10 @@ from STJ010 STJ
 			on ST1.D_E_L_E_T_ = ''
 			and ST1.T1_FILIAL = STL.TL_FILIAL
 			and ST1.T1_CODFUNC = STL.TL_CODIGO
+
+			left join SH7010 SH7 (nolock)
+				on SH7.D_E_L_E_T_ = ''
+				and SH7.H7_CODIGO = ST1.T1_TURNO
 where
 		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
 	and year(STJ.TJ_DTORIGI) between 2019 and 2029

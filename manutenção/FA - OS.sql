@@ -1,6 +1,6 @@
 select
 	cast(trim(STL.TL_SEQRELA) as int) as TL_SEQRELA,
-	STL.TL_QUANTID,
+	cast(STL.TL_QUANTID as numeric(15, 2)) as TL_QUANTID,
 
 	case
 		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
@@ -65,7 +65,12 @@ select
 	null as B1_UPRC,
 	null as T1_SALARIO,
 
-	isnull((select nullif(SR6010.R6_HRNORMA, 0) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = ST1.T1_TURNO), case ST1.T1_CCUSTO when 302 then 220 when 303 then 180 else 0 end) as HORAS_FUNC,
+    case
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
+        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '017' then 180.0
+    else 0.0 end as HORAS_FUNC,
 
 	/*
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
@@ -111,6 +116,10 @@ select
 	substring(STJ.TJ_DTORIGI, 1, 6) as PERIODO_OS,
 	STJ.TJ_TERMINO as TERMINO,
 	STJ.TJ_SITUACA as SITUACAO,
+
+	concat(trim(SH7.H7_CODIGO), ' - ', trim(SH7.H7_DESCRI)) as TURNO_MDO,
+    cast(ST1.T1_DTFIMDI as date) as FIM_DISP,
+    trim(ST1.T1_CCUSTO) as CC_FUNC,
 	
 	trim(ST4.T4_NOME) as DESC_SERVICO,
 	trim(TT9.TT9_DESCRI) as DESC_TAREFA,
@@ -207,6 +216,11 @@ from STJ010 STJ (nolock)
 			on ST1.D_E_L_E_T_ = ''
 			and ST1.T1_FILIAL = STL.TL_FILIAL
 			and ST1.T1_CODFUNC = STL.TL_CODIGO
+
+			left join SH7010 SH7 (nolock)
+				on SH7.D_E_L_E_T_ = ''
+				and SH7.H7_CODIGO = ST1.T1_TURNO
+		
 		left join STI010 STI (nolock)
 			on STI.D_E_L_E_T_ = ''
 			and STI.TI_FILIAL = STL.TL_FILIAL
