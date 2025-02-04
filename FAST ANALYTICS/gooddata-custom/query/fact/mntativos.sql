@@ -32,7 +32,7 @@ select
 
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
-		when 'E' then 'MÃO-DE-OBRA'
+		when 'E' then 'ESPECIALIDADE'
 		when 'P' then 'PEÇAS'
 		when 'T' then 'TERCEIROS'
 		else 'OUTROS'
