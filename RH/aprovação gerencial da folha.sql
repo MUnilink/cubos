@@ -30,6 +30,7 @@
         case SRC.RC_PD when '373' then SRC.RC_VALOR when '530' then SRC.RC_VALOR when '532' then SRC.RC_VALOR when '535' then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
+        trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
         trim(SRA.RA_NOMECMP) as NOME,
         SRA.RA_SITFOLH as SITUACAO,
         trim(SQ3.Q3_CARGO) as CARGO,
@@ -100,6 +101,7 @@ union
         case SRD.RD_PD when '373' then SRD.RD_VALOR when '530' then SRD.RD_VALOR when '532' then SRD.RD_VALOR when '535' then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
+        trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
         trim(SRA.RA_NOMECMP) as NOME,
         SRA.RA_SITFOLH as SITUACAO,
         trim(SQ3.Q3_CARGO) as CARGO,
