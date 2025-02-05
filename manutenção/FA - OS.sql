@@ -2,20 +2,24 @@ select
 	cast(trim(STL.TL_SEQRELA) as int) as TL_SEQRELA,
 	cast(STL.TL_QUANTID as numeric(15, 2)) as TL_QUANTID,
 
-	case
-		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
-		when STL.TL_TIPOREG = 'M' and trim(STL.TL_CODIGO) like 'T%' then ST1.T1_SALARIO * STL.TL_QUANTID
-		when STL.TL_TIPOREG = 'M' and left(STL.TL_DTINICI, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') then
-		(
-			select avg(STL010.TL_CUSTO)
-			from STL010
-			where
-					STL010.D_E_L_E_T_ = ''
-				and STL010.TL_CODIGO = STL.TL_CODIGO
-				and left(STL010.TL_DTINICI, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
-		)
-		else STL.TL_CUSTO
-	end as TL_CUSTO,
+	cast
+	(
+		case
+			when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM * STL.TL_QUANTID
+			when STL.TL_TIPOREG = 'M' and trim(STL.TL_CODIGO) like 'T%' then ST1.T1_SALARIO * STL.TL_QUANTID
+			when STL.TL_TIPOREG = 'M' and left(STL.TL_DTINICI, 6) > (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT') then
+			(
+				select avg(STL010.TL_CUSTO)
+				from STL010
+				where
+						STL010.D_E_L_E_T_ = ''
+					and STL010.TL_CODIGO = STL.TL_CODIGO
+					and left(STL010.TL_DTINICI, 6) = (select trim(SX6010.X6_CONTEUD) from SX6010 where SX6010.X6_VAR = 'MV_GPMESCT')
+			)
+			else STL.TL_CUSTO
+		end
+		as numeric(15, 2)
+	) as TL_CUSTO,
 
 	case
 		when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120)
@@ -106,8 +110,10 @@ select
 	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DATAHORA_FOS,
 
 	cast(STL.TL_DTINICI as date) as DATAINI_APP,
+	STL.TL_HOINICI as HORA_INIAPP,
 	case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 113) else null end as DATAHORA_IRET,
 	cast(STL.TL_DTFIM as date) as DATAFIM_APP,
+	STL.TL_HOFIM as HORA_FIMAPP,
 	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 113) else null end as DATAHORA_FRET,
 
 	case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
