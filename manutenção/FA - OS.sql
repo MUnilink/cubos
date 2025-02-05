@@ -17,8 +17,16 @@ select
 		else STL.TL_CUSTO
 	end as TL_CUSTO,
 
-	case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120) else null end as DTINI_APP,
-	case when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120) else null end as DTFIM_APP,
+	case
+		when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120)
+		when isdate(STL.TL_DTINICI) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', '00:00'), 120)
+	else convert(datetime, concat(STJ.TJ_DTORIGI , ' ', '00:00'), 120) end as DTINI_APP,
+	
+	case
+		when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120)
+		when isdate(STL.TL_DTFIM) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', '00:00'), 120)
+	else convert(datetime, concat(STJ.TJ_DTPRFIM , ' ', '00:00'), 120) end as DTFIM_APP,
+	
 	cast(STJ.TJ_DTORIGI as date) as DATA_INIOS,
 	cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
