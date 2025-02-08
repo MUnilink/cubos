@@ -6,6 +6,14 @@ select
     SCP.CP_UM as UN,
     SCP.CP_QUANT as QTD_SOLICTADA,
     SCP.CP_QUJE as QTD_ATENDIDA,
+    cast(SCP.CP_EMISSAO as date) as DATA_SA,
+    left(SCP.CP_EMISSAO, 6) as PERIODO,
+    SCP.CP_USER as USR_SA,
+    SCP.CP_CODSOLI,
+    SCP.CP_PREREQU,
+    SCP.CP_STATUS,
+    SCP.CP_STATSA,
+    SCP.CP_SALBLQ,
 
     case
         when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
@@ -14,37 +22,70 @@ select
         else 'OUTROS'
     end as SA_ATENDIDA,
 
-    SD3.D3_OP,
-    SD3.D3_ORDEM,
-    SD3.D3_DOC,
-    SD3.D3_TM,
-    SD3.D3_CF,
-    SD3.D3_CC,
-    SD3.D3_ITEMCTA,
-    convert(date, SD3.D3_EMISSAO, 103) as D3_EMISSAO,
-    SD3.D3_LOCALIZ,
-    upper(trim(SD3.D3_USUARIO)) as D3_USUARIO,
-    SD3.D3_NUMSEQ,
-    SD3.D3_ESTORNO,
-        
-    trim(SB1.B1_COD) as B1_COD,
-    trim(SB1.B1_DESC) as B1_DESC,
-    trim(isnull(SB1.B1_GRUPO, '-')) as B1_GRUPO,
-    
-    convert(date, SCP.CP_EMISSAO, 103) as DATA_SA,
-    substring(SCP.CP_EMISSAO, 1, 6) as PERIODO,
-    SCP.CP_USER,
-    SCP.CP_CODSOLI,
-    SCP.CP_PREREQU,
-    SCP.CP_STATUS,
-    SCP.CP_STATSA,
-    SCP.CP_SALBLQ,
+    (
+		select top 1 cast(SCR010.CR_DATALIB as date)
+		from SCR010
+		where
+			    nullif(SCR010.CR_LIBAPRO, '') is not null
+			and SCR010.CR_TIPO = 'SA'
+			and SCR010.CR_FILIAL = SCP.CP_FILIAL
+			and SCR010.CR_NUM = SCP.CP_NUM
+            and SCR010.D_E_L_E_T_ = ''
+	) as DATAAPROV_SA,
+	
+	datediff(day,
+		SCP.CP_EMISSAO,
+		(
+			select top 1 cast(SCR010.CR_DATALIB as date)
+			from SCR010
+			where
+				    nullif(SCR010.CR_LIBAPRO, '') is not null
+				and SCR010.CR_TIPO = 'SA'
+				and SCR010.CR_FILIAL = SCP.CP_FILIAL
+				and SCR010.CR_NUM = SCP.CP_NUM
+                and SCR010.D_E_L_E_T_ = ''
+		)
+	) as DIASAPROV_SA,
 
-    SCQ.CQ_NUMREQ,
-    SCQ.CQ_QUANT,
-    SCQ.CQ_QTDISP,
-    SCP.CP_NUMSC,
-    SCP.CP_ITSC,
+    datediff(day,
+		(
+			select top 1 cast(SCR010.CR_DATALIB as date)
+			from SCR010
+			where
+				    nullif(SCR010.CR_LIBAPRO, '') is not null
+				and SCR010.CR_TIPO = 'SA'
+				and SCR010.CR_FILIAL = SCP.CP_FILIAL
+				and SCR010.CR_NUM = SCP.CP_NUM
+                and SCR010.D_E_L_E_T_ = ''
+		),
+        SD3.D3_EMISSAO
+	) as DIASAPRSA_ATEND,
+
+    left(SD3.D3_OP, 6) as OP,
+    right(left(SD3.D3_OP, 8), 2) as TIPO_OP,
+    SD3.D3_DOC as DOCUMENTO,
+    SD3.D3_TM as TIPO_MOV,
+    SD3.D3_CF as TIPO_CLAS,
+    SD3.D3_CC as CC,
+    SD3.D3_ITEMCTA as ATIVIDADE,
+    cast(SD3.D3_EMISSAO as date) as D3_EMISSAO,
+    SD3.D3_LOCALIZ as ENDERECO,
+    upper(trim(SD3.D3_USUARIO)) as USR_ATEND,
+    SD3.D3_NUMSEQ as NUMSEQ,
+    SD3.D3_ESTORNO as ESTORNO,
+        
+    trim(SB1.B1_COD) as PRODUTO,
+    trim(SB1.B1_DESC) as PROD_DESC,
+    trim(isnull(SB1.B1_GRUPO, '-')) as PROD_GRUPO,
+    
+    SCQ.CQ_NUMREQ as REQUISICAO,
+    SCQ.CQ_ITEM as ITEM_REQ,
+    SCQ.CQ_NUMSQ as SEQ_REQ,
+    SCQ.CQ_QUANT as QTD_REQ,
+    SCQ.CQ_QTDISP as QTD_DISPREQ,
+    cast(SCQ.CQ_DATPRF as date) as DATA_REQ,
+    SCP.CP_NUMSC as SC_NUM,
+    SCP.CP_ITSC as SC_ITEM,
     
     case when SD3.D3_ESTORNO = 'S' then 'ATENDIMENTO ESTORNADO'
     else
@@ -82,5 +123,4 @@ from SCP010 SCP (nolock)
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = SCP.CP_PRODUTO
-
 where SCP.D_E_L_E_T_ = ''
