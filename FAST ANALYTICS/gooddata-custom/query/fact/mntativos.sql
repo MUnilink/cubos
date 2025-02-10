@@ -1,4 +1,5 @@
 select
+	convert(datetime, getdate(), 113) as ULTIMA_CARGA,
 	cast(trim(STL.TL_SEQRELA) as int) as ITEM_OS,
 	cast(STL.TL_QUANTID as numeric(15, 2)) as TL_QUANTID,
 
@@ -23,13 +24,13 @@ select
 
 	case
 		when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120)
-		when isdate(STL.TL_DTINICI) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', '00:00'), 120)
-	else convert(datetime, concat(STJ.TJ_DTORIGI , ' ', '00:00'), 120) end as DTINI_APP,
+		when isdate(STL.TL_DTINICI) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', '00:00:00'), 120)
+	else convert(datetime, concat(STJ.TJ_DTORIGI , ' ', '00:00:00'), 120) end as DTINI_APP,
 	
 	case
 		when isdate(concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM)) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', STL.TL_HOFIM), 120)
-		when isdate(STL.TL_DTFIM) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', '00:00'), 120)
-	else convert(datetime, concat(STJ.TJ_DTPRFIM , ' ', '00:00'), 120) end as DTFIM_APP,
+		when isdate(STL.TL_DTFIM) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', '00:00:00'), 120)
+	else convert(datetime, concat(STJ.TJ_DTPRFIM , ' ', '00:00:00'), 120) end as DTFIM_APP,
 	
 	STJ.TJ_DTORIGI as DATA_INIOS,
 	STJ.TJ_DTPRFIM as DATA_FIMOS,
