@@ -218,13 +218,14 @@ select
 		SD1.D1_DTDIGIT
 	) as DIASAPROV_PC_NF,
 	
-	SD1.D1_CC as NF_CC,
-	SD1.D1_ITEMCTA as NF_AT,
-	SD1.D1_ITEM as NF_ITEM,
+	trim(SD1.D1_CC) as NF_CC,
+	trim(SD1.D1_ITEMCTA) as NF_AT,
+	trim(SD1.D1_ITEM) as NF_ITEM,
+	trim(SD1.D1_TES) as NF_TES,
+	(select concat(trim(SD1.D1_CF), ' - ', trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '13' and SX5010.X5_CHAVE = SD1.D1_CF) as CFOP,
 	SD1.D1_QUANT as NF_QUANT,
 	SD1.D1_VUNIT as NF_VUNIT,
 	SD1.D1_TOTAL as NF_TOTAL,
-	SD1.D1_TES as NF_TES,
 	SD1.D1_CUSTO as NF_CUSTO,
 	SD1.D1_VALDESC as NF_VALDESC,
 
@@ -312,7 +313,7 @@ from SC7010 SC7 (nolock)
 		and SD1.D1_ITEMPC = SC7.C7_ITEM
 		
 		left join SE2010 SE2 (nolock)
-			on trim(SE2.E2_TIPO) = 'NF'
+			on trim(SE2.E2_TIPO) = 'PA'
 			and SE2.E2_FILIAL = SD1.D1_FILIAL
 			and SE2.E2_NUM = SD1.D1_DOC
 			and SE2.E2_FORNECE = SD1.D1_FORNECE
