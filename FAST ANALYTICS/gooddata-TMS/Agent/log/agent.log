@@ -4748,3 +4748,1284 @@
 05/02/25 08:00:06:573 DEBUG [main] (Main.java:471) - No such file or directory
 05/02/25 08:00:06:573 ERROR [main] (Main.java:472) - Status de execução: ERROR 
 
+05/02/25 10:00:05:002  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 10:00:05:004  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 10:00:06:798  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 10:00:06:800  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 10:00:06:800  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 10:00:06:800  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 10:00:06:800  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 10:00:06:803  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 10:00:06:804 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 10:00:06:805 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 10:00:06:805 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+05/02/25 12:00:06:624  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 12:00:06:628  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 12:00:08:207  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 12:00:08:208  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 12:00:08:208  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 12:00:08:208  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 12:00:08:208  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 12:00:08:208  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 12:00:08:214 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 12:00:08:215 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 12:00:08:215 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+05/02/25 14:00:03:578  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 14:00:03:580  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 14:00:05:505  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 14:00:05:506  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 14:00:05:506  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 14:00:05:506  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 14:00:05:506  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 14:00:05:507  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 14:00:05:507 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 14:00:05:508 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 14:00:05:508 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+05/02/25 16:00:03:217  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 16:00:03:219  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 16:00:04:719  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 16:00:04:720  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 16:00:04:720  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 16:00:04:720  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 16:00:04:720  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 16:00:04:720  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 16:00:04:721 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 16:00:04:721 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 16:00:04:721 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+05/02/25 18:00:03:217  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 18:00:03:220  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 18:00:05:241  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 18:00:05:242  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 18:00:05:242  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 18:00:05:242  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 18:00:05:242  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 18:00:05:242  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 18:00:05:243 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 18:00:05:243 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 18:00:05:244 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+05/02/25 20:00:03:232  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 20:00:03:234  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 20:00:04:565  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 20:00:04:565  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 20:00:04:565  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 20:00:04:565  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 20:00:04:565  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 20:00:04:565  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 20:00:04:566 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 20:00:04:567 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 20:00:04:567 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+05/02/25 22:00:02:914  INFO [main] (Main.java:133) - Início do processo do agent...
+
+05/02/25 22:00:02:915  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+05/02/25 22:00:04:606  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+05/02/25 22:00:04:606  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250205'
+
+05/02/25 22:00:04:608  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230105'
+
+05/02/25 22:00:04:608  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250205'
+
+05/02/25 22:00:04:608  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+05/02/25 22:00:04:608  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+05/02/25 22:00:04:609 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+05/02/25 22:00:04:609 DEBUG [main] (Main.java:471) - No such file or directory
+05/02/25 22:00:04:609 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 00:00:02:787  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 00:00:02:789  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 00:00:04:564  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 00:00:04:565  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 00:00:04:565  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 00:00:04:566  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 00:00:04:566  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 00:00:04:566  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 00:00:04:567 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 00:00:04:567 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 00:00:04:568 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 02:00:02:783  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 02:00:02:785  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 02:00:04:534  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 02:00:04:535  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 02:00:04:535  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 02:00:04:535  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 02:00:04:535  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 02:00:04:535  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 02:00:04:536 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 02:00:04:536 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 02:00:04:538 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 04:00:03:864  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 04:00:03:869  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 04:00:05:607  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 04:00:05:608  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 04:00:05:608  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 04:00:05:608  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 04:00:05:608  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 04:00:05:609  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 04:00:05:609 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 04:00:05:609 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 04:00:05:610 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 06:00:03:900  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 06:00:03:903  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 06:00:05:294  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 06:00:05:295  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 06:00:05:295  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 06:00:05:295  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 06:00:05:295  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 06:00:05:295  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 06:00:05:296 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 06:00:05:296 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 06:00:05:296 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 08:00:03:924  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 08:00:03:928  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 08:00:05:876  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 08:00:05:876  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 08:00:05:876  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 08:00:05:876  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 08:00:05:877  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 08:00:05:877  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 08:00:05:877 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 08:00:05:877 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 08:00:05:878 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 10:00:03:608  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 10:00:03:614  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 10:00:05:631  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 10:00:05:631  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 10:00:05:633  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 10:00:05:633  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 10:00:05:633  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 10:00:05:633  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 10:00:05:634 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 10:00:05:634 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 10:00:05:634 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 12:00:04:128  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 12:00:04:134  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 12:00:06:091  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 12:00:06:091  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 12:00:06:092  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 12:00:06:092  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 12:00:06:092  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 12:00:06:092  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 12:00:06:093 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 12:00:06:093 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 12:00:06:093 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 14:00:04:730  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 14:00:04:735  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 14:00:06:312  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 14:00:06:313  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 14:00:06:313  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 14:00:06:313  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 14:00:06:313  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 14:00:06:313  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 14:00:06:314 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 14:00:06:314 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 14:00:06:314 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 16:00:04:985  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 16:00:05:002  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 16:00:06:710  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 16:00:06:711  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 16:00:06:711  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 16:00:06:711  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 16:00:06:711  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 16:00:06:711  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 16:00:06:712 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 16:00:06:712 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 16:00:06:712 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 18:00:02:690  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 18:00:02:691  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 18:00:04:580  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 18:00:04:581  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 18:00:04:581  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 18:00:04:581  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 18:00:04:581  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 18:00:04:581  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 18:00:04:582 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 18:00:04:582 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 18:00:04:582 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 20:00:02:777  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 20:00:02:779  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 20:00:04:724  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 20:00:04:724  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 20:00:04:725  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 20:00:04:725  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 20:00:04:725  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 20:00:04:725  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 20:00:04:726 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 20:00:04:726 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 20:00:04:726 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+06/02/25 22:00:03:070  INFO [main] (Main.java:133) - Início do processo do agent...
+
+06/02/25 22:00:03:071  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+06/02/25 22:00:04:657  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+06/02/25 22:00:04:657  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250206'
+
+06/02/25 22:00:04:657  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230106'
+
+06/02/25 22:00:04:658  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250206'
+
+06/02/25 22:00:04:658  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+06/02/25 22:00:04:658  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+06/02/25 22:00:04:659 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+06/02/25 22:00:04:659 DEBUG [main] (Main.java:471) - No such file or directory
+06/02/25 22:00:04:659 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 00:00:02:938  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 00:00:02:940  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 00:00:05:031  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 00:00:05:031  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 00:00:05:032  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 00:00:05:032  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 00:00:05:032  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 00:00:05:032  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 00:00:05:032 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 00:00:05:033 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 00:00:05:033 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 02:00:02:857  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 02:00:02:859  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 02:00:04:208  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 02:00:04:209  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 02:00:04:209  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 02:00:04:209  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 02:00:04:209  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 02:00:04:209  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 02:00:04:210 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 02:00:04:210 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 02:00:04:210 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 04:00:04:103  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 04:00:04:110  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 04:00:05:764  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 04:00:05:764  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 04:00:05:764  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 04:00:05:764  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 04:00:05:764  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 04:00:05:765  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 04:00:05:765 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 04:00:05:765 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 04:00:05:766 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 06:00:03:344  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 06:00:03:352  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 06:00:04:794  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 06:00:04:795  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 06:00:04:795  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 06:00:04:795  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 06:00:04:795  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 06:00:04:795  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 06:00:04:796 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 06:00:04:796 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 06:00:04:796 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 08:00:04:047  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 08:00:04:049  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 08:00:05:484  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 08:00:05:485  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 08:00:05:485  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 08:00:05:485  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 08:00:05:485  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 08:00:05:485  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 08:00:05:487 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 08:00:05:487 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 08:00:05:487 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 10:00:04:131  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 10:00:04:133  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 10:00:06:004  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 10:00:06:005  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 10:00:06:005  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 10:00:06:005  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 10:00:06:005  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 10:00:06:005  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 10:00:06:006 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 10:00:06:006 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 10:00:06:006 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 12:00:06:045  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 12:00:06:047  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 12:00:07:913  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 12:00:07:913  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 12:00:07:913  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 12:00:07:913  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 12:00:07:913  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 12:00:07:914  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 12:00:07:914 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 12:00:07:914 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 12:00:07:914 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 14:00:03:572  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 14:00:03:575  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 14:00:05:173  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 14:00:05:173  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 14:00:05:173  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 14:00:05:173  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 14:00:05:173  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 14:00:05:174  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 14:00:05:174 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 14:00:05:174 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 14:00:05:174 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 16:00:03:527  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 16:00:03:530  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 16:00:05:724  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 16:00:05:725  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 16:00:05:725  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 16:00:05:725  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 16:00:05:725  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 16:00:05:725  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 16:00:05:726 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 16:00:05:726 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 16:00:05:727 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 18:00:03:713  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 18:00:03:716  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 18:00:05:786  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 18:00:05:786  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 18:00:05:787  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 18:00:05:787  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 18:00:05:787  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 18:00:05:787  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 18:00:05:788 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 18:00:05:788 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 18:00:05:788 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 20:00:02:969  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 20:00:02:970  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 20:00:04:812  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 20:00:04:812  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 20:00:04:812  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 20:00:04:812  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 20:00:04:812  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 20:00:04:812  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 20:00:04:813 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 20:00:04:814 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 20:00:04:814 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+07/02/25 22:00:03:110  INFO [main] (Main.java:133) - Início do processo do agent...
+
+07/02/25 22:00:03:112  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+07/02/25 22:00:04:821  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+07/02/25 22:00:04:821  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250207'
+
+07/02/25 22:00:04:821  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230107'
+
+07/02/25 22:00:04:821  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250207'
+
+07/02/25 22:00:04:822  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+07/02/25 22:00:04:822  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+07/02/25 22:00:04:822 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+07/02/25 22:00:04:822 DEBUG [main] (Main.java:471) - No such file or directory
+07/02/25 22:00:04:823 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 00:00:03:185  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 00:00:03:189  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 00:00:06:782  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 00:00:06:783  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 00:00:06:783  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 00:00:06:783  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 00:00:06:783  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 00:00:06:783  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 00:00:06:785 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 00:00:06:785 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 00:00:06:786 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 02:00:02:865  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 02:00:02:866  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 02:00:04:668  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 02:00:04:668  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 02:00:04:668  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 02:00:04:669  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 02:00:04:669  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 02:00:04:669  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 02:00:04:669 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 02:00:04:669 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 02:00:04:670 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 04:00:03:654  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 04:00:03:662  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 04:00:05:367  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 04:00:05:367  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 04:00:05:369  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 04:00:05:369  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 04:00:05:369  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 04:00:05:369  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 04:00:05:370 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 04:00:05:370 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 04:00:05:370 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 06:00:05:613  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 06:00:05:630  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 06:00:06:967  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 06:00:06:967  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 06:00:06:968  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 06:00:06:968  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 06:00:06:968  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 06:00:06:968  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 06:00:06:969 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 06:00:06:969 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 06:00:06:969 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 08:00:05:028  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 08:00:05:049  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 08:00:06:749  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 08:00:06:750  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 08:00:06:750  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 08:00:06:750  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 08:00:06:750  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 08:00:06:750  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 08:00:06:751 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 08:00:06:751 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 08:00:06:751 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 10:00:03:925  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 10:00:03:934  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 10:00:05:593  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 10:00:05:593  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 10:00:05:594  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 10:00:05:594  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 10:00:05:594  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 10:00:05:594  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 10:00:05:594 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 10:00:05:595 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 10:00:05:595 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 12:00:03:995  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 12:00:03:997  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 12:00:05:447  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 12:00:05:448  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 12:00:05:448  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 12:00:05:448  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 12:00:05:448  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 12:00:05:449  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 12:00:05:449 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 12:00:05:450 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 12:00:05:450 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 14:00:03:781  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 14:00:03:787  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 14:00:05:844  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 14:00:05:845  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 14:00:05:845  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 14:00:05:845  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 14:00:05:845  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 14:00:05:845  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 14:00:05:846 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 14:00:05:846 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 14:00:05:847 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 16:00:04:389  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 16:00:04:396  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 16:00:05:952  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 16:00:05:953  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 16:00:05:953  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 16:00:05:953  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 16:00:05:953  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 16:00:05:954  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 16:00:05:955 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 16:00:05:956 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 16:00:05:956 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 18:00:03:102  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 18:00:03:105  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 18:00:04:898  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 18:00:04:899  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 18:00:04:899  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 18:00:04:899  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 18:00:04:899  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 18:00:04:899  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 18:00:04:900 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 18:00:04:900 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 18:00:04:901 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 20:00:03:217  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 20:00:03:220  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 20:00:04:787  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 20:00:04:788  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 20:00:04:788  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 20:00:04:788  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 20:00:04:788  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 20:00:04:788  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 20:00:04:789 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 20:00:04:789 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 20:00:04:790 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+08/02/25 22:00:02:857  INFO [main] (Main.java:133) - Início do processo do agent...
+
+08/02/25 22:00:02:859  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+08/02/25 22:00:04:740  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+08/02/25 22:00:04:741  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250208'
+
+08/02/25 22:00:04:741  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230108'
+
+08/02/25 22:00:04:741  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250208'
+
+08/02/25 22:00:04:741  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+08/02/25 22:00:04:741  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+08/02/25 22:00:04:742 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+08/02/25 22:00:04:742 DEBUG [main] (Main.java:471) - No such file or directory
+08/02/25 22:00:04:743 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 00:00:03:229  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 00:00:03:265  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 00:00:05:214  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 00:00:05:215  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 00:00:05:216  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 00:00:05:216  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 00:00:05:216  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 00:00:05:216  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 00:00:05:217 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 00:00:05:217 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 00:00:05:217 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 02:00:03:097  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 02:00:03:103  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 02:00:04:792  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 02:00:04:793  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 02:00:04:793  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 02:00:04:793  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 02:00:04:793  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 02:00:04:793  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 02:00:04:794 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 02:00:04:797 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 02:00:04:798 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 04:00:05:841  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 04:00:05:846  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 04:00:07:491  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 04:00:07:492  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 04:00:07:492  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 04:00:07:492  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 04:00:07:492  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 04:00:07:492  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 04:00:07:493 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 04:00:07:494 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 04:00:07:494 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 06:00:05:679  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 06:00:05:682  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 06:00:06:698  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 06:00:06:699  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 06:00:06:699  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 06:00:06:699  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 06:00:06:699  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 06:00:06:699  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 06:00:06:700 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 06:00:06:700 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 06:00:06:700 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 08:00:04:089  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 08:00:04:102  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 08:00:05:788  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 08:00:05:788  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 08:00:05:788  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 08:00:05:789  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 08:00:05:789  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 08:00:05:789  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 08:00:05:790 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 08:00:05:790 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 08:00:05:790 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 10:00:03:041  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 10:00:03:043  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 10:00:04:575  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 10:00:04:576  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 10:00:04:578  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 10:00:04:578  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 10:00:04:578  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 10:00:04:578  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 10:00:04:579 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 10:00:04:579 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 10:00:04:580 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 12:00:03:096  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 12:00:03:098  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 12:00:04:456  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 12:00:04:456  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 12:00:04:458  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 12:00:04:458  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 12:00:04:458  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 12:00:04:458  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 12:00:04:459 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 12:00:04:459 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 12:00:04:459 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 14:00:03:493  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 14:00:03:495  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 14:00:05:047  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 14:00:05:048  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 14:00:05:048  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 14:00:05:048  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 14:00:05:048  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 14:00:05:048  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 14:00:05:049 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 14:00:05:049 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 14:00:05:049 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 16:00:03:767  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 16:00:03:769  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 16:00:04:936  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 16:00:04:937  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 16:00:04:937  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 16:00:04:938  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 16:00:04:938  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 16:00:04:938  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 16:00:04:939 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 16:00:04:939 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 16:00:04:940 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 18:00:03:373  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 18:00:03:375  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 18:00:10:458  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 18:00:10:458  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 18:00:10:458  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 18:00:10:458  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 18:00:10:459  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 18:00:10:459  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 18:00:10:459 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 18:00:10:459 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 18:00:10:459 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 20:00:03:542  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 20:00:03:544  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 20:00:06:269  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 20:00:06:269  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 20:00:06:269  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 20:00:06:270  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 20:00:06:270  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 20:00:06:270  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 20:00:06:270 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 20:00:06:271 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 20:00:06:271 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+09/02/25 22:00:04:584  INFO [main] (Main.java:133) - Início do processo do agent...
+
+09/02/25 22:00:04:589  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+09/02/25 22:00:06:006  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+09/02/25 22:00:06:006  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250209'
+
+09/02/25 22:00:06:006  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230109'
+
+09/02/25 22:00:06:006  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250209'
+
+09/02/25 22:00:06:006  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+09/02/25 22:00:06:006  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+09/02/25 22:00:06:007 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+09/02/25 22:00:06:007 DEBUG [main] (Main.java:471) - No such file or directory
+09/02/25 22:00:06:007 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+10/02/25 00:00:03:856  INFO [main] (Main.java:133) - Início do processo do agent...
+
+10/02/25 00:00:03:861  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+10/02/25 00:00:05:636  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+10/02/25 00:00:05:636  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250210'
+
+10/02/25 00:00:05:637  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230110'
+
+10/02/25 00:00:05:637  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250210'
+
+10/02/25 00:00:05:637  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+10/02/25 00:00:05:637  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+10/02/25 00:00:05:638 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+10/02/25 00:00:05:639 DEBUG [main] (Main.java:471) - No such file or directory
+10/02/25 00:00:05:639 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+10/02/25 02:00:03:289  INFO [main] (Main.java:133) - Início do processo do agent...
+
+10/02/25 02:00:03:299  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+10/02/25 02:00:05:012  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+10/02/25 02:00:05:013  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250210'
+
+10/02/25 02:00:05:013  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230110'
+
+10/02/25 02:00:05:013  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250210'
+
+10/02/25 02:00:05:013  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+10/02/25 02:00:05:013  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+10/02/25 02:00:05:014 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+10/02/25 02:00:05:014 DEBUG [main] (Main.java:471) - No such file or directory
+10/02/25 02:00:05:015 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+10/02/25 04:00:04:103  INFO [main] (Main.java:133) - Início do processo do agent...
+
+10/02/25 04:00:04:108  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+10/02/25 04:00:06:030  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+10/02/25 04:00:06:031  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250210'
+
+10/02/25 04:00:06:031  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230110'
+
+10/02/25 04:00:06:031  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250210'
+
+10/02/25 04:00:06:031  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+10/02/25 04:00:06:031  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+10/02/25 04:00:06:032 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+10/02/25 04:00:06:032 DEBUG [main] (Main.java:471) - No such file or directory
+10/02/25 04:00:06:032 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+10/02/25 06:00:04:194  INFO [main] (Main.java:133) - Início do processo do agent...
+
+10/02/25 06:00:04:201  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+10/02/25 06:00:05:422  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+10/02/25 06:00:05:423  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250210'
+
+10/02/25 06:00:05:423  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230110'
+
+10/02/25 06:00:05:423  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250210'
+
+10/02/25 06:00:05:423  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+10/02/25 06:00:05:423  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+10/02/25 06:00:05:424 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+10/02/25 06:00:05:424 DEBUG [main] (Main.java:471) - No such file or directory
+10/02/25 06:00:05:424 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+10/02/25 08:00:04:220  INFO [main] (Main.java:133) - Início do processo do agent...
+
+10/02/25 08:00:04:248  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+10/02/25 08:00:06:208  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+10/02/25 08:00:06:209  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250210'
+
+10/02/25 08:00:06:209  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230110'
+
+10/02/25 08:00:06:209  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250210'
+
+10/02/25 08:00:06:209  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+10/02/25 08:00:06:209  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+10/02/25 08:00:06:210 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+10/02/25 08:00:06:210 DEBUG [main] (Main.java:471) - No such file or directory
+10/02/25 08:00:06:210 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
+10/02/25 10:00:05:109  INFO [main] (Main.java:133) - Início do processo do agent...
+
+10/02/25 10:00:05:119  INFO [main] (Main.java:134) - TOTVS Analytics: 1.6.2
+
+10/02/25 10:00:06:985  INFO [main] (JdbcExtractor.java:509) - Início da exibição dos parâmetros (arquivo config.properties): 
+
+10/02/25 10:00:06:986  INFO [main] (JdbcExtractor.java:515) - FINAL_DATE: '20250210'
+
+10/02/25 10:00:06:986  INFO [main] (JdbcExtractor.java:515) - START_DATE: '20230110'
+
+10/02/25 10:00:06:986  INFO [main] (JdbcExtractor.java:515) - EXTRACTION_DATE: '20250210'
+
+10/02/25 10:00:06:987  INFO [main] (JdbcExtractor.java:515) - CODE_INSTANCE: '01'
+
+10/02/25 10:00:06:987  INFO [main] (JdbcExtractor.java:519) - Fim da exibição dos parâmetros.
+
+10/02/25 10:00:06:988 ERROR [main] (Main.java:470) - Erro ao extrair os dados do banco de dados
+
+10/02/25 10:00:06:989 DEBUG [main] (Main.java:471) - No such file or directory
+10/02/25 10:00:06:989 ERROR [main] (Main.java:472) - Status de execução: ERROR 
+
