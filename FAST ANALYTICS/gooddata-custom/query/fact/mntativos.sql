@@ -36,17 +36,15 @@ select
 	STJ.TJ_DTPRFIM as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
 	STJ.TJ_SITUACA as SITUACAO,
-
 	STJ.TJ_POSCONT,
 	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
-
 	trim(STL.TL_CODIGO) as INSUMO,
 	trim(STL.TL_LOCAL) as ARMAZEM,
 
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
 		when 'E' then 'ESPECIALIDADE'
-		when 'P' then 'PEÇAS'
+		when 'P' then case STL.TL_ORIGNFE when 'SD1' then 'PEÇAS DIRETAS' else 'PEÇAS' end
 		when 'T' then 'TERCEIROS'
 		else 'OUTROS'
 	end as TIPO_CUSTO,
@@ -69,12 +67,12 @@ select
 	trim(SB1.B1_GRUPO) as B1_GRUPO,
 	trim(SB1.B1_COD) as B1_COD,
 	trim(SA2.A2_COD) + trim(SA2.A2_LOJA) as ID_FORNECEDOR,
-	
 	trim(STL.TL_PLANO) as TI_PLANO,
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
 	trim(STJ.TJ_YITMCT) as ATIVIDADE,
+	trim(SD1.D1_PEDIDO) as PEDCOMPRA,
 	
 	case
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
@@ -135,6 +133,21 @@ from STJ010 STJ
 			left join SH7010 SH7 (nolock)
 				on SH7.D_E_L_E_T_ = ''
 				and SH7.H7_CODIGO = ST1.T1_TURNO
+		
+		left join SD1010 SD1 (nolock)
+			on SD1.D_E_L_E_T_ = ''
+			and SD1.D1_FILIAL = STL.TL_FILIAL
+			and left(SD1.D1_OP, 6) = STL.TL_ORDEM
+			and SD1.D1_DOC = STL.TL_NOTFIS
+			and SD1.D1_SERIE = STL.TL_SERIE
+			and SD1.D1_ITEM = STL.TL_ITEM
+			and SD1.D1_FORNECE = STL.TL_FORNEC
+			and SD1.D1_LOJA = STL.TL_LOJA
+
+			left join SA2010 SA2 (nolock)
+				on SA2.D_E_L_E_T_ = ''
+				and SA2.A2_COD = SD1.D1_FORNECE
+				and SA2.A2_LOJA = SD1.D1_LOJA
 where
 		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
 	and year(STJ.TJ_DTORIGI) between 2019 and 2029
