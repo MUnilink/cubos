@@ -119,6 +119,11 @@ select
 	trim(SB1.B1_DESC) as PRODUTO,
 	trim(SA2.A2_COD) as COD_FORNECEDOR,
 	trim(SA2.A2_NOME) as FORNECEDOR,
+    
+    trim(STL.TL_DOC) as NFE_NUM,
+    trim(STL.TL_ITEM) as NFE_ITEM,
+    trim(SD1.D1_PEDIDO) as PC_NUM,
+    trim(SD1.D1_ITEMPC) as PC_ITEM,
 
     TQB.TQB_SOLICI as SS,
     convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INISS,
@@ -144,21 +149,17 @@ from STL010 STL (nolock)
             on TQB.D_E_L_E_T_ = ''
             and TQB.TQB_FILIAL = STJ.TJ_FILIAL
             and TQB.TQB_ORDEM = STJ.TJ_ORDEM
+        left join STI010 STI (nolock)
+            on STI.D_E_L_E_T_ = ''
+            and STI.TI_FILIAL = STJ.TJ_FILIAL
+            and STI.TI_PLANO = STJ.TJ_PLANO
+        left join STE010 STE (nolock)
+            on STE.D_E_L_E_T_ = ''
+            and STE.TE_TIPOMAN = STJ.TJ_TIPO
     
-    left join SCP010 SCP (nolock)
-        on SCP.D_E_L_E_T_ = ''
-        and SCP.CP_FILIAL = STL.TL_FILIAL
-        and SCP.CP_NUM = STL.TL_NUMSA
-        and SCP.CP_ITEM = STL.TL_ITEMSA
-    left join SB1010 SB1 (nolock)
-        on SB1.D_E_L_E_T_ = ''
-        and SB1.B1_COD = STL.TL_CODIGO            
     left join TT9010 TT9 (nolock)
         on TT9.D_E_L_E_T_ = ''
         and TT9.TT9_TAREFA = STL.TL_TAREFA
-    left join SA2010 SA2 (nolock)
-        on SA2.D_E_L_E_T_ = ''
-        and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
     left join SH4010 SH4 (nolock)
         on SH4.D_E_L_E_T_ = ''
         and SH4.H4_CODIGO = STL.TL_CODIGO
@@ -174,11 +175,33 @@ from STL010 STL (nolock)
             on SH7.D_E_L_E_T_ = ''
             and SH7.H7_CODIGO = ST1.T1_TURNO
     
-    left join STI010 STI (nolock)
-        on STI.D_E_L_E_T_ = ''
-        and STI.TI_FILIAL = STL.TL_FILIAL
-        and STI.TI_PLANO = STL.TL_PLANO
-    left join STE010 STE (nolock)
-        on STE.D_E_L_E_T_ = ''
-        and STE.TE_TIPOMAN = STJ.TJ_TIPO
+    left join SCP010 SCP (nolock)
+        on SCP.D_E_L_E_T_ = ''
+        and SCP.CP_FILIAL = STL.TL_FILIAL
+        and SCP.CP_NUM = STL.TL_NUMSA
+        and SCP.CP_ITEM = STL.TL_ITEMSA
+    left join SB1010 SB1 (nolock)
+        on SB1.D_E_L_E_T_ = ''
+        and SB1.B1_COD = STL.TL_CODIGO
+
+    left join SD1010 SD1 (nolock)
+        on SD1.D_E_L_E_T_ = ''
+        and SD1.D1_FILIAL = STL.TL_FILIAL
+        and left(SD1.D1_OP, 6) = STL.TL_ORDEM
+        and SD1.D1_DOC = STL.TL_NOTFIS
+        and SD1.D1_SERIE = STL.TL_SERIE
+        and SD1.D1_ITEM = STL.TL_ITEM
+        and SD1.D1_FORNECE = STL.TL_FORNEC
+        and SD1.D1_LOJA = STL.TL_LOJA
+
+        left join SC7010 SC7 (nolock)
+            on SC7.D_E_L_E_T_ = ''
+            and SC7.C7_FILIAL = SD1.D1_FILIAL
+            and SC7.C7_NUM = SD1.D1_PEDIDO
+            and SC7.C7_ITEM = SD1.D1_ITEMPC
+
+            left join SA2010 SA2 (nolock)
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = STL.TL_FORNEC
+                and SA2.A2_LOJA = STL.TL_LOJA
 where STL.D_E_L_E_T_ = ''
