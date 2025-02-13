@@ -73,7 +73,7 @@ SELECT
         and SCR.CR_NIVEL =
         (
             select max(SCR010.CR_NIVEL)
-            from SCR010 (nolock)
+            from SCR010
             where
                     SCR010.D_E_L_E_T_ = ''
                 and SCR010.CR_TIPO = 'SC'
@@ -98,7 +98,7 @@ SELECT
         and SCR.CR_NIVEL =
         (
             select max(SCR010.CR_NIVEL)
-            from SCR010 (nolock)
+            from SCR010
             where
                     SCR010.D_E_L_E_T_ = ''
                 and SCR010.CR_TIPO = 'PC'
