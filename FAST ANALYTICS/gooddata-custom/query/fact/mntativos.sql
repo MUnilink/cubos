@@ -113,9 +113,6 @@ from STJ010 STJ
 			and left(ADESIVO_CUSTO.B9_DATA, 6) = left(STL.TL_DTFIM, 6)
 			and ADESIVO_CUSTO.B9_COD = STL.TL_CODIGO
 
-		left join SA2010 SA2
-			on SA2.D_E_L_E_T_ = ''
-			and SA2.A2_COD + SA2.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA
 		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
 			and SB1.B1_COD = STL.TL_CODIGO
@@ -135,7 +132,8 @@ from STJ010 STJ
 				and SH7.H7_CODIGO = ST1.T1_TURNO
 		
 		left join SD1010 SD1 (nolock)
-			on SD1.D_E_L_E_T_ = ''
+			on STL.TL_ORIGNFE = 'SD1'
+			and SD1.D_E_L_E_T_ = ''
 			and SD1.D1_FILIAL = STL.TL_FILIAL
 			and left(SD1.D1_OP, 6) = STL.TL_ORDEM
 			and SD1.D1_DOC = STL.TL_NOTFIS
