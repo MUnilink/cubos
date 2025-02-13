@@ -81,7 +81,7 @@ select
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
 		when 'E' then 'ESPECIALIDADE'
-		when 'P' then 'PEÇAS'
+		when 'P' then case STL.TL_ORIGNFE when 'SD1' then 'PEÇAS DIRETAS' else 'PEÇAS' end
 		when 'T' then 'TERCEIROS'
 		else 'OUTROS'
 	end as TIPO_CUSTO,
@@ -185,7 +185,8 @@ from STL010 STL (nolock)
         and SB1.B1_COD = STL.TL_CODIGO
 
     left join SD1010 SD1 (nolock)
-        on SD1.D_E_L_E_T_ = ''
+        on STL.TL_ORIGNFE = 'SD1'
+        and SD1.D_E_L_E_T_ = ''
         and SD1.D1_FILIAL = STL.TL_FILIAL
         and left(SD1.D1_OP, 6) = STL.TL_ORDEM
         and SD1.D1_DOC = STL.TL_NOTFIS
@@ -202,6 +203,6 @@ from STL010 STL (nolock)
 
             left join SA2010 SA2 (nolock)
                 on SA2.D_E_L_E_T_ = ''
-                and SA2.A2_COD = STL.TL_FORNEC
-                and SA2.A2_LOJA = STL.TL_LOJA
+                and SA2.A2_COD = SC7.C7_FORNECE
+                and SA2.A2_LOJA = SC7.C7_LOJA
 where STL.D_E_L_E_T_ = ''

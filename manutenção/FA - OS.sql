@@ -237,7 +237,8 @@ from STJ010 STJ (nolock)
 			and STI.TI_PLANO = STL.TL_PLANO
 		
 		left join SD1010 SD1 (nolock)
-			on SD1.D_E_L_E_T_ = ''
+			on STL.TL_ORIGNFE = 'SD1'
+			and SD1.D_E_L_E_T_ = ''
 			and SD1.D1_FILIAL = STL.TL_FILIAL
 			and left(SD1.D1_OP, 6) = STL.TL_ORDEM
 			and SD1.D1_DOC = STL.TL_NOTFIS
