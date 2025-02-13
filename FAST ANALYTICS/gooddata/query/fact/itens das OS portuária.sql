@@ -22,13 +22,6 @@ select
     case when cast(ZC2.ZC2_TIPO as int) = 2 then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (2, 14)) else null end as COD_SRJ,
     null as COD_ZA7,
     null as COD_SE1,
-
-    case ZC1.ZC1_TIPOP
-        when 1 then upper('Cabotagem')
-        when 2 then upper('Importacao')
-        when 3 then upper('Exportacao')
-        when 4 then upper('Interna')
-    else 'OUTROS' end as TIPO_OP,
     
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_ITEM) as ITEM,
