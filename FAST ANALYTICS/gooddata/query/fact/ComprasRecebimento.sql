@@ -17,14 +17,42 @@ SELECT
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_TES, ' ')), ' '), '|') AS BK_TES,
     'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
-    case when SA2.A2_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
     
     case
         when (SC7.C7_QUJE > 0) and (SC7.C7_QUJE < SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('R', ' ')), ' '), '|')
         when (SC7.C7_QUJE >= SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
     else 'P |'+'|' end as BK_SITUACAO_COMPRA,
     
-    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
+    (
+        select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
+        from SCR010 SCR
+            inner join SAK010
+                on SAK010.D_E_L_E_T_ = ''
+                and SAK010.AK_COD = SCR.CR_LIBAPRO
+        where
+                SCR.D_E_L_E_T_ = ''
+            and SCR.CR_FILIAL = SC7.C7_FILIAL
+            and SCR.CR_NUM = SC7.C7_NUM
+            and SCR.CR_STATUS < 6
+            and SCR.CR_NIVEL =
+            (
+                select max(SCR010.CR_NIVEL)
+                from SCR010 (nolock)
+                where
+                        SCR010.D_E_L_E_T_ = ''
+                    and SCR010.CR_TIPO = 'PC'
+                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
+                    and SCR010.CR_TIPO = SCR.CR_TIPO
+                    and SCR010.CR_NUM = SCR.CR_NUM
+                group by
+                    SCR010.CR_FILIAL,
+                    SCR010.CR_TIPO,
+                    SCR010.CR_NUM
+            )
+    ) as BK_APROVADOR,
+
     SD1.D1_EMISSAO as DATANF,
     SD1.D1_DTDIGIT as DATA,
     SD1.D1_QUANT as QTD_ATENDIDA,
@@ -145,13 +173,13 @@ FROM SD1010 SD1
         ON CTD.CTD_FILIAL = '      '
         AND CTD.CTD_ITEM = SD1.D1_ITEMCTA
         AND CTD.D_E_L_E_T_ = ' '
-    LEFT JOIN SF1010 SF1
-        ON SF1.F1_FILIAL = SD1.D1_FILIAL
-        AND SF1.F1_DOC = SD1.D1_DOC
-        AND SF1.F1_SERIE = SD1.D1_SERIE
-        AND SF1.F1_FORNECE = SD1.D1_FORNECE
-        AND SF1.F1_LOJA = SD1.D1_LOJA
-        AND SF1.D_E_L_E_T_ = ' '
+    left join SF1010 SF1
+        on SF1.F1_FILIAL = SD1.D1_FILIAL
+        and SF1.F1_DOC = SD1.D1_DOC
+        and SF1.F1_SERIE = SD1.D1_SERIE
+        and SF1.F1_FORNECE = SD1.D1_FORNECE
+        and SF1.F1_LOJA = SD1.D1_LOJA
+        and SF1.D_E_L_E_T_ = ' '
         
         LEFT JOIN SA4010 SA4
             ON SA4.A4_FILIAL = '      '
