@@ -1,21 +1,17 @@
 select
-/*
-	ZD3.ZD3_LITROS,
-	ZD3.ZD3_VLUNI,
-	ZD3.ZD3_HODOM,
-	ZD3.ZD3_KMRD,
-	ZD3.ZD3_KML,
-	ZD3.ZD3_TOTAL,
-    convert(date, ZD3.ZD3_DATA, 103) as ZD3_DATA,
-	substring(ZD3.ZD3_DATA, 1, 6) as PERIODO_ZD3,
-*/
 	trim(TQI.TQI_TANQUE) as TANQUE,
+	trim(TQF.TQF_FILIAL) as FILIAL_POSTO,
+	trim(TQF.TQF_CODIGO) as COD_POSTO,
+	trim(TQF.TQF_LOJA) as LOJA,
+	trim(TQF.TQF_CNPJ) as CNPJ,
+	trim(TQF.TQF_NREDUZ) as DESC_POSTO,
+	trim(TQF.TQF_CIDADE) as CIDADE_POSTO,
 	trim(ST9.T9_CODBEM) as EQUIPAMENTO,
 	trim(TQN.TQN_CCUSTO) as CC,
 	trim(TQN.TQN_YITMCT) as ATIVIDADE,
 	trim(TQM.TQM_NOMCOM) as COMBUSTIVEL,
-	(select sum(SD1010.D1_TOTAL) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6))/
-	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6)) as VALOR_COMPRA,
+	(select sum(SD1010.D1_TOTAL) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and SD1010.D1_TES in (42, 44) and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6))/
+	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and SD1010.D1_TES in (42, 44) and left(SD1010.D1_DTDIGIT, 6) = left(TQN.TQN_DTABAS, 6)) as VALOR_COMPRA,
 	
 	substring(TQN.TQN_DTABAS, 1, 6) as PERIODO_TQN,
 	convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
@@ -55,13 +51,10 @@ from TQN010 TQN (nolock)
 		on TQI.D_E_L_E_T_ = ''
 		and TQI.TQI_FILIAL = TQN.TQN_FILIAL
 		and TQI.TQI_TANQUE = TQN.TQN_TANQUE
-
-		left join TQF010 TQF (nolock)
-			on TQF.D_E_L_E_T_ = ''
-			and TQF.TQF_FILIAL = TQI.TQI_FILIAL
-			and TQF.TQF_CODIGO = TQI.TQI_CODPOS 
-			and TQF.TQF_LOJA = TQI.TQI_LOJA
-
+	left join TQF010 TQF (nolock)
+		on TQF.D_E_L_E_T_ = ''
+		and TQF.TQF_CODIGO = TQN.TQN_POSTO
+		and TQF.TQF_LOJA = TQN.TQN_LOJA
 	left join ST9010 ST9 (nolock)
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = TQN.TQN_FROTA
