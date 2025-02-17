@@ -32,4 +32,4 @@ from ZC1010 ZC1
 where
         ZC1.D_E_L_E_T_ = ''
 
-union select null, null, null, null, null, null, null
+union select null, null, null, null, null, null, null, null
