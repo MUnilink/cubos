@@ -8,6 +8,8 @@ select * from sys.all_columns
 select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 select * from INFORMATION_SCHEMA.TABLE_CONSTRAINTS
 
+select * from tbcct
+
 select pk.object_id as ID_pk, fk.object_id as ID_fk, pk.name as chave_prim, fk.name as chave_estr from sys.key_constraints pk left join sys.foreign_keys fk on fk.parent_object_id = pk.object_id
 
 select
