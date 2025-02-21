@@ -12,6 +12,8 @@ select
 	case ST9.T9_PROPRIE when 1 then 'SIM' when '2' then 'NAO' else 'OUTROS' end as PROPRIO,
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
 	cast(ST9.T9_DTCOMPR as date) as DTCOMPR,
+	cast(ST9.T9_DTBAIXA as date) as DTBAIXA,
+	(select trim(TPJ010.TPJ_DESMOT) from TPJ010 (nolock) where TPJ010.D_E_L_E_T_ = '' and TPJ010.TPJ_CODMOT = ST9.T9_MTBAIXA) as DESC_BAIXA,
 	ST9.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS,
 
