@@ -4,13 +4,32 @@ select
 	trim(SE2.E2_NUM) as TITULO,
 	trim(SE2.E2_TIPO) as TIPO_TITULO,
 	cast(SE2.E2_EMISSAO as date) as DATA_TITULO,
+	left(SE2.E2_EMISSAO, 6) as PERIODO,
 	cast(SE2.E2_VENCTO as date) as VENCIMENTO,
+	left(SE2.E2_VENCTO, 6) as PERIODO_VENCIMENTO,
 	cast(SE2.E2_VENCREA as date) as VENCREAL,
+	left(SE2.E2_VENCREA, 6) as PERIODO_VENCREAL,
 	cast(SE2.E2_BAIXA as date) as BAIXA,
 	SE2.E2_PARCELA as PARCELA,
 	SE2.E2_VALOR as VALOR_TITULO,
+	trim(SA2.A2_NOME) as NOME_FORNECEDOR,
+	trim(SE2.E2_FORNECE) as FORNECEDOR,
+	trim(SE2.E2_LOJA) as LOJA,
+	trim(SA2.A2_CGC) as CNPJ,
+	trim(SA2.A2_EST) as UF,
+
+	month(SE2.E2_EMISSAO) as TITULO_MES,
+	year(SE2.E2_EMISSAO) as TITULO_ANO,
+	month(SE2.E2_VENCTO) as VENCIMENTO_MES,
+	year(SE2.E2_VENCTO) as VENCIMENTO_ANO,
+	month(SE2.E2_VENCREA) as VENCREAL_MES,
+	year(SE2.E2_VENCREA) as VENCREAL_ANO,
 
     trim(SE2.E2_HIST) as HISTORICO,
+	trim(CTD.CTD_DESC01) as ATIVIDADE,
+	trim(CTT.CTT_DESC01) as CCUSTO,
+	trim(SE2.E2_CCUSTO) as CC,
+	trim(SE2.E2_ITEMCTA) as AT,
     SE2.E2_SALDO as SALDO,
     SE2.E2_DESCONT as DESCONT,
     SE2.E2_MULTA as MULTA,
@@ -31,31 +50,21 @@ select
     trim(SE2.E2_ITEMD) as ITEMC_DEB,
     trim(SE2.E2_CCC) as CC_CRE,
     trim(SE2.E2_ITEMC) as ITEMC_CRE,
-
 	
     trim(SC7.C7_FILIAL) as FILIAL,
 	trim(SB1.B1_COD) as PRODUTO,
 	trim(SB1.B1_DESC) as NOMEPRODUTO,
 	trim(SB1.B1_GRUPO) as GRUPO,
 	trim(SB1.B1_UM) as UN,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
-	trim(CTT.CTT_DESC01) as CCUSTO,
-	trim(SC7.C7_ITEMCTA) as AT,
-	trim(SC7.C7_CC) as CC,
+	trim(SC7.C7_ITEMCTA) as PC_AT,
+	trim(SC7.C7_CC) as PC_CC,
 	substring(SC7.C7_OP, 1, 6) as OS,
-
-	trim(SC7.C7_NUM) as PEDIDO,
-	trim(SC7.C7_ITEM) as ITEM_PC,
-	trim(SC7.C7_FORNECE) as FORNECEDOR,
-	trim(SC7.C7_LOJA) as LOJA,
-	trim(SA2.A2_NOME) as NOME_FORNECEDOR,
-	trim(SA2.A2_CGC) as CNPJ,
-	trim(SA2.A2_EST) as UF,
-
-	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
-	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
+	trim(SC7.C7_NUM) as PC_NUM,
+	trim(SC7.C7_ITEM) as PC_ITEM,
+	cast(SC7.C7_EMISSAO as date) as PC_DATA,
+	substring(SC7.C7_EMISSAO, 1, 6) as PC_PERIODO,
 	(select trim(upper(SY1010.Y1_NOME)) from SY1010 where SY1010.Y1_COD = SC7.C7_COMPRA) as SOLICITANTE_PC,
-	trim(upper(SY1.Y1_NOME)) as DIGITACAO_PC,
+	trim(upper(SY1.Y1_NOME)) as PC_DIGITADO,
 
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -94,9 +103,6 @@ select
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
 	SC7.C7_PRECO as PC_PRECO,
 	SC7.C7_TOTAL as PC_TOTAL,
-
-	year(SC7.C7_EMISSAO) as ANO_PEDIDO,
-	month(SC7.C7_EMISSAO) as MES_PEDIDO,
 
 	case
 		when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
@@ -184,11 +190,11 @@ from SE2010 SE2 (nolock)
                 on SBM.D_E_L_E_T_ = ''
                 and SBM.BM_GRUPO = SB1.B1_GRUPO
         
-        left join CTT010 CTT (nolock)
-            on CTT.D_E_L_E_T_ = ''
-            and CTT.CTT_CUSTO = SD1.D1_CC
-        left join CTD010 CTD (nolock)
-            on CTD.D_E_L_E_T_ = ''
-            and CTD.CTD_ITEM = SD1.D1_ITEMCTA
+    left join CTT010 CTT (nolock)
+        on CTT.D_E_L_E_T_ = ''
+        and CTT.CTT_CUSTO = SE2.E2_CCUSTO
+    left join CTD010 CTD (nolock)
+        on CTD.D_E_L_E_T_ = ''
+        and CTD.CTD_ITEM = SE2.E2_ITEMCTA
 
 where SE2.D_E_L_E_T_ = ''
