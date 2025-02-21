@@ -5,7 +5,7 @@
         substring(SRC.RC_PERIODO, 1, 4) as PERIODO_ANO,
         SRC.RC_MAT as MATRICULA,
         SRC.RC_PD as VERBA,
-        (select trim(coalesce(nullif(SRV010.RV_DESCDET, ''), SRV010.RV_DESC)) from SRV010 where SRV010.D_E_L_E_T_ = '' and SRV010.RV_COD = SRC.RC_PD) as DESC_VERBA,
+        isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
         SRC.RC_SEQ as SEQ,
         SRC.RC_ROTEIR as ROTEIRO,
 
@@ -22,12 +22,13 @@
         case trim(SRV.RV_TIPOCOD) when '1' then SRC.RC_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
         
-        case SRC.RC_PD when '039' then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
+        case SRC.RC_PD when '039' then SRC.RC_VALOR when '215' then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
         case SRC.RC_PD when '353' then SRC.RC_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
         case SRC.RC_PD when '420' then SRC.RC_VALOR when '422' then SRC.RC_VALOR when '423' then SRC.RC_VALOR else 0.0 end as IR,
         case SRC.RC_PD when '401' then SRC.RC_VALOR when '402' then SRC.RC_VALOR when '403' then SRC.RC_VALOR else 0.0 end as INSS,
         case SRC.RC_PD when '407' then SRC.RC_VALOR else 0.0 end as MENS_SINDICAL,
         case SRC.RC_PD when '373' then SRC.RC_VALOR when '530' then SRC.RC_VALOR when '532' then SRC.RC_VALOR when '535' then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
+        case SRC.RC_PD when '041' then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -76,7 +77,7 @@ union
         substring(SRD.RD_PERIODO, 1, 4) as PERIODO_ANO,
         SRD.RD_MAT as MATRICULA,
         SRD.RD_PD as VERBA,
-        (select trim(coalesce(nullif(SRV010.RV_DESCDET, null), SRV010.RV_DESC)) from SRV010 where SRV010.D_E_L_E_T_ = '' and SRV010.RV_COD = SRD.RD_PD) as DESC_VERBA,
+        isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
         SRD.RD_SEQ as SEQ,
         SRD.RD_ROTEIR as ROTEIRO,
 
@@ -93,12 +94,13 @@ union
         case trim(SRV.RV_TIPOCOD) when '1' then SRD.RD_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
         
-        case SRD.RD_PD when '039' then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
+        case SRD.RD_PD when '039' then SRD.RD_VALOR when '215' then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
         case SRD.RD_PD when '353' then SRD.RD_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
         case SRD.RD_PD when '420' then SRD.RD_VALOR when '422' then SRD.RD_VALOR when '423' then SRD.RD_VALOR else 0.0 end as IR,
         case SRD.RD_PD when '401' then SRD.RD_VALOR when '402' then SRD.RD_VALOR when '403' then SRD.RD_VALOR else 0.0 end as INSS,
         case SRD.RD_PD when '407' then SRD.RD_VALOR else 0.0 end as MENS_SINDICAL,
         case SRD.RD_PD when '373' then SRD.RD_VALOR when '530' then SRD.RD_VALOR when '532' then SRD.RD_VALOR when '535' then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
+        case SRD.RD_PD when '041' then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
