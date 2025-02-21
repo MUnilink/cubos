@@ -28,7 +28,7 @@
         case SRC.RC_PD when '401' then SRC.RC_VALOR when '402' then SRC.RC_VALOR when '403' then SRC.RC_VALOR else 0.0 end as INSS,
         case SRC.RC_PD when '407' then SRC.RC_VALOR else 0.0 end as MENS_SINDICAL,
         case SRC.RC_PD when '373' then SRC.RC_VALOR when '530' then SRC.RC_VALOR when '532' then SRC.RC_VALOR when '535' then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
-        case SRC.RC_PD when '041' then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
+        case SRC.RC_PD when '041' then SRC.RC_VALOR when '030' then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -100,7 +100,7 @@ union
         case SRD.RD_PD when '401' then SRD.RD_VALOR when '402' then SRD.RD_VALOR when '403' then SRD.RD_VALOR else 0.0 end as INSS,
         case SRD.RD_PD when '407' then SRD.RD_VALOR else 0.0 end as MENS_SINDICAL,
         case SRD.RD_PD when '373' then SRD.RD_VALOR when '530' then SRD.RD_VALOR when '532' then SRD.RD_VALOR when '535' then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
-        case SRD.RD_PD when '041' then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
+        case SRD.RD_PD when '041' then SRD.RD_VALOR when '030' then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
