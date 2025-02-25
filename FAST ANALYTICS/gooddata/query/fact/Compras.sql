@@ -159,7 +159,7 @@ FROM SC7010 SC7
         and Y1_DIG.Y1_COD not in (1, 6, 11, 19)
     left join SY1010 Y1_COM
         on Y1_COM.Y1_FILIAL = left(SC7.C7_FILIAL, 2)
-        and Y1_COM.Y1_USER = SC7.C7_YNEGOCI
+        and Y1_COM.Y1_COD = SC7.C7_YNEGOCI
         and Y1_COM.Y1_COD not in (1, 6, 11, 19)
     
     left join ACV010 ACV
