@@ -49,7 +49,7 @@ select
                         and ZB1010.ZB1_MACRON = 7
                         and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
                 )
-            , APT.DTW_YHODFI)
+            , APT.DTW_YHODFI) 
         from DTW010 APT (nolock)
         where
                 APT.D_E_L_E_T_ = ''
@@ -159,73 +159,41 @@ select
     left(VIAGEM.DTQ_DATENC, 6) as PERIODO_ENCVGA,
 
     (
-        select cast(DTW010.DTW_DATREA as date)
+        select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         from DTW010 (nolock)
-        where 
+        where
                 DTW010.D_E_L_E_T_ = ''
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 49
     ) as DATAINI,
     (
-        select DTW010.DTW_HORREA
+        select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
         from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and DTW010.DTW_ATIVID = 49
-    ) as HORAINI,
-    (
-        select cast(DTW010.DTW_DATREA as date)
-        from DTW010 (nolock)
-        where 
+        where
                 DTW010.D_E_L_E_T_ = ''
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 50
     ) as DATAFIM,
     (
-        select DTW010.DTW_HORREA
+        select top 1 first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and DTW010.DTW_ATIVID = 50
-    ) as HORAFIM,
-    (
-        select top 1 first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
-        from DTW010 (nolock)
-        where 
+        where
                 DTW010.D_E_L_E_T_ = ''
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 57
     ) as DATA_CHECLI,
     (
-        select top 1 first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        select top 1 first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and DTW010.DTW_ATIVID = 57
-    ) as HORA_CHECLI,
-    (
-        select top 1 first_value(cast(DTW010.DTW_DATREA as date)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
-        from DTW010 (nolock)
-        where 
+        where
                 DTW010.D_E_L_E_T_ = ''
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 56
     ) as DATA_SAICLI,
     (
-        select top 1 first_value(DTW010.DTW_HORREA) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+        select left(DTW010.DTW_DATREA, 6)
         from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and DTW010.DTW_ATIVID = 56
-    ) as HORA_SAICLI,
-    (
-        select substring(DTW010.DTW_DATREA, 1, 6)
-        from DTW010 (nolock)
-        where 
+        where
                 DTW010.D_E_L_E_T_ = ''
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 50
@@ -237,8 +205,6 @@ select
     ZE4.ZE4_KMINI as km_ini,
     ZE4.ZE4_YKMFIM as km_fim,
     ZE4.ZE4_YKMFIM - ZE4.ZE4_KMINI as km_VIAGEM,
-    convert(datetime, concat(ZE4.ZE4_DTINI, ' ', ZE4.ZE4_HRINI), 113) as VGA_DATAINI,
-    convert(datetime, concat(ZE4.ZE4_DTFIM, ' ', ZE4.ZE4_HRFIM), 113) as VGA_DATAFIM,
     ZE5.ZE5_ITENS as ITEM_CAB,
     
     trim(ZE1.ZE1_COD) as CT_CODIGO,
@@ -266,7 +232,14 @@ select
         when 15 then 'TIPO RH IMPROD'
         when 16 then 'TIPO MNT IMPROD'
         else 'OUTROS'
-    end as TIPO_ITEM
+    end as TIPO_ITEM,
+
+    case
+        when ZE1.ZE1_TIPO in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO in (1, 4, 5, 11))
+        when ZE1.ZE1_TIPO in (2, 14, 15) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO in (2, 14))
+        when ZE1.ZE1_TIPO in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO in (3, 6, 9, 10, 12, 13, 16))
+        when ZE1.ZE1_TIPO = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO = 7)
+    else null end as DESC_RECURSO
 
 from DUD010 DUD (nolock)
     inner join
@@ -289,16 +262,6 @@ from DUD010 DUD (nolock)
                 when '9' then 'CANCELADA'
                 else 'OUTROS'
             end as STATUS_VGA,
-
-            (
-                select DTW010.DTW_DATREA
-                from DTW010 
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = 50
-            ) as DATAFIM,
             
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
             trim(DA4010.DA4_COD) as ID_MOTORISTA,
@@ -306,7 +269,8 @@ from DUD010 DUD (nolock)
             (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
             (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
             (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
+            DTR.DTR_ITEM as ITEM
         from DTQ010 DTQ
             left join DTR010 DTR
                 on DTR.D_E_L_E_T_ = ''
@@ -329,18 +293,16 @@ from DUD010 DUD (nolock)
                 and DA8010.DA8_COD = DTQ.DTQ_ROTA
         where DTQ.D_E_L_E_T_ = ''
     ) VIAGEM
-        on DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
-        and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
-        and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
+        on DUD.DUD_FILIAL = VIAGEM.FILIAL
+        and DUD.DUD_FILORI = VIAGEM.FILORI
+        and DUD.DUD_VIAGEM = VIAGEM.VIAGEM
 
         inner join ZE5010 ZE5 (nolock)
             on ZE5.D_E_L_E_T_ = ''
             and concat(ZE5.ZE5_FILIAL, ZE5.ZE5_VIAGEM) = VIAGEM.ID_VIAGEM
             and ZE5.ZE5_MOTORI = VIAGEM.ID_MOTORISTA
             and ZE5.ZE5_BEMCAV = VIAGEM.ID_VEICULO_CM
-            and ZE5.ZE5_CARR1 = VIAGEM.ID_VEICULO_RB1
-            and ZE5.ZE5_CARR2 = VIAGEM.ID_VEICULO_RB2
-            and ZE5.ZE5_CARR3 = VIAGEM.ID_VEICULO_RB3
+            and ZE5.ZE5_ITENS = VIAGEM.ITEM
 
     left join DT5010 DT5 (nolock)
         on DT5.D_E_L_E_T_ = ''
@@ -433,11 +395,11 @@ from DUD010 DUD (nolock)
     inner join ZE1010 ZE1 (nolock)
         on ZE1.D_E_L_E_T_ = ''
         and ZE1.ZE1_FILIAL = DUD.DUD_FILORI
-        and ZE1.ZE1_VIAGEM = DUD.DUD_VIAGEM
+        and ZE1.ZE1_NUM = DUD.DUD_VIAGEM
         
-        inner join ZE4010 ZE4 (nolock)
+        left join ZE4010 ZE4 (nolock)
             on ZE4.D_E_L_E_T_ = ''
             and ZE4.ZE4_FILIAL = ZE1.ZE1_FILIAL
-            and ZE4.ZE4_VIAGEM = ZE1.ZE1_VIAGEM
+            and ZE4.ZE4_VIAGEM = ZE1.ZE1_NUM
 where
         DUD.D_E_L_E_T_ = ''
