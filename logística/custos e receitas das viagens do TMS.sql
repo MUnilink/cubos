@@ -1,36 +1,19 @@
 select
-    DTQ.DTQ_FILORI,
-    DTQ.DTQ_VIAGEM,
-    DT6.DT6_DOC,
-    DT6.DT6_SERIE,
-    left(DT6.DT6_DATEMI, 6) as PERIODO_CTE,
-    cast(DT6.DT6_DATEMI as date) as DT6_DATEMI,
-    DA8.DA8_DESC,
-    DTQ.DTQ_KMVGE,
-
-    trim(REG_COL.DUY_EST) as UF_COLETA,
-	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
-	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
-	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
+    VIAGEM.DTQ_VIAGEM as VIAGEM,
+    cast(VIAGEM.DATAFIM as date) as DATA_FIMVGA,
+    left(VIAGEM.DATAFIM, 6) as PERIODO_FIMVGA,
     
-    DTQ.DTQ_DATGER,
-    DTQ.DTQ_DATFEC,
-    DTQ.DTQ_DATENC,
-
-    substring(DTQ.DTQ_DATGER, 1, 6) as PERIODO_GERVGA,
-    substring(DTQ.DTQ_DATFEC, 1, 6) as PERIODO_FECVGA,
-    substring(DTQ.DTQ_DATENC, 1, 6) as PERIODO_ENCVGA,
-
-    trim(DUYORI.DUY_DESCRI) as ORIGEM,
-    trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
-    
     trim(DEV.A1_COD) as DEV_COD,
     trim(DEV.A1_LOJA) as DEV_LOJA,
     trim(DEV.A1_NOME) as CLI_DEVEDOR,
+    
+    trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(REM.A1_COD) as REM_COD,
     trim(REM.A1_LOJA) as REM_LOJA,
     trim(REM.A1_NOME) as CLI_ORIGEM,
+    
+    trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DES.A1_COD) as DES_COD,
     trim(DES.A1_LOJA) as DES_LOJA,
     trim(DES.A1_NOME) as CLI_DESTINO,
@@ -115,15 +98,16 @@ select
     DTR.DTR_CODRB2,
     DTR.DTR_CODRB3,
 
-    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as CTE_CM,
+    DT6.DT6_DOC CTE_DOC,
+    DT6.DT6_SERIE CTE_SERIE,
+    left(DT6.DT6_DATEMI, 6) as PERIODO_CTE,
+    cast(DT6.DT6_DATEMI as date) as DATA_CTE,
+    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DUD.DUD_VIAGEM), 1) as CTE_CM,
     DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as IMPOSTO_CM,
+    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DUD.DUD_VIAGEM), 1) as IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
     DT6.DT6_VALMER,
-
-    DT6.DT6_CLIDEV,
-    DT6.DT6_LOJDEV,
 
     DTC.DTC_FILORI,
     DTC.DTC_DOC,
@@ -164,12 +148,12 @@ select
     DF1.DF1_CODOBC,
     DF1.DF1_YDSARM as NOME_ARMADORA,
 
-    DT6C.D2_DOC as COMP_DOC,
-    DT6C.D2_SERIE as COMP_SERIE,
-    DT6C.D2_TOTAL as COMP_TOTAL,
-    DT6C.D2_VALIPI as COMP_VALIPI,
-    DT6C.D2_VALICM as COMP_VALICM,
-    convert(date, DT6C.D2_EMISSAO, 103) as COMP_EMISSAO,
+    DT6C.D2_DOC as DOCOMP_DOC,
+    DT6C.D2_SERIE as DOCOMP_SERIE,
+    DT6C.D2_TOTAL as DOCOMP_TOTAL,
+    DT6C.D2_VALIPI as DOCOMP_VALIPI,
+    DT6C.D2_VALICM as DOCOMP_VALICM,
+    cast(DT6C.D2_EMISSAO as date) as DOCOMP_EMISSAO,
 
     SC5.C5_NUM as RPS_PEDIDO,
     RPS.D2_DOC as RPS_DOC,
@@ -177,11 +161,18 @@ select
     RPS.D2_TOTAL as RPS_TOTAL,
     RPS.D2_VALIPI as RPS_VALIPI,
     RPS.D2_VALICM as RPS_VALICM,
-    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
+    cast(RPS.D2_EMISSAO as date) as RPS_EMISSAO,
 
     SE1.E1_NUM as ND_TITULO,
     SE1.E1_VALOR as ND_VALOR,
-    SE1.E1_EMISSAO as ND_EMISSAO,
+    cast(SE1.E1_EMISSAO as date) as ND_EMISSAO,
+
+    cast(VIAGEM.DTQ_DATGER as date) as DT_GERVGA,
+    cast(VIAGEM.DTQ_DATFEC as date) as DT_FECVGA,
+    cast(VIAGEM.DTQ_DATENC as date) as DT_ENCVGA,
+    left(VIAGEM.DTQ_DATGER, 6) as PERIODO_GERVGA,
+    left(VIAGEM.DTQ_DATFEC, 6) as PERIODO_FECVGA,
+    left(VIAGEM.DTQ_DATENC, 6) as PERIODO_ENCVGA,
 
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -273,32 +264,109 @@ select
         when '5' then 'FECHADA'
         when '9' then 'CANCELADA'
         else 'OUTROS'
-    end as DTQ_STATUS
+    end as DTQ_STATUS,
+
+    ZE4.ZE4_VIAGEM as VIAGEM,
+    ZE4.ZE4_TOTHR as HORAS_VIAGEM,
+    ZE4.ZE4_STATUS as STATUS_TMS,
+    ZE4.ZE4_KMINI as km_ini,
+    ZE4.ZE4_YKMFIM as km_fim,
+    convert(datetime, concat(ZE4.ZE4_DTINI, ' ', ZE4.ZE4_HRINI), 113) as CT_DATAINI,
+    convert(datetime, concat(ZE4.ZE4_DTFIM, ' ', ZE4.ZE4_HRFIM), 113) as CT_DATAFIM,
+    ZE5.ZE5_ITENS as ITEM_CAB,
+    
+    ZE1.ZE1_ITEM as CT_ITEM,
+    ZE1.ZE1_TIPO as CT_TIPO,
+    case ZE1.ZE1_TIPO
+        when 1 then 'RECEITA'
+        when 2 then 'FOLHA'
+        when 3 then 'MANUTENÇÃO'
+        when 4 then 'MATERIAIS'
+        when 5 then 'COMPRAS'
+        when 6 then 'DEPRECIAÇÃO'
+        when 7 then 'CONTABILIDADE'
+        when 8 then 'DESPESAS FINANCEIRAS'
+        when 9 then 'OUTROS CUSTOS - TAXAS'
+        when 10 then 'COMBUSTIVEL'
+        when 11 then 'SERVIÇOS TOMADOS'
+        when 12 then 'SEGURO'
+        when 13 then 'PNEUS'
+        when 14 then 'PROVISÕES'
+        when 15 then 'TIPO RH IMPROD'
+        when 16 then 'TIPO MNT IMPROD'
+        else 'OUTROS'
+    end as TIPO_ITEM,
+    
+    trim(ZE1.ZE1_COD) as CT_CODIGO,
+    cast(ZE1.ZE1_TOTAL as numeric(15, 2)) as CT_VALOR,
+    cast(ZE1.ZE1_DATA as date) as CT_DATA,
+    left(ZE1.ZE1_COMPET, 6) as CT_PERIODO,
+    convert(datetime, concat(ZE1.ZE1_DTINI, ' ', ZE1.ZE1_HRINI), 113) as CT_DATAINI,
+    convert(datetime, concat(ZE1.ZE1_DTFIM, ' ', ZE1.ZE1_HRFIM), 113) as CT_DATAFIM,
 
 from DUD010 DUD (nolock)
-    left join DTR010 DTR (nolock)
-        on DTR.D_E_L_E_T_ = ''
-        and DTR.DTR_FILORI = DUD.DUD_FILORI
-        and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+    inner join
+    (
+        select
+            DTQ.DTQ_FILIAL as FILIAL,
+            DTQ.DTQ_FILORI as FILORI,
+            DTQ.DTQ_VIAGEM as VIAGEM,
+            DTQ.DTQ_DATGER,
+            DTQ.DTQ_DATFEC,
+            DTQ.DTQ_DATENC,
+            trim(DA8.DA8_DESC) as ROTA,
 
-        left join DUP010 DUP (nolock)
-            on DUP.D_E_L_E_T_ = ''
-            and DUP.DUP_FILORI = DTR.DTR_FILORI
-            and DUP.DUP_VIAGEM = DTR.DTR_VIAGEM
-            and DUP.DUP_ITEDTR = DTR.DTR_ITEM
-            and DUP.DUP_CODVEI = DTR.DTR_CODVEI
+            (
+                select DTW010.DTW_DATREA
+                from DTW010 
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                    and DTW010.DTW_ATIVID = 50
+            ) as DATAFIM,
+            
+            concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
+            trim(DA4010.DA4_COD) as ID_MOTORISTA,
+            trim(DA4010.DA4_NOME) as MOTORISTA,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
+        from DTQ010 DTQ
+            left join DTR010 DTR
+                on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                
+                left join DUP010
+                    on DUP010.D_E_L_E_T_ = ''
+                    and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                    and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                    and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                    and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-            left join DA4010 DA4 (nolock)
-                on DA4.DA4_COD = DUP.DUP_CODMOT
-    
-    left join DTQ010 DTQ (nolock)
-        on DTQ.D_E_L_E_T_ = ''
-        and DTQ.DTQ_FILORI = DUD.DUD_FILORI
-        and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
+                    left join DA4010
+                        on DA4010.D_E_L_E_T_ = ''
+                        and DA4010.DA4_COD = DUP010.DUP_CODMOT
+            
+            left join DA8010 DA8 (nolock)
+                on DA8.D_E_L_E_T_ = ''
+                and DA8.DA8_COD = DTQ.DTQ_ROTA
+        where DTQ.D_E_L_E_T_ = ''
+    ) VIAGEM
+        on DUD.DUD_FILIAL = VIAGEM.DTQ_FILIAL
+        and DUD.DUD_FILORI = VIAGEM.DTQ_FILORI
+        and DUD.DUD_VIAGEM = VIAGEM.DTQ_VIAGEM
 
-        left join DA8010 DA8 (nolock)
-            on DA8.D_E_L_E_T_ = ''
-            and DA8.DA8_COD = DTQ.DTQ_ROTA
+        inner join ZE5010 ZE5 (nolock)
+            on ZE5.D_E_L_E_T_ = ''
+            and ZE5.ZE5_VIAGEM = VIAGEM.VIAGEM
+            and ZE5.ZE5_MOTORI = VIAGEM.ID_MOTORISTA
+            and ZE5.ZE5_BEMCAV = VIAGEM.ID_VEICULO_CM
+            and ZE5.ZE5_CARR1 = VIAGEM.ID_VEICULO_RB1
+            and ZE5.ZE5_CARR2 = VIAGEM.ID_VEICULO_RB2
+            and ZE5.ZE5_CARR3 = VIAGEM.ID_VEICULO_RB3
 
     left join DT5010 DT5 (nolock)
         on DT5.D_E_L_E_T_ = ''
@@ -387,16 +455,15 @@ from DUD010 DUD (nolock)
     left join SE1010 SE1 (nolock)
         on SE1.D_E_L_E_T_ = ''
         and trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM
-    
+        
     inner join ZE1010 ZE1 (nolock)
         on ZE1.D_E_L_E_T_ = ''
+        and ZE1.ZE1_FILIAL = DUD.DUD_FILORI
         and ZE1.ZE1_VIAGEM = DUD.DUD_VIAGEM
         
-        inner join ZE1010 ZE5 (nolock)
-            on ZE5.D_E_L_E_T_ = ''
-            and ZE5.ZE5_VIAGEM = ZE1.ZE1_VIAGEM
         inner join ZE1010 ZE4 (nolock)
             on ZE4.D_E_L_E_T_ = ''
+            and ZE4.ZE4_FILIAL = ZE1.ZE1_FILIAL
             and ZE4.ZE4_VIAGEM = ZE1.ZE1_VIAGEM
 where
         DUD.D_E_L_E_T_ = ''
