@@ -33,7 +33,7 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_ITEM) as ITEM,
     cast(ZC1.ZC1_EMISSA as date) as DT_INIOS,
-    cast(isnull(nullif(ZC1.ZC1_DTENCE, ''), ZC1.ZC1_DTFIM) as date) as DT_FIMOS,
+    cast(case when ZC1.ZC1_STATUS = 1 then null when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM else ZC1.ZC1_DTENCE end as date) as DT_FIMOS,
     cast(ZC2.ZC2_DTFIM as date) as DATA_APP,
     concat(left(isnull(nullif(ZC2.ZC2_COMPET, ''), ZC1.ZC1_DTFIM), 6), '01') as COMPETENCIA,
     'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
