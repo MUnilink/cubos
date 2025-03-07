@@ -1,8 +1,5 @@
 select
-    VIAGEM.*,
-    cast(VIAGEM.DATAFIM as date) as DATA_FIMVGA,
-    left(VIAGEM.DATAFIM, 6) as PERIODO_FIMVGA,
-    
+    VIAGEM.*,    
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
     trim(DEV.A1_COD) as DEV_COD,
     trim(DEV.A1_LOJA) as DEV_LOJA,
@@ -174,6 +171,28 @@ select
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 50
     ) as DATAFIM,
+    
+    datediff
+    (
+        minute,
+        (
+            select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+            from DTW010 (nolock)
+            where
+                    DTW010.D_E_L_E_T_ = ''
+                and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
+                and DTW010.DTW_ATIVID = 49
+        ),
+        (
+            select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
+            from DTW010 (nolock)
+            where
+                    DTW010.D_E_L_E_T_ = ''
+                and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
+                and DTW010.DTW_ATIVID = 50
+        )
+    )/60.0 as HORAS_VIAGEM,
+    
     (
         select top 1 first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
@@ -200,7 +219,7 @@ select
     ) as COMPETENCIA,
 
     ZE4.ZE4_VIAGEM as VIAGEM,
-    ZE4.ZE4_TOTHR as HORAS_VIAGEM,
+    ZE4.ZE4_TOTHR as HR_VIAGEM,
     ZE4.ZE4_STATUS as STATUS_TMS,
     ZE4.ZE4_KMINI as km_ini,
     ZE4.ZE4_YKMFIM as km_fim,
