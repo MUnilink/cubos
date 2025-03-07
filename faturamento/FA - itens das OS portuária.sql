@@ -23,13 +23,6 @@ select
     null as COD_ZA7,
     null as COD_SE1,
 
-    case ZC1.ZC1_TIPOP
-        when 1 then upper('Cabotagem')
-        when 2 then upper('Importacao')
-        when 3 then upper('Exportacao')
-        when 4 then upper('Interna')
-    else 'OUTROS' end as TIPO_OP,
-
     trim(ZC2.ZC2_COD) as INSUMO,
     trim(ZC2.ZC2_ITEM) as ITEM,
     cast(ZC1.ZC1_EMISSA as date) as DT_INIOS,
@@ -52,7 +45,33 @@ select
     ZC2.ZC2_QTDREC as QTD_RECURSO,
     
     case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
-	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS
+	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
+
+    /**/
+    
+    cast(ZC1.ZC1_DTENCE as date) as DT_ENCOS,
+    case ZC1.ZC1_TIPOP
+        when 1 then upper('Cabotagem')
+        when 2 then upper('Importacao')
+        when 3 then upper('Exportacao')
+        when 4 then upper('Interna')
+    else 'OUTROS' end as TIPO_OP,
+
+    case ZC1.ZC1_STATUS
+        when 1 then 'ABERTA'
+        when 2 then 'SOLICITADO CANCELAMENTO'
+        when 3 then 'CANCELADA'
+        when 5 then 'CORTESIA'
+        when 6 then 'ENCERRADA'
+        else 'OUTROS'
+    end as STATUS_OS,
+
+    case ZC1.ZC1_STATU2
+        when 1 then 'PENDENTE'
+        when 2 then 'PARCIAL'
+        when 3 then 'FINALIZADO'
+        else 'OUTROS'
+    end as STATUS_FATURAMENTO
 
 from ZC2010 ZC2 (nolock)
     inner join ZC1010 ZC1
