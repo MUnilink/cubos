@@ -262,28 +262,7 @@ select
 
     case
         when ZE1.ZE1_TIPO = 8 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then 0.0
-        when ZE1.ZE1_TIPO = 4 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
-        (
-            select cast(sum(SD3010.D3_CUSTO1) as numeric(15, 2))
-            from SD3010 (nolock)
-            where
-                    SD3010.D3_YOS = ZC2.NUM_OS
-                and left(SD3010.D3_EMISSAO, 6) = left(ZE1.ZE1_COMPET, 6)
-                and SD3010.D3_ESTORNO = ''
-                and SD3010.D3_FILIAL = ZC2.FILIAL
-                and SD3010.D3_COD = ZC2.INSUMO
-                and SD3010.D_E_L_E_T_ = ''
-        )
-        when ZE1.ZE1_TIPO in (5, 11) and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
-        (
-            select sum(SC7010.C7_TOTAL)
-            from SC7010 (nolock)
-            where
-                    case when trim(SC7010.C7_YOS) = '2024/0' then right(left(replace(replace(SC7010.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7010.C7_YOS end = ZC2.NUM_OS
-                and SC7010.C7_YOSIT = ZC2.ITEM
-                and SC7010.D_E_L_E_T_ = ''
-        )
-        when ZE1.ZE1_TIPO = 3 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+        when ZE1.ZE1_TIPO = 3 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select sum(STL010.TL_CUSTO)
             from STJ010 (nolock)
@@ -294,12 +273,12 @@ select
                     and STL010.TL_ORDEM = STJ010.TJ_ORDEM
             where
                     STJ010.D_E_L_E_T_ = ''
-                and STJ010.TJ_CODBEM = ZC2.INSUMO
+                and STJ010.TJ_CODBEM = ZE1.ZE1_COD
                 and left(STL010.TL_DTFIM, 6) = left(ZE1.ZE1_COMPET, 6)
                 and STL010.TL_SEQRELA > 0
                 and STJ010.TJ_SERVICO not in ('PNEMOV', 'PNEROD')
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 6 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+        )
+        when ZE1.ZE1_TIPO = 6 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select cast(sum(SN4010.N4_VLROC1) as numeric(15, 2))
             from SN4010 (nolock)
@@ -314,12 +293,12 @@ select
                         and SN1010.N1_ITEM = SN3010.N3_ITEM
             where
                     SN4010.D_E_L_E_T_ = ''
-                and SN1010.N1_CODBEM = ZC2.INSUMO
+                and SN1010.N1_CODBEM = ZE1.ZE1_COD
                 and left(SN4010.N4_DATA, 6) = left(ZE1.ZE1_COMPET, 6)
                 and SN4010.N4_OCORR = 6
                 and SN4010.N4_TIPOCNT = 3
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 7 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+        )
+        when ZE1.ZE1_TIPO = 7 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select cast(sum(case when CT2010.CT2_DEBITO between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2)) else case when CT2010.CT2_CREDIT between ZA8010.ZA8_CT1INI and ZA8010.ZA8_CT1FIM then cast(CT2010.CT2_VALOR as numeric(15, 2))*-1 else 0.0 end end) as numeric(15, 2))
             from CT2010 (nolock)
@@ -334,11 +313,11 @@ select
                         and ZA7010.ZA7_COD = ZA8010.ZA8_COD
             where
                     CT2010.D_E_L_E_T_ = ''
-                and ZA7010.ZA7_COD = ZC2.INSUMO
+                and ZA7010.ZA7_COD = ZE1.ZE1_COD
                 and left(CT2010.CT2_DATA, 6) = left(ZE1.ZE1_COMPET, 6)
                 and ZE1.ZE1_TIPO = 7
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 9 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+        )
+        when ZE1.ZE1_TIPO = 9 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select cast(sum(TS1010.TS1_VALOR)/12 as numeric(15, 2))
             from TS1010 (nolock)
@@ -360,18 +339,19 @@ select
                 and TS1.TS1_DOCTO = TS1010.TS1_DOCTO
                 and TS1.TS1_CODBEM = TS1010.TS1_CODBEM
                 and TS1.TS1_DTVENC = TS1010.TS1_DTVENC
-            where TS1010.TS1_CODBEM = ZC2.INSUMO
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 10 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+            where
+                    TS1010.TS1_CODBEM = ZE1.ZE1_COD
+        )
+        when ZE1.ZE1_TIPO = 10 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select cast(sum(TQN010.TQN_VALTOT) as numeric(15, 2))
             from TQN010
             where
                     TQN010.D_E_L_E_T_ = ''
-                and TQN010.TQN_FROTA = ZC2.INSUMO
+                and TQN010.TQN_FROTA = ZE1.ZE1_COD
                 and left(TQN010.TQN_DTABAS, 6) = left(ZE1.ZE1_COMPET, 6)
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 12 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+        )
+        when ZE1.ZE1_TIPO = 12 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select cast(sum(ZC4010.ZC4_VLSEG)/sum(ZC4.VALOR_ANUAL)/12.0 as numeric(15, 2))
             from ZC4010 (nolock)
@@ -391,19 +371,19 @@ select
                         and ZC4010.ZC4_DTVGFI = ZC4.FIM_VIG
             where
                     ZC4010.D_E_L_E_T_ = ''
-                and ZC2.INSUMO = ZC4010.ZC4_CODBEM
+                and ZE1.ZE1_COD = ZC4010.ZC4_CODBEM
                 and eomonth(concat(left(ZE1.ZE1_COMPET, 6), '01')) between ZC4.INI_VIG and ZC4.FIM_VIG
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 13 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+        )
+        when ZE1.ZE1_TIPO = 13 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select sum(ZC6010.ZC6_CUSTO)
             from ZC6010 (nolock)
             where
                     ZC6010.D_E_L_E_T_ = ''
                 and ZC6010.ZC6_ANOMES = left(ZE1.ZE1_COMPET, 6)
-                and (ZC6010.ZC6_BEMPAI = ZC2.INSUMO or ZC6010.ZC6_BEMPA2 = ZC2.INSUMO)
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 2 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+                and (ZC6010.ZC6_BEMPAI = ZE1.ZE1_COD or ZC6010.ZC6_BEMPA2 = ZE1.ZE1_COD)
+        )
+        when ZE1.ZE1_TIPO = 2 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023 then
         (
             select sum(FOLHA.VALOR)
             from
@@ -469,9 +449,8 @@ select
                     and exists (select * from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and SRV010.RV_YCPOR = 'S' and SRV010.RV_COD = SRD.RD_PD)
                     and SRD.D_E_L_E_T_ = ''
             ) FOLHA
-            where concat(FOLHA.RD_FILIAL, FOLHA.RD_DATARQ, FOLHA.CARGO_FOLHA) = concat(ZC2.FILIAL, left(ZE1.ZE1_COMPET, 6), ZC2.INSUMO)
-        ) else 0.0 end
-        when ZE1.ZE1_TIPO = 14 and left(left(ZE1.ZE1_COMPET, 6), 4) > 2023
+            where concat(FOLHA.RD_FILIAL, FOLHA.RD_DATARQ, FOLHA.CARGO_FOLHA) = concat(ze1.ZE1_FILIAL, left(ZE1.ZE1_COMPET, 6), ZE1.ZE1_COD)
+        )
     else 0.0 end as CUSTO
 
 from DUD010 DUD (nolock)
