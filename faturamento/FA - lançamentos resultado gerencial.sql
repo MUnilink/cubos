@@ -33,8 +33,8 @@ select distinct
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE2.ZE2_COD as CONTAROP,
     ZE2.ZE2_CONTA as CONTA_CONTABIL,
+    cast(case when ZC1.ZC1_STATUS = 1 then null when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM else ZC1.ZC1_DTENCE end as date) as DT_FIMOS,
     
-    ZE3.ZE3_VALOR as VL_ORIGINAL,
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
@@ -45,6 +45,7 @@ select distinct
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     
     /* para validação no RM */
+    ZE3.ZE3_VALOR as VL_ORIGINAL,
     cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
     trim(SA1.A1_NOME) as CLIENTE,
     trim(ZE2.ZE2_CONTA) as CONTA,

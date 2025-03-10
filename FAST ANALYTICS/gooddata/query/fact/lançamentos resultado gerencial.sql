@@ -34,6 +34,7 @@ select distinct
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE2.ZE2_COD as CONTAROP,
     ZE2.ZE2_CONTA as CONTA_CONTABIL,
+    cast(case when ZC1.ZC1_STATUS = 1 then null when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM else ZC1.ZC1_DTENCE end as date) as DT_FIMOS,
     
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
