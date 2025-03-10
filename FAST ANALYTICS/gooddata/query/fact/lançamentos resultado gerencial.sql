@@ -4,6 +4,7 @@ select distinct
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
+    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1.ZC1_MERCAD, ' ')), ' '), '|') as ID_MERCADORIA,
     null as ID_PEDIDODEVENDA,
     null as ID_NFS,
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
@@ -66,6 +67,9 @@ from ZE3010 ZE3
             on SA2.D_E_L_E_T_ = ''
             and SA2.A2_COD = ZC1.ZC1_DESPA
             and SA2.A2_LOJA = ZC1.ZC1_LJDESP
+        left join SB1010 SB1
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_COD = ZC1.ZC1_MERCAD
     
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
