@@ -10,21 +10,22 @@ select
     case when SA1.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_EST, ' '))+RTRIM(COALESCE(SA1.A1_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6.C6_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
+    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1.ZC1_MERCAD, ' ')), ' '), '|') as ID_MERCADORIA,
     
     concat(trim(ZC2.ZC2_FILIAL), trim(ZC2.ZC2_NUM)) as ID_OSPORTUARIA,
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as ID_PEDIDODEVENDA,
     concat('SF2', trim(SD2.D2_FILIAL), trim(SD2.D2_CLIENTE), trim(SD2.D2_LOJA), trim(SD2.D2_DOC), trim(SD2.D2_SERIE)) as ID_NF,
 
-    SC5.C5_NUM AS NUMERO_DO_PEDIDO,
-    SC5.C5_EMISSAO AS DATA_DA_VENDA,
-    SC6.C6_ENTREG AS DATA_DA_ENTREGA,
-    SC6.C6_ITEM AS NUMERO_DO_ITEM,
-    SC6.C6_VALOR AS VL_VENDA_TOTAL,
-    SC6.C6_QTDVEN AS QTDE_VENDIDA,
-    SC6.C6_PRCVEN AS VL_PRECO_UNITARIO,
-    SC6.C6_VALOR AS VL_VENDA_MERCADORIA,
-    SC6.C6_VALOR AS VL_VENDA_LIQUIDA,
-    SC6.C6_PRUNIT AS VL_PRECO_LISTA,
+    SC5.C5_NUM as NUMERO_DO_PEDIDO,
+    SC5.C5_EMISSAO as DATA_DA_VENDA,
+    SC6.C6_ENTREG as DATA_DA_ENTREGA,
+    SC6.C6_ITEM as NUMERO_DO_ITEM,
+    SC6.C6_VALOR as VL_VENDA_TOTAL,
+    SC6.C6_QTDVEN as QTDE_VENDIDA,
+    SC6.C6_PRCVEN as VL_PRECO_UNITARIO,
+    SC6.C6_VALOR as VL_VENDA_MERCADORIA,
+    SC6.C6_VALOR as VL_VENDA_LIQUIDA,
+    SC6.C6_PRUNIT as VL_PRECO_LISTA,
     
     case when SC9.C9_BLEST = ' ' and SC9.C9_BLCRED = '  ' then 'Liberado' else 'Bloqueado' end as STATUS_DO_ITEM_DO_PEDIDO,    
     case
@@ -36,16 +37,21 @@ select
     end as STATUS_DO_PEDIDO
 
 from SC5010 SC5
-    INNER JOIN SC6010 SC6
-        ON C6_FILIAL = C5_FILIAL
-        AND C6_NUM = C5_NUM
-        AND SC6.D_E_L_E_T_ = ' '
+    inner join SC6010 SC6
+        on SC6.C6_FILIAL = SC5.C5_FILIAL
+        and SC6.C6_NUM = SC5.C5_NUM
+        and SC6.D_E_L_E_T_ = ' '
 
         left join ZC2010 ZC2 (nolock)
             on ZC2.D_E_L_E_T_ = ''
             and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
             and ZC2.ZC2_NUM = SC6.C6_YOS
             and ZC2.ZC2_ITEM = SC6.C6_YITOS
+
+            left join ZC1010 ZC1
+                on ZC1.D_E_L_E_T_ = ''
+                and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+                and ZC1.ZC1_NUM = ZC2.ZC2_NUM
     
     INNER JOIN SF4010 SF4
         ON F4_FILIAL = '      '
@@ -117,6 +123,6 @@ from SC5010 SC5
         and CTT.CTT_FILIAL = substring(SC6.C6_FILIAL, 1, 4)
         and CTT.CTT_CUSTO = SC6.C6_CCUSTO
 where
-        SC5.C5_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        SC5.C5_EMISSAO between <<START_DATE>> and <<FINAL_DATE>>
     and SC5.C5_TIPO = 'N'
     and SC5.D_E_L_E_T_ = ''
