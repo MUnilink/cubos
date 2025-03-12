@@ -73,7 +73,7 @@ FROM   (SELECT RA_FILIAL,
                        INNER JOIN RFQ010 RFQ
                                ON RFQ_FILIAL = Substring(RA_FILIAL, 1, 4)
                                   AND RFQ_PROCES = '00001'
-                                  AND RFQ_PERIOD = '202409'
+                                  AND RFQ_PERIOD=:PERIODO
                                   AND RFQ.D_E_L_E_T_ = ' '
                        INNER JOIN YDATA
                                ON ID BETWEEN RFQ_DTINI AND RFQ_DTFIM
