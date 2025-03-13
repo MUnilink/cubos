@@ -78,6 +78,12 @@ select
     trim(STJ.TJ_TIPO) as COD_CTIPO,
     trim(STE.TE_TIPOMAN) as TE_TIPOMAN,
 	trim(STE.TE_NOME) as CARAC_TIPO,
+    case STE.TE_CARACTE
+        when 'P' then 'PREVENTIVA'
+        when 'C' then 'CORRETIVA'
+        else 'OUTROS'
+    end as TE_CARACTE,
+    
     trim(ST4.T4_SERVICO) as COD_SERVICO,
 	trim(ST4.T4_NOME) as SERVICO,
     trim(STL.TL_TAREFA) as COD_TAREFA,
@@ -150,4 +156,9 @@ from STL010 STL (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = STL.TL_CODIGO
 
-where STL.D_E_L_E_T_ = ''
+where
+        STL.D_E_L_E_T_ = ''
+        STL.TL_SEQRELA>0
+    and left(STL.TL_DTFIM, 6)>=:PERIODO
+    and (ST9.T9_CODFAMI=:FAMILIA or lower(ST9.T9_CODFAMI)=:FAMILIA)
+    and STE.TE_CARACTE=:TIPO_MNT /* preventiva, corretiva ou todas */
