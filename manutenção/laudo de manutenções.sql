@@ -2,16 +2,22 @@ select
     STL.TL_FILIAL as FILIAL,
     STL.TL_ORDEM as OS,
     trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+    trim(ST9.T9_NOME) as NOME,
+	trim(TQR.TQR_DESMOD) as MODELO,
+	trim(ST9.T9_PLACA) as PLACA,
+	trim(ST9.T9_CODFAMI) as FAMILIA,
+	trim(ST7.T7_NOME) as FABRICANTE,
+	trim(ST9.T9_CHASSI) as CHASSI,
+	trim(ST9.T9_ANOMOD) as ANOMODELO,
+	trim(ST9.T9_ANOFAB) as ANOFABRIC,
+	trim(ST9.T9_RENAVAM) as RENAVAM,
+    (select TQ0010.TQ0_EIXOS from TQ0010 where TQ0010.D_E_L_E_T_ = '' and TQ0010.TQ0_DESENH = ST9.T9_CODFAMI and TQ0010.TQ0_TIPMOD = ST9.T9_TIPMOD) as EIXOS,
+    
     cast(STJ.TJ_DTORIGI as date) as DATA_OS,
     left(STJ.TJ_DTORIGI, 6) as PERIODO_OS,
-    ST9.T9_CODFAMI as FAMILIA,
-    cast(ST9.T9_DTBAIXA as date) as DT_BAIXA,
-	trim(STJ.TJ_USUAFIM) as USR_FIM,
-    trim(STJ.TJ_USUARIO) as USR_INI,
     trim(STJ.TJ_TERMINO) as TERMINO,
     trim(STJ.TJ_SITUACA) as SITUACAO,
 
-    cast(STI.TI_DATAPLA as date) as DATA_PLANO,
     trim(STI.TI_DESCRIC) as NOME_PLANO,
     trim(STI.TI_PLANO) as NUM_PLANO,
     
@@ -27,9 +33,6 @@ select
     case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), 113) else null end as DTH_INIPAR,
 	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DTH_FIMMNT,
     case when isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM), 113) else null end as DTH_FIMPAR,
-
-    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then cast(datediff(minute, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_PAR,
-    case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then cast(datediff(minute, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_MNT,
     
     left(STL.TL_DTFIM, 6) as PERIODO_APP,
     cast(STL.TL_DTFIM as date) as DATA_APP,
