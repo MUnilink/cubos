@@ -7,156 +7,148 @@ select distinct -- PEDIDO DE COMPRA
     CodigoCop = Cop.CdCop,
     DataCop = Cop.DtCop,
     DiaSemanaDataCop = Datename(dw, DtCop),
-    
     Autorizador = case when Cop.FlCopAut = 0 then 'Pedido NÃO Autorizado' else Isnull(Atd.NmPes, 'Pedido Autorizado') end,
     Comprador = case when Cop.CdCocufnOri is null then '' else Scp.Comprador/* .NmUsr */ end ,
     DtCotacao = Scp.DtCotacao, --Coc.DtCoc
---, AprovadorSolicitacao = Scp.AprovadorSolicitacao
-    AprovadorSolicitacao = case when (Scp.AprovadorSolicitacao is null and Scp.FlScpAut = 1) then 'Solicitação Aprovada Automaticamente' else Scp.AprovadorSolicitacao end,
+    AprovadorSolicitacao = case when (Scp.AprovadorSolicitacao is null and Scp.FlScpAut = 1) then 'Solicitação Aprovada Automaticamente' else Scp.AprovadorSolicitacao end, --Scp.AprovadorSolicitacao
     DhAprovadorSolicitacao = case when (Scp.DhAprovadorSolicitacao is null and Scp.FlScpAut = 1 and Scp.DhAprovadorSolicitacao = '1900-01-01 00:00:00.000') then ' ' else Scp.DhAprovadorSolicitacao end, -- TOTALIZADORES PEDIDO DE COMPRA
     ValorBruTot = CopTot.VrCopiteBru,
     ValorDesTot = CopTot.VrCopiteDes,
     ValorOesTot = CopTot.VrCopiteOes,
     ValorTot = CopTot.VrCopite,
     DataAutorizacao = AtdAut.DhAtdEfe, -- DOCUMENTO DE COMPRA
---,	DtAutorizacao = Cpd.DtCpdAut
+
     DtAutorizacao =
-    (select Top 1 Cpd.DtCpdAut
-     from TbCpo Cpo
-     join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
-     where Cpo.CdCopRem = CopRem.CdCopRem
-         and Cpd.FlCpdAut = 1
-     order by Cpd.CdCpd desc), --,	NmAutorizador = UsrAut.NmUsr
+    (   
+        select Top 1 Cpd.DtCpdAut
+        from TbCpo Cpo
+            inner join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
+                inner join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
+        where Cpo.CdCopRem = CopRem.CdCopRem
+            and Cpd.FlCpdAut = 1
+        order by Cpd.CdCpd desc
+    ), --,	DtAutorizacao = Cpd.DtCpdAut
 
     NmAutorizador =
-    (select Top 1 UsrAut.NmUsr
-     from TbCpo Cpo
-     join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
-     where Cpo.CdCopRem = CopRem.CdCopRem
-         and Cpd.FlCpdAut = 1
-     order by Cpd.CdCpd desc), --,	DtConferente = Cpd.DtCpdCnf
+    (   
+        select Top 1 UsrAut.NmUsr
+        from TbCpo Cpo
+            inner join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
+                inner join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
+        where Cpo.CdCopRem = CopRem.CdCopRem
+            and Cpd.FlCpdAut = 1
+        order by Cpd.CdCpd desc
+    ), --,	NmAutorizador = UsrAut.NmUsr
 
     DtConferente =
-    (select Top 1 Cpd.DtCpdCnf
-     from TbCpo Cpo
-     join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     join TbUsr UsrCnf on UsrCnf.CdUsr = Cpd.CdUsrCnf
-     where Cpo.CdCopRem = CopRem.CdCopRem
-         and Cpd.FlCpdCnf = 1
-     order by Cpd.CdCpd desc), --,	NmConferente = UsrCon.NmUsr
+    (   
+        select Top 1 Cpd.DtCpdCnf
+        from TbCpo Cpo
+            inner join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
+                inner join TbUsr UsrCnf on UsrCnf.CdUsr = Cpd.CdUsrCnf
+        where Cpo.CdCopRem = CopRem.CdCopRem
+            and Cpd.FlCpdCnf = 1
+        order by Cpd.CdCpd desc
+    ), --,	DtConferente = Cpd.DtCpdCnf
 
     NmConferente =
-    (select Top 1 UsrCnf.NmUsr
-     from TbCpo Cpo
-     join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     join TbUsr UsrCnf on UsrCnf.CdUsr = Cpd.CdUsrCnf
-     where Cpo.CdCopRem = CopRem.CdCopRem
-         and Cpd.FlCpdCnf = 1
-     order by Cpd.CdCpd desc), --,	DtContabil = Cpd.DtCpdCon
+    (   
+        select Top 1 UsrCnf.NmUsr
+        from TbCpo Cpo
+            inner join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
+                inner join TbUsr UsrCnf on UsrCnf.CdUsr = Cpd.CdUsrCnf
+        where Cpo.CdCopRem = CopRem.CdCopRem
+            and Cpd.FlCpdCnf = 1
+        order by Cpd.CdCpd desc
+    ), --,	NmConferente = UsrCon.NmUsr
 
     DtContabil =
     (select Top 1 Cpd.DtCpdCon
      from TbCpo Cpo
      join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     order by Cpd.CdCpd desc), --,	NmResponsavel = UsrRes.NmUsr
+     order by Cpd.CdCpd desc
+    ),--,	DtContabil = Cpd.DtCpdCon
 
     NmResponsavel =
-    (select Top 1 UsrRes.NmUsr
-     from TbCpo Cpo
-     join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     join TbUsr UsrRes on UsrRes.CdUsr = Cpd.CdUsrRes
-     where Cpo.CdCopRem = CopRem.CdCopRem
-     order by Cpd.CdCpd desc),
+    (
+        select Top 1 UsrRes.NmUsr
+        from TbCpo Cpo
+            inner join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
+                inner join TbUsr UsrRes on UsrRes.CdUsr = Cpd.CdUsrRes
+        where Cpo.CdCopRem = CopRem.CdCopRem
+        order by Cpd.CdCpd desc
+    ),  --,	NmResponsavel = UsrRes.NmUsr
     
     DtRecebimento =
-    (select Top 1 Cpd.DtCpdCon
-     from TbCpo Cpo
-     join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
-     join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
-     where Cpo.CdCopRem = CopRem.CdCopRem
-         and Cpd.FlCpdAut = 1
-     order by Cpd.CdCpd desc), --EMPRESA
-                                                                           Empresa = Une.NmUne,
-                                                                           CodigoUne = Une.CdUne,
-                                                                           LogradouroUne = Convert(Varchar(100), IsNull(RTrim(PesUne.SgTlg) + ' ' + PesUne.NmLgr + ', ', '') + IsNull(PesUne.NrPesEdr + ', ', '') + IsNull(PesUne.NrPesEdrCom, '')),
-                                                                           BairroUne = PesUne.NmLocBai,
-                                                                           CidadeUne = PesUne.NmLocCid,
-                                                                           EstadoUne = PesUne.SgLocEst,
-                                                                           CepUne = PesUne.NrPesEdrCep --,	CnpjUne = 	CASE PesUne.TpPes
---				When 1 Then Stuff(Stuff(Stuff(Stuff(Right('00000000000000' + convert(varchar, IsNull(PesUne.NrPesCpj, '******')), 14), 13, 0, '-'), 9, 0, '/'), 6, 0, '.'), 3, 0, '.')
---				Else Stuff(Stuff(Stuff(Right('00 000 000 000' + convert(varchar, IsNull(PesUne.NrPesCpj, '*****')), 11), 10, 0, '-'), 7, 0, '.'), 4, 0, '.')
---				End
- ,
-                                                                           CnpjUne = case PesUne.TpPes
-                                                                                         when 1 then Stuff(Stuff(Stuff(Stuff(Right('00000000000000' + IsNull(convert(varchar, PesUne.NrPesCpj), '******'), 14), 13, 0, '-'), 9, 0, '/'), 6, 0, '.'), 3, 0, '.')
-                                                                                         else Stuff(Stuff(Stuff(Right('00 000 000 000' + IsNull(convert(varchar, PesUne.NrPesCpj), '*****'), 11), 10, 0, '-'), 7, 0, '.'), 4, 0, '.')
-                                                                                     end ,
-                                                                                     CgfUne = PesUne.NrPesCgf,
-                                                                                     FoneUne = '(' + Convert(VarChar, PesUne.NrLocCidDdd) + ') ' + Convert(VarChar, MctUne.NrMctTel),
-                                                                                     EmailUne = IsNull(convert(varchar(60), MctUne001.NrMctEnd), ''),
-                                                                                     SiteUne = IsNull(convert(varchar(60), MctUne002.NrMctEnd), '') -- FORNECEDOR
-,
-                                                                                     Fornecedor = IsNull(PesFrn.NmPes, ''),
-                                                                                     CodigoFrn = Frn.CdFrn,
-                                                                                     FornecedorMae = FrnMae.NmFrn,
-                                                                                     CodigoFrnMae = FrnMae.CdFrn,
-                                                                                     LogradouroFrn = Convert(Varchar(100), IsNull(RTrim(PesFrn.SgTlg) + ' ' + Isnull(PesFrn.NmLgr, '') + ', ', '') + IsNull(PesFrn.NrPesEdr + ', ', '') + IsNull(PesFrn.NrPesEdrCom, '')),
-                                                                                     BairroFrn = PesFrn.NmLocBai,
-                                                                                     CidadeFrn = PesFrn.NmLocCid,
-                                                                                     EstadoFrn = PesFrn.SgLocEst,
-                                                                                     CepFrn = PesFrn.NrPesEdrCep --,	CnpjFrn = 	CASE PesFrn.TpPes
---				When 1 Then Stuff(Stuff(Stuff(Stuff(Right('00000000000000' + convert(varchar, IsNull(PesFrn.NrPesCpj, '******')), 14), 13, 0, '-'), 9, 0, '/'), 6, 0, '.'), 3, 0, '.')
---				Else Stuff(Stuff(Stuff(Right('00 000 000 000' + convert(varchar, IsNull(PesFrn.NrPesCpj, '*****')), 11), 10, 0, '-'), 7, 0, '.'), 4, 0, '.')
---				End
- ,
-                                                                                     CnpjFrn = case PesFrn.TpPes
-                                                                                                   when 1 then Stuff(Stuff(Stuff(Stuff(Right('00000000000000' + IsNull(convert(varchar, PesFrn.NrPesCpj), '******'), 14), 13, 0, '-'), 9, 0, '/'), 6, 0, '.'), 3, 0, '.')
-                                                                                                   else Stuff(Stuff(Stuff(Right('00 000 000 000' + IsNull(convert(varchar, PesFrn.NrPesCpj), '*****'), 11), 10, 0, '-'), 7, 0, '.'), 4, 0, '.')
-                                                                                               end,
-                                                                                               CgfFrn = Isnull(PesFrn.NrPesCgf, '') --,	FoneFrn = '(' + Convert(VarChar, PesFrn.NrLocCidDdd) + ') ' + Convert(VarChar, MctFrn.NrMctTel) + IsNull(' ' + MctFrn.NmMct, '')
-,
-                                                                                               FoneFrn = Isnull(PesFrn.TelFrn, ''),
-                                                                                               Contato = Isnull(PesFrn.ContFrn, '') -- REMESSA
-,
-                                                                                               CodigoRem = Coprem.CdCopRem,
-                                                                                               DataRem = Coprem.DtCopRem,
-                                                                                               DiaSemanaDataRem = Datename(dw, Coprem.DtCopRem),
-                                                                                               DataRec = Coprem.DtCopRemRec,
-                                                                                               DiaSemanaDataRec = Datename(dw, Coprem.DtCopRemRec) -- ITEM
-,
-                                                                                               CodigoIte = Copite.CdCopite,
-                                                                                               NomeCodigoAlt = Tca.NmTca,
-                                                                                               CodigoObjAlt = IsNull(Cao.NrCao, ''),
-                                                                                               Objeto = Obj.NmObj + case
-                                                                                                                        when Com.NmCom is null then ''
-                                                                                                                        else ' ' + Com.NmCom
-                                                                                                                    end,
-                                                                                                                    CodigoObj = Obj.CdObj,
-                                                                                                                    QuantidadeIte = CopIte.QtCopite,
-                                                                                                                    UnidadeIte = Und.SgUnd,
-                                                                                                                    PrecoUntIte = Copite.VrCopiteUnt,
-                                                                                                                    ValorIte = Copite.VrCopite,
-                                                                                                                    IPIIte = Convert(Decimal(19, 0), 100 * NullIf(Copits.VrCopits / Copite.VrCopiteBru, 0)) -- CONDIÇÕES DE PAGAMENTO
-,
-                                                                                                                    FormaPagamento = Fpg.NmFpg,
-                                                                                                                    PrazoMedio = Fpg.QtFpgPrzMed,
-                                                                                                                    TipoOperacao = Top0.NmTop,
-                                                                                                                    TipoFrete = Dom.Description,
-                                                                                                                    Transportadora = Isnull(PesTra.NmPes, '') -- OBSERVAÇÃO
-,
-                                                                                                                    Obs = IsNull(Cop.TtCop, '') --Usu´ario que fez solicitacao de comrpa
---,	Requisitante = Requisitante.Usuario
-,
-                                                                                                                    Requisitante = Scp.Solicitante --(Select top 1 Usr.NmUsr
- --                      From TbUsr Usr
- --                      join TbScp Scp on Scp.CdUsr = Usr.CdUsr
- --				   join TbCocScp CosScp on CosScp.CdScp = Scp.CdScp
- --				   where CosScp.CdCoc = Coc.CdCoc)
-,
-                                                                                                                    DtRequisicao = Scp.DtSolicitacao --(Select top 1 Scp.DtScp From TbScp Scp join TbCocScp CosScp on CosScp.CdScp = Scp.CdScp where CosScp.CdCoc = Coc.CdCoc)
- -- PEDIDO DE COMPRA
+    (
+        select Top 1 Cpd.DtCpdCon
+        from TbCpo Cpo
+            inner join TbCpd Cpd on Cpd.CdCpd = Cpo.Cdcpd
+                inner join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
+        where Cpo.CdCopRem = CopRem.CdCopRem and Cpd.FlCpdAut = 1
+        order by Cpd.CdCpd desc
+    ),
+    
+    Empresa = Une.NmUne,
+    CodigoUne = Une.CdUne,
+    LogradouroUne = Convert(Varchar(100), IsNull(RTrim(PesUne.SgTlg) + ' ' + PesUne.NmLgr + ', ', '') + IsNull(PesUne.NrPesEdr + ', ', '') + IsNull(PesUne.NrPesEdrCom, '')),
+    BairroUne = PesUne.NmLocBai,
+    CidadeUne = PesUne.NmLocCid,
+    EstadoUne = PesUne.SgLocEst,
+    CepUne = PesUne.NrPesEdrCep,
+    
+    CnpjUne =
+        case PesUne.TpPes
+            when 1 then Stuff(Stuff(Stuff(Stuff(Right('00000000000000' + IsNull(convert(varchar, PesUne.NrPesCpj), '******'), 14), 13, 0, '-'), 9, 0, '/'), 6, 0, '.'), 3, 0, '.')
+            else Stuff(Stuff(Stuff(Right('00 000 000 000' + IsNull(convert(varchar, PesUne.NrPesCpj), '*****'), 11), 10, 0, '-'), 7, 0, '.'), 4, 0, '.')
+        end,
+    
+    CgfUne = PesUne.NrPesCgf,
+    FoneUne = '(' + Convert(VarChar, PesUne.NrLocCidDdd) + ') ' + Convert(VarChar, MctUne.NrMctTel),
+    EmailUne = IsNull(convert(varchar(60), MctUne001.NrMctEnd), ''),
+    SiteUne = IsNull(convert(varchar(60), MctUne002.NrMctEnd), ''), -- FORNECEDOR
+    Fornecedor = IsNull(PesFrn.NmPes, ''),
+    CodigoFrn = Frn.CdFrn,
+    FornecedorMae = FrnMae.NmFrn,
+    CodigoFrnMae = FrnMae.CdFrn,
+    LogradouroFrn = Convert(Varchar(100), IsNull(RTrim(PesFrn.SgTlg) + ' ' + Isnull(PesFrn.NmLgr, '') + ', ', '') + IsNull(PesFrn.NrPesEdr + ', ', '') + IsNull(PesFrn.NrPesEdrCom, '')),
+    BairroFrn = PesFrn.NmLocBai,
+    CidadeFrn = PesFrn.NmLocCid,
+    EstadoFrn = PesFrn.SgLocEst,
+    CepFrn = PesFrn.NrPesEdrCep,
+    
+    CnpjFrn =
+        case PesFrn.TpPes
+            when 1 then Stuff(Stuff(Stuff(Stuff(Right('00000000000000' + IsNull(convert(varchar, PesFrn.NrPesCpj), '******'), 14), 13, 0, '-'), 9, 0, '/'), 6, 0, '.'), 3, 0, '.')
+            else Stuff(Stuff(Stuff(Right('00 000 000 000' + IsNull(convert(varchar, PesFrn.NrPesCpj), '*****'), 11), 10, 0, '-'), 7, 0, '.'), 4, 0, '.')
+        end,
+    
+    CgfFrn = Isnull(PesFrn.NrPesCgf, ''),
+    FoneFrn = Isnull(PesFrn.TelFrn, ''),
+    Contato = Isnull(PesFrn.ContFrn, ''),
+    CodigoRem = Coprem.CdCopRem,
+    DataRem = Coprem.DtCopRem,
+    DiaSemanaDataRem = Datename(dw, Coprem.DtCopRem),
+    DataRec = Coprem.DtCopRemRec,
+    DiaSemanaDataRec = Datename(dw, Coprem.DtCopRemRec), -- ITEM
+    CodigoIte = Copite.CdCopite,
+    NomeCodigoAlt = Tca.NmTca,
+    CodigoObjAlt = IsNull(Cao.NrCao, ''),
+    Objeto = Obj.NmObj + case when Com.NmCom is null then '' else ' ' + Com.NmCom end,
+    CodigoObj = Obj.CdObj,
+    QuantidadeIte = CopIte.QtCopite,
+    UnidadeIte = Und.SgUnd,
+    PrecoUntIte = Copite.VrCopiteUnt,
+    ValorIte = Copite.VrCopite,
+    IPIIte = Convert(Decimal(19, 0), 100 * NullIf(Copits.VrCopits / Copite.VrCopiteBru, 0)), -- CONDIÇÕES DE PAGAMENTO
+    FormaPagamento = Fpg.NmFpg,
+    PrazoMedio = Fpg.QtFpgPrzMed,
+    TipoOperacao = Top0.NmTop,
+    TipoFrete = Dom.Description,
+    Transportadora = Isnull(PesTra.NmPes, ''), -- OBSERVAÇÃO
+    Obs = IsNull(Cop.TtCop, '') --Usuário que fez solicitacao de comrpa
+    Requisitante = Scp.Solicitante, --Requisitante.Usuario
+    DtRequisicao = Scp.DtSolicitacao
 from TbCopIte CopIte
     inner join TbObj Obj on Obj.CdObj = CopIte.CdObj
         left join TbCao Cao on Cao.CdObj = Obj.CdObj
