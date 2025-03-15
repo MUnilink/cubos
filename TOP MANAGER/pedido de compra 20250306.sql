@@ -158,19 +158,18 @@ from TbCopIte CopIte
                 and Tca.CdTca = Cao.CdTca
     inner join TbUap Uap on Uap.CdUap = CopIte.CdUap
         inner join TbUnd Und on Und.CdUnd = Uap.CdUnd
-    left join TbCom Com on Com.CdCom = Copite.CdCom
+    left join TbCom Com on Com.CdCom = CopIte.CdCom
+    left join TbCopits Copits on Copits.CdCopite = CopIte.CdCopite
+        inner join TbOes Oes on Oes.SgOes = 'IPI' and Copits.CdOes = Oes.CdOes -- CONDIÇÕES DE PAGAMENTO
     
     inner join TbCopRem CopRem on CopRem.CdCopRem = CopIte.CdCopRem
-    left join TbCpo Cpo on Cpo.CdCopRem = CopRem.CdCopRem
-        left join TbCpd Cpd on Cpd.CdCpd = Cpo.CdCpd
-            left join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
-            left join TbUsr UsrCon on UsrCon.CdUsr = Cpd.CdUsrCnf
-            left join TbUsr UsrRes on UsrRes.CdUsr = Cpd.CdUsrRes
+        left join TbCpo Cpo on Cpo.CdCopRem = CopRem.CdCopRem
+            left join TbCpd Cpd on Cpd.CdCpd = Cpo.CdCpd
+                left join TbUsr UsrAut on UsrAut.CdUsr = Cpd.CdUsrAut
+                left join TbUsr UsrCon on UsrCon.CdUsr = Cpd.CdUsrCnf
+                left join TbUsr UsrRes on UsrRes.CdUsr = Cpd.CdUsrRes
         
         inner join TbCop Cop on Cop.CdCop = CopRem.CdCop
-            left join TbCopits Copits
-            inner join TbOes Oes on Oes.SgOes = 'IPI' on Copits.CdCopite = Copite.CdCopite and Copits.CdOes = Oes.CdOes -- CONDIÇÕES DE PAGAMENTO
-
             inner join TbTop Top0 on Top0.CdTop = Cop.CdTop
             inner join VwDom Dom on Dom.Field = 'TpCopFrt' and Dom.Number = Cop.TpCopFrt
             left join TbFpg Fpg on Fpg.CdFpg = Cop.CdFpg
