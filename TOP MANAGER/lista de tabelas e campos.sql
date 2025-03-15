@@ -26,7 +26,46 @@ from sys.foreign_keys fk
 
 where
         tabref.schema_id = 1 and tabori.schema_id = 1
-    --and tabref.type_desc in ('USER_TABLE', 'VIEW')
-    and lower(tabref.name) in ('tbdoc')
-	--and lower(tabori.name) in ('tbpes')
-order by 2
+    --and tabref.type_desc in ('USER_TABLE', 'VIEW') order by tabela_ref
+	--and lower(tabref.name) in (lower('tbobj')) order by tabela_ori
+	--and lower(tabori.name) in (lower('tbobj')) order by tabela_ref
+	
+	and lower(fk_colsref.name) in (lower('tpobj')) order by tabela_ori
+	--and lower(fk_colsori.name) in (lower('cdobj')) order by tabela_ref
+
+
+select * from TbCop pedidoCompra
+select * from TbCopite pedidoCompraItem1
+select * from TbCopits pedidoCompraItem2
+select * from TbScp solicitacaoCompra
+select * from TbCoprem
+select * from TbCocsca cotacao
+select * from TbCocscp
+
+select * from TbCld CLD
+select * from TbAgc agencia
+select * from TbDep
+select * from TbFin fim
+select * from TbCcs ccusto
+select * from TbLfs lancFiscal
+select * from TbLot loteOuLotacao select * from TbObj
+
+select * from TbCocfrn
+select * from TbCocune
+select * from TbCocufn
+
+select * from TbFrn fornecedor
+select * from Projetos
+select * from TbClp
+select * from TbTdo tipoDoc
+select * from TbUne unidade
+select * from TbUsr usuarios
+select * from TbFpg condPagto
+select * from TbTop operacao
+select * from TbOed
+select * from TbOep
+select * from TbOes
+
+select * from TbObj
+select * from TbObj
+select * from TbTit

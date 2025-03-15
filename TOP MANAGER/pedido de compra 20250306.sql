@@ -146,7 +146,7 @@ select distinct -- PEDIDO DE COMPRA
     TipoOperacao = Top0.NmTop,
     TipoFrete = Dom.Description,
     Transportadora = Isnull(PesTra.NmPes, ''), -- OBSERVAÇÃO
-    Obs = IsNull(Cop.TtCop, '') --Usuário que fez solicitacao de comrpa
+    Obs = IsNull(Cop.TtCop, ''), --Usuário que fez solicitacao de comrpa
     Requisitante = Scp.Solicitante, --Requisitante.Usuario
     DtRequisicao = Scp.DtSolicitacao
 from TbCopIte CopIte
@@ -293,11 +293,12 @@ from TbCopIte CopIte
                             inner join TbMct Mct on Mct.CdPes = Pes.CdPes
                                 inner join TbTmc Tmc on Tmc.CdTmc = Mct.CdTmc
                         where Tmc.TpTmc = 2 -- e-Mail
-                        order by Mct.CdMct) MctUne001 on MctUne001.CdPes = PesUne.CdPes
+                        order by Mct.CdMct
+                    ) MctUne001 on MctUne001.CdPes = PesUne.CdPes
                     
                     left join
                     (
-                        elect Top 1
+                        select Top 1
                             Pes.CdPes ,
                             Mct.NrMctEnd
                         from TbPes Pes
