@@ -43,6 +43,8 @@ select
     upper(trim(SE2.E2_APROVA)) as APR_TITULO,
     upper(trim(SE2.E2_USUALIB)) as LIB_TITULO,
 
+	trim(SE2.E2_NATUREZ) as NATUREZA,
+	trim(SED.ED_DESCRIC) as DESC_NATUREZA,
     trim(SE2.E2_CONTAD) as CONTA,
     trim(SE2.E2_DEBITO) as CONTA_DEB,
     trim(SE2.E2_CREDIT) as CONTA_CRE,
@@ -196,5 +198,8 @@ from SE2010 SE2 (nolock)
     left join CTD010 CTD (nolock)
         on CTD.D_E_L_E_T_ = ''
         and CTD.CTD_ITEM = SE2.E2_ITEMCTA
+	left join SED010 SED (nolock)
+		on SED.D_E_L_E_T_ = ''
+		and SED.ED_CODIGO = SE2.E2_NATUREZ
 
 where SE2.D_E_L_E_T_ = ''
