@@ -70,6 +70,9 @@ where
             /* LP 610-030 */
             when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC1)
             when trim(CFOP.X5_CHAVE) in (5352, 5351) and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
+            /*LP 610-050 */
+            when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES = '522' then trim(SB1.B1_YCTREC5)
+            when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then trim(SB1.B1_YCTREC4)
         else null end
     = '310102003'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
