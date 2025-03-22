@@ -1,4 +1,4 @@
-select distinct
+select
     ZE2.ZE2_COD as CODIGO,
     upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) as DESCRICAO,
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
@@ -49,3 +49,4 @@ from ZE3010 ZE3 (nolock)
         and ZE2.ZE2_COD = ZE3.ZE3_ITEMPL
 where
         ZE3.D_E_L_E_T_ = ''
+    and ZE3.ZE3_COMPET=:COMPETENCIA
