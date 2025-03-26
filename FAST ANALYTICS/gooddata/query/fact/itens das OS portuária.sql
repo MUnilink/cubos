@@ -17,7 +17,7 @@ select
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
 
-    case when cast(ZC2.ZC2_TIPO as int) in (1, 11) then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
+    case when cast(ZC2.ZC2_TIPO as int) = 1 then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
     case when cast(ZC2.ZC2_TIPO as int) = 3 then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13)) else null end as COD_DA3,
     case when cast(ZC2.ZC2_TIPO as int) = 2 then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (2, 14)) else null end as COD_SRJ,
     null as COD_ZA7,
@@ -121,5 +121,5 @@ from ZC2010 ZC2 (nolock)
         and PV.OS = ZC2.ZC2_NUM
 where
         ZC1.ZC1_DTINI between <<START_DATE>> and <<FINAL_DATE>>
-    and cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 11)
+    and cast(ZC2.ZC2_TIPO as int) in (1, 2, 3)
     and ZC2.D_E_L_E_T_ = ''
