@@ -2,10 +2,12 @@ select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
+
     
     ZC2.QTDxVALORUNI as VALOR_PROD,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_IMPR,
-    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLPROD) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as CUSTO_PROD,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLTOTL) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_TOTAL,
+    case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_IMPR,
+    
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_PAD,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORAS_IMPR,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_OPP,
@@ -133,18 +135,11 @@ from
             ZC1010.ZC1_DESPA,
             ZC1010.ZC1_LJDESP,
             
-            trim(ZC1010.ZC1_PORTO) as PORTO,
-            trim(ZC1010.ZC1_NAVIO) as NAVIO,
-            trim(ZC1010.ZC1_TABPRC) as TABELADEPRECO,
-            trim(ZC1010.ZC1_VIAGEM) as VIAGEM_PORT,
-            trim(ZC2010.ZC2_CONTEI) as CONTEINER,
-            trim(ZC2010.ZC2_LACRE) as LACRE,
             cast(ZC2010.ZC2_DATA as date) as DATA_ITEM,
             cast(ZC2010.ZC2_DTINI as date) as DATA_INIAPONT,
             cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAPONT,
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
-            
             case cast(ZC2010.ZC2_TIPO as int)
                 when 1 then 'RECEITA'
                 when 2 then 'FOLHA'
@@ -173,8 +168,6 @@ from
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
             
             cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as HORAS_PROD,
-            cast(ZC2010.ZC2_QTDPRV as numeric(15, 2)) * cast(ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
-            cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) * cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
             cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
         
@@ -224,5 +217,3 @@ from
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
-
-where ZC2.PERIODO=:PERIODO_CUSTO
