@@ -36,20 +36,20 @@ select
     DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DUD.DUD_VIAGEM), 1) as IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
 
-    DT6C.D2_DOC as DOCOMP_DOC,
-    DT6C.D2_SERIE as DOCOMP_SERIE,
-    DT6C.D2_TOTAL as DOCOMP_TOTAL,
-    DT6C.D2_VALIPI as DOCOMP_VALIPI,
-    DT6C.D2_VALICM as DOCOMP_VALICM,
-    cast(DT6C.D2_EMISSAO as date) as DOCOMP_EMISSAO,
+    COMP.D2_DOC as DOCOMP_DOC,
+    COMP.D2_SERIE as DOCOMP_SERIE,
+    COMP.D2_TOTAL as DOCOMP_TOTAL,
+    COMP.D2_VALIPI as DOCOMP_VALIPI,
+    COMP.D2_VALICM as DOCOMP_VALICM,
+    cast(COMP.D2_EMISSAO as date) as DOCOMP_EMISSAO,
 
-    SC5.C5_NUM as RPS_PEDIDO,
-    RPS.D2_DOC as RPS_DOC,
-    RPS.D2_SERIE as RPS_SERIE,
-    RPS.D2_TOTAL as RPS_TOTAL,
-    RPS.D2_VALIPI as RPS_VALIPI,
-    RPS.D2_VALICM as RPS_VALICM,
-    cast(RPS.D2_EMISSAO as date) as RPS_EMISSAO,
+    SC5.C5_NUM as NFS_PEDIDO,
+    NFS.D2_DOC as NFS_DOC,
+    NFS.D2_SERIE as NFS_SERIE,
+    NFS.D2_TOTAL as NFS_TOTAL,
+    NFS.D2_VALIPI as NFS_VALIPI,
+    NFS.D2_VALICM as NFS_VALICM,
+    cast(NFS.D2_EMISSAO as date) as NFS_EMISSAO,
 
     SE1.E1_NUM as ND_TITULO,
     SE1.E1_VALOR as ND_VALOR,
@@ -60,37 +60,101 @@ select
     cast(VIAGEM.DTQ_DATENC as date) as DT_ENCVGA,
     left(VIAGEM.DTQ_DATGER, 6) as PERIODO_GERVGA,
     left(VIAGEM.DTQ_DATFEC, 6) as PERIODO_FECVGA,
-    left(VIAGEM.DTQ_DATENC, 6) as PERIODO_ENCVGA
+    left(VIAGEM.DTQ_DATENC, 6) as PERIODO_ENCVGA,
+
+    case
+        /* LP 610-001 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
+        /* LP 610-040 */
+        when trim(CFOP.X5_CHAVE) = 5359 then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        /* LP 610-600 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        /* LP 610-010 */
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /* LP 610-020 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /* LP 610-030 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /*LP 610-050 */
+        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES = '522' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
+        /* LP 610-015 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+    else null end as LP_CRE
 
 from DUD010 DUD (nolock)
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
-        and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
+        and SC5.C5_FILIAL = DUD.DUD_FILDOC
+        and SC5.C5_YVIAGEM = DUD.DUD_VIAGEM
 
-        left join SD2010 RPS (nolock)
-            on RPS.D_E_L_E_T_ = ''
-            and RPS.D2_FILIAL = SC5.C5_FILIAL
-            and RPS.D2_DOC = SC5.C5_NOTA
-            and RPS.D2_SERIE = SC5.C5_SERIE
-            and RPS.D2_CLIENTE = SC5.C5_CLIENTE
-            and RPS.D2_LOJA = SC5.C5_LOJACLI
+        left join SD2010 NFS (nolock)
+            on NFS.D_E_L_E_T_ = ''
+            and NFS.D2_FILIAL = SC5.C5_FILIAL
+            and NFS.D2_DOC = SC5.C5_NOTA
+            and NFS.D2_SERIE = SC5.C5_SERIE
+            and NFS.D2_CLIENTE = SC5.C5_CLIENTE
+            and NFS.D2_LOJA = SC5.C5_LOJACLI
+
+            left join SF4010 NFS_TES (nolock)
+                on NFS_TES.D_E_L_E_T_ = ''
+                and NFS_TES.F4_CODIGO = NFS.D2_TES
+            left join SX5010 NFS_CFOP (nolock)
+                on NFS_CFOP.D_E_L_E_T_ = ''
+                and NFS_CFOP.X5_TABELA = '13'
+                and NFS_CFOP.X5_CHAVE = NFS.D2_CF
     
     left join SE1010 SE1 (nolock)
         on SE1.D_E_L_E_T_ = ''
-        and trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM
+        and SE1.E1_FILIAL = DUD.DUD_FILDOC
+        and SE1.E1_YVIATMS = DUD.DUD_VIAGEM
     
-    left join DT6010 DT6
+    left join DT6010 DT6 (nolock)
         on DT6.D_E_L_E_T_ = ''
         and DT6.DT6_FILDOC = DUD.DUD_FILDOC
         and DT6.DT6_DOC = DUD.DUD_DOC
         and DT6.DT6_SERIE = DUD.DUD_SERIE
             
-        left join SD2010 DT6C (nolock)
-            on DT6C.D_E_L_E_T_ = ''
-            and DT6C.D2_NFORI = DT6.DT6_DOC
-            and DT6C.D2_SERIORI = DT6.DT6_SERIE
-            and DT6C.D2_CLIENTE = DT6.DT6_CLIDEV
-            and DT6C.D2_LOJA = DT6.DT6_LOJDEV
+        left join SD2010 COMP (nolock)
+            on COMP.D_E_L_E_T_ = ''
+            and COMP.D2_NFORI = DT6.DT6_DOC
+            and COMP.D2_SERIORI = DT6.DT6_SERIE
+            and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
+            and COMP.D2_LOJA = DT6.DT6_LOJDEV
+
+            left join SF4010 NFC_TES (nolock)
+                on NFC_TES.D_E_L_E_T_ = ''
+                and NFC_TES.F4_CODIGO = COMP.D2_TES
+            left join SX5010 NFC_CFOP (nolock)
+                on NFC_CFOP.D_E_L_E_T_ = ''
+                and NFC_CFOP.X5_TABELA = '13'
+                and NFC_CFOP.X5_CHAVE = COMP.D2_CF
+        
+        left join SD2010 SD2 (nolock)
+            on SD2.D_E_L_E_T_ = ''
+            and SD2.D2_DOC = DT6.DT6_DOC
+            and SD2.D2_SERIE = DT6.DT6_SERIE
+            and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
+            and SD2.D2_LOJA = DT6.DT6_LOJDEV
+
+            left join SF4010 SF4 (nolock)
+                on SF4.D_E_L_E_T_ = ''
+                and SF4.F4_CODIGO = SD2.D2_TES
+            left join SX5010 CFOP (nolock)
+                on CFOP.D_E_L_E_T_ = ''
+                and CFOP.X5_TABELA = '13'
+                and CFOP.X5_CHAVE = SD2.D2_CF
+            left join SB1010 SB1 (nolock)
+                on SB1.D_E_L_E_T_= ''
+                and SB1.B1_COD = SD2.D2_COD
+
         left join DTC010 DTC
             on DTC.D_E_L_E_T_ = ''
             and DTC.DTC_FILDOC = DT6.DT6_FILDOC
@@ -160,13 +224,13 @@ from DUD010 DUD (nolock)
             (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
             (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
             (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-        from DTQ010 DTQ
-            left join DTR010 DTR
+        from DTQ010 DTQ (nolock)
+            left join DTR010 DTR (nolock)
                 on DTR.D_E_L_E_T_ = ''
                 and DTR.DTR_FILORI = DTQ.DTQ_FILORI
                 and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
                 
-                left join DUP010
+                left join DUP010 (nolock)
                     on DUP010.D_E_L_E_T_ = ''
                     and DUP010.DUP_FILORI = DTR.DTR_FILORI
                     and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
