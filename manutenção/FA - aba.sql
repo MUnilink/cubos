@@ -13,7 +13,18 @@ select
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
 	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
-	ZD3.TQN_YITMCT as TQN_YITMCT
+	ZD3.TQN_YITMCT as TQN_YITMCT,
+
+	/* RM */
+	convert(datetime, ZD3.DATA_ABA, 113) as DATA_ABA,
+	ZD3.TIPO_ABA,
+
+	case
+		when ST9.T9_CODFAMI = 'VP' then ZD3.ZD3_KMRD /* não calcula para ARLA e parcial*/
+		when ZD3.ZD3_HODOM < lag(ZD3.ZD3_HODOM, 1, 0) over (partition by ZD3.ZD3_VEICUL, ZD3.ZD3_COMB order by ZD3.ZD3_VEICUL, ZD3.ZD3_DATA, ZD3.ZD3_HORA) then ZD3.ZD3_HODOM /* quando quebra */
+		else ZD3.ZD3_HODOM - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = ZD3.ZD3_VEICUL and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < concat(ZD3.ZD3_DATA, ' ', ZD3.ZD3_HORA))
+	end as km_TQN
+
 from
 	(
 		select
@@ -27,7 +38,10 @@ from
 			ZD30.ZD3_TOTAL,
 			ZD30.ZD3_TANQUE,
 			ZD30.ZD3_COMB,
+			left(ZD30.ZD3_DATA, 14) as DATA_ABA,
+			case when right(trim(ZD30.ZD3_DATA), 1) = '*' then 'P' else 'C' end as TIPO_ABA,
 			left(ZD30.ZD3_DATA, 8) as ZD3_DATA,
+			left(right(trim(ZD30.ZD3_DATA), 7), 5) as ZD3_HORA,
 			ZD30.ZD3_KML,
 			ZD30.ZD3_KMRD,
 
@@ -59,7 +73,7 @@ from
 					and TQN010.TQN_FROTA = ZD30.ZD3_VEICUL
 					and TQN010.TQN_DTABAS = substring(ZD30.ZD3_DATA, 1, 8)
 					and TQN010.TQN_HRABAS = substring(ZD30.ZD3_DATA, 10, 5)
-			) as TQN_YITMCT		
+			) as TQN_YITMCT
 		from ZD3010 ZD30
 		where ZD30.D_E_L_E_T_ = ''
 	) as ZD3
