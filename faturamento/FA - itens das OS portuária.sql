@@ -4,7 +4,7 @@ select
     OS.BK_FILIAL,
     OS.BK_CLIENTE,
     OS.BK_FORNECEDOR,
-    OS.ID_MERCADORIA,
+    OS.ID_PRODUTO,
     OS.ID_OSPORTUARIA,
     PV.ID_PEDIDODEVENDA,
     PV.ID_NFS,
@@ -19,35 +19,30 @@ select
     OS.COD_SB1,
     OS.COD_DA3,
     OS.COD_SRJ,
-    null as COD_ZA7,
-    null as COD_SE1,
+    OS.COD_ZA7,
+    OS.COD_SE1,
 
     OS.INSUMO,
-    OS.ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
-    OS.DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
 
     null as ITEM_RATEIO,
-    PV.QTD as QTD_RATEIO,
+    sum(PV.QTD) as QTD_RATEIO,
     null as PERC_RATEIO,
     
-    OS.QTD_PREV,
-    OS.QTD_REAL,
-    OS.VAL_PREV,
-    OS.VAL_REAL,
-    OS.VAL_PREV_TOTAL,
-    OS.VAL_REAL_TOTAL,
-    OS.VALOR_TOTAL,
-    OS.QTD_RECURSO,
-    OS.HORAS_APONT,
-	OS.HORAS_TOTAIS,
-    
-    (select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '3' and ZC7010.ZC7_CODIGO = ZC2010.ZC2_COD and ZC7010.ZC7_COMPET = left(ZC2010.ZC2_COMPET, 6)) as HORAS_PADRAO,
-    (select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '3' and ZC7010.ZC7_CODIGO = ZC2010.ZC2_COD and ZC7010.ZC7_COMPET = left(ZC2010.ZC2_COMPET, 6)) as HORAS_IMPR,
-    (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '3' and ZC7010.ZC7_CC = 305 and ZC7010.ZC7_CC = PV.CC and ZC7010.ZC7_CODIGO = ZC2010.ZC2_COD and ZC7010.ZC7_COMPET = left(ZC2010.ZC2_COMPET, 6)) as HORAS_PROD
+    cast(sum(OS.QTD_PREV) as numeric(15, 2)) as QTD_PREV,
+    cast(sum(OS.QTD_REAL) as numeric(15, 2)) as QTD_REAL,
+    cast(sum(OS.VAL_PREV) as numeric(15, 2)) as VAL_PREV,
+    cast(sum(OS.VAL_REAL) as numeric(15, 2)) as VAL_REAL,
+    cast(sum(OS.VAL_PREV_TOTAL) as numeric(15, 2)) as VAL_PREV_TOTAL,
+    cast(sum(OS.VAL_REAL_TOTAL) as numeric(15, 2)) as VAL_REAL_TOTAL,
+    cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) as VALOR_TOTAL,
+    cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
+    cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
+	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
+    OS.USUARIO
 
 from
     (
@@ -57,7 +52,7 @@ from
             'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4010.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4010.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
             'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1010.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1010.A1_COD, ' '))+RTRIM(COALESCE(SA1010.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
             'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2010.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2010.A2_COD, ' '))+RTRIM(COALESCE(SA2010.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
-            'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1010.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1010.ZC1_MERCAD, ' ')), ' '), '|') as ID_MERCADORIA,
+            'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1010.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1010.ZC1_MERCAD, ' ')), ' '), '|') as ID_PRODUTO,
             'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH010.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1010.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
             
             concat(trim(ZC1010.ZC1_FILIAL), trim(ZC1010.ZC1_NUM)) as ID_OSPORTUARIA,
@@ -82,6 +77,9 @@ from
             cast(ZC2010.ZC2_QTDREA * ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
             case when ZC2010.ZC2_TOTAL > 99999999 then 99999999 else ZC2010.ZC2_TOTAL end as VALOR_TOTAL,
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
+            upper(trim(ZC2010.ZC2_NMUSU)) as USUARIO,
+            null as COD_ZA7,
+            null as COD_SE1,
             
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(ZC2010.ZC2_QTDREC * datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
@@ -143,8 +141,7 @@ from
                     and SAH010.AH_UNIMED = SB1010.B1_UM
 
         where
-                left(ZC2010.ZC2_COMPET, 4) > 2023
-            and cast(ZC2010.ZC2_TIPO as int) in (1, 2, 3)
+                cast(ZC2010.ZC2_TIPO as int) in (1, 2, 3)
             and ZC2010.D_E_L_E_T_ = ''
     ) OS
     
@@ -184,5 +181,29 @@ from
                     and CTT010.CTT_CUSTO = SC6010.C6_CC
             where
                     SC6010.D_E_L_E_T_ = ''
-        ) PV
-            on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
+        ) PV on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
+group by
+    OS.BK_FILIAL,
+    OS.BK_CLIENTE,
+    OS.BK_FORNECEDOR,
+    OS.ID_PRODUTO,
+    OS.ID_OSPORTUARIA,
+    PV.ID_PEDIDODEVENDA,
+    PV.ID_NFS,
+    OS.BK_NAT_FINANCEIRA,
+    OS.BK_CONDICAO_DE_PAGAMENTO,
+    PV.BK_ITEM_CONTABIL,
+    PV.BK_CENTRO_DE_CUSTO,
+    OS.ID_TABELA_PRECO,
+    OS.ID_TIPO_ITEM,
+    OS.COD_SB1,
+    OS.COD_DA3,
+    OS.COD_SRJ,
+    OS.COD_ZA7,
+    OS.COD_SE1,
+    OS.INSUMO,
+    OS.DT_INIOS,
+    OS.DT_FIMOS,
+    OS.COMPETENCIA,
+    OS.BK_UNIDADE_DE_MEDIDA,
+    OS.USUARIO
