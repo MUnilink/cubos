@@ -21,16 +21,13 @@ select
     OS.COD_SRJ,
     OS.COD_ZA7,
     OS.COD_SE1,
+    OS.USUARIO,
 
     OS.INSUMO,
     OS.DT_INIOS,
     OS.DT_FIMOS,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
-
-    null as ITEM_RATEIO,
-    sum(PV.QTD) as QTD_RATEIO,
-    null as PERC_RATEIO,
     
     cast(sum(OS.QTD_PREV) as numeric(15, 2)) as QTD_PREV,
     cast(sum(OS.QTD_REAL) as numeric(15, 2)) as QTD_REAL,
@@ -38,11 +35,14 @@ select
     cast(sum(OS.VAL_REAL) as numeric(15, 2)) as VAL_REAL,
     cast(sum(OS.VAL_PREV_TOTAL) as numeric(15, 2)) as VAL_PREV_TOTAL,
     cast(sum(OS.VAL_REAL_TOTAL) as numeric(15, 2)) as VAL_REAL_TOTAL,
-    cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) as VALOR_TOTAL,
+    cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) as VL_PROD,
+    sum(OS.RATEIO_IMP * OS.VALOR_TOTAL) as VL_IMPR,
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
-    OS.USUARIO
+    null as ITEM_RATEIO,
+    null as PERC_RATEIO,
+    sum(PV.QTD) as QTD_RATEIO
 
 from
     (
@@ -107,53 +107,53 @@ from
                 when 3 then 'FINALIZADO'
                 else 'OUTROS'
             end as STATUS_FATURAMENTO,
-            
-            ZG1.*
-            
-            case
-                when cast(ZC2.ZC2_TIPO as int) = 2 then
-                (
-                    select
-                        ZG1.ZG1_VLIMPR/
-                        (
-                            select sum(ZG1010.ZG1_VLIMPR)
-                            from ZG1010
-                            where
-                                ZG1010.ZG1_VLIMPR != 0
-                            and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-                            and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-                            and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-                            and ZG1010.D_E_L_E_T_ = ''
-                        ) as VL_RIMP
-                    from ZG1010 ZG1 (nolock)
-                    where
-                            ZG1.ZG1_TIPO = 2
-                        and left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
-                        and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
-                        and ZG1.D_E_L_E_T_ = ''
-                )
-                when cast(ZC2.ZC2_TIPO as int) = 14 then
-                (
-                    select
-                        ZG1.ZG1_VLIMPR/
-                        (
-                            select sum(ZG1010.ZG1_VLIMPR)
-                            from ZG1010
-                            where
-                                ZG1010.ZG1_VLIMPR != 0
-                            and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-                            and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-                            and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-                            and ZG1010.D_E_L_E_T_ = ''
-                        ) as VL_RIMP
-                    from ZG1010 ZG1 (nolock)
-                    where
-                            ZG1.ZG1_TIPO = 14
-                        and left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
-                        and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
-                        and ZG1.D_E_L_E_T_ = ''
-                )
-            else 0.0 end as VALOR_IMPRO
+                        
+            cast(
+                case
+                    when cast(ZC2.ZC2_TIPO as int) = 2 then
+                    (
+                        select
+                            ZG1.ZG1_VLIMPR/
+                            (
+                                select sum(ZG1010.ZG1_VLIMPR)
+                                from ZG1010
+                                where
+                                    ZG1010.ZG1_VLIMPR != 0
+                                and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                                and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                                and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                                and ZG1010.D_E_L_E_T_ = ''
+                            ) as VL_RIMP
+                        from ZG1010 ZG1 (nolock)
+                        where
+                                ZG1.ZG1_TIPO = 2
+                            and left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
+                            and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
+                            and ZG1.D_E_L_E_T_ = ''
+                    )
+                    when cast(ZC2.ZC2_TIPO as int) = 14 then
+                    (
+                        select
+                            ZG1.ZG1_VLIMPR/
+                            (
+                                select sum(ZG1010.ZG1_VLIMPR)
+                                from ZG1010
+                                where
+                                    ZG1010.ZG1_VLIMPR != 0
+                                and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                                and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                                and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                                and ZG1010.D_E_L_E_T_ = ''
+                            ) as VL_RIMP
+                        from ZG1010 ZG1 (nolock)
+                        where
+                                ZG1.ZG1_TIPO = 14
+                            and left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
+                            and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
+                            and ZG1.D_E_L_E_T_ = ''
+                    )
+                else 0.0 end as numeric(15, 2)
+            ) as RATEIO_IMP
         
         from ZC2010 ZC2 (nolock)
             left join ZC1010 (nolock)
@@ -186,29 +186,8 @@ from
                 left join SAH010
                     on SAH010.D_E_L_E_T_ = ''
                     and SAH010.AH_UNIMED = SB1010.B1_UM
-            
-            (
-                select
-                    G1.ZG1_VLIMPR/
-                    (
-                        select sum(ZG1010.ZG1_VLIMPR)
-                        from ZG1010
-                        where
-                            ZG1010.ZG1_VLIMPR != 0
-                        and ZG1010.ZG1_FILORI = G1.ZG1_FILORI
-                        and ZG1010.ZG1_COMPET = G1.ZG1_COMPET
-                        and ZG1010.ZG1_CODIGO = G1.ZG1_CODIGO
-                        and ZG1010.D_E_L_E_T_ = ''
-                    ) as VL_RIMP
-                from ZG1010 G1 (nolock)
-                where G1.D_E_L_E_T_ = '' and G1.ZG1_TIPO = '2'
-            ) ZG1
-                on left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
-                and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
-
-        where
-                cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 15, 16)
-            and ZC2.D_E_L_E_T_ = ''
+        
+        where ZC2.D_E_L_E_T_ = '' and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 2, 14, 15, 16)
     ) OS
     
         left join
