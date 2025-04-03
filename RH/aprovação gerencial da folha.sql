@@ -30,7 +30,14 @@
         case SRC.RC_PD when '373' then SRC.RC_VALOR when '530' then SRC.RC_VALOR when '532' then SRC.RC_VALOR when '535' then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
         case SRC.RC_PD when '041' then SRC.RC_VALOR when '030' then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
         case SRC.RC_PD when '451' then SRC.RC_VALOR when '452' then SRC.RC_VALOR else 0.0 end as DOBRAS_DOMINGOS,
+        case SRC.RC_PD when '738' then SRC.RC_VALOR else 0.0 end as PLANO_SAUDE,
+        case SRC.RC_PD when '057' then SRC.RC_VALOR else 0.0 end as DIARIAS,
+        case SRC.RC_PD when '719' then SRC.RC_VALOR else 0.0 end as VALI,
+        
         case when SRC.RC_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRC.RC_VALOR else 0.0 end as HREXTRA_APROVADA,
+        case when SRC.RC_PD in ('285', '561', '796') then SRC.RC_VALOR else 0.0 end as VTRA,
+        case when SRC.RC_PD in ('562', '749') then SRC.RC_VALOR else 0.0 end as VCES,
+
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -104,7 +111,14 @@ union
         case SRD.RD_PD when '373' then SRD.RD_VALOR when '530' then SRD.RD_VALOR when '532' then SRD.RD_VALOR when '535' then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
         case SRD.RD_PD when '041' then SRD.RD_VALOR when '030' then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
         case SRD.RD_PD when '451' then SRD.RD_VALOR when '452' then SRD.RD_VALOR else 0.0 end as DOBRAS_DOMINGOS,
+        case SRD.RD_PD when '738' then SRD.RD_VALOR else 0.0 end as PLANO_SAUDE,
+        case SRD.RD_PD when '057' then SRD.RD_VALOR else 0.0 end as DIARIAS,
+        case SRD.RD_PD when '719' then SRD.RD_VALOR else 0.0 end as VALI,
+        
         case when SRD.RD_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRD.RD_VALOR else 0.0 end as HREXTRA_APROVADA,
+        case when SRD.RD_PD in ('285', '561', '796') then SRD.RD_VALOR else 0.0 end as VTRA,
+        case when SRD.RD_PD in ('562', '749') then SRD.RD_VALOR else 0.0 end as VCES,
+
         
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
