@@ -218,7 +218,6 @@ select
             and DTW010.DTW_ATIVID = 50
     ) as COMPETENCIA,
 
-    ZE4.ZE4_VIAGEM as VIAGEM,
     ZE4.ZE4_TOTHR as VGA_HORAS,
     ZE4.ZE4_STATUS as STATUS_TMS,
     ZE4.ZE4_KMINI as km_ini,
