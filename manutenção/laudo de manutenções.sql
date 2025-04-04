@@ -158,7 +158,9 @@ from STL010 STL (nolock)
 
 where
         STL.D_E_L_E_T_ = ''
-        STL.TL_SEQRELA>0
-    and left(STL.TL_DTFIM, 6)>=:PERIODO
-    and (ST9.T9_CODFAMI=:FAMILIA or lower(ST9.T9_CODFAMI)=:FAMILIA)
-    and STE.TE_CARACTE=:TIPO_MNT /* preventiva, corretiva ou todas */
+        STL.TL_SEQRELA > 0
+    and left(STL.TL_DTFIM, 6)>=:PERIODO_INI
+    and ST9.T9_CODFAMI=:FAMILIA
+    and STE.TE_CARACTE=:TIPO_MNT
+    and ST9.T9_CODBEM=:EQUIPAMENTO
+    and STL.TL_ORDEM=:OS
