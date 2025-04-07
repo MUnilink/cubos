@@ -21,13 +21,20 @@ select
     OS.COD_SRJ,
     OS.COD_ZA7,
     OS.COD_SE1,
+    
     OS.USUARIO,
 
     OS.INSUMO,
+    null as ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
+    null as DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
+
+    RAT_IMPR.TIPO as ITEM_RATEIO,
+    sum(PV.QTD) as QTD_RATEIO,
+    sum(RAT_IMPR.PERC_RATEIO) as PERC_RATEIO,
     
     cast(sum(OS.QTD_PREV) as numeric(15, 2)) as QTD_PREV,
     cast(sum(OS.QTD_REAL) as numeric(15, 2)) as QTD_REAL,
@@ -35,14 +42,10 @@ select
     cast(sum(OS.VAL_REAL) as numeric(15, 2)) as VAL_REAL,
     cast(sum(OS.VAL_PREV_TOTAL) as numeric(15, 2)) as VAL_PREV_TOTAL,
     cast(sum(OS.VAL_REAL_TOTAL) as numeric(15, 2)) as VAL_REAL_TOTAL,
-    cast(case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else sum(OS.VALOR_TOTAL) end as numeric(15, 2)) as VL_PROD,
+    cast(case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else sum(OS.VALOR_TOTAL) end as numeric(15, 2)) as VALOR_TOTAL,
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
-    
-    null as ITEM_RATEIO,
-    sum(RAT_IMPR.PERC_RATEIO) as PERC_RATEIO,
-    sum(PV.QTD) as QTD_RATEIO,
 
     /* RM */
     case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else 0.0 end as VL_IMPR,
@@ -243,8 +246,7 @@ group by
     OS.DT_FIMOS,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
-    OS.USUARIO,
-    
+    OS.USUARIO,    
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,

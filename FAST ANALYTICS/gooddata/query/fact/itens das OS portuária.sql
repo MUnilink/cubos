@@ -15,41 +15,36 @@ select
     PV.BK_ITEM_CONTABIL,
     PV.BK_CENTRO_DE_CUSTO,
     OS.ID_TABELA_PRECO,
-    OS.ID_TIPO_ITEM,
+    case when OS.ID_TIPO_ITEM in (15, 16) then RAT_IMPR.TIPO else OS.ID_TIPO_ITEM end as ID_TIPO_ITEM,
     OS.COD_SB1,
     OS.COD_DA3,
     OS.COD_SRJ,
-    null as COD_ZA7,
-    null as COD_SE1,
+    OS.COD_ZA7,
+    OS.COD_SE1,
+    OS.USUARIO,
 
     OS.INSUMO,
-    OS.ITEM,
+    null as ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
-    OS.DATA_APP,
+    null as DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
 
-    null as ITEM_RATEIO,
-    PV.QTD as QTD_RATEIO,
-    null as PERC_RATEIO,
+    RAT_IMPR.TIPO as ITEM_RATEIO,
+    sum(PV.QTD) as QTD_RATEIO,
+    sum(RAT_IMPR.PERC_RATEIO) as PERC_RATEIO,
     
-    OS.QTD_PREV,
-    OS.QTD_REAL,
-    OS.VAL_PREV,
-    OS.VAL_REAL,
-    OS.VAL_PREV_TOTAL,
-    OS.VAL_REAL_TOTAL,
-    OS.VALOR_TOTAL,
-    OS.QTD_RECURSO,
-    OS.HORAS_APONT,
-	OS.HORAS_TOTAIS,
-    OS.USUARIO,
-    
-    (select sum(ZC7010.ZC7_HRPAD) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '3' and ZC7010.ZC7_CODIGO = ZC2010.ZC2_COD and ZC7010.ZC7_COMPET = left(ZC2010.ZC2_COMPET, 6)) as HORAS_PADRAO,
-    (select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '3' and ZC7010.ZC7_CODIGO = ZC2010.ZC2_COD and ZC7010.ZC7_COMPET = left(ZC2010.ZC2_COMPET, 6)) as HORAS_IMPR,
-    (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '3' and ZC7010.ZC7_CC = 305 and ZC7010.ZC7_CC = PV.CC and ZC7010.ZC7_CODIGO = ZC2010.ZC2_COD and ZC7010.ZC7_COMPET = left(ZC2010.ZC2_COMPET, 6)) as HORAS_PROD
-
+    cast(sum(OS.QTD_PREV) as numeric(15, 2)) as QTD_PREV,
+    cast(sum(OS.QTD_REAL) as numeric(15, 2)) as QTD_REAL,
+    cast(sum(OS.VAL_PREV) as numeric(15, 2)) as VAL_PREV,
+    cast(sum(OS.VAL_REAL) as numeric(15, 2)) as VAL_REAL,
+    cast(sum(OS.VAL_PREV_TOTAL) as numeric(15, 2)) as VAL_PREV_TOTAL,
+    cast(sum(OS.VAL_REAL_TOTAL) as numeric(15, 2)) as VAL_REAL_TOTAL,
+    cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
+    cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
+	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
+    cast(case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else sum(OS.VALOR_TOTAL) end as numeric(15, 2)) as VALOR_TOTAL
 from
     (
         select
@@ -79,11 +74,14 @@ from
             case when ZC2010.ZC2_QTDREA > 99999999 then 99999999 else ZC2010.ZC2_QTDREA end as QTD_REAL,
             case when ZC2010.ZC2_VLUPRV > 99999999 then 99999999 else ZC2010.ZC2_VLUPRV end as VAL_PREV,
             case when ZC2010.ZC2_VLUREA > 99999999 then 99999999 else ZC2010.ZC2_VLUREA end as VAL_REAL,
-            cast(ZC2010.ZC2_QTDPRV * ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_TOTAL,
-            cast(ZC2010.ZC2_QTDREA * ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_TOTAL,
             case when ZC2010.ZC2_TOTAL > 99999999 then 99999999 else ZC2010.ZC2_TOTAL end as VALOR_TOTAL,
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
-            upper(trim(ZC2010.ZC2_NMUSU)) as USUARIO
+            upper(trim(ZC2010.ZC2_NMUSU)) as USUARIO,
+            ZC1010.ZC1_FILIAL as FILIAL,
+            0.0 as VAL_PREV_TOTAL,
+            0.0 as VAL_REAL_TOTAL,
+            null as COD_ZA7,
+            null as COD_SE1,
             
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(ZC2010.ZC2_QTDREC * datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
@@ -110,7 +108,7 @@ from
                 when 2 then 'PARCIAL'
                 when 3 then 'FINALIZADO'
                 else 'OUTROS'
-            end as STATUS_FATURAMENTO        
+            end as STATUS_FATURAMENTO
         
         from ZC2010 (nolock)
             left join ZC1010 (nolock)
@@ -143,10 +141,8 @@ from
                 left join SAH010
                     on SAH010.D_E_L_E_T_ = ''
                     and SAH010.AH_UNIMED = SB1010.B1_UM
-
-        where
-                cast(ZC2010.ZC2_TIPO as int) in (1, 2, 3)
-            and ZC2010.D_E_L_E_T_ = ''
+        
+        where ZC2010.D_E_L_E_T_ = ''
     ) OS
     
         left join
@@ -185,7 +181,65 @@ from
                     and CTT010.CTT_CUSTO = SC6010.C6_CC
             where
                     SC6010.D_E_L_E_T_ = ''
-        ) PV
-            on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
-where
-        OS.DT_INIOS between <<START_DATE>> and <<FINAL_DATE>>
+        ) PV on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
+        
+        left join
+        (
+            select
+                ZG1.ZG1_FILORI as FILIAL,
+                ZG1.ZG1_COMPET as COMPETENCIA,
+                trim(ZG1.ZG1_CODIGO) as INSUMO,
+                ZG1.ZG1_TIPO as TIPO,
+                cast(
+                    ZG1.ZG1_VLIMPR/
+                    (
+                        select sum(ZG1010.ZG1_VLIMPR)
+                        from ZG1010
+                        where
+                            ZG1010.ZG1_VLIMPR != 0
+                        and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                        and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                        and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                        and ZG1010.D_E_L_E_T_ = ''
+                    )
+                    as numeric(15, 2)
+                ) as PERC_RATEIO
+            from ZG1010 ZG1 (nolock)
+            where ZG1.D_E_L_E_T_ = ''
+        ) RAT_IMPR
+            on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = OS.ID_TIPO_ITEM
+            and RAT_IMPR.FILIAL = OS.FILIAL
+            and RAT_IMPR.COMPETENCIA = left(OS.COMPETENCIA, 6)
+            and RAT_IMPR.INSUMO = OS.INSUMO
+
+where OS.DT_INIOS between <<START_DATE>> and <<FINAL_DATE>>
+group by
+    OS.BK_FILIAL,
+    OS.BK_CLIENTE,
+    OS.BK_FORNECEDOR,
+    OS.ID_PRODUTO,
+    OS.ID_OSPORTUARIA,
+    PV.ID_PEDIDODEVENDA,
+    PV.ID_NFS,
+    OS.BK_NAT_FINANCEIRA,
+    OS.BK_CONDICAO_DE_PAGAMENTO,
+    PV.BK_ITEM_CONTABIL,
+    PV.BK_CENTRO_DE_CUSTO,
+    OS.ID_TABELA_PRECO,
+    OS.ID_TIPO_ITEM,
+    OS.COD_SB1,
+    OS.COD_DA3,
+    OS.COD_SRJ,
+    OS.COD_ZA7,
+    OS.COD_SE1,
+    OS.INSUMO,
+    OS.DT_INIOS,
+    OS.DT_FIMOS,
+    OS.COMPETENCIA,
+    OS.BK_UNIDADE_DE_MEDIDA,
+    OS.USUARIO,    
+    OS.TIPO_OP,
+    OS.STATUS_FATURAMENTO,
+    OS.STATUS_OS,
+    OS.DT_ENCOS,
+    RAT_IMPR.TIPO
