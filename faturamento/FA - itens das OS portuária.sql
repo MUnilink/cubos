@@ -15,7 +15,7 @@ select
     PV.BK_ITEM_CONTABIL,
     PV.BK_CENTRO_DE_CUSTO,
     OS.ID_TABELA_PRECO,
-    OS.ID_TIPO_ITEM,
+    case when OS.ID_TIPO_ITEM in (15, 16) then RAT_IMPR.TIPO else OS.ID_TIPO_ITEM end as ID_TIPO_ITEM,
     OS.COD_SB1,
     OS.COD_DA3,
     OS.COD_SRJ,
@@ -35,25 +35,22 @@ select
     cast(sum(OS.VAL_REAL) as numeric(15, 2)) as VAL_REAL,
     cast(sum(OS.VAL_PREV_TOTAL) as numeric(15, 2)) as VAL_PREV_TOTAL,
     cast(sum(OS.VAL_REAL_TOTAL) as numeric(15, 2)) as VAL_REAL_TOTAL,
-    cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) as VL_PROD,
-    case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else 0.0 end as VL_IMPR,
+    cast(case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else sum(OS.VALOR_TOTAL) end as numeric(15, 2)) as VL_PROD,
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
-    null as ITEM_RATEIO,ZG1.TIPO, 
-    null as PERC_RATEIO,RAT_IMPR.PERC_RATEIO,
+    
+    null as ITEM_RATEIO,
+    sum(RAT_IMPR.PERC_RATEIO) as PERC_RATEIO,
     sum(PV.QTD) as QTD_RATEIO,
 
     /* RM */
+    case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else 0.0 end as VL_IMPR,
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,
     OS.DT_ENCOS,
-    
-    ZG1.FILIAL,
-    ZG1.COMPETENCIA,
-    ZG1.INSUMO,
-    ZG1.TIPO,
+    RAT_IMPR.TIPO,
     sum(RAT_IMPR.PERC_RATEIO) as PROPIMPR
 
 from
@@ -251,4 +248,5 @@ group by
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,
-    OS.DT_ENCOS
+    OS.DT_ENCOS,
+    RAT_IMPR.TIPO
