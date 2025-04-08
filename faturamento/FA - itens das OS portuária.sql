@@ -25,10 +25,10 @@ select
     OS.USUARIO,
 
     OS.INSUMO,
-    null as ITEM,
+    OS.ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
-    null as DATA_APP,
+    OS.DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
 
@@ -98,6 +98,10 @@ from
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(ZC2010.ZC2_QTDREC * datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
 
             cast(ZC1010.ZC1_DTENCE as date) as DT_ENCOS,
+            
+            
+            /* RM */
+            
             case ZC1010.ZC1_TIPOP
                 when 1 then upper('Cabotagem')
                 when 2 then upper('Importacao')

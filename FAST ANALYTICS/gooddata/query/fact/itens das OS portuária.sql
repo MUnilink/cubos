@@ -24,10 +24,10 @@ select
     OS.USUARIO,
 
     OS.INSUMO,
-    null as ITEM,
+    OS.ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
-    null as DATA_APP,
+    OS.DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
 
@@ -85,30 +85,7 @@ from
             
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(ZC2010.ZC2_QTDREC * datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
-
-            cast(ZC1010.ZC1_DTENCE as date) as DT_ENCOS,
-            case ZC1010.ZC1_TIPOP
-                when 1 then upper('Cabotagem')
-                when 2 then upper('Importacao')
-                when 3 then upper('Exportacao')
-                when 4 then upper('Interna')
-            else 'OUTROS' end as TIPO_OP,
-
-            case ZC1010.ZC1_STATUS
-                when 1 then 'ABERTA'
-                when 2 then 'SOLICITADO CANCELAMENTO'
-                when 3 then 'CANCELADA'
-                when 5 then 'CORTESIA'
-                when 6 then 'ENCERRADA'
-                else 'OUTROS'
-            end as STATUS_OS,
-
-            case ZC1010.ZC1_STATU2
-                when 1 then 'PENDENTE'
-                when 2 then 'PARCIAL'
-                when 3 then 'FINALIZADO'
-                else 'OUTROS'
-            end as STATUS_FATURAMENTO
+            cast(ZC1010.ZC1_DTENCE as date) as DT_ENCOS
         
         from ZC2010 (nolock)
             left join ZC1010 (nolock)
