@@ -39,8 +39,6 @@ select
     cast(sum(OS.QTD_REAL) as numeric(15, 2)) as QTD_REAL,
     cast(sum(OS.VAL_PREV) as numeric(15, 2)) as VAL_PREV,
     cast(sum(OS.VAL_REAL) as numeric(15, 2)) as VAL_REAL,
-    cast(sum(OS.VAL_PREV_TOTAL) as numeric(15, 2)) as VAL_PREV_TOTAL,
-    cast(sum(OS.VAL_REAL_TOTAL) as numeric(15, 2)) as VAL_REAL_TOTAL,
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
@@ -88,8 +86,6 @@ from
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
             upper(trim(ZC2010.ZC2_NMUSU)) as USUARIO,
             ZC1010.ZC1_FILIAL as FILIAL,
-            0.0 as VAL_PREV_TOTAL,
-            0.0 as VAL_REAL_TOTAL,
             null as COD_ZA7,
             null as COD_SE1,
             
