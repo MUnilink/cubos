@@ -71,4 +71,4 @@ from SR8010 SR8 (nolock)
 				on SQ3.D_E_L_E_T_ = ''
 				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 				
-where SRA.D_E_L_E_T_ = ''
+where SR8.D_E_L_E_T_ = ''
