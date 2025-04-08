@@ -44,7 +44,8 @@ select
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
-    cast(case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else sum(OS.VALOR_TOTAL) end as numeric(15, 2)) as VALOR_TOTAL
+    cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) as VALOR_TOTAL,
+    case when OS.ID_TIPO_ITEM in (15, 16) then sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) else 0.0 end as VL_IMPR
 from
     (
         select
@@ -214,9 +215,11 @@ group by
     OS.DT_FIMOS,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
-    OS.USUARIO,    
+    OS.USUARIO,
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,
     OS.DT_ENCOS,
-    RAT_IMPR.TIPO
+    RAT_IMPR.TIPO,
+    OS.ITEM,
+    OS.DATA_APP
