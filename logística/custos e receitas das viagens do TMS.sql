@@ -332,164 +332,164 @@ select
         when ZE1.ZE1_TIPO = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO = 7)
     else null end as DESC_RECURSO
 
-from DUD010 DUD (nolock)
-    inner join
-    (
-        select
-            DTQ.DTQ_FILIAL as FILIAL,
-            DTQ.DTQ_FILORI as FILORI,
-            DTQ.DTQ_VIAGEM as VIAGEM,
-            DTQ.DTQ_DATGER,
-            DTQ.DTQ_DATFEC,
-            DTQ.DTQ_DATENC,
-            trim(DA8010.DA8_DESC) as ROTA,
+from ZE1010 ZE1 (nolock)
+    left join ZE4010 ZE4 (nolock)
+        on ZE4.D_E_L_E_T_ = ''
+        and ZE4.ZE4_FILIAL = ZE1.ZE1_FILIAL
+        and ZE4.ZE4_VIAGEM = ZE1.ZE1_NUM
 
-            case DTQ.DTQ_STATUS
-                when '1' then 'EXCLUÍDA'
-                when '2' then 'EM TRANSITO'
-                when '3' then 'ENCERRADA'
-                when '4' then 'CHEGADA EM FILIAL'
-                when '5' then 'FECHADA'
-                when '9' then 'CANCELADA'
-                else 'OUTROS'
-            end as STATUS_VGA,
-            
-            concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-            trim(DA4010.DA4_COD) as ID_MOTORISTA,
-            trim(DA4010.DA4_NOME) as MOTORISTA,
-            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
-            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
-            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-            (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
-            DTR.DTR_ITEM as ITEM
-        from DTQ010 DTQ
-            left join DTR010 DTR
-                on DTR.D_E_L_E_T_ = ''
-                and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-                and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+    left join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILORI = ZE1.ZE1_FILIAL
+        and DUD.DUD_VIAGEM = ZE1.ZE1_NUM
+        
+        left join
+        (
+            select
+                DTQ.DTQ_FILIAL as FILIAL,
+                DTQ.DTQ_FILORI as FILORI,
+                DTQ.DTQ_VIAGEM as VIAGEM,
+                DTQ.DTQ_DATGER,
+                DTQ.DTQ_DATFEC,
+                DTQ.DTQ_DATENC,
+                trim(DA8010.DA8_DESC) as ROTA,
+
+                case DTQ.DTQ_STATUS
+                    when '1' then 'EXCLUÍDA'
+                    when '2' then 'EM TRANSITO'
+                    when '3' then 'ENCERRADA'
+                    when '4' then 'CHEGADA EM FILIAL'
+                    when '5' then 'FECHADA'
+                    when '9' then 'CANCELADA'
+                    else 'OUTROS'
+                end as STATUS_VGA,
                 
-                left join DUP010
-                    on DUP010.D_E_L_E_T_ = ''
-                    and DUP010.DUP_FILORI = DTR.DTR_FILORI
-                    and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
-                    and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
-                    and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+                concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
+                trim(DA4010.DA4_COD) as ID_MOTORISTA,
+                trim(DA4010.DA4_NOME) as MOTORISTA,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
+                DTR.DTR_ITEM as ITEM
+            from DTQ010 DTQ
+                left join DTR010 DTR
+                    on DTR.D_E_L_E_T_ = ''
+                    and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                    and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                    
+                    left join DUP010
+                        on DUP010.D_E_L_E_T_ = ''
+                        and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                        and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                        and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                        and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                    left join DA4010
-                        on DA4010.D_E_L_E_T_ = ''
-                        and DA4010.DA4_COD = DUP010.DUP_CODMOT
-            
-            left join DA8010 (nolock)
-                on DA8010.D_E_L_E_T_ = ''
-                and DA8010.DA8_COD = DTQ.DTQ_ROTA
-        where DTQ.D_E_L_E_T_ = ''
-    ) VIAGEM
-        on DUD.DUD_FILIAL = VIAGEM.FILIAL
-        and DUD.DUD_FILORI = VIAGEM.FILORI
-        and DUD.DUD_VIAGEM = VIAGEM.VIAGEM
+                        left join DA4010
+                            on DA4010.D_E_L_E_T_ = ''
+                            and DA4010.DA4_COD = DUP010.DUP_CODMOT
+                
+                left join DA8010 (nolock)
+                    on DA8010.D_E_L_E_T_ = ''
+                    and DA8010.DA8_COD = DTQ.DTQ_ROTA
+            where DTQ.D_E_L_E_T_ = ''
+        ) VIAGEM
+            on DUD.DUD_FILIAL = VIAGEM.FILIAL
+            and DUD.DUD_FILORI = VIAGEM.FILORI
+            and DUD.DUD_VIAGEM = VIAGEM.VIAGEM
 
-        inner join ZE5010 ZE5 (nolock)
-            on ZE5.D_E_L_E_T_ = ''
-            and concat(ZE5.ZE5_FILIAL, ZE5.ZE5_VIAGEM) = VIAGEM.ID_VIAGEM
-            and ZE5.ZE5_MOTORI = VIAGEM.ID_MOTORISTA
-            and ZE5.ZE5_BEMCAV = VIAGEM.ID_VEICULO_CM
-            and ZE5.ZE5_ITENS = VIAGEM.ITEM
+            inner join ZE5010 ZE5 (nolock)
+                on ZE5.D_E_L_E_T_ = ''
+                and concat(ZE5.ZE5_FILIAL, ZE5.ZE5_VIAGEM) = VIAGEM.ID_VIAGEM
+                and ZE5.ZE5_MOTORI = VIAGEM.ID_MOTORISTA
+                and ZE5.ZE5_BEMCAV = VIAGEM.ID_VEICULO_CM
+                and ZE5.ZE5_ITENS = VIAGEM.ITEM
 
-    left join DT5010 DT5 (nolock)
-        on DT5.D_E_L_E_T_ = ''
-        and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-        and DT5.DT5_NUMSOL = DUD.DUD_DOC
-        and DUD.DUD_SERIE = 'COL'
+        left join DT5010 DT5 (nolock)
+            on DT5.D_E_L_E_T_ = ''
+            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
+            and DT5.DT5_NUMSOL = DUD.DUD_DOC
+            and DUD.DUD_SERIE = 'COL'
 
-        left join DF1010 DF1 (nolock)
-            on DF1.D_E_L_E_T_ = ''
-            and DF1.DF1_FILDOC = DT5.DT5_FILORI
-            and DF1.DF1_DOC = DT5.DT5_DOC
-            and DF1.DF1_SERIE = DT5.DT5_SERIE
+            left join DF1010 DF1 (nolock)
+                on DF1.D_E_L_E_T_ = ''
+                and DF1.DF1_FILDOC = DT5.DT5_FILORI
+                and DF1.DF1_DOC = DT5.DT5_DOC
+                and DF1.DF1_SERIE = DT5.DT5_SERIE
 
-    left join DT6010 DT6 (nolock)
-        on DT6.D_E_L_E_T_ = ''
-        and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-        and DT6.DT6_DOC = DUD.DUD_DOC
-        and DT6.DT6_SERIE = DUD.DUD_SERIE
+        left join DT6010 DT6 (nolock)
+            on DT6.D_E_L_E_T_ = ''
+            and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+            and DT6.DT6_DOC = DUD.DUD_DOC
+            and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-        left join SD2010 COMP (nolock)
-            on COMP.D_E_L_E_T_ = ''
-            and COMP.D2_NFORI = DT6.DT6_DOC
-            and COMP.D2_SERIORI = DT6.DT6_SERIE
-            and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
-            and COMP.D2_LOJA = DT6.DT6_LOJDEV
-        left join SA1010 DEV (nolock)
-            on DEV.A1_FILIAL = '      '
-            and DEV.A1_COD = DT6.DT6_CLIDEV
-            and DEV.A1_LOJA = DT6.DT6_LOJDEV
-            and DEV.D_E_L_E_T_ = ' '
-        left join SA1010 REM
-            ON REM.A1_FILIAL = '      '
-            AND REM.A1_COD = DT6.DT6_CLIREM
-            AND REM.A1_LOJA = DT6.DT6_LOJREM
-            AND REM.D_E_L_E_T_ = ' '
-        left join SA1010 DES
-            ON DES.A1_FILIAL = '      '
-            AND DES.A1_COD = DT6.DT6_CLIDES
-            AND DES.A1_LOJA = DT6.DT6_LOJDES
-            AND DES.D_E_L_E_T_ = ' '
+            left join SD2010 COMP (nolock)
+                on COMP.D_E_L_E_T_ = ''
+                and COMP.D2_NFORI = DT6.DT6_DOC
+                and COMP.D2_SERIORI = DT6.DT6_SERIE
+                and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
+                and COMP.D2_LOJA = DT6.DT6_LOJDEV
+            left join SA1010 DEV (nolock)
+                on DEV.A1_FILIAL = '      '
+                and DEV.A1_COD = DT6.DT6_CLIDEV
+                and DEV.A1_LOJA = DT6.DT6_LOJDEV
+                and DEV.D_E_L_E_T_ = ' '
+            left join SA1010 REM
+                ON REM.A1_FILIAL = '      '
+                AND REM.A1_COD = DT6.DT6_CLIREM
+                AND REM.A1_LOJA = DT6.DT6_LOJREM
+                AND REM.D_E_L_E_T_ = ' '
+            left join SA1010 DES
+                ON DES.A1_FILIAL = '      '
+                AND DES.A1_COD = DT6.DT6_CLIDES
+                AND DES.A1_LOJA = DT6.DT6_LOJDES
+                AND DES.D_E_L_E_T_ = ' '
 
-    LEFT JOIN DUY010 DUYORI
-        ON DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
-        AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
-        AND DUYORI.D_E_L_E_T_ = ' '
-    LEFT JOIN DUY010 DUYDES
-        ON DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
-        AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
-        AND DUYDES.D_E_L_E_T_ = ' '
-    LEFT JOIN DUY010 DUYDEV
-        ON DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
-        AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
-        AND DUYDEV.D_E_L_E_T_ = ' '
-    
-    left join DUY010 REG_COL (nolock)
-        ON REG_COL.D_E_L_E_T_ = ' '
-        and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
-        and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
-    left join DUY010 REG_ENT (nolock)
-        ON REG_ENT.D_E_L_E_T_ = ' '
-        and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
-        and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
-    left join DTC010 DTC (nolock)
-        on DTC.D_E_L_E_T_ = ''
-        and DTC.DTC_FILORI = DT6.DT6_FILDOC
-        and DTC.DTC_DOC = DT6.DT6_DOC
-        and DTC.DTC_SERIE = DT6.DT6_SERIE
-
-        left join SB1010 SB1 (nolock)
-            on SB1.D_E_L_E_T_ = ''
-            and SB1.B1_COD = DTC.DTC_CODPRO
-    
-    left join SC5010 SC5 (nolock)
-        on SC5.D_E_L_E_T_ = ''
-        and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
-
-        left join SD2010 RPS (nolock)
-            on RPS.D_E_L_E_T_ = ''
-            and RPS.D2_FILIAL = SC5.C5_FILIAL
-            and RPS.D2_DOC = SC5.C5_NOTA
-            and RPS.D2_SERIE = SC5.C5_SERIE
-            and RPS.D2_CLIENTE = SC5.C5_CLIENTE
-            and RPS.D2_LOJA = SC5.C5_LOJACLI
-    
-    left join SE1010 SE1 (nolock)
-        on SE1.D_E_L_E_T_ = ''
-        and (trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
+        LEFT JOIN DUY010 DUYORI
+            ON DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
+            AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+            AND DUYORI.D_E_L_E_T_ = ' '
+        LEFT JOIN DUY010 DUYDES
+            ON DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
+            AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+            AND DUYDES.D_E_L_E_T_ = ' '
+        LEFT JOIN DUY010 DUYDEV
+            ON DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
+            AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+            AND DUYDEV.D_E_L_E_T_ = ' '
         
-    inner join ZE1010 ZE1 (nolock)
-        on ZE1.D_E_L_E_T_ = ''
-        and ZE1.ZE1_FILIAL = DUD.DUD_FILORI
-        and ZE1.ZE1_NUM = DUD.DUD_VIAGEM
+        left join DUY010 REG_COL (nolock)
+            ON REG_COL.D_E_L_E_T_ = ' '
+            and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
+            and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
+        left join DUY010 REG_ENT (nolock)
+            ON REG_ENT.D_E_L_E_T_ = ' '
+            and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
+            and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
+        left join DTC010 DTC (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_DOC = DT6.DT6_DOC
+            and DTC.DTC_SERIE = DT6.DT6_SERIE
+
+            left join SB1010 SB1 (nolock)
+                on SB1.D_E_L_E_T_ = ''
+                and SB1.B1_COD = DTC.DTC_CODPRO
         
-        left join ZE4010 ZE4 (nolock)
-            on ZE4.D_E_L_E_T_ = ''
-            and ZE4.ZE4_FILIAL = ZE1.ZE1_FILIAL
-            and ZE4.ZE4_VIAGEM = ZE1.ZE1_NUM
+        left join SC5010 SC5 (nolock)
+            on SC5.D_E_L_E_T_ = ''
+            and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
+
+            left join SD2010 RPS (nolock)
+                on RPS.D_E_L_E_T_ = ''
+                and RPS.D2_FILIAL = SC5.C5_FILIAL
+                and RPS.D2_DOC = SC5.C5_NOTA
+                and RPS.D2_SERIE = SC5.C5_SERIE
+                and RPS.D2_CLIENTE = SC5.C5_CLIENTE
+                and RPS.D2_LOJA = SC5.C5_LOJACLI
+        
+        left join SE1010 SE1 (nolock)
+            on SE1.D_E_L_E_T_ = ''
+            and (trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
 where
         DUD.D_E_L_E_T_ = ''
