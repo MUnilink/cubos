@@ -115,9 +115,97 @@ select
     DTR.DTR_CODRB2,
     DTR.DTR_CODRB3,
 
-    DT6.DT6_VALFRE / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as CTE_CM,
+    DT6.DT6_VALFRE/
+    (
+        isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1)
+        *
+        isnull
+        (
+            (
+                select nullif(count(DTC010.DTC_NUMNFC), '')
+                from DTC010 (nolock)
+                where
+                        DTC010.D_E_L_E_T_ = ''
+                    and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC010.DTC_DOC = DT6.DT6_DOC
+                    and DTC010.DTC_SERIE = DT6.DT6_SERIE
+            ), 1
+        )
+    ) as CTE_RAT,
+
+    COMP.D2_TOTAL/
+    (
+        isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1)
+        *
+        isnull
+        (
+            (
+                select nullif(count(DTC010.DTC_NUMNFC), '')
+                from DTC010 (nolock)
+                where
+                        DTC010.D_E_L_E_T_ = ''
+                    and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC010.DTC_DOC = DT6.DT6_DOC
+                    and DTC010.DTC_SERIE = DT6.DT6_SERIE
+            ), 1
+        )
+    ) as COMP_RAT,
+
+    RPS.D2_TOTAL/
+    (
+        isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1)
+        *
+        isnull
+        (
+            (
+                select nullif(count(DTC010.DTC_NUMNFC), '')
+                from DTC010 (nolock)
+                where
+                        DTC010.D_E_L_E_T_ = ''
+                    and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC010.DTC_DOC = DT6.DT6_DOC
+                    and DTC010.DTC_SERIE = DT6.DT6_SERIE
+            ), 1
+        )
+    ) as RPS_RAT,
+
+    SE1.E1_VALOR/
+    (
+        isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1)
+        *
+        isnull
+        (
+            (
+                select nullif(count(DTC010.DTC_NUMNFC), '')
+                from DTC010 (nolock)
+                where
+                        DTC010.D_E_L_E_T_ = ''
+                    and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC010.DTC_DOC = DT6.DT6_DOC
+                    and DTC010.DTC_SERIE = DT6.DT6_SERIE
+            ), 1
+        )
+    ) as ND_RAT,
+    
+    DT6.DT6_VALIMP/
+    (
+        isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1)
+        *
+        isnull
+        (
+            (
+                select nullif(count(DTC010.DTC_NUMNFC), '')
+                from DTC010 (nolock)
+                where
+                        DTC010.D_E_L_E_T_ = ''
+                    and DTC010.DTC_FILDOC = DT6.DT6_FILDOC
+                    and DTC010.DTC_DOC = DT6.DT6_DOC
+                    and DTC010.DTC_SERIE = DT6.DT6_SERIE
+            ), 1
+        )
+    ) as IMPOSTO_CM,
+    
     DT6.DT6_VALFRE as CTE_TOTAL,
-    DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DTQ.DTQ_VIAGEM), 1) as IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
     DT6.DT6_VALTOT,
     DT6.DT6_VALMER,
@@ -164,12 +252,12 @@ select
     DF1.DF1_CODOBC,
     DF1.DF1_YDSARM as NOME_ARMADORA,
 
-    DT6C.D2_DOC as COMP_DOC,
-    DT6C.D2_SERIE as COMP_SERIE,
-    DT6C.D2_TOTAL as COMP_TOTAL,
-    DT6C.D2_VALIPI as COMP_VALIPI,
-    DT6C.D2_VALICM as COMP_VALICM,
-    convert(date, DT6C.D2_EMISSAO, 103) as COMP_EMISSAO,
+    COMP.D2_DOC as COMP_DOC,
+    COMP.D2_SERIE as COMP_SERIE,
+    COMP.D2_TOTAL as COMP_TOTAL,
+    COMP.D2_VALIPI as COMP_VALIPI,
+    COMP.D2_VALICM as COMP_VALICM,
+    convert(date, COMP.D2_EMISSAO, 103) as COMP_EMISSAO,
 
     SC5.C5_NUM as RPS_PEDIDO,
     RPS.D2_DOC as RPS_DOC,
@@ -317,12 +405,12 @@ from DTQ010 DTQ (nolock)
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-            left join SD2010 DT6C (nolock)
-                on DT6C.D_E_L_E_T_ = ''
-                and DT6C.D2_NFORI = DT6.DT6_DOC
-                and DT6C.D2_SERIORI = DT6.DT6_SERIE
-                and DT6C.D2_CLIENTE = DT6.DT6_CLIDEV
-                and DT6C.D2_LOJA = DT6.DT6_LOJDEV
+            left join SD2010 COMP (nolock)
+                on COMP.D_E_L_E_T_ = ''
+                and COMP.D2_NFORI = DT6.DT6_DOC
+                and COMP.D2_SERIORI = DT6.DT6_SERIE
+                and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
+                and COMP.D2_LOJA = DT6.DT6_LOJDEV
 
             left join SA1010 DEV (nolock)
                 on DEV.A1_FILIAL = '      '
@@ -363,7 +451,7 @@ from DTQ010 DTQ (nolock)
             and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
         left join DTC010 DTC (nolock)
             on DTC.D_E_L_E_T_ = ''
-            and DTC.DTC_FILORI = DT6.DT6_FILDOC
+            and DTC.DTC_FILDOC = DT6.DT6_FILDOC
             and DTC.DTC_DOC = DT6.DT6_DOC
             and DTC.DTC_SERIE = DT6.DT6_SERIE
 
@@ -385,6 +473,6 @@ from DTQ010 DTQ (nolock)
     
     left join SE1010 SE1 (nolock)
         on SE1.D_E_L_E_T_ = ''
-        and trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM
+        and (trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM or SE1.E1_YVIAGEM = DTQ.DTQ_VIAGEM)
 where
         DTQ.D_E_L_E_T_ = ''
