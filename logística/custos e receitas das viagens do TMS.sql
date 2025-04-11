@@ -15,70 +15,6 @@ select
     trim(DES.A1_LOJA) as DES_LOJA,
     trim(DES.A1_NOME) as CLI_DESTINO,
 
-/*
-    OPERAÇÕES
-    01 – INICIO DE VIAGEM
-    05 – CHEGADA NO CLIENTE
-    06 -  SAIDA DO CLIENTE
-    09 – CHEGADA NO PORTO - no TMS essa macro é apontada como chegada de cliente {porto}
-    10 – SAIDA DO PORTO - no TMS essa macro é apontada como saída de cliente {porto}
-    07 – FIM DE VIAGEM
-
-    OCORRÊNCIA
-    17 – ENTREGA EFETUADA
-*/
-
-    (
-        select
-            isnull
-            (
-                (
-                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-                    from ZB1010 (nolock)
-                    where
-                            ZB1010.D_E_L_E_T_ = ''
-                        and ZB1010.ZB1_STATUS = 'OK'
-                        and
-                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                            =
-                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
-                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                        and ZB1010.ZB1_MACRON = 7
-                        and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
-                )
-            , APT.DTW_YHODFI) 
-        from DTW010 APT (nolock)
-        where
-                APT.D_E_L_E_T_ = ''
-            and concat(APT.DTW_FILORI, APT.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and APT.DTW_ATIVID = 50
-    ) as km_fim,
-    (
-        select
-            isnull
-            (
-                (
-                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-                    from ZB1010 (nolock)
-                    where
-                            ZB1010.D_E_L_E_T_ = ''
-                        and ZB1010.ZB1_STATUS = 'OK'
-                        and
-                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                            =
-                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
-                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                        and ZB1010.ZB1_MACRON = 1
-                        and ZB1010.ZB1_CODDA3 = VIAGEM.ID_VEICULO_CM
-                )
-            , APT.DTW_YHODIN)
-        from DTW010 APT (nolock)
-        where
-                APT.D_E_L_E_T_ = ''
-            and concat(APT.DTW_FILORI, APT.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and APT.DTW_ATIVID = 49
-    ) as km_ini,
-
     DT6.DT6_DOC CTE_DOC,
     DT6.DT6_SERIE CTE_SERIE,
     left(DT6.DT6_DATEMI, 6) as PERIODO_CTE,
@@ -232,44 +168,6 @@ select
             and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
             and DTW010.DTW_ATIVID = 50
     ) as DATAFIM,
-    
-    datediff
-    (
-        minute,
-        (
-            select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-            from DTW010 (nolock)
-            where
-                    DTW010.D_E_L_E_T_ = ''
-                and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-                and DTW010.DTW_ATIVID = 49
-        ),
-        (
-            select datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)
-            from DTW010 (nolock)
-            where
-                    DTW010.D_E_L_E_T_ = ''
-                and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-                and DTW010.DTW_ATIVID = 50
-        )
-    )/60.0 as HORAS_VIAGEM,
-    
-    (
-        select top 1 first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
-        from DTW010 (nolock)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and DTW010.DTW_ATIVID = 57
-    ) as DATA_CHECLI,
-    (
-        select top 1 first_value(datetimefromparts(year(DTW010.DTW_DATREA), month(DTW010.DTW_DATREA), day(DTW010.DTW_DATREA), substring(DTW010.DTW_HORREA, 1, 2), substring(DTW010.DTW_HORREA, 3, 4), 0, 0)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
-        from DTW010 (nolock)
-        where
-                DTW010.D_E_L_E_T_ = ''
-            and concat(DTW010.DTW_FILORI, DTW010.DTW_VIAGEM) = VIAGEM.ID_VIAGEM
-            and DTW010.DTW_ATIVID = 56
-    ) as DATA_SAICLI,
     (
         select left(DTW010.DTW_DATREA, 6)
         from DTW010 (nolock)
@@ -322,7 +220,7 @@ select
     else null end as DESC_RECURSO
 
 from ZE1010 ZE1 (nolock)
-    left join ZE4010 ZE4 (nolock)
+    inner join ZE4010 ZE4 (nolock)
         on ZE4.D_E_L_E_T_ = ''
         and ZE4.ZE4_FILIAL = ZE1.ZE1_FILIAL
         and ZE4.ZE4_VIAGEM = ZE1.ZE1_NUM
@@ -387,7 +285,7 @@ from ZE1010 ZE1 (nolock)
             and DUD.DUD_FILORI = VIAGEM.FILORI
             and DUD.DUD_VIAGEM = VIAGEM.VIAGEM
 
-            inner join ZE5010 ZE5 (nolock)
+            left join ZE5010 ZE5 (nolock)
                 on ZE5.D_E_L_E_T_ = ''
                 and concat(ZE5.ZE5_FILIAL, ZE5.ZE5_VIAGEM) = VIAGEM.ID_VIAGEM
                 and ZE5.ZE5_MOTORI = VIAGEM.ID_MOTORISTA
@@ -472,4 +370,4 @@ from ZE1010 ZE1 (nolock)
             on SE1.D_E_L_E_T_ = ''
             and (trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
 where
-        DUD.D_E_L_E_T_ = ''
+        ZE1.D_E_L_E_T_ = ''
