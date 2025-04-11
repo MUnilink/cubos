@@ -27,7 +27,7 @@ select
     OS.ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
-    OS.DATA_APP,
+    OS.DATA_APP as DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
 
@@ -46,6 +46,7 @@ select
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) as numeric (15, 2)) else 0.0 end as VL_IMPR,
 
     /* RM */
+    OS.OS,
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,
@@ -96,7 +97,7 @@ from
             
             
             /* RM */
-            
+            substring(ZC2010.ZC2_NUM, 6, 10) as OS,
             case ZC1010.ZC1_TIPOP
                 when 1 then upper('Cabotagem')
                 when 2 then upper('Importacao')
@@ -221,6 +222,7 @@ from
             and RAT_IMPR.FILIAL = OS.FILIAL
             and RAT_IMPR.COMPETENCIA = left(OS.COMPETENCIA, 6)
             and RAT_IMPR.INSUMO = OS.INSUMO
+where OS.COMPETENCIA like '2025%'
 group by
     OS.BK_FILIAL,
     OS.BK_CLIENTE,
@@ -250,7 +252,9 @@ group by
     OS.ITEM,
     OS.DATA_APP,
     RAT_IMPR.TIPO,
+
     /* RM */
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
-    OS.STATUS_OS
+    OS.STATUS_OS,
+    OS.OS
