@@ -285,7 +285,7 @@ from ZE1010 ZE1 (nolock)
             and DUD.DUD_FILORI = VIAGEM.FILORI
             and DUD.DUD_VIAGEM = VIAGEM.VIAGEM
 
-            left join ZE5010 ZE5 (nolock)
+            inner join ZE5010 ZE5 (nolock)
                 on ZE5.D_E_L_E_T_ = ''
                 and concat(ZE5.ZE5_FILIAL, ZE5.ZE5_VIAGEM) = VIAGEM.ID_VIAGEM
                 and ZE5.ZE5_MOTORI = VIAGEM.ID_MOTORISTA
@@ -368,6 +368,6 @@ from ZE1010 ZE1 (nolock)
         
         left join SE1010 SE1 (nolock)
             on SE1.D_E_L_E_T_ = ''
-            and (trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
+            and (SE1.E1_YVIATMS = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
 where
         ZE1.D_E_L_E_T_ = ''
