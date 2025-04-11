@@ -18,6 +18,18 @@ select
 	ST9.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS,
 
+	case ST9.T9_TEMCONT
+		when 'S' then 'PROPRIO'
+		when 'N' then 'NAO'
+		when 'P' then 'ESTRUTURA'
+		when 'I' then 'IMEDIATO'
+		else 'OUTROS'
+	end as POSSUI_CONT,
+	
+	trim(ST9.T9_TPCONTA) as TIPO_CONT,
+	cast(ST9.T9_POSCONT as int) as CONT_ATUAL,
+	cast(ST9.T9_CONTACU as int) as CONT_ACUM,
+
 	trim(SN1.N1_GRUPO) as GRUPO_ATF,
 	trim(SN1.N1_CBASE) as ATIVO,
 	trim(SN1.N1_DESCRIC) as DESC_ATIVO,
