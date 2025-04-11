@@ -1,4 +1,15 @@
     select
+        (
+            select max(SB9010.B9_QINI)
+            from SB9010
+            where
+                    left(SB9010.B9_DATA, 6) = left(SD3.D3_EMISSAO, 6)
+                and SB9010.B9_FILIAL = SD3.D3_FILIAL
+                and SB9010.B9_LOCAL = SD3.D3_LOCAL
+                and SB9010.B9_COD = SD3.D3_COD
+                and SB9010.D_E_L_E_T_ = ''
+        ) as QTD_INI,
+        
         SB1.B1_COD as contador,
         trim(SB1.B1_COD) as PRODUTO,
         trim(SB1.B1_DESC) as NOMEPRODUTO,
@@ -45,6 +56,17 @@
             SD3.D_E_L_E_T_ = ''
 union
     select
+        (
+            select max(SB9010.B9_QINI)
+            from SB9010
+            where
+                    left(SB9010.B9_DATA, 6) = left(SD1.D1_DTDIGIT, 6)
+                and SB9010.B9_FILIAL = SD1.D1_FILIAL
+                and SB9010.B9_LOCAL = SD1.D1_LOCAL
+                and SB9010.B9_COD = SD1.D1_COD
+                and SB9010.D_E_L_E_T_ = ''
+        ) as QTD_INI,
+        
         SB1.B1_COD as contador,
         trim(SB1.B1_COD) as PRODUTO,
         trim(SB1.B1_DESC) as NOMEPRODUTO,
@@ -91,6 +113,17 @@ union
             SD1.D_E_L_E_T_ = ''
 union
     select
+        (
+            select max(SB9010.B9_QINI)
+            from SB9010
+            where
+                    left(SB9010.B9_DATA, 6) = left(SD2.D2_EMISSAO, 6)
+                and SB9010.B9_FILIAL = SD2.D2_FILIAL
+                and SB9010.B9_LOCAL = SD2.D2_LOCAL
+                and SB9010.B9_COD = SD2.D2_COD
+                and SB9010.D_E_L_E_T_ = ''
+        ) as QTD_INI,
+        
         SB1.B1_COD as contador,
         trim(SB1.B1_COD) as PRODUTO,
         trim(SB1.B1_DESC) as NOMEPRODUTO,
