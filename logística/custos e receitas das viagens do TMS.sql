@@ -162,17 +162,6 @@ select
     DT6.DT6_VALTOT,
     DT6.DT6_VALMER,
 
-    DTC.DTC_FILORI,
-    DTC.DTC_DOC,
-    DTC.DTC_SERIE,
-    DTC.DTC_NUMNFC,
-    DTC.DTC_SERNFC,
-    DTC.DTC_CODPRO,
-    DTC.DTC_VALOR,
-    DTC.DTC_PESO,
-    DTC.DTC_PESLIQ,
-    trim(SB1.B1_DESC) as NFCLI_PRODUTO,
-
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
 
     DT5.DT5_NUMSOL,
@@ -293,8 +282,8 @@ select
     ZE4.ZE4_TOTHR as VGA_HORAS,
     ZE4.ZE4_STATUS as STATUS_TMS,
     ZE4.ZE4_KMINI as km_ini,
-    ZE4.ZE4_YKMFIM as km_fim,
-    ZE4.ZE4_YKMFIM - ZE4.ZE4_KMINI as km_VIAGEM,
+    ZE4.ZE4_KMFIM as km_fim,
+    ZE4.ZE4_KMFIM - ZE4.ZE4_KMINI as km_VIAGEM,
     ZE5.ZE5_ITENS as ITEM_CAB,
     
     trim(ZE1.ZE1_COD) as VGA_CODIGO,
@@ -466,15 +455,6 @@ from ZE1010 ZE1 (nolock)
             ON REG_ENT.D_E_L_E_T_ = ' '
             and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
             and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
-        left join DTC010 DTC (nolock)
-            on DTC.D_E_L_E_T_ = ''
-            and DTC.DTC_FILORI = DT6.DT6_FILDOC
-            and DTC.DTC_DOC = DT6.DT6_DOC
-            and DTC.DTC_SERIE = DT6.DT6_SERIE
-
-            left join SB1010 SB1 (nolock)
-                on SB1.D_E_L_E_T_ = ''
-                and SB1.B1_COD = DTC.DTC_CODPRO
         
         left join SC5010 SC5 (nolock)
             on SC5.D_E_L_E_T_ = ''
