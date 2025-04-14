@@ -2,9 +2,11 @@ select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
-
+        
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.QTDxVALORUNI else 0.0 end as VALOR_IMPR,
     
     ZC2.QTDxVALORUNI as VALOR_PROD,
+    
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLTOTL) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_TOTAL,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_IMPR,
     
@@ -12,10 +14,6 @@ select
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select sum(ZC7010.ZC7_HRIMPR) from ZC7010 where ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORAS_IMPR,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 305 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_OPP,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.FILIAL, ZC2.PERIODO, ZC2.INSUMO, ZC2.ITEM) is null then (select ZC7010.ZC7_HRPAD from ZC7010 where ZC7010.ZC7_CC = 304 and ZC7010.D_E_L_E_T_ = '' and ZC7010.ZC7_CODIGO = ZC2.INSUMO and ZC7010.ZC7_COMPET = ZC2.PERIODO) else 0.0 end as HORA_TMS,
-    
-    (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC2.PORTO) as DESC_PORTO,
-    (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC2.NAVIO) as DESC_NAVIO,
-    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC2.TABELADEPRECO) as DESC_TABPRECO,
     
     case
         when ZC2.TIPO in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = ZC2.INSUMO and ZC2.TIPO in (1, 4, 5, 11))
@@ -33,16 +31,6 @@ select
     DEV.A1_LOJA as CLI_LOJA,
     DEV.A1_CGC as CLI_CNPJ,
     trim(DEV.A1_NOME) as CLIENTE,
-
-    ARM.A1_COD as ARM_CODIGO,
-    ARM.A1_LOJA as ARM_LOJA,
-    ARM.A1_CGC as ARM_CNPJ,
-    trim(DEV.A1_NOME) as ARMADORA,
-
-    DES.A2_COD as DESP_CODIGO,
-    DES.A2_LOJA as DESP_LOJA,
-    DES.A2_CGC as DESP_CNPJ,
-    trim(DES.A2_NOME) as DESPACHANTE,
 
     SC6.C6_NUM as PEDIDO,
     SC6.C6_ITEM as ITEM_PEDIDO,
@@ -185,14 +173,6 @@ from
             on DEV.D_E_L_E_T_ = ''
             and DEV.A1_COD = ZC2.ZC1_CODSA1
             and DEV.A1_LOJA = ZC2.ZC1_LOJSA1
-        left join SA1010 ARM (nolock)
-            on ARM.D_E_L_E_T_ = ''
-            and ARM.A1_COD = ZC2.ZC1_ARMADO
-            and ARM.A1_LOJA = ZC2.ZC1_LJARMA
-        left join SA2010 DES (nolock)
-            on DES.D_E_L_E_T_ = ''
-            and DES.A2_COD = ZC2.ZC1_DESPA
-            and DES.A2_LOJA = ZC2.ZC1_LJDESP
 
     left join ST9010 ST9 (nolock)
         on ST9.D_E_L_E_T_ = ''
@@ -217,3 +197,32 @@ from
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
+        
+        left join
+        (
+            select
+                ZG1.ZG1_FILORI as FILIAL,
+                ZG1.ZG1_COMPET as COMPETENCIA,
+                trim(ZG1.ZG1_CODIGO) as INSUMO,
+                ZG1.ZG1_TIPO as TIPO,
+                cast(
+                    ZG1.ZG1_VLIMPR/
+                    (
+                        select sum(ZG1010.ZG1_VLIMPR)
+                        from ZG1010
+                        where
+                            ZG1010.ZG1_VLIMPR != 0
+                        and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                        and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                        and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                        and ZG1010.D_E_L_E_T_ = ''
+                    )
+                    as numeric(15, 2)
+                ) as PERC_RATEIO
+            from ZG1010 ZG1 (nolock)
+            where ZG1.D_E_L_E_T_ = ''
+        ) RAT_IMPR
+            on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZC2.TIPO
+            and RAT_IMPR.FILIAL = ZC2.FILIAL
+            and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
+            and RAT_IMPR.INSUMO = ZC2.INSUMO
