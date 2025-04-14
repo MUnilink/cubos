@@ -2,9 +2,10 @@ select
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC2.FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
-        
+
+    RAT_IMPR.*,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.QTDxVALORUNI else 0.0 end as VALOR_IMPR,
-    
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO else ZC2.TIPO end as ID_TIPO,
     ZC2.QTDxVALORUNI as VALOR_PROD,
     
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLTOTL) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_TOTAL,
@@ -17,7 +18,7 @@ select
     
     case
         when ZC2.TIPO in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = ZC2.INSUMO and ZC2.TIPO in (1, 4, 5, 11))
-        when ZC2.TIPO in (2, 14, 15) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = ZC2.INSUMO and ZC2.TIPO in (2, 14))
+        when ZC2.TIPO in (2, 14, 15) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = ZC2.INSUMO and ZC2.TIPO in (2, 14, 15))
         when ZC2.TIPO in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = ZC2.INSUMO and ZC2.TIPO in (3, 6, 9, 10, 12, 13, 16))
         when ZC2.TIPO = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = ZC2.INSUMO and ZC2.TIPO = 7)
     else null end as DESC_RECURSO,
@@ -77,7 +78,6 @@ from
             cast(substring(ZC1010.ZC1_NUM, 6, 10) as int) as OS,
             ZC2010.ZC2_FILORI as FILORI,
             ZC2010.ZC2_ITEM as ITEM,
-            lag(ZC2010.ZC2_ITEM, 1, null) over(partition by ZC2010.ZC2_FILIAL, ZC2010.ZC2_COMPET, ZC2010.ZC2_COD order by ZC2010.ZC2_FILIAL, ZC2010.ZC2_COMPET, ZC2010.ZC2_NUM, ZC2010.ZC2_ITEM) as ITEM_ANT,
             left(ZC1010.ZC1_NUM, 4) as ANO_OS,
             left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
             cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
