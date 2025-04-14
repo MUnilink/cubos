@@ -19,7 +19,6 @@
         
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
         case SRC.RC_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
-        case when SRC.RC_ROTEIR = 'ADI' and SRC.RC_PD = '183' then SRC.RC_VALOR when SRC.RC_ROTEIR = 'FOL' and SRC.RC_PD = '999' then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRC.RC_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
         
@@ -33,7 +32,9 @@
         case SRC.RC_PD when '738' then SRC.RC_VALOR else 0.0 end as PLANO_SAUDE,
         case SRC.RC_PD when '057' then SRC.RC_VALOR else 0.0 end as DIARIAS,
         case SRC.RC_PD when '719' then SRC.RC_VALOR else 0.0 end as VALI,
-        
+        case SRC.RC_PD when '461' then SRC.RC_VALOR else 0.0 end as ARRED_DESC,
+        case when SRC.RC_PD in ('147', '091', '140', '304') then SRC.RC_VALOR else 0.0 end as ARRED_PROV,
+        case when SRC.RC_PD in ('183', '999') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         case when SRC.RC_PD in ('420', '421', '422') then SRC.RC_VALOR else 0.0 end as IR,
         case when SRC.RC_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRC.RC_VALOR else 0.0 end as HREXTRA_APROVADA,
         case when SRC.RC_PD in ('285', '561', '796') then SRC.RC_VALOR else 0.0 end as VTRA,
@@ -101,7 +102,6 @@ union
         
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
         case SRD.RD_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
-        case when SRD.RD_ROTEIR = 'ADI' and SRD.RD_PD = '183' then SRD.RD_VALOR when SRD.RD_ROTEIR = 'FOL' and SRD.RD_PD = '999' then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRD.RD_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
         
@@ -115,7 +115,9 @@ union
         case SRD.RD_PD when '738' then SRD.RD_VALOR else 0.0 end as PLANO_SAUDE,
         case SRD.RD_PD when '057' then SRD.RD_VALOR else 0.0 end as DIARIAS,
         case SRD.RD_PD when '719' then SRD.RD_VALOR else 0.0 end as VALI,
-        
+        case SRD.RD_PD when '461' then SRD.RD_VALOR else 0.0 end as ARRED_DESC,
+        case when SRD.RD_PD in ('147', '091', '140', '304') then SRD.RD_VALOR else 0.0 end as ARRED_PROV,
+        case when SRD.RD_PD in ('183', '999') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         case when SRD.RD_PD in ('420', '421', '422') then SRD.RD_VALOR else 0.0 end as IR,
         case when SRD.RD_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRD.RD_VALOR else 0.0 end as HREXTRA_APROVADA,
         case when SRD.RD_PD in ('285', '561', '796') then SRD.RD_VALOR else 0.0 end as VTRA,
