@@ -66,7 +66,7 @@ from
             trim(ZC2010.ZC2_ITEM) as ITEM,
             cast(ZC1010.ZC1_EMISSA as date) as DT_INIOS,
             cast(case when ZC1010.ZC1_STATUS = 1 then null when ZC1010.ZC1_DTENCE = '' then ZC1010.ZC1_DTFIM else ZC1010.ZC1_DTENCE end as date) as DT_FIMOS,
-            cast(ZC2010.ZC2_DTFIM as date) as DATA_APP,
+            cast(ZC2010.ZC2_DATA as date) as DATA_APP,
             concat(left(isnull(nullif(ZC2010.ZC2_COMPET, ''), ZC1010.ZC1_DTFIM), 6), '01') as COMPETENCIA,
             
             case when ZC2010.ZC2_QTDPRV > 99999999 then 99999999 else ZC2010.ZC2_QTDPRV end as QTD_PREV,
@@ -128,7 +128,6 @@ from
                 concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
                 'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
                 'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
-                SC6010.C6_CC as CC,
                 1 as QTD
             from SC6010
                 left join SD2010
