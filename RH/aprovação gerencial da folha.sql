@@ -17,14 +17,14 @@
             else '-'
         end as TIPO_VERBA,
         
+        cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
         case SRC.RC_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
-        case SRC.RC_PD when '999' then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
+        case when SRC.RC_ROTEIR = 'ADI' and SRC.RC_PD = '183' then SRC.RC_VALOR when SRC.RC_ROTEIR = 'FOL' and SRC.RC_PD = '999' then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRC.RC_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
         
         case SRC.RC_PD when '039' then SRC.RC_VALOR when '215' then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
         case SRC.RC_PD when '353' then SRC.RC_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
-        case SRC.RC_PD when '420' then SRC.RC_VALOR when '422' then SRC.RC_VALOR when '423' then SRC.RC_VALOR else 0.0 end as IR,
         case SRC.RC_PD when '401' then SRC.RC_VALOR when '402' then SRC.RC_VALOR when '403' then SRC.RC_VALOR else 0.0 end as INSS,
         case SRC.RC_PD when '407' then SRC.RC_VALOR else 0.0 end as MENS_SINDICAL,
         case SRC.RC_PD when '373' then SRC.RC_VALOR when '530' then SRC.RC_VALOR when '532' then SRC.RC_VALOR when '535' then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
@@ -34,6 +34,7 @@
         case SRC.RC_PD when '057' then SRC.RC_VALOR else 0.0 end as DIARIAS,
         case SRC.RC_PD when '719' then SRC.RC_VALOR else 0.0 end as VALI,
         
+        case when SRC.RC_PD in ('420', '421', '422') then SRC.RC_VALOR else 0.0 end as IR,
         case when SRC.RC_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRC.RC_VALOR else 0.0 end as HREXTRA_APROVADA,
         case when SRC.RC_PD in ('285', '561', '796') then SRC.RC_VALOR else 0.0 end as VTRA,
         case when SRC.RC_PD in ('562', '749') then SRC.RC_VALOR else 0.0 end as VCES,
@@ -98,14 +99,14 @@ union
             else '-'
         end as TIPO_VERBA,
         
+        cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
         case SRD.RD_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
-        case SRD.RD_PD when '999' then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
+        case when SRD.RD_ROTEIR = 'ADI' and SRD.RD_PD = '183' then SRD.RD_VALOR when SRD.RD_ROTEIR = 'FOL' and SRD.RD_PD = '999' then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         case trim(SRV.RV_TIPOCOD) when '1' then SRD.RD_VALOR else 0.0 end as PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
         
         case SRD.RD_PD when '039' then SRD.RD_VALOR when '215' then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
         case SRD.RD_PD when '353' then SRD.RD_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
-        case SRD.RD_PD when '420' then SRD.RD_VALOR when '422' then SRD.RD_VALOR when '423' then SRD.RD_VALOR else 0.0 end as IR,
         case SRD.RD_PD when '401' then SRD.RD_VALOR when '402' then SRD.RD_VALOR when '403' then SRD.RD_VALOR else 0.0 end as INSS,
         case SRD.RD_PD when '407' then SRD.RD_VALOR else 0.0 end as MENS_SINDICAL,
         case SRD.RD_PD when '373' then SRD.RD_VALOR when '530' then SRD.RD_VALOR when '532' then SRD.RD_VALOR when '535' then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
@@ -115,6 +116,7 @@ union
         case SRD.RD_PD when '057' then SRD.RD_VALOR else 0.0 end as DIARIAS,
         case SRD.RD_PD when '719' then SRD.RD_VALOR else 0.0 end as VALI,
         
+        case when SRD.RD_PD in ('420', '421', '422') then SRD.RD_VALOR else 0.0 end as IR,
         case when SRD.RD_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRD.RD_VALOR else 0.0 end as HREXTRA_APROVADA,
         case when SRD.RD_PD in ('285', '561', '796') then SRD.RD_VALOR else 0.0 end as VTRA,
         case when SRD.RD_PD in ('562', '749') then SRD.RD_VALOR else 0.0 end as VCES,
