@@ -27,7 +27,7 @@ select
     OS.ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
-    OS.DATA_APP as DATA_APP,
+    OS.DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
 
@@ -52,7 +52,14 @@ select
     OS.STATUS_OS,
     OS.DT_ENCOS,
     RAT_IMPR.TIPO,
-    sum(RAT_IMPR.PERC_RATEIO) as PROPIMPR
+    sum(RAT_IMPR.PERC_RATEIO) as PROPIMPR,
+
+    case
+        when OS.ID_TIPO_ITEM in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = OS.INSUMO and OS.ID_TIPO_ITEM in (1, 4, 5, 11))
+        when OS.ID_TIPO_ITEM in (2, 14, 15) then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = OS.INSUMO and OS.ID_TIPO_ITEM in (2, 14))
+        when OS.ID_TIPO_ITEM in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = OS.INSUMO and OS.ID_TIPO_ITEM in (3, 6, 9, 10, 12, 13, 16))
+        when OS.ID_TIPO_ITEM = 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = OS.INSUMO and OS.ID_TIPO_ITEM = 7)
+    else null end as DESC_RECURSO
 
 from
     (
@@ -76,7 +83,7 @@ from
             trim(ZC2010.ZC2_ITEM) as ITEM,
             cast(ZC1010.ZC1_EMISSA as date) as DT_INIOS,
             cast(case when ZC1010.ZC1_STATUS = 1 then null when ZC1010.ZC1_DTENCE = '' then ZC1010.ZC1_DTFIM else ZC1010.ZC1_DTENCE end as date) as DT_FIMOS,
-            cast(ZC2010.ZC2_DTFIM as date) as DATA_APP,
+            cast(ZC2010.ZC2_DATA as date) as DATA_APP,
             concat(left(isnull(nullif(ZC2010.ZC2_COMPET, ''), ZC1010.ZC1_DTFIM), 6), '01') as COMPETENCIA,
             
             case when ZC2010.ZC2_QTDPRV > 99999999 then 99999999 else ZC2010.ZC2_QTDPRV end as QTD_PREV,
@@ -165,7 +172,6 @@ from
                 concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
                 'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
                 'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
-                SC6010.C6_CC as CC,
                 1 as QTD
             from SC6010
                 left join SD2010
