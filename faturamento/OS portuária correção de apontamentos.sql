@@ -31,7 +31,7 @@ select
         when 9 then 'DOCUMENTAÇÃO E TAXAS'
         when 10 then 'COMBUSTIVEL'
         when 11 then 'TAXAS'
-        when 12 then 'SEGURO'
+        when 12 then 'SEGURO EQUIPAMENTO'
         when 13 then 'PNEUS'
         else 'OUTROS'
     end as TIPO_INSUMO,
