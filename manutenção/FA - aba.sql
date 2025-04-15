@@ -16,15 +16,25 @@ select
 	ZD3.TQN_YITMCT as TQN_YITMCT,
 
 	/* RM */
+	trim(ST9.T9_CODFAMI) as FAMILIA,
 	convert(datetime, ZD3.DATA_ABA, 113) as DATA_ABA,
 	ZD3.TIPO_ABA,
-
 	case
-		when ST9.T9_CODFAMI = 'VP' then ZD3.ZD3_KMRD /* não calcula para ARLA e parcial*/
+		when ST9.T9_CODFAMI = 'VP' then ZD3.ZD3_HODOM
 		when ZD3.ZD3_HODOM < lag(ZD3.ZD3_HODOM, 1, 0) over (partition by ZD3.ZD3_VEICUL, ZD3.ZD3_COMB order by ZD3.ZD3_VEICUL, ZD3.ZD3_DATA, ZD3.ZD3_HORA) then ZD3.ZD3_HODOM /* quando quebra */
-		else ZD3.ZD3_HODOM - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = ZD3.ZD3_VEICUL and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < concat(ZD3.ZD3_DATA, ' ', ZD3.ZD3_HORA))
-	end as km_TQN
+		else
+		(
+			select max(STP010.TP_POSCONT)
+			from STP010
+			where
+					STP010.D_E_L_E_T_ = ''
+				and STP010.TP_CODBEM = ZD3.ZD3_VEICUL
+				and convert(datetime, concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA), 113) < convert(datetime, ZD3.DATA_ABA, 113)
+				and STP010.TP_TIPOLAN = 'A'
+		)
+	end as cont_TQN,
 
+	left(ZD3.ZD3_DATA, 6) as PERIODO
 from
 	(
 		select
