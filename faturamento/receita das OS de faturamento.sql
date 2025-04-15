@@ -3,10 +3,34 @@ select
     ZC2.*,
     (select max(trim(ST9010.T9_CCUSTO)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and ST9010.T9_CODBEM = ZC2.INSUMO) as CC,
 
-    RAT_IMPR.*,
+    RAT_IMPR.PERC_RATEIO,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.QTDxVALORUNI else 0.0 end as VALOR_IMPR,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO else ZC2.TIPO end as ID_TIPO,
-    ZC2.QTDxVALORUNI as VALOR_PROD,
+    case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTDxVALORUNI end as VALOR_PROD,
+
+    case
+        when ZC2.TIPO = 1 then 'RECEITA'
+        when ZC2.TIPO = 2 then 'FOLHA'
+        when ZC2.TIPO = 3 then 'MANUTENÇÃO'
+        when ZC2.TIPO = 4 then 'MATERIAIS'
+        when ZC2.TIPO = 5 then 'COMPRAS'
+        when ZC2.TIPO = 6 then 'DEPRECIAÇÃO'
+        when ZC2.TIPO = 7 then 'CONTABILIDADE'
+        when ZC2.TIPO = 8 then 'DESPESAS FINANCEIRAS'
+        when ZC2.TIPO = 9 then 'DOCUMENTAÇÃO'
+        when ZC2.TIPO = 10 then 'COMBUSTIVEL'
+        when ZC2.TIPO = 11 then 'SERVIÇOS TOMADOS'
+        when ZC2.TIPO = 12 then 'SEGURO EQUIPAMENTO'
+        when ZC2.TIPO = 13 then 'PNEUS'
+        when ZC2.TIPO = 14 then 'PROVISÕES'
+        when ZC2.TIPO = 15 and RAT_IMPR.TIPO = 2 then 'FOLHA'
+        when ZC2.TIPO = 15 and RAT_IMPR.TIPO = 14 then 'PROVISÕES'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 3 then 'MANUTENÇÃO'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 6 then 'DEPRECIAÇÃO'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 9 then 'DOCUMENTAÇÃO'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 12 then 'SEGURO EQUIPAMENTO'
+        else 'OUTROS'
+    end as TIPO_INSUMO,
     
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLTOTL) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_TOTAL,
     case when lag(ZC2.ITEM, 1, null) over(partition by ZC2.FILIAL, ZC2.PERIODO, ZC2.TIPO, ZC2.INSUMO order by ZC2.ITEM) is null then (select sum(ZG1010.ZG1_VLIMPR) from ZG1010 (nolock) where ZG1010.D_E_L_E_T_ = '' and ZC2.PERIODO = ZG1010.ZG1_COMPET and ZC2.FILIAL = ZG1010.ZG1_FILORI and ZC2.INSUMO = trim(ZG1010.ZG1_CODIGO) and ZC2.TIPO = cast(ZG1010.ZG1_TIPO as int)) else 0.0 end as VALOR_IMPR,
@@ -128,26 +152,6 @@ from
             cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAPONT,
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
-            case cast(ZC2010.ZC2_TIPO as int)
-                when 1 then 'RECEITA'
-                when 2 then 'FOLHA'
-                when 3 then 'MANUTENÇÃO'
-                when 4 then 'MATERIAIS'
-                when 5 then 'COMPRAS'
-                when 6 then 'DEPRECIAÇÃO'
-                when 7 then 'CONTABILIDADE'
-                when 8 then 'DESPESAS FINANCEIRAS'
-                when 9 then 'OUTROS CUSTOS - TAXAS'
-                when 10 then 'COMBUSTIVEL'
-                when 11 then 'SERVIÇOS TOMADOS'
-                when 12 then 'SEGURO'
-                when 13 then 'PNEUS'
-                when 14 then 'PROVISÕES'
-                when 15 then 'TIPO RH IMPROD'
-                when 16 then 'TIPO MNT IMPROD'
-                else 'OUTROS'
-            end as TIPO_INSUMO,
-
             trim(ZC2010.ZC2_COD) as INSUMO,
             cast(ZC2010.ZC2_QTDPRV as numeric(15, 2)) as QTD_PREV_ITEM,
             cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as QTD_REAL_ITEM,
