@@ -23,4 +23,6 @@ from ZC7010 ZC7
         and ZG1.ZG1_COMPET = ZC7.ZC7_COMPET
         and ZG1.ZG1_TABELA = ZC7.ZC7_ORIGEM
         and ZG1.ZG1_ATIVO = 'S'
-where ZC7.D_E_L_E_T_ = ''
+where
+            concat(ZC7.ZC7_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
+        and ZC7.D_E_L_E_T_ = ''
