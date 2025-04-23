@@ -1,12 +1,73 @@
 correção dos apontamentos mensais realizados nas OS levou em conta que datas e horários estão corretos considerando a conferência diária realizada pela Marília
 sugestões: divisão de tarefas pelos adm pátio e TMUT, para que cada equipe acompanhe o apontamento do pessoal em campo e o encerramento das OS, junto com a rotina já existente de abertura de OS. Assim a Marília realizará a conferência mensal e as correções de apontamento além daquelas realizadas pelos adm pátio e TMUT. Se necessário, reabrirá as OS e as encerrará novamente após corrigi-las. Neste momento poderão ser feitas as conferências pela controladoria.
 
+PLACAS
 2235 - LUIS RIBEIRO - eliminar item 434
 2235 - JAIRO RODRIGO - alterar item 112 para qtd rec. 9 e eliminar item 132
 2235 - GUSTAVO QUEIROZ - eliminar item 172 e alterar item 197 para qtd rec. 1
 2235 - ADRIAN FARIAS - incluir uma máquina e item 224 qtd rec. 1
+
 2236 - AIRTON SILVA - eliminar item 477
 2236 - ANDERSON OLIVEIRA - editar item 056 para qtd rec. 56, eliminar itens 076 e 077
 2236 - HENRIQUE LIMA - incluir máquina e Konecranes no dia 19/01
 2236 - HENRIQUE LIMA - incluir conferente e Konecranes no dia 21/01
 2236 - JOSE ARIMATEA - eliminar itens 144 e 145
+2236 - MARCELO NASCIMENTO - adicionar máquina dia 10/01
+2236 - MARCELO NASCIMENTO - adicionar qtd rec. 3 ref. a 6 - motorista dia 10/01
+2236 - MARCELO NASCIMENTO - alterar item 503 para qtd rec. 4
+2236 - ROGER ALVES - eliminar item 390
+2236 - ROGER ALVES - adicionar conferente dia 23/01
+2236 - ROMULO DIAS - eliminar item 579
+2236 - VALERIO DE ALMEIDA - eliminar item 044
+2236 - VALERIO DE ALMEIDA - alterar item 626 para qtd rec. 2
+
+2291 - CLAUDIO GERMANO - eliminar item 093
+
+2302 - ANDERSON OLIVEIRA - eliminar item 027
+2302 - WIRGINIA CONCEICAO - incluir Konecranes no dia 14/01
+2302 - ROGER ALVES - alterar item 167 para qtd rec. 2
+2302 - ANDERSON OLIVEIRA - alterar item 154 para qtd rec. 2
+2302 - JOEL COSTA - alterar item 175 para qtd rec. 3
+2302 - JOAO RICARDO - alterar item 201 para qtd rec. 2
+2302 - JOAO RICARDO - eliminar itens 211, 213, 214, 215
+2302 - CLAUDIO GERMANO - item 224 para qtd rec. 3
+2302 - MARIA GEISLIANE - eliminar itens 233, 234, 235, 236
+2302 - ROGER ALVES - adicionar qtd rec. 3 ref. a 6 - motorista dia 21/01
+2302 - MARIA GEISLIANE - adicionar qtd rec. 3 ref. a 6 - motorista dia 22/01
+2302 - JOAO RICARDO - eliminar item 340
+2302 - ANTONIO PEDRO - alterar item 400 para qtd rec. 2
+2302 - ANTONIO PEDRO - eliminar itens 408 a 411
+2302 - ANTONIO PEDRO - eliminar itens 370
+2302 - ANTONIO PEDRO - alterar item 374 para qtd rec. 4
+2302 - ANTONIO PEDRO - eliminar itens 387 a 396
+2302 - ANTONIO PEDRO - eliminar itens 460 a 470
+2302 - CARLOS BRUNO - incluir Konecranes no dia 12/01
+2302 - ROGER ALVES - eliminar itens 211
+2302 - ROGER ALVES - alterar item 212 para qtd rec. 2
+2302 - HENRIQUE LIMA - incluir Konecranes no dia 15/01
+2302 - VALERIO DE ALMEIDA - eliminar item 240
+
+2306 - ANTONIO PEDRO - eliminar item 004
+2306 - ROGER ALVES - eliminar item 031
+
+2309 - eliminar item 099, 011, 012, 047, 028
+2309 - CARLOS RIBEIRO - incluir Konecranes no dia 16/01
+
+2313 - eliminar itens 156, 187, 196, 198
+2313 - alterar item 155 motorista para qtd rec. 2
+2313 - alterar item 375 motorista para qtd rec. 7
+
+2314 - eliminar itens 149, 621, 535, 265, 266, 213, 554, 314
+2314 - ALISON DAMASCENO - alterar item 444 para qtd rec. 2
+2314 - alterar item 134 para qtd rec. 2
+2314 - alterar item 258 para qtd rec. 4
+2314 - MARCELO NASCIMENTO - incluir 6 - motorista no dia 28/01
+2314 - alterar item 206 para qtd rec. 2 dia 19/01
+
+2345 - ANTONIO PEDRO - eliminar itens 014 a 020
+
+2346 - SARAH MOREIRA - eliminar itens 041, 047
+2346 - LUIS RIBEIRO - eliminar itens 006, 051
+
+CFS às vezes tem capatazia, às vezes, não, ver RODRIGO REGO 14, 16, 17 de janeiro; concentração de apontamentos por um dos três conferentes do CFS
+analisar pares máquina-operador e motorista-CMSR, verificar outras OS, de aluguel
