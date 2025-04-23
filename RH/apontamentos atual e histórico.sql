@@ -18,13 +18,24 @@
         trim(SRA.RA_CIC) as CPF,
 
         SPH.PH_PD as EVENTO,
-        concat(SPH.PH_PD, ' - ', (select trim(SP9010.P9_DESC) from SP9010 (nolock) where SP9010.D_E_L_E_T_ = '' and SP9010.P9_CODIGO = SPH.PH_PD)) as DESC_EVENTO,
+        case SP9.P9_TIPOCOD
+            when '1' then 'PROVENTO'
+			when '2' then 'DESCONTO'
+			when '3' then 'BASE PROVENTO'
+			when '4' then 'BASE DESCONTO'
+        else 'OUTROS' end as TIPO_EVENTO,
+        
+        concat(SPH.PH_PD, ' - ', trim(SP9.P9_DESC)) as DESC_EVENTO,
         cast(SPH.PH_DATA as date) as DATA,
         left(SPH.PH_DATA, 6) as PERIODO,
         cast(floor(SPH.PH_QUANTC) as int) as HORAS,
-        cast((SPH.PH_QUANTC - floor(SPH.PH_QUANTC))*6,0.0 as numeric(15,2)) as MINUTOS
-        cast(SPH.PH_QUANTC as numeric(15, 2)) as QTD
+        cast((SPH.PH_QUANTC - floor(SPH.PH_QUANTC))*60.0 as numeric(15,2)) as MINUTOS,
+        cast(SPH.PH_QUANTC as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        'PONTO HIST' as TIPO_PONTO
     from SPH010 SPH (nolock)
+        inner join SP9010 SP9 (nolock)
+            on SP9.D_E_L_E_T_ = ''
+            and SP9.P9_CODIGO = SPH.PH_PD
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SPH.PH_FILIAL
@@ -48,8 +59,10 @@
                 and CTT.CTT_CUSTO = SRA.RA_CC
             inner join CTD010 CTD (nolock)
                 on CTD.D_E_L_E_T_ = ''
-                and CTD.CTD_ITEM = SRA.RA_ITEM
-    where SPH.D_E_L_E_T_ = ''
+                and CTD.CTD_ITEM = SRA.RA_ITEM  
+    where
+            datediff(month, SPH.PH_DATA, getdate()) < 7
+        and SPH.D_E_L_E_T_ = ''
 union
     select
         trim(SRA.RA_FILIAL) as FILIAL,
@@ -71,13 +84,24 @@ union
         trim(SRA.RA_CIC) as CPF,
 
         SPC.PC_PD as EVENTO,
-        concat(SPC.PC_PD, ' - ', (select trim(SP9010.P9_DESC) from SP9010 (nolock) where SP9010.D_E_L_E_T_ = '' and SP9010.P9_CODIGO = SPC.PC_PD)) as DESC_EVENTO,
+        case SP9.P9_TIPOCOD
+            when '1' then 'PROVENTO'
+			when '2' then 'DESCONTO'
+			when '3' then 'BASE PROVENTO'
+			when '4' then 'BASE DESCONTO'
+        else 'OUTROS' end as TIPO_EVENTO,
+        
+        concat(SPC.PC_PD, ' - ', trim(SP9.P9_DESC)) as DESC_EVENTO,
         cast(SPC.PC_DATA as date) as DATA,
         left(SPC.PC_DATA, 6) as PERIODO,
         cast(floor(SPC.PC_QUANTC) as int) as HORAS,
-        cast((SPC.PC_QUANTC - floor(SPC.PC_QUANTC))*6,0.0 as numeric(15,2)) as MINUTOS
-        cast(SPC.PC_QUANTC as numeric(15, 2)) as QTD
+        cast((SPC.PC_QUANTC - floor(SPC.PC_QUANTC))*60.0 as numeric(15,2)) as MINUTOS,
+        cast(SPC.PC_QUANTC as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        'PONTO ATUAL' as TIPO_PONTO
     from SPC010 SPC (nolock)
+        inner join SP9010 SP9 (nolock)
+            on SP9.D_E_L_E_T_ = ''
+            and SP9.P9_CODIGO = SPC.PC_PD
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SPC.PC_FILIAL
@@ -124,13 +148,31 @@ union
         trim(SRA.RA_CIC) as CPF,
 
         SRD.RD_PD as EVENTO,
-        concat(SRD.RD_PD, ' - ', (select coalesce(nullif(trim(SRV010.RV_DESCDET), ''), trim(SRV010.RV_DESC)) from SRV010 (nolock) where SRV010.D_E_L_E_T_ = '' and SRV010.RV_COD = SRD.RD_PD)) as DESC_EVENTO,
+        case SRV.RV_TIPOCOD
+            when '1' then 'PROVENTO'
+			when '2' then 'DESCONTO'
+			when '3' then 'BASE PROVENTO'
+			when '4' then 'BASE DESCONTO'
+        else 'OUTROS' end as TIPO_EVENTO,
+        
+        concat(SRD.RD_PD, ' - ', coalesce(nullif(trim(SRV.RV_DESCDET), ''), trim(SRV.RV_DESC))) as DESC_EVENTO,
         null as DATA,
         SRD.RD_DATARQ as PERIODO,
         0.0 as HORAS,
         0.0 as MINUTOS,
-        case when SRD.RD_PD = '990' then SRA.RA_HRSMES else cast(SRD.RD_HORAS as numeric(15, 2)) end as QTD
+        cast(case when SRD.RD_PD = '990' then SRA.RA_HRSMES else SRD.RD_HORAS*SRA.RA_HRSMES/30.0 end as numeric(15 ,2)) * case when SRV.RV_TIPOCOD = 2 or exists(select * from RCM010 where RCM010.D_E_L_E_T_ = '' and RCM010.RCM_PD = SRD.RD_PD) then -1 else 1 end as QTD,
+        'FOLHA' as TIPO_PONTO
     from SRD010 SRD (nolock)
+        inner join SRV010 SRV (nolock)
+            on SRV.D_E_L_E_T_ = ''
+            and SRV.RV_COD = SRD.RD_PD
+            and
+            (
+                SRV.RV_COD = '990'
+                or SRV.RV_COD in (select SP9010.P9_CODFOL from SP9010 where SP9010.D_E_L_E_T_ = '')
+                or SRV.RV_COD in (select RCM010.RCM_PD from RCM010 where RCM010.D_E_L_E_T_ = '')
+            )
+
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SRD.RD_FILIAL
@@ -156,5 +198,5 @@ union
                 on CTD.D_E_L_E_T_ = ''
                 and CTD.CTD_ITEM = SRA.RA_ITEM
     where
-            SRD.RD_PD in ('990', '051')
+            datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 7
         and SRD.D_E_L_E_T_ = ''
