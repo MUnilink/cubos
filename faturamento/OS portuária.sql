@@ -1,12 +1,13 @@
 select
     ZC1.ZC1_FILIAL as FILIAL,
-    concat(trim(ZC1.ZC1_NUM), trim(ZC2.ZC2_ITEM)) as ID_OS,
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     ZC2.ZC2_ITEM as ITEM,
-    substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
-    substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
+    
+    left(ZC1.ZC1_EMISSA, 6) as PERIODO_INIOS,
+    cast(ZC1.ZC1_EMISSA as date) as DATA_INIOS,
+    left(ZC1.ZC1_DTENCE, 6) as PERIODO_ENCOS,
+    cast(ZC1.ZC1_DTENCE as date) as DATA_ENCOS,
     
     convert
     (
@@ -141,21 +142,7 @@ select
     TAX.A2_COD as TAX_CODIGO,
     TAX.A2_LOJA as TAX_LOJA,
     TAX.A2_CGC as TAX_CNPJ,
-    trim(TAX.A2_NOME) as TAXA_FOR,
-
-    (
-        select max(SD1010.D1_DOC)
-        from SD1010 (nolock)
-            left join SC7010 (nolock)
-                on SC7010.D_E_L_E_T_ = ''
-                and SC7010.C7_FILIAL = SD1010.D1_FILIAL
-                and SC7010.C7_NUM = SD1010.D1_PEDIDO
-                and SC7010.C7_ITEM = SD1010.D1_ITEMPC
-        where
-                case when trim(SC7010.C7_YOS) = '2024/0' then right(left(replace(replace(SC7010.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7010.C7_YOS end = ZC2.ZC2_NUM
-            and SC7010.C7_YOSIT = ZC2.ZC2_ITEM
-            and SD1010.D_E_L_E_T_ = ''
-    ) as TAXA_NF
+    trim(TAX.A2_NOME) as TAXA_FOR
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
