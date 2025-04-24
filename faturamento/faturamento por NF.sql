@@ -2,6 +2,7 @@ SELECT
     SD2.D2_FILIAL as BK_FILIAL,
     SF2.F2_SERIE AS SERIE_DA_NOTA_FISCAL,
     SF2.F2_DOC AS NUMERO_DA_NOTA_FISCAL,
+    SD2.D2_ITEM as ITEM_NF,
     trim(SD2.D2_CCUSTO) as CC_NF,
     trim(SD2.D2_ITEMCC) as ATIVIDADE_NF,
     SD2.D2_TIPO AS TIPO_NF,
@@ -43,7 +44,6 @@ SELECT
     trim(SC6.C6_UM) as UN_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
     trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
-    cast(SC5.C5_EMISSAO as date) as DT_PEDIDO,
     cast(SC6.C6_ENTREG as date) as DT_ITEMPV,
 
     SC6.C6_QTDVEN as QTD_PEDIDO,
@@ -76,8 +76,6 @@ SELECT
         when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
         when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
     else null end as LP_CRE,
-
-    concat(trim(SA1.A1_CONTA), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SA1.A1_CONTA)) as LP_DEB,
 
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
     cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
@@ -130,30 +128,57 @@ SELECT
         else 'OUTROS'
     end as STATUS_PEDIDO,
 
-    DUD.DUD_VIAGEM as VIAGEM_TMS,
+    coalesce
+    (
+        DUD.DUD_VIAGEM,
+        (
+            select distinct DUD010.DUD_VIAGEM
+            from DUD010 (nolock)
+                inner join SC5010 (nolock)
+                    on SC5010.D_E_L_E_T_ = ' '
+                    and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
+            where
+                    DUD010.D_E_L_E_T_ = ''
+                and SD2.D2_FILIAL = SC5010.C5_FILIAL
+                and SD2.D2_DOC = SC5010.C5_NOTA
+                and SD2.D2_SERIE = SC5010.C5_SERIE
+                and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
+                and SD2.D2_LOJA = SC5010.C5_LOJACLI
+        ),
+        (
+            select distinct DUD010.DUD_VIAGEM
+            from DUD010 (nolock)
+                inner join SD2010 (nolock)
+                    on SD2010.D_E_L_E_T_ = ''
+                    and SD2010.D2_FILIAL = DUD010.DUD_FILDOC
+                    and SD2010.D2_DOC = DUD010.DUD_DOC
+                    and SD2010.D2_SERIE = DUD010.DUD_SERIE
+            where 
+                    DUD010.D_E_L_E_T_ = ''
+                and SD2010.D2_NFORI = SD2.D2_DOC
+                and SD2010.D2_SERIORI = SD2.D2_SERIE
+                and SD2010.D2_CLIENTE = SD2.D2_CLIENTE
+                and SD2010.D2_LOJA = SD2.D2_LOJA
+        )
+    ) as VIAGEM_TMS,
+    
     cast(DT6.DT6_DATEMI as date) as DATA_CTE,
     DT6.DT6_VALFRE as VL_CTE,
     DT6.DT6_VALIMP as VL_CTEIMP,
     DT6.DT6_VALTOT as VL_CTETOTAL,
     DT6.DT6_VALMER as VL_MERCAD,
-    DTC.DTC_NUMNFC as NUM_NFCLI,
-    DTC.DTC_SERNFC as SER_NFCLI,
-    DTC.DTC_VALOR as VALOR_NFCLI,
-    trim(DTC.DTC_CODPRO) as PROD_NFCLI,
-    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DTC.DTC_CODPRO) as DESC_PRNFCLI,
     trim(REG_COL.DUY_EST) as UF_COLETA,
 	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
 	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
 	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
-    
     trim(SE1.E1_PREFIXO) as PREFIXO,
     trim(SE1.E1_TIPO) as TIPO_TIT,
     SE1.E1_NATUREZ as NUM_NAT,
     SE1.E1_NFELETR as NUM_NFELETR,
     cast(coalesce(SE1.E1_VALOR, 0) as decimal(15, 2)) as VALOR_TIT,
-    (select trim(SED010.ED_DESCRIC) from SED010 (nolock) where SED010.D_E_L_E_T_ = '' and SED010.ED_CODIGO = SE1.E1_NATUREZ) as NATUREZA
+    (select trim(SED010.ED_DESCRIC) from SED010 (nolock) where SED010.D_E_L_E_T_ = '' and SED010.ED_CODIGO = SE1.E1_NATUREZ) as NATFIN
 
-from SD2010 SD2
+from SD2010 SD2 (nolock)
     inner join SF2010 SF2 (nolock)
         on SF2.F2_FILIAL = SD2.D2_FILIAL
         and SF2.F2_CLIENTE = SD2.D2_CLIENTE
@@ -206,11 +231,6 @@ from SD2010 SD2
                 and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
                 and ZC1.ZC1_NUM = ZC2.ZC2_NUM
         
-        left join SC5010 SC5
-            on SC5.D_E_L_E_T_ = ' '
-            and SC5.C5_FILIAL = SC6.C6_FILIAL
-            and SC5.C5_NUM = SC6.C6_NUM
-        
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_FILDOC = SD2.D2_FILIAL
@@ -230,11 +250,6 @@ from SD2010 SD2
                 and SE1.E1_LOJA = DT6.DT6_LOJDEV
                 and SE1.E1_NUM = DT6.DT6_DOC
                 and SE1.E1_PREFIXO = DT6.DT6_SERIE
-            left join DTC010 DTC (nolock)
-                on DTC.D_E_L_E_T_ = ''
-                and DTC.DTC_FILORI = DT6.DT6_FILDOC
-                and DTC.DTC_DOC = DT6.DT6_DOC
-                and DTC.DTC_SERIE = DT6.DT6_SERIE
             left join DUY010 REG_COL (nolock)
                 on REG_COL.D_E_L_E_T_ = ''
                 and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
@@ -243,6 +258,7 @@ from SD2010 SD2
                 on REG_ENT.D_E_L_E_T_ = ''
                 and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
                 and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
+
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
