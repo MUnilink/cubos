@@ -30,22 +30,18 @@ select
 	trim(CTT.CTT_DESC01) as CCUSTO,
 	trim(SE1.E1_CCUSTO) as CC,
 	trim(SE1.E1_ITEMCTA) as AT,
-    SE1.E1_SALDO as SALDO,
-    SE1.E1_DESCONT as DESCONT,
-    SE1.E1_MULTA as MULTA,
-    SE1.E1_JUROS as JUROS,
-    SE1.E1_CORREC as CORREC,
-    SE1.E1_VALLIQ as VALOR_LIQ,
+    cast(SE1.E1_SALDO as numeric(15, 2)) as SALDO,
+    cast(SE1.E1_DESCONT as numeric(15, 2)) as DESCONT,
+    cast(SE1.E1_MULTA as numeric(15, 2)) as MULTA,
+    cast(SE1.E1_JUROS as numeric(15, 2)) as JUROS,
+    cast(SE1.E1_CORREC as numeric(15, 2)) as CORREC,
+    cast(SE1.E1_VALLIQ as numeric(15, 2)) as VALOR_LIQ,
     SE1.E1_NUMBOR as BORDERO,
-    trim(SE1.E1_TITORIG) as TITULO_ORI,
+    trim(SE1.E1_YTITORI) as TITULO_ORI,
     trim(SE1.E1_ORIGEM) as ORIGEM,
-    cast(SE1.E1_DATALIB as date) as DT_LIBTIT,
-    upper(trim(SE1.E1_APROVA)) as APR_TITULO,
-    upper(trim(SE1.E1_USUALIB)) as LIB_TITULO,
 
 	trim(SE1.E1_NATUREZ) as NATUREZA,
 	trim(SED.ED_DESCRIC) as DESC_NATUREZA,
-    trim(SE1.E1_CONTAD) as CONTA,
     trim(SE1.E1_DEBITO) as CONTA_DEB,
     trim(SE1.E1_CREDIT) as CONTA_CRE,
     trim(SE1.E1_CCD) as CC_DEB,
@@ -70,19 +66,17 @@ select
 
 	SD2.D2_DOC as NF_DOC,
 	SD2.D2_SERIE as NF_SERIE,
-	cast(SD2.D2_EMISSAO as date) as NF_EMI,
-	cast(SD2.D2_DTDIGIT as date) as NF_DATA,
-	substring(SD2.D2_DTDIGIT, 1, 6) as NF_PERIODO,
+	cast(SD2.D2_EMISSAO as date) as NF_DATA,
+	substring(SD2.D2_EMISSAO, 1, 6) as NF_PERIODO,
 	
-	SD2.D2_CC as NF_CC,
-	SD2.D2_ITEMCTA as NF_AT,
+	SD2.D2_CCUSTO as NF_CC,
+	SD2.D2_ITEMCC as NF_AT,
 	SD2.D2_ITEM as NF_ITEM,
 	SD2.D2_QUANT as NF_QUANT,
-	SD2.D2_VUNIT as NF_VUNIT,
+	SD2.D2_PRUNIT as NF_VUNIT,
 	SD2.D2_TOTAL as NF_TOTAL,
 	SD2.D2_TES as NF_TES,
-	SD2.D2_CUSTO as NF_CUSTO,
-	SD2.D2_VALDESC as NF_VALDESC,
+	SD2.D2_DESCON as NF_VALDESC,
 
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
     cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
@@ -103,9 +97,9 @@ select
     cast(coalesce(SD2.D2_PESO * SD2.D2_QUANT, 0) as decimal(12, 4)) as PESO_LIQUIDO,
     1 as contador
 
-from SE2010 SE2 (nolock)
+from SE1010 SE1 (nolock)
 	left join SA1010 SA1 (nolock)
-		on SA2.D_E_L_E_T_ = ''
+		on SA1.D_E_L_E_T_ = ''
 		and SA1.A1_COD = SE1.E1_CLIENTE
 		and SA1.A1_LOJA = SE1.E1_LOJA
 	
@@ -139,4 +133,4 @@ from SE2010 SE2 (nolock)
 		on SED.D_E_L_E_T_ = ''
 		and SED.ED_CODIGO = SE1.E1_NATUREZ
 
-where SE2.D_E_L_E_T_ = ''
+where SE1.D_E_L_E_T_ = ''
