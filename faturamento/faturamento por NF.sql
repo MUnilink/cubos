@@ -45,10 +45,9 @@ SELECT
     trim(SC6.C6_CC) as CC_PEDIDO,
     trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
     cast(SC6.C6_ENTREG as date) as DT_ITEMPV,
-
-    SC6.C6_QTDVEN as QTD_PEDIDO,
-    SC6.C6_PRCVEN as PRECO_PEDIDO,
-    SC6.C6_VALOR as VALOR_PEDIDO,
+    cast(SC6.C6_QTDVEN as numeric(15, 2)) as QTD_PEDIDO,
+    cast(SC6.C6_PRCVEN as numeric(15, 2)) as PRECO_PEDIDO,
+    cast(SC6.C6_VALOR as numeric(15, 2)) as VALOR_PEDIDO,
 
     case
         /* LP 610-001 */
@@ -94,7 +93,7 @@ SELECT
     cast(coalesce(SD2.D2_PRUNIT, 0) as decimal(16, 4)) as VL_UNITARIO,
     cast(coalesce(SD2.D2_SEGURO, 0) as decimal(14, 2)) as VL_SEGURO,
     cast(coalesce(SD2.D2_PESO * SD2.D2_QUANT, 0) as decimal(12, 4)) as PESO_LIQUIDO,
-    1 AS contador,
+    1 as contador,
     
     trim(ZC2.ZC2_NUM) as OS_PORTUARIA,
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
@@ -131,6 +130,7 @@ SELECT
     coalesce
     (
         DUD.DUD_VIAGEM,
+        VGA2.DUD_VIAGEM,
         (
             select distinct DUD010.DUD_VIAGEM
             from DUD010 (nolock)
@@ -144,21 +144,6 @@ SELECT
                 and SD2.D2_SERIE = SC5010.C5_SERIE
                 and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
                 and SD2.D2_LOJA = SC5010.C5_LOJACLI
-        ),
-        (
-            select distinct DUD010.DUD_VIAGEM
-            from DUD010 (nolock)
-                inner join SD2010 (nolock)
-                    on SD2010.D_E_L_E_T_ = ''
-                    and SD2010.D2_FILIAL = DUD010.DUD_FILDOC
-                    and SD2010.D2_DOC = DUD010.DUD_DOC
-                    and SD2010.D2_SERIE = DUD010.DUD_SERIE
-            where 
-                    DUD010.D_E_L_E_T_ = ''
-                and SD2010.D2_NFORI = SD2.D2_DOC
-                and SD2010.D2_SERIORI = SD2.D2_SERIE
-                and SD2010.D2_CLIENTE = SD2.D2_CLIENTE
-                and SD2010.D2_LOJA = SD2.D2_LOJA
         )
     ) as VIAGEM_TMS,
     
@@ -259,6 +244,18 @@ from SD2010 SD2 (nolock)
                 and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
                 and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
 
+    left join SD2010 COMP (nolock)
+        on COMP.D_E_L_E_T_ = ''
+        and COMP.D2_DOC = SD2.D2_NFORI
+        and COMP.D2_SERIE = SD2.D2_SERIORI
+        and COMP.D2_CLIENTE = SD2.D2_CLIENTE
+        and COMP.D2_LOJA = SD2.D2_LOJA
+
+        left join DUD010 VGA2 (nolock)
+            on VGA2.D_E_L_E_T_ = ''
+            and VGA2.DUD_FILDOC = COMP.D2_FILIAL
+            and VGA2.DUD_DOC = COMP.D2_DOC
+            and VGA2.DUD_SERIE = COMP.D2_SERIE
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
