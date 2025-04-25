@@ -25,7 +25,6 @@ select distinct
         where
                 SC6010.D_E_L_E_T_ = ''
             and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
-            and left(SD2010.D2_EMISSAO, 6) = ZE3.ZE3_COMPET
     ) as BK_ITEM_CONTABIL,
     
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
