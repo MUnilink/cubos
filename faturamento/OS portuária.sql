@@ -3,7 +3,7 @@ select
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     ZC2.ZC2_ITEM as ITEM,
-    
+    /*row_number() over(partition by order by ) as TURNO*/
     left(ZC1.ZC1_EMISSA, 6) as PERIODO_INIOS,
     cast(ZC1.ZC1_EMISSA as date) as DATA_INIOS,
     left(ZC1.ZC1_DTENCE, 6) as PERIODO_ENCOS,
@@ -95,6 +95,15 @@ select
         when 6 then 'ENCERRADA'
         else 'OUTROS'
     end as STATUS_OS,
+
+    case ZC2.ZC2_STATUS
+        when 1 then 'ABERTA'
+        when 2 then 'SOLICITADO CANCELAMENTO'
+        when 3 then 'CANCELADA'
+        when 5 then 'CORTESIA'
+        when 6 then 'ENCERRADA'
+        else 'OUTROS'
+    end as STATUS_ITEM,
     
     case ZC1.ZC1_STATU2
         when 1 then 'PENDENTE'
@@ -115,7 +124,7 @@ select
     ZC2.ZC2_CARRET as SR,
 
     substring(ZC2.ZC2_COMPET, 1, 6) as PERIODO,
-    substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
+    substring(coalesce(nullif(ZC2.ZC2_DTFIM, ''), ZC2.ZC2_COMPET), 1, 6) as PERIODO_APONT,
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
@@ -130,7 +139,7 @@ select
     SC6.C6_UM as UN_PEDIDO,
     SC6.C6_QTDVEN as QTD_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
-    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
+    (trim(SC6.C6_ITEMCTA)) as ATIVIDADE_PEDIDO,
     convert(date, SC6.C6_ENTREG, 103) as DATA_PEDIDO,
     substring(SC6.C6_ENTREG, 1, 6) as PERIODO_PEDIDO,
 
