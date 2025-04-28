@@ -19,7 +19,6 @@ select
         where
                 SC6010.D_E_L_E_T_ = ''
             and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
-            and left(SD2010.D2_EMISSAO, 6) = ZE3.ZE3_COMPET
     ) as ATIVIDADE,
     ZE2.ZE2_MSBLQL as BLOQUEADO,
     ZE3.ZE3_COMPET as PERIODO,
@@ -27,6 +26,14 @@ select
     trim(ZE2.ZE2_CONTA) as CONTA,
     left(ZE3.ZE3_NUM, 6) as FILORI,
     right(trim(ZE3.ZE3_NUM), 11) as NUM_OS,
+    
+    case
+        when len(trim(ZE2.ZE2_COD)) <= 2 then 1
+        when len(trim(ZE2.ZE2_COD)) <= 3 then 2
+        when len(trim(ZE2.ZE2_COD)) <= 5 then 3
+        when len(trim(ZE2.ZE2_COD)) <= 8 then 4
+        else 0
+    end as NIVEL,
     
     case
         when len(trim(ZE2.ZE2_COD)) = 8 then left(trim(ZE2.ZE2_COD), 5)
