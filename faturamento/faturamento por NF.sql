@@ -146,6 +146,15 @@ SELECT
                 and SD2.D2_LOJA = SC5010.C5_LOJACLI
         )
     ) as VIAGEM_TMS,
+
+    case DUD.DUD_STATUS
+        when 1 then upper('Em Aberto')
+        when 2 then upper('Em Transito')
+        when 3 then upper('Carregado')
+        when 4 then upper('Encerrado')
+        when 9 then upper('Cancelado')
+        else 'Outros'
+    end as STATUS_DOC,
     
     cast(DT6.DT6_DATEMI as date) as DATA_CTE,
     DT6.DT6_VALFRE as VL_CTE,
@@ -155,13 +164,7 @@ SELECT
     trim(REG_COL.DUY_EST) as UF_COLETA,
 	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
 	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
-	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
-    trim(SE1.E1_PREFIXO) as PREFIXO,
-    trim(SE1.E1_TIPO) as TIPO_TIT,
-    SE1.E1_NATUREZ as NUM_NAT,
-    SE1.E1_NFELETR as NUM_NFELETR,
-    cast(coalesce(SE1.E1_VALOR, 0) as decimal(15, 2)) as VALOR_TIT,
-    (select trim(SED010.ED_DESCRIC) from SED010 (nolock) where SED010.D_E_L_E_T_ = '' and SED010.ED_CODIGO = SE1.E1_NATUREZ) as NATFIN
+	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA
 
 from SD2010 SD2 (nolock)
     inner join SF2010 SF2 (nolock)
@@ -221,6 +224,7 @@ from SD2010 SD2 (nolock)
         and DUD.DUD_FILDOC = SD2.D2_FILIAL
         and DUD.DUD_DOC = SD2.D2_DOC
         and DUD.DUD_SERIE = SD2.D2_SERIE
+        and DUD.DUD_SERIE != 'COL'
 
 		left join DT6010 DT6 (nolock)
 			on DT6.D_E_L_E_T_ = ''
@@ -228,13 +232,6 @@ from SD2010 SD2 (nolock)
 			and DT6.DT6_DOC = DUD.DUD_DOC
 			and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-            left join SE1010 SE1 (nolock)
-                on SE1.D_E_L_E_T_ = ''
-                and SE1.E1_FILIAL = DT6.DT6_FILDOC
-                and SE1.E1_CLIENTE = DT6.DT6_CLIDEV
-                and SE1.E1_LOJA = DT6.DT6_LOJDEV
-                and SE1.E1_NUM = DT6.DT6_DOC
-                and SE1.E1_PREFIXO = DT6.DT6_SERIE
             left join DUY010 REG_COL (nolock)
                 on REG_COL.D_E_L_E_T_ = ''
                 and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
