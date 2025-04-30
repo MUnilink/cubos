@@ -13,18 +13,36 @@ select
 	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
 	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
     
-    DTQ.DTQ_DATGER,
-    DTQ.DTQ_DATFEC,
-    DTQ.DTQ_DATENC,
+    cast(DTQ.DTQ_DATGER as date) as DT_GERVGA,
+    cast(DTQ.DTQ_DATFEC as date) as DT_FECVGA,
+    cast(DTQ.DTQ_DATENC as date) as DT_ENCVGA,
 
     substring(DTQ.DTQ_DATGER, 1, 6) as PERIODO_GERVGA,
     substring(DTQ.DTQ_DATFEC, 1, 6) as PERIODO_FECVGA,
     substring(DTQ.DTQ_DATENC, 1, 6) as PERIODO_ENCVGA,
 
+    case DTQ.DTQ_STATUS
+        when '1' then upper('Em Aberto')
+        when '2' then upper('Em Transito')
+        when '3' then upper('Encerrada')
+        when '4' then upper('Chegada em Filial')
+        when '5' then upper('Fechada')
+        when '9' then upper('Cancelada')
+        else 'Outros'
+    end as STATUS_VGA,
+
+    case DUD.DUD_STATUS
+        when 1 then upper('Em Aberto')
+        when 2 then upper('Em Transito')
+        when 3 then upper('Carregado')
+        when 4 then upper('Encerrado')
+        when 9 then upper('Cancelado')
+        else 'Outros'
+    end as STATUS_DOC,
+
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
-    
     trim(DEV.A1_COD) as DEV_COD,
     trim(DEV.A1_LOJA) as DEV_LOJA,
     trim(DEV.A1_NOME) as CLI_DEVEDOR,
@@ -351,17 +369,7 @@ select
             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
             and DTW010.DTW_ATIVID = 50
-    ) as COMPETENCIA,
-
-    case DTQ.DTQ_STATUS
-        when '1' then 'EXCLUÍDA'
-        when '2' then 'EM TRANSITO'
-        when '3' then 'ENCERRADA'
-        when '4' then 'CHEGADA EM FILIAL'
-        when '5' then 'FECHADA'
-        when '9' then 'CANCELADA'
-        else 'OUTROS'
-    end as DTQ_STATUS
+    ) as COMPETENCIA
 
 from DTQ010 DTQ (nolock)
     inner join DA8010 DA8 (nolock)
