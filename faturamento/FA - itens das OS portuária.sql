@@ -23,6 +23,7 @@ select
     OS.COD_SE1,
     OS.USUARIO,
 
+    OS.ID_RECURSO,
     OS.INSUMO,
     OS.ITEM,
     OS.DT_INIOS,
@@ -101,7 +102,7 @@ from
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(ZC2010.ZC2_QTDREC * datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
 
             cast(ZC1010.ZC1_DTENCE as date) as DT_ENCOS,
-            
+            case when cast(ZC2.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_YFORNE)) else concat(trim(ZC2.ZC2_TIPO), ' ', trim(ZC2.ZC2_COD)) end as ID_RECURSO,
             
             /* RM */
             substring(ZC2010.ZC2_NUM, 6, 10) as OS,
