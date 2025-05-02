@@ -1,6 +1,6 @@
 select distinct
     ZE1.ZE1_NUM as VIAGEM,
-    ZE4.ZE4_DATAFI as DATA_FIM,
+    cast(ZE4.ZE4_DATAFI as date) as DATA_FIM,
     left(ZE4.ZE4_DATAFI, 6) as PERIODO,
     ZE4.ZE4_TOTHR as VGA_HORAS,
     ZE4.ZE4_STATUS as STATUS_TMS,
@@ -17,7 +17,7 @@ select distinct
     trim(ZE1.ZE1_COD) as VGA_CODIGO,
     cast(ZE1.ZE1_TOTAL as numeric(15, 2)) as VGA_VALOR,
     cast(ZE1.ZE1_DATA as date) as VGA_DATA,
-    left(ZE1.ZE1_COMPET, 6) as VGA_PERIODO,
+    left(ZE1.ZE1_COMPET, 6) as PERIODO_CUSTO,
 
     RAT_IMPR.*,
     case when ZE1.ZE1_TIPO in (15, 16) then cast(RAT_IMPR.PERC_RATEIO * ZE1.ZE1_TOTAL as numeric(15 ,2)) else 0.00 end as VALOR_IMPR,
@@ -25,24 +25,28 @@ select distinct
 
     ZE1.ZE1_ITEM as VGA_ITEMCUSTO,
     ZE1.ZE1_TIPO as VGA_TIPO,
-    case ZE1.ZE1_TIPO
-        when 1 then 'RECEITA'
-        when 2 then 'FOLHA'
-        when 3 then 'MANUTENÇÃO'
-        when 4 then 'MATERIAIS'
-        when 5 then 'COMPRAS'
-        when 6 then 'DEPRECIAÇÃO'
-        when 7 then 'CONTABILIDADE'
-        when 8 then 'DESPESAS FINANCEIRAS'
-        when 9 then 'OUTROS CUSTOS - TAXAS'
-        when 10 then 'COMBUSTIVEL'
-        when 11 then 'SERVIÇOS TOMADOS'
-        when 12 then 'SEGURO'
-        when 13 then 'PNEUS'
-        when 14 then 'PROVISÕES'
-        when 15 then 'TIPO RH IMPROD'
-        when 16 then 'TIPO MNT IMPROD'
-        when 17 then 'DIÁRIA'
+    case
+        when ZE1.ZE1_TIPO = 1 then 'RECEITA'
+        when ZE1.ZE1_TIPO = 2 then 'FOLHA'
+        when ZE1.ZE1_TIPO = 3 then 'MANUTENÇÃO'
+        when ZE1.ZE1_TIPO = 4 then 'MATERIAIS'
+        when ZE1.ZE1_TIPO = 5 then 'COMPRAS'
+        when ZE1.ZE1_TIPO = 6 then 'DEPRECIAÇÃO'
+        when ZE1.ZE1_TIPO = 7 then 'CONTABILIDADE'
+        when ZE1.ZE1_TIPO = 8 then 'DESPESAS FINANCEIRAS'
+        when ZE1.ZE1_TIPO = 9 then 'DOCUMENTAÇÃO'
+        when ZE1.ZE1_TIPO = 10 then 'COMBUSTIVEL'
+        when ZE1.ZE1_TIPO = 11 then 'SERVIÇOS TOMADOS'
+        when ZE1.ZE1_TIPO = 12 then 'SEGURO EQUIPAMENTO'
+        when ZE1.ZE1_TIPO = 13 then 'PNEUS'
+        when ZE1.ZE1_TIPO = 14 then 'PROVISÕES'
+        when ZE1.ZE1_TIPO = 17 then 'DIÁRIA'
+        when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 2 then 'FOLHA'
+        when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 14 then 'PROVISÕES'
+        when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 3 then 'MANUTENÇÃO'
+        when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 6 then 'DEPRECIAÇÃO'
+        when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 9 then 'DOCUMENTAÇÃO'
+        when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 12 then 'SEGURO EQUIPAMENTO'
         else 'OUTROS'
     end as TIPO_ITEM,
 
@@ -90,6 +94,6 @@ from ZE1010 ZE1 (nolock)
     ) RAT_IMPR
         on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZE1.ZE1_TIPO
         and RAT_IMPR.FILIAL = ZE1.ZE1_FILIAL
-        and RAT_IMPR.COMPETENCIA = ZE1.ZE1_COMPET
+        and RAT_IMPR.COMPETENCIA = left(ZE4.ZE4_DATAFI, 6)
         and RAT_IMPR.INSUMO = ZE1.ZE1_COD
 where ZE1.D_E_L_E_T_ = ''
