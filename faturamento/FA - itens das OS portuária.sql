@@ -259,6 +259,7 @@ group by
     OS.ITEM,
     OS.DATA_APP,
     RAT_IMPR.TIPO,
+    OS.ID_RECURSO,
 
     /* RM */
     OS.TIPO_OP,
