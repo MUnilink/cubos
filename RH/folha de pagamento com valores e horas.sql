@@ -17,7 +17,7 @@ select
 	trim(SRD.RD_PERIODO) as PERIODO,
 	trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-	case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+	case when SRD.RD_PD = '990' then 'REF' SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
 	
 	cast(SRD.RD_HORAS as numeric(15, 2)) as HORAS_VERBA,
