@@ -26,11 +26,15 @@
         else 'OUTROS' end as TIPO_EVENTO,
         
         concat(SPH.PH_PD, ' - ', trim(SP9.P9_DESC)) as DESC_EVENTO,
+        concat(trim(SPH.PH_ABONO), ' - ', (select trim(SP6010.P6_DESC) from SP6010 where SP6010.D_E_L_E_T_ = '' and SP6010.P6_CODIGO = SPH.PH_ABONO)) as DESC_MOTIVO,
+        cast(SPH.PH_QUANTC as numeric(15, 2)) as QTD_EVENTO,
+        cast(SPH.PH_QTABONO as numeric(15, 2)) as QTD_ABONO,
         cast(SPH.PH_DATA as date) as DATA,
         left(SPH.PH_DATA, 6) as PERIODO,
         cast(floor(SPH.PH_QUANTC) as int) as HORAS,
         cast((SPH.PH_QUANTC - floor(SPH.PH_QUANTC))*60.0 as numeric(15,2)) as MINUTOS,
-        cast(SPH.PH_QUANTC as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        cast(SPH.PH_QUANTC - SPH.PH_QTABONO as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        /*(select from SPI010 where SPI010.D_E_L_E_T_ = '' and ) as SALDO_ATUAL,*/
         'PONTO HIST' as TIPO_PONTO
     from SPH010 SPH (nolock)
         inner join SP9010 SP9 (nolock)
@@ -92,11 +96,15 @@ union
         else 'OUTROS' end as TIPO_EVENTO,
         
         concat(SPC.PC_PD, ' - ', trim(SP9.P9_DESC)) as DESC_EVENTO,
+        concat(trim(SPC.PC_ABONO), ' - ', (select trim(SP6010.P6_DESC) from SP6010 where SP6010.D_E_L_E_T_ = '' and SP6010.P6_CODIGO = SPC.PC_ABONO)) as DESC_MOTIVO,
+        cast(SPC.PC_QUANTC as numeric(15, 2)) as QTD_EVENTO,
+        cast(SPC.PC_QTABONO as numeric(15, 2)) as QTD_ABONO,
         cast(SPC.PC_DATA as date) as DATA,
         left(SPC.PC_DATA, 6) as PERIODO,
         cast(floor(SPC.PC_QUANTC) as int) as HORAS,
         cast((SPC.PC_QUANTC - floor(SPC.PC_QUANTC))*60.0 as numeric(15,2)) as MINUTOS,
-        cast(SPC.PC_QUANTC as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        cast(SPC.PC_QUANTC - SPC.PC_QTABONO as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        /*(select from SPI010 where SPI010.D_E_L_E_T_ = '' and ) as SALDO_ATUAL,*/
         'PONTO ATUAL' as TIPO_PONTO
     from SPC010 SPC (nolock)
         inner join SP9010 SP9 (nolock)
@@ -156,11 +164,15 @@ union
         else 'OUTROS' end as TIPO_EVENTO,
         
         concat(SRD.RD_PD, ' - ', coalesce(nullif(trim(SRV.RV_DESCDET), ''), trim(SRV.RV_DESC))) as DESC_EVENTO,
-        null as DATA,
+        null as DESC_MOTIVO,
+        null as QTD_EVENTO,
+        null as QTD_ABONO,
+        cast(concat(SRD.RD_DATARQ, '01') as date) as DATA,
         SRD.RD_DATARQ as PERIODO,
         0.0 as HORAS,
         0.0 as MINUTOS,
         cast(case when SRD.RD_PD = '990' then SRA.RA_HRSMES else SRD.RD_HORAS*SRA.RA_HRSMES/30.0 end as numeric(15 ,2)) * case when SRV.RV_TIPOCOD = 2 or exists(select * from RCM010 where RCM010.D_E_L_E_T_ = '' and RCM010.RCM_PD = SRD.RD_PD) then -1 else 1 end as QTD,
+        /*(select from SPI010 where SPI010.D_E_L_E_T_ = '' and ) as SALDO_ATUAL,*/
         'FOLHA' as TIPO_PONTO
     from SRD010 SRD (nolock)
         inner join SRV010 SRV (nolock)
