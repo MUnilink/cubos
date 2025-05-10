@@ -1,5 +1,6 @@
 select
 	trim(SRA.RA_FILIAL) as FILIAL,
+	concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	trim(SRA.RA_MAT) as MATRICULA,
 	trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRA.RA_MUNICIP) as MUNICIPIO,
@@ -55,7 +56,7 @@ select
 			)
 	) as CARGO_FOLHA,
 	(
-		select concat(SRJ010.RJ_FUNCAO, ' - ', trim(SRJ010.RJ_DESC))
+		select concat(trim(SRJ010.RJ_FUNCAO), ' - ', trim(SRJ010.RJ_DESC))
 		from SRJ010
 		where
 				SRJ010.D_E_L_E_T_ = ''
@@ -88,7 +89,7 @@ select
 	) as CARGO_ANT,
 
 	(
-		select concat(SRJ010.RJ_FUNCAO, ' - ', trim(SRJ010.RJ_DESC))
+		select concat(trim(SRJ010.RJ_FUNCAO), ' - ', trim(SRJ010.RJ_DESC))
 		from SRJ010
 		where
 				SRJ010.D_E_L_E_T_ = ''
@@ -107,6 +108,9 @@ select
     1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) as DIAS_PERIODO,
 	cast(concat(SRD.RD_DATARQ, '01') as date) as INI_PERIODO,
 	eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO,
+
+	cast(case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end as date) as INI_FOLHA,
+	cast(case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end as date) as FIM_FOLHA,
 
     (
         select cast(max(SR7010.R7_DATA) as date)
@@ -171,7 +175,7 @@ select
 	datediff
 	(
 		day,
-		case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
+		case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
 		case when
 		(
 			select max(SR7010.R7_DATA)
@@ -191,14 +195,14 @@ select
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
-		else case when SRA.RA_DEMISSA <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
+		else case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
 	) as DIAS_ANT,
 	
 	SRA.RA_HRSMES *
 	datediff
 	(
 		day,
-		case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
+		case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
 		case when
 		(
 			select max(SR7010.R7_DATA)
@@ -218,15 +222,15 @@ select
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
-		else case when SRA.RA_DEMISSA <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
-	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when SRA.RA_DEMISSA <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end)) as HORAS_ANT,
+		else case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end)) as HORAS_ANT,
 	
 	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
 	(
 		datediff
 		(
 			day,
-			case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
+			case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
 			case when
 			(
 				select max(SR7010.R7_DATA)
@@ -246,9 +250,9 @@ select
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
-			else case when SRA.RA_DEMISSA <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
+			else case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
 		)
-	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when SRA.RA_DEMISSA <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end)) as  VALOR_ANT,
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end)) as VALOR_ANT,
 
 	datediff
 	(
@@ -272,7 +276,7 @@ select
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
-		else concat(SRD.RD_DATARQ, '01') end,
+		else case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
 		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
 	) as DIAS_PFOLHA,
 
@@ -298,9 +302,9 @@ select
 				and SR7010.R7_MAT = SRD.RD_MAT
 				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 		)
-		else case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
+		else case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
 		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
-	) /(1 + datediff(day, concat(SRD.RD_DATARQ, '01'), case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end)) as HORAS_PFOLHA,
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end)) as HORAS_PFOLHA,
 	
 	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
 	(
@@ -326,10 +330,10 @@ select
 					and SR7010.R7_MAT = SRD.RD_MAT
 					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
 			)
-			else case when left(SRA.RA_ADMISSA, 6) = SRD.RD_DATARQ then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
+			else case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
 			case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
 		)
-	) /(1 + datediff(day, concat(SRD.RD_DATARQ, '01'), case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end)) as VALOR_PFOLHA
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end)) as VALOR_PFOLHA
 
 from SRD010 SRD (nolock)
 	inner join SRV010 SRV (nolock)
