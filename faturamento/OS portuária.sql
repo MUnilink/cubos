@@ -49,8 +49,7 @@ select
     trim(DES.A2_NOME) as DESPACHANTE,
     
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
-    ZC1.ZC1_TABPRC as TABELADEPRECO,
-    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
+    concat(trim(ZC1.ZC1_TABPRC), ' - ', (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC)) as TABELA_PRECO,
     
     case cast(ZC2.ZC2_TIPO as int)
         when 1 then 'RECEITA'
@@ -123,11 +122,12 @@ select
     ZC2.ZC2_VEICUL as CM,
     ZC2.ZC2_CARRET as SR,
 
-    substring(ZC2.ZC2_COMPET, 1, 6) as PERIODO,
-    substring(coalesce(nullif(ZC2.ZC2_DTFIM, ''), ZC2.ZC2_COMPET), 1, 6) as PERIODO_APONT,
+    left(ZC2.ZC2_COMPET, 6) as PERIODO,
+    left(coalesce(nullif(ZC2.ZC2_DATA, ''), ZC2.ZC2_COMPET), 6) as PERIODO_APONT,
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
+    convert(date, ZC2.ZC2_DATA, 103) as DATA_ITEM,
     convert(datetime, case isdate(ZC2.ZC2_HRINI) when 1 then concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) else concat(ZC2.ZC2_DTINI, ' ', '00:00') end, 113) as DTINI_APONT,
     convert(datetime, case isdate(ZC2.ZC2_HRFIM) when 1 then concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) else concat(ZC2.ZC2_DTFIM, ' ', '00:00') end, 113) as DTFIM_APONT,
     case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
@@ -139,13 +139,14 @@ select
     SC6.C6_UM as UN_PEDIDO,
     SC6.C6_QTDVEN as QTD_PEDIDO,
     trim(SC6.C6_CC) as CC_PEDIDO,
-    (trim(SC6.C6_ITEMCTA)) as ATIVIDADE_PEDIDO,
+    trim(SC6.C6_ITEMCTA) as ATIVIDADE_PEDIDO,
     convert(date, SC6.C6_ENTREG, 103) as DATA_PEDIDO,
     substring(SC6.C6_ENTREG, 1, 6) as PERIODO_PEDIDO,
 
     SD2.D2_DOC as FAT_DOC,
     SD2.D2_SERIE as FAT_SERIE,
     SD2.D2_ITEM as FAT_ITEM,
+    cast(SD2.D2_EMISSAO as date) as FAT_DATA,
     cast(SD2.D2_QUANT as numeric(15, 2)) as FAT_QUANT,
 
     TAX.A2_COD as TAX_CODIGO,
@@ -214,4 +215,4 @@ where
     and ZC2.ZC2_INCLUS != 'C'
     and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
 	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
-    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202309
+    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202312
