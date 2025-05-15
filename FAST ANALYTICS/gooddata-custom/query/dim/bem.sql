@@ -15,8 +15,8 @@ select
 		else '-'
 	end as T9_CATBEM,
 
+	(select case TQS010.TQS_XPNEU when 'S' then 'S' else 'N' end from TQS010 where TQS010.D_E_L_E_T_ = '' and TQS010.TQS_CODBEM = ST9.T9_CODBEM) as PNEU_AGG,
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as T9_SITBEM
 
 from ST9010 ST9
-where
-		ST9.D_E_L_E_T_ = ''
+where ST9.D_E_L_E_T_ = ''
