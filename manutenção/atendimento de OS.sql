@@ -6,14 +6,19 @@ select
     left(STJ.TJ_DTORIGI, 6) as PERIODO_OS,
     ST9.T9_CODFAMI as FAMILIA,
     cast(ST9.T9_DTBAIXA as date) as DT_BAIXA,
-	trim(STJ.TJ_USUAFIM) as USR_FIM,
-    trim(STJ.TJ_USUARIO) as USR_INI,
-    trim(STJ.TJ_TERMINO) as TERMINO,
-    trim(STJ.TJ_SITUACA) as SITUACAO,
-    trim(SB1.B1_YDESCRI) as DESC_FROTA,
+	trim(upper(STJ.TJ_USUAFIM)) as USR_FIM,
+    trim(upper(STJ.TJ_USUARIO)) as USR_INI,
     cast(STI.TI_DATAPLA as date) as DATA_PLANO,
     trim(STI.TI_DESCRIC) as NOME_PLANO,
     trim(STI.TI_PLANO) as NUM_PLANO,
+
+    case STJ.TJ_TERMINO when 'S' then 'SIM' when 'N' then 'NÃO' end as TERMINO,
+    case STJ.TJ_SITUACA 
+        when 'C' then upper('Cancelado')
+        when 'L' then upper('Liberado')
+        when 'P' then upper('Pendente')
+        else 'OUTROS'
+    end as SITUACAO_OS,
 
     case
         when trim(SB1.B1_COD) in ('11010013', '11030072', '11040035', '11140183', '11150193', '11160355', '11190270', '11220137', '11251271', '11350030', '11370005', '11010014', '11010017', '11010069', '11010106', '11010153', '11020038', '11030054', '11040012', '11040176', '11040269', '11060018', '11060039', '11060056', '11060308', '11060344', '11060346', '11060408', '11060410', '11060480', '11060501', '11060712', '11060724', '11061135', '11070015', '11090014', '11130053', '11140021', '11140027', '11140028', '11140029', '11140030', '11140031', '11140032', '11140033', '11140034', '11140035', '11140036', '11150089', '11150130', '11150155', '11150159', '11150194', '11150198', '11150199', '11150213', '11150227', '11150406', '11150579', '11150718', '11160005', '11160006', '11160007', '11160011', '11160013', '11160039', '11160132', '11160169', '11160234', '11160275', '11180003', '11180006', '11180007', '11180061', '11180063', '11180065', '11180068', '11190016', '11190050', '11190052', '11190234', '11190326', '11190362', '11190380', '11190456', '11220031', '11220094', '11220469', '11220610', '11250149', '11250351', '11250454', '11250928', '11250999', '11251018', '11251272', '11350026', '11350032', '11350034', '11350036', '11350037', '11350039', '11350042', '11350046', '11350050', '11350051', '11350061', '11350065', '11350096', '11350097', '11350129', '11350149')
@@ -139,9 +144,18 @@ select
     TQB.TQB_SOLICI as SS,
     convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INISS,
     convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCSS,
-    TQB.TQB_USUARI,
-    TQB.TQB_SOLUCA,
-    TQB.TQB_CDEXEC
+    
+    case TQB.TQB_SOLUCA
+        when 'A' then upper('Aguardando Analise')
+        when 'D' then upper('Distribuida')
+        when 'E' then upper('Encerrada')
+        when 'C' then upper('Cancelada')
+        else 'OUTROS'
+    end as SITUACAO_SS,
+    
+    concat(trim(TQB.TQB_CDSERV), ' - ', (select upper(trim(TQ3010.TQ3_NMSERV)) from TQ3010 where TQ3010.D_E_L_E_T_ = '' and TQ3010.TQ3_CDSERV = TQB.TQB_CDSERV)) as SERVICO_SS,
+    concat(trim(TQB.TQB_CDEXEC), ' - ', (select upper(trim(TQ4010.TQ4_NMEXEC)) from TQ4010 where TQ4010.D_E_L_E_T_ = '' and TQ4010.TQ4_CDEXEC = TQB.TQB_CDEXEC)) as EXECUTA_SS,
+    upper(TQB.TQB_USUARI) as USR_SS
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
