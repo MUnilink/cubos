@@ -1,58 +1,89 @@
 select
-    ZC2.D_E_L_E_T_,
-    case when cast(substring(ZC1.ZC1_NUM, 6, 10) as int) in (1469, 1473, 1474, 1480, 1497, 1479, 1464, 1465, 1472, 1511, 1376, 1430, 1453, 1514, 1525, 1468, 1484, 1486, 1490, 1492, 1493, 1494, 1495, 1496, 1499, 1500, 1503, 1504, 1505, 1508, 1509, 1517, 1459, 1462, 1463, 1466, 1467, 1475, 1481, 1483, 1487, 1488, 1522, 1527, 1528, 1529, 1531, 1506, 1460, 1476, 1461, 1470, 1485, 1491, 1512, 1515, 1518, 1519, 1524, 1526, 1411, 1507, 1516)
-            and ZC2.ZC2_ITEM in ('012', '023', '025', '021', '156', '312', '316', '027', '158', '314', '317', '036', '160', '320', '321', '052', '162', '322', '326', '059', '164', '324', '327', '069', '166', '330', '334', '076', '168', '332', '335', '085', '170', '339', '340', '003', '006', '009', '010', '015', '185', '370', '371', '187', '372', '374', '038', '189', '377', '380', '045', '191', '378', '381', '193', '384', '387', '063', '195', '386', '388', '078', '199', '392', '397', '197', '390', '396', '088', '201', '394', '398', '095', '203', '402', '403', '004', '034', '065', '066', '067', '016', '071', '074', '040', '073', '075', '227', '129', '294', '296', '035', '131', '304', '309', '057', '133', '135', '336', '344', '646', '9ME', '9MO', '112', '648', '9NA', '9NQ', '183', '650', '9OW', '9P4', '079', '788', '9UY', '9VG', '106', '790', '9V7', '9VH', '140', '794', '9WH', '9WP', '125', '792', '9W7', '9WO', '796', '9XB', '9XW', '194', '798', '9XQ', '9XX', '236', '802', '9YW', '9Z8', '216', '800', '9YM', '9Z7', '804', 'A16', 'A1W', '592', '9IQ', '9J2', '134', '596', '9JZ', '9K5', '116', '594', '9JQ', '9K4', '598', '9KY', '9LV', '209', '600', '9LS', '9LW', '238', '253', '604', '606', '9N8', '9NJ', '9NU', '9NV', '226', '602', '9N4', '9NT', '271', '608', '9NW', '307', '610', '9OR', '9PB', '349', '612', '9Q1', '9QH', '614', '9QA', '9QI', '149', '425', '9G8', '9GL', '051', '573', '208', '866', '9GM', '9GT', '251', '868', '9HT', '9HX', '874', '9JP', '9JR', '297', '298', '870', '872', '9IY', '9IZ', '9J3', '9J4', '141', '167', '178', '221', '266', '282', '533', '535', '537', '539', '541', '543', '9DY', '9E5', '9EA', '9EB', '9EY', '9FE', '9FK', '9FL', '9GN', '9GP', '9GY', '9GZ', '050', '070', '130', '151', '219', '281', '318', '182', '405', '652', '654', '656', '658', '660', '662', '664', '666', '668', '670', '672', '9LK', '9LU', '9MD', '9MP', '9NK', '9NR', '9OF', '9OV', '9P5', '9P6', '9Q5', '9Q7', '9R8', '9R9', '9RV', '9S6', '9T3', '9T5', '9TL', '9TR', '9U0', '9U1', '029', '123', '138', '301', '359', '395', '437', '454', '467', '486', '487', '806', '808', '810', '812', '814', '816', '818', '820', '822', '824', '826', '9U2', '9UA', '9W5', '9WF', '9WQ', '9WR', 'A08', 'A0L', 'A1C', 'A1Q', 'A1X', 'A1Y', 'A2U', 'A3A', 'A3E', 'A3F', 'A47', 'A4A', 'A4B', 'A4F', 'A4G', 'A4H', '163', '200', '240', '616', '618', '620', '622', '624', '9KZ', '9LL', '9LX', '9LY', '9NH', '9NX', '9NY', '9P0', '9PC', '103', '150', '427', '429', '431', '433', '435', '9EK', '9F1', '9F2', '9F3', '9FX', '9G2', '9G9', '9GO', '019', '139', '144', '179', '181', '375', '072', '180', '022', '137', '293', '033', '302', '310', '058', '328', '143', '337', '345', '389', '674', '9TN', '136', '186', '049', '188', '220', '171', '232', '212', '341', '114', '207', '104', '018', '047', '267', '077', '119', '234', '254', '056', '105', '154', '273', '360', '233', '213', '342', '132', '115', '338', '048', '351', '571', '599', '353', '638', '643', '876', '9GG', '9GU', '272', '274', '878', '880', '9IP', '9IR', '9J5', '9J6', '545', '9CF', '9CZ', '121', '547', '9DR', '9EC', '549', '9GB', '9H0', '256', '551', '9GJ', '9H1', '054', '676', '9LO', '680', '9P3', '9P8', '161', '678', '9OM', '9P7', '828', '9UU', '9VI', '111', '830', '9VB', '9VJ', '834', '9WJ', '9WT', '128', '832', '9W9', '9WS', '836', '9XD', '9XY', '838', '9XU', '9XZ', '239', '842', '9YY', '9ZA', '840', '9YO', '9Z9', '343', '844', 'A17', 'A1Z', '626', '9IO', '630', '9K1', '9K7', '117', '628', '9K6', '159', '632', '9KV', '9LZ', '634', '9M0', '9ED', '9F4', '440', '9FZ', '355', '579', '091', '357', '601', '642', '644', '882', '9GV', '884', '9HJ', '9HY', '268', '886', '9IM', '9J7', '553', '9CC', '9D0', '118', '555', '9DP', '557', '9H2', '559', '9GH', '9H3', '682', '9MJ', '9MQ', '192', '686', '9P2', '9PA', '684', '9OL', '9P9', '295', '688', '9RQ', '9S7', '362', '690', '9SW', '9T6', '846', '9UX', '9VK', '107', '848', '9V8', '9VL', '852', '9YU', '9ZC', '214', '850', '9YK', '9ZB', '854', 'A18', 'A20', '068', '636', '640', '9JY', '9K9', '9JO', '9K8', '155', '9KT', '9M1', '206', '9LR', '9M2', '122', '229', '276', '237', '257', '110', '108', '142', '127', '169', '218', '113', '211', '098', '383', '856', 'A1O', 'A21', '017', '148', '888', '9FC', '9FH', '890', '9G3', '247', '892', '9HP', '9HZ', '264', '894', '9IJ', '9J8', '299', '896', '9J0', '9J9', '024', '145', '032', '147', '311', '323', '329', '346', '060', '692', '9LT', '694', '9M9', '9MR', '696', '9N9', '9NS', '700', '698', '9OB', '217', '702', '9Q3', '9Q8', '279', '704', '9R6', '9RA', '288', '706', '9RM', '9S8', '368', '708', '9T1', '9T7', '385', '710', '9TJ', '9U3', '031', '858', '9U4', '9UB', '305', '860', 'A0C', 'A0M', '862', 'A1D', 'A22', '864', 'A1R', 'A23', '436', 'A2T', 'A3G', '452', 'A38', 'A3H', '464', 'A44', 'A4I', '488', 'A4C', 'A4J', '9KQ', '9M3', '198', '9LJ', '9M4', '252', '9NI', '9O0', '9O1', '228', '9N5', '9NZ', '306', '9OQ', '9PD', '9PE', '350', '9Q2', '9QJ', '9QK', '361', '578', '093', '363', '603', '365', '645', '367', '900', '9GD', '9GW', '230', '902', '9HH', '9I0', '277', '904', '9IT', '9JA', '561', '9CH', '9D1', '563', '9DS', '9EE', '184', '565', '9FM', '567', '9GC', '9H4', '258', '569', '9GK', '9H5', '053', '712', '9LN', '714', '9MI', '9MS', '716', '9N7', '720', '9P1', '718', '9OK', '222', '722', '9Q6', '9Q9', '9UV', '9VM', '9VC', '9VN', '9WL', '9WV', '9WB', '9WU', '9X9', '9Y0', '202', '9XV', '9Y1', '241', '9Z0', '9ZE', '9YQ', '9ZD', '9Z4', '9ZF', 'A13', 'A24', 'A1M', 'A25', '442', 'A2Y', 'A3I', '450', '898', 'A36', 'A3J', '9JU', '9KB', '9JK', '9KA', '9KX', '9M5', '9M6', '242', '250', '9NC', '9NG', '9O2', '9O3', '9EG', '9F5', '097', '444', '9EW', '9F6', '446', '9FU', '9GQ', '448', '9GR', '369', '576', '605', '373', '639', '647', '190', '908', '9GI', '9GX', '278', '910', '9IU', '9JB', '9CE', '9D2', '724', '726', '9MH', '9MT', '730', '9PG', '728', '9OJ', '9PF', '215', '732', '269', '734', '9R0', '9RB', '146', '9WM', '9WX', '9WC', '9WW', '9XC', '9Y2', '196', '906', '9XS', '9Y3', '9Z1', '9ZH', '9YR', '9ZG', 'A5J', '9JX', '9KD', '9JN', '9KC', '9KW', '9M7', '205', '9LQ', '9M8', '055', '577', '914', '284', '916', '9IV', '9JC', '082', '9CK', '9D3', '124', '575', '9DT', '9EF', '9H6', '259', '9H7', '9LI', '9EH', '9F7', '102', '9F0', '9F8', '456', '9FT', '9GS', '918', '9FB', '920', '9G4', '210', '922', '924', '9HC', '9I1', '249', '926', '9HR', '9I2', '930', '9JS', '300', '928', '9J1', '9JD', '081', '581', '9CJ', '9D4', '583', '9E6', '585', '9EZ', '9FN', '589', '9H8', '223', '587', '9FG', '9FO', '283', '591', '9H9', '313', '593', '9HQ', '9HV', '736', '738', '9MC', '9MU', '740', '9NL', '744', '9OU', '9PI', '742', '9OE', '9PH', '746', '9Q4', '9QB', '364', '748', '9SY', '9T8', '750', '9TO', '9VA', '9VO', '9WG', '9WZ', '9W6', '9WY', '235', '9YV', '9ZJ', '9YL', '9ZI', '265', '9ZY', 'A0N', '315', 'A5L', '441', 'A2X', 'A3K', 'A32', 'A3L', '9JV', '9KF', '9JL', '9KE', '165', '9L1', '9MA', '9MB', '246', '9ND', '9NF', '9O4', '9O5', '458', '9F9', '101', '460', '9FA', '462', '9FV', '152', '466', '932', '934', '9FW', '9G5', '936', '9HD', '9I3', '938', '9IL', '9JE', '153', '157', '347', '752', '754', '9MV', '756', '9N6', '760', '9OS', '9PK', '758', '9OC', '9PJ', '762', '9R5', '9RC', '289', '764', '9RN', '9S9', '319', '766', '9RW', '9SA', '366', '768', '9T0', '9T9', '770', '9TK', '9U5', '406', '772', '9TS', '9U6', '9UC', 'A0H', 'A0O', 'A1E', 'A1F', 'A26', 'A27', '940', 'A46', 'A4K', '489', '942', 'A4D', 'A4L', '503', '944', 'A4T', 'A4Y', '9KR', '9LM', '270', '9NP', '9O6', '9OP', '9QL', '9QM', '9FD', '946', '9HM', '9I5', '9HE', '9I4', '245', '948', '9HN', '9I6', '950', '9IK', '9JF', '595', '9CG', '9D5', '597', '9DZ', '9E4', '9EI', '9FP', '225', '9FI', '9FQ', '9HA', '607', '9HS', '9HW', '774', '776', '9MW', '778', '782', '9OT', '9PM', '780', '9OD', '9PL', '784', '9QC', '275', '786', '9R3', '9RD', '290', '9RO', '9SB', '9RX', '9SC', '404', '9UM', '030', '9UD', '9XR', '9Y4', '231', '952', '9YT', '9ZL', '9YJ', '9ZK', '325', '954', 'A0K', 'A0P', '956', 'A1H', 'A28', '382', '958', 'A1N', 'A29', '960', 'A2S', 'A3M', '962', 'A3C', 'A3N', '465', '964', 'A45', 'A4M', '502', '966', 'A4S', 'A4Z', '9KU', '9MF', '9NB', '9O8', '9O7', '574', '379', '641', '9GE', '9IN', '9JG', '609', '9CD', '9D6', '9MG', '9MX', '9OZ', '9PO', '9OI', '9PN', '9Q0', '9QD', '968', '9UW', '9VP', '970', '9VD', '9VQ', '974', '9WK', '9X1', '972', '9WA', '9X0', '976', '9XA', '9Y5', '978', '9XP', '9Y6', '982', '9YZ', '9ZN', '980', '9YP', '9ZM', 'A5K', '986', 'A34', 'A3O', '9JW', '9KH', '109', '9JM', '9KG', '9L0', '204', '9LP', '9GF', '9JH', '080', '611', '9CI', '9D7', '120', '613', '9DQ', '9EJ', '615', '9GA', '9HB', '255', '617', '9MY', '9OX', '9PQ', '9OG', '9PP', '468', '100', '470', '472', '572', '9IS', '9JI', '9JJ', '303', '9OY', '9PS', '9OH', '9PR', '9PZ', '9QE', '988', '9UT', '9VR', '990', '9V9', '9VS', '994', '9WI', '9X3', '126', '992', '9W8', '9X2', '996', '9XE', '9Y7', '998', '9XT', '9Y8', '99C', '9YX', '9ZP', '99A', '9YN', '9ZO', '99E', 'A19', 'A2A', '9K0', '9KJ', '9KI', '9QX', '9QZ', '061', '474', '099', '476', '9EX', '478', '9FY', '172', '480', '9HF', '9I7', '285', '9IW', '619', '9DV', '621', '9E8', '9EL', '623', '625', '286', '627', '248', '9QP', '9QQ', '9RE', '9S2', '9SF', '287', '9RL', '9SD', '9RY', '9SE', '352', '9SR', '9TA', '9SS', '9TB', '422', '9TY', '9U7', '99G', 'A03', 'A0Q', '99I', 'A1L', 'A2B', '99K', 'A1P', 'A2C', '418', '99M', 'A2P', 'A3P', '99O', 'A48', 'A4N', '490', '99Q', 'A4E', 'A4O', '9NN', '9O9', '291', '9QN', '9QG', '9QO', '629', '9HG', '509', '99S', 'A4W', 'A50', '514', '99U', 'A55', 'A57', '407', '9TT', '9U8', '011', '005', '013', '008', '002', '007', '635', '649', '020', '028', '014', '9S3', '9SG', '99W', '9UN', 'A5M', '041', '026', '459', '376', '631', '391', '655', '393', '9E3', '9EM', '633', '9HO', '9RT', '9SH', '423', '9TZ', '408', '9TU', '9U9', '9A0', 'A00', 'A0R', '9A2', 'A02', 'A0S', '9A4', 'A14', 'A2D', '9A6', 'A1G', 'A2E', '9OA', '037', '062', '399', '089', '400', '039', '510', '9A8', 'A4X', 'A51', '515', '9AA', 'A56', 'A58', '9QF', '042', '044', '410', '9TV', '637', '9BK', '9BP', '9BM', '9BQ', '9BV', '9BX', '292', '043', '331', '173', '333', '175', '9MM', '9MZ', '9UL', '174', '9PU', '9ON', '9PT', '9PX', '9QR', '9RF', '9AC', '9UE', '090', '9AE', '9V6', '9VT', '9AG', '9WD', '9X4', '9AI', '9Z3', '9ZQ', '9AK', 'A06', 'A0T', '358', '9AM', 'A1B', 'A2F', '9AO', 'A1V', 'A2G', '434', '9AQ', 'A2R', 'A3Q', '9QY', '096', '482', '9EV', '9FF', '9AS', 'A1J', 'A2H', '9NM', '653', '657', '9I8', '308', '9JT', '9BO', '9BR', '9DU', '9EN', '9E7', '9EO', '9HI', '263', '651', '9QS', '9RG', '9S4', '9SI', '9SU', '9TC', '9AU', '9AW', '9UF', '9AY', '9UK', '9UO', '9B0', '9YI', '9ZR', '9B2', '9ZZ', 'A0U', '9B4', 'A01', 'A0V', 'A5I', '9B8', 'A3D', 'A3R', '9KK', '9N2', '484', '9E9', '492', '9IX', '9CW', '9D8', '9E2', '9EP', '9LA', '9LC', '9LB', '9LD', '9LE', '9LF', '9LG', '9LH', '9ML', '9N0', '177', '9PW', '9OO', '9PV', '9QT', '9QU', '9BA', '9TW', '9TX', '9BC', '9BF', '9W4', '9X5', '9BH', '9YS', '9ZS', '9BJ', '9ZW', 'A0W', '9BL', '9ZX', 'A0X', '9BN', 'A05', 'A0Y', 'A1K', 'A2I', '9I9', '9IA', '9IB', '9ID', '9IC', '9IE', '9IF', '9II', '9IG', '092', '9KL', '9L2', '9MK', '9KP', '9N1', '9NO', '494', '496', '498', '9DW', '9DX', '500', '9E0', '504', '9E1', '506', '508', '9G1', '9NE', '084', '590', '176', '984', '659', '9C0', '9C1', '661', '9C3', '9C6', '663', '9CA', '9D9', '665', '9CY', '9DA', '667', '9FR', '669', '9FS', '671', '9HK', '9L4', '9L3', '9L5', '9L6', '9L8', '9L7', '9L9', '912', '9PY', '9RU', '9SJ', '9TM', '9TP', 'A04', 'A0Z', '9BT', 'A15', 'A2J', 'A1S', 'A2K', '463', 'A43', 'A4P', '9BZ', 'A49', 'A4Q', '512', '9EU', '516', '9G0', '518', '9G6', '520', '522', '9QV', '046', '401', '673', '9EQ', '675', '348', '9MN', '9N3', '9QW', '9S5', '9SK', '9ST', '9TD', '9UG', '9UH', '9C5', '9VF', '9VU', '9C7', 'A1A', 'A2L', '9KM', '677', '9C4', '679', '681', '9ER', '9ES', '683', '9HL', '9RP', '9RR', '9RS', '9SL', '9SM', '9SN', '9C9', '9UJ', '9UP', '9CB', '9UQ', '9WN', '9X6', 'A5N', 'A1I', 'A2M', 'A2Q', 'A3S', '524', '9CL', '9UI', '9UR', '083', '685', '9BS', '687', '9BW', '9BY', '9CN', '9US', '9VV', '9CP', '9WE', '9X7', '9CR', '9X8', '9Y9', '9CT', '9XO', '9YA', '243', '9CV', '9Z2', '9ZT', '9CX', 'A09', 'A10', '9IH', '9K2', '9KN', '526', '528', '9G7', '570', '409', '689', '691', '9BU', '693', '9C2', '9C8', '695', '697', '9DB', '699', '9DC', '701', '9DO', '9ET', '703', '705', '707', '9VE', '9VW', '501', 'A4R', 'A52', '9K3', '9KO', '356', '087', '530', '9FJ', '411', '582', '9UZ', '9VX', '9XL', '9YB', '532', '413', '586', '709', '9DD', '711', '086', '9V5', '9VY', '9XH', '9YC', '534', '415', '713', '9CO', '9DE', '715', '9V4', '9VZ', '9XK', '9YD', '536', '538', '417', '419', '717', '9CM', '9DF', '9R1', '9RH', '9XI', '9YE', '445', '9DJ', 'A31', 'A3T', '540', '542', '421', '719', '9DG', '721', '9SX', '9TE', '9DL', '9V3', '9W0', '544', '580', '723', '725', '9CQ', '9DH', '9DI', '727', '9SZ', '9TF', 'A5H', '447', 'A33', 'A3U', 'A4V', 'A53', '546', '729', '9HU', '9R2', '9RI', '9SV', '9TG', '584', '731', '733', '735', '737', '9S0', '9SO', '9T4', '9TH', 'A0A', 'A11', 'A1T', 'A2N', 'A2W', 'A3V', '455', 'A3B', 'A3W', '548', '550', '739', '280', '9R7', '9RJ', '9T2', '9TI', 'A0D', 'A12', 'A1U', 'A2O', '438', 'A2V', 'A3X', '453', 'A39', 'A3Y', '9KS', '99Y', '741', '9CU', '743', '224', '745', '747', '9S1', '9SP', '412', '749', '9CS', '9DK', '751', '753', '755', '9R4', '9RK', '9RZ', '9SQ', '439', '457', '505', '064', '757', '9V2', '9W1', '9XG', '9YF', '9Z5', '9ZU', '443', 'A2Z', 'A3Z', '449', 'A35', 'A40', '588', '094', '759', '9DM', '761', '9V1', '9W2', '9XF', '9YG', '9Z6', '9ZV', 'A30', 'A41', '451', 'A37', 'A42', '552', '554', 'A4U', 'A54', '556', '763', '9DN', '765', '9V0', '9W3', '9XJ', '9YH', '558')
-            then 'JANEIRO'
-        else 'OUTROS'
-    end as CORRECAO,
-
     ZC1.ZC1_FILIAL as FILIAL,
-    concat(trim(ZC1.ZC1_NUM), '-', trim(ZC2.ZC2_ITEM)) as ID_OS,
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     ZC2.ZC2_ITEM as ITEM,
-    substring(ZC1.ZC1_NUM, 1, 4) as ANO_OS,
-    substring(ZC1.ZC1_EMISSA, 1, 6) as PERIODO_OS,
-    convert(date, ZC1.ZC1_EMISSA, 103) as DATA_OS,
-    ZC2.R_E_C_N_O_,
+    /*row_number() over(partition by order by ) as TURNO*/
+    left(ZC1.ZC1_EMISSA, 6) as PERIODO_INIOS,
+    cast(ZC1.ZC1_EMISSA as date) as DATA_INIOS,
+    left(ZC1.ZC1_DTENCE, 6) as PERIODO_ENCOS,
+    cast(ZC1.ZC1_DTENCE as date) as DATA_ENCOS,
+    
+    convert
+    (
+        datetime,
+        case isdate(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(ZC1.ZC1_DTINI, ' ', '12:00')
+        end, 113
+    ) as DTINI_OS,
+    
+    convert
+    (
+        datetime,
+        case isdate(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2)))
+            when 1 then concat(ZC1.ZC1_DTFIM, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', '00')), ':  :00'), '00:00'))
+            else concat(ZC1.ZC1_DTFIM, ' ', '12:00')
+        end, 113
+    ) as DTFIM_OS,
+    
+    ZC1.ZC1_PORTO as PORTO,
+    (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
+    ZC1.ZC1_NAVIO as NAVIO,
+    (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
+    trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
+
+    DEV.A1_COD as CLI_CODIGO,
+    DEV.A1_LOJA as CLI_LOJA,
+    DEV.A1_CGC as CLI_CNPJ,
+    trim(DEV.A1_NOME) as CLIENTE,
+
+    ARM.A1_COD as ARM_CODIGO,
+    ARM.A1_LOJA as ARM_LOJA,
+    ARM.A1_CGC as ARM_CNPJ,
+    trim(DEV.A1_NOME) as ARMADORA,
+
+    DES.A2_COD as DESP_CODIGO,
+    DES.A2_LOJA as DESP_LOJA,
+    DES.A2_CGC as DESP_CNPJ,
+    trim(DES.A2_NOME) as DESPACHANTE,
     
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
-    ZC1.ZC1_TABPRC as TABELADEPRECO,
-    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
+    concat(trim(ZC1.ZC1_TABPRC), ' - ', (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC)) as TABELA_PRECO,
     
-    case ZC2.ZC2_TIPO
+    case cast(ZC2.ZC2_TIPO as int)
         when 1 then 'RECEITA'
-        when 2 then 'FUNÇÃO'
+        when 2 then 'FOLHA'
         when 3 then 'MANUTENÇÃO'
         when 4 then 'MATERIAIS'
+        when 5 then 'COMPRAS'
         when 6 then 'DEPRECIAÇÃO'
         when 7 then 'CONTABILIDADE'
         when 8 then 'DESPESAS FINANCEIRAS'
-        when 9 then 'DOCUMENTAÇÃO E TAXAS'
+        when 9 then 'DOCUMENTAÇÃO'
         when 10 then 'COMBUSTIVEL'
-        when 11 then 'TAXAS'
+        when 11 then 'SERVIÇOS TOMADOS'
         when 12 then 'SEGURO EQUIPAMENTO'
         when 13 then 'PNEUS'
+        when 14 then 'PROVISÕES'
+        when 15 then 'TIPO RH IMPROD'
+        when 16 then 'TIPO MNT IMPROD'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
     trim(ZC2.ZC2_COD) as INSUMO,
     
     case cast(ZC2.ZC2_TIPO as int)
-        when 1 then (select max(case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end) from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 1)
-        when 11 then (select max(case when SB1010.B1_DESC like 'TRANSPORTE PORTUARIO - %' then replace(SB1010.B1_DESC, 'TRANSPORTE PORTUARIO - ', '') else trim(SB1010.B1_DESC) end) from DA1010 (nolock) inner join SB1010 (nolock) on SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DA1010.DA1_CODPRO where DA1010.D_E_L_E_T_ = '' and DA1010.DA1_CODTAB = ZC1.ZC1_TABPRC and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 11)
-        when 2 then (select max(trim(SRJ010.RJ_DESC)) from SRJ010 (nolock) where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_FUNCAO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
-        when 3 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3)
-        when 4 then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 4)
-        when 6 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 6)
-        when 7 then (select max(trim(ZA7010.ZA7_DESC)) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
-        when 9 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 9)
-        when 10 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 10)
-        when 12 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 12)
-        when 13 then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 13)
-        else trim(ZC2.ZC2_DESC)
+        when 2 then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
+        when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
+        when 8 then null
+    else
+        case
+            when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11))
+            when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
+        else null end
     end as DESC_INSUMO,
-
+    
     case cast(ZC2.ZC2_TIPO as int) when 3 then (select max(trim(ST9010.T9_CODFAMI)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3) else '-' end as FAMILIA_EQUIP,
 
     case ZC1.ZC1_STATUS
@@ -63,6 +94,15 @@ select
         when 6 then 'ENCERRADA'
         else 'OUTROS'
     end as STATUS_OS,
+
+    case ZC2.ZC2_STATUS
+        when 1 then 'ABERTA'
+        when 2 then 'SOLICITADO CANCELAMENTO'
+        when 3 then 'CANCELADA'
+        when 5 then 'CORTESIA'
+        when 6 then 'ENCERRADA'
+        else 'OUTROS'
+    end as STATUS_ITEM,
     
     case ZC1.ZC1_STATU2
         when 1 then 'PENDENTE'
@@ -73,23 +113,68 @@ select
     
     ZC2.ZC2_QTDPRV as QTD_PREV,
     ZC2.ZC2_QTDREA as QTD_REAL,
-    ZC2.ZC2_QTDREC as QTD_RECURSO,    
+    ZC2.ZC2_QTDREC as QTD_RECURSO,
 
-    substring(ZC2.ZC2_COMPET, 1, 6) as PERIODO,
-    substring(ZC2.ZC2_DTFIM, 1, 6) as PERIODO_APONT,
+    ZC2.ZC2_VEICUL as CM,
+    ZC2.ZC2_CARRET as SR,
+
+    left(ZC2.ZC2_COMPET, 6) as PERIODO,
+    left(coalesce(nullif(ZC2.ZC2_DATA, ''), ZC2.ZC2_COMPET), 6) as PERIODO_APONT,
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
-    convert(datetime, case isdate(ZC2.ZC2_HRINI) when 1 then concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) else concat(ZC2.ZC2_DTINI, ' ', '12:00') end, 113) as DTINI_APONT,
-    convert(datetime, case isdate(ZC2.ZC2_HRFIM) when 1 then concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) else concat(ZC2.ZC2_DTFIM, ' ', '12:00') end, 113) as DTFIM_APONT,
-	case isdate(ZC2.ZC2_HRINI) when 1 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end as HORAS_TOTAIS,
-    datediff(minute, ZC2.ZC2_DTINI, ZC2.ZC2_DTFIM)/60.0 as HORAS_APONT,
+    convert(date, ZC2.ZC2_DATA, 103) as DATA_ITEM,
+    convert(datetime, case isdate(ZC2.ZC2_HRINI) when 1 then concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) else concat(ZC2.ZC2_DTINI, ' ', '00:00') end, 113) as DTINI_APONT,
+    convert(datetime, case isdate(ZC2.ZC2_HRFIM) when 1 then concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) else concat(ZC2.ZC2_DTFIM, ' ', '00:00') end, 113) as DTFIM_APONT,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
+	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
-    case when trim(upper(ZC2.ZC2_NMUSU)) = 'PAULO BARBOSA' then 'AUTO' else 'MANUAL' end as TIPO_LANC
+
+    case
+        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'AUT'
+        when isdate(ZC2.ZC2_DTINI) = 0 or nullif(ZC2.ZC2_DTINI, '') is null then 'apontamento sem data ini'
+        when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null then 'apontamento sem data fim'
+        when isdate(ZC2.ZC2_HRINI) = 0 or nullif(ZC2.ZC2_HRINI, '') is null then 'apontamento sem hora ini'
+        when isdate(ZC2.ZC2_HRFIM) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'apontamento sem hora fim'
+        when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.5 then 'MAIOR QUE 12,5 h'
+        when then
+        when then
+        when then
+        when then
+        else 'OK'
+    end as STATUS_APONT
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-where year(ZC2.ZC2_DTFIM) = 2024
+        
+        left join SA1010 DEV (nolock)
+            on DEV.D_E_L_E_T_ = ''
+            and DEV.A1_COD = ZC1.ZC1_CODSA1
+            and DEV.A1_LOJA = ZC1.ZC1_LOJSA1
+        left join SA1010 ARM (nolock)
+            on ARM.D_E_L_E_T_ = ''
+            and ARM.A1_COD = ZC1.ZC1_ARMADO
+            and ARM.A1_LOJA = ZC1.ZC1_LJARMA
+        left join SA2010 DES (nolock)
+            on DES.D_E_L_E_T_ = ''
+            and DES.A2_COD = ZC1.ZC1_DESPA
+            and DES.A2_LOJA = ZC1.ZC1_LJDESP
+    
+    left join SA2010 TAX (nolock)
+        on TAX.D_E_L_E_T_ = ''
+        and TAX.A2_COD = ZC2.ZC2_YFORNE
+        and TAX.A2_LOJA = ZC2.ZC2_YLOJA
+    left join ST9010 ST9 (nolock)
+        on ST9.D_E_L_E_T_ = ''
+        and trim(ST9.T9_CODBEM) = trim(ZC2.ZC2_COD)
+
+
+where
+        ZC2.D_E_L_E_T_ = ''
+    and ZC2.ZC2_INCLUS != 'C'
+    and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
+	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
+    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202312
