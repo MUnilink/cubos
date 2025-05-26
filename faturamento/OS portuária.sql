@@ -153,14 +153,14 @@ select
     case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
 	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(ZC2.ZC2_QTDREC * datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,
 
-
     case
         when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A'
         when day(ZC2.ZC2_DTINI) %2 = 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA PAR'
         when day(ZC2.ZC2_DTINI) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA ÍMPAR'
         when day(ZC2.ZC2_DTINI) %2 = 0 and (datepart(hour, ZC2.ZC2_HRINI) between 19 and 23 or ((day(ZC2.ZC2_DTINI) +1) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 0 and 6)) then 'NOITE PAR'
         when day(ZC2.ZC2_DTINI) %2 != 0 and (datepart(hour, ZC2.ZC2_HRINI) between 19 and 23 or ((day(ZC2.ZC2_DTINI) +1) %2 = 0 and datepart(hour, ZC2.ZC2_HRINI) between 0 and 6)) then 'NOITE ÍMPAR'
-    else 'N/A' end as TURNO,
+        else 'N/A'
+    end as TURNO,
     
     case
         when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'não se aplica'

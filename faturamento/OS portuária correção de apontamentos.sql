@@ -3,7 +3,17 @@ select
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     ZC2.ZC2_ITEM as ITEM,
-    /*row_number() over(partition by order by ) as TURNO*/
+
+    ZC1.ZC1_DTINI,
+	ZC1.ZC1_HRINI,
+	ZC1.ZC1_DTFIM,
+	ZC1.ZC1_HRFIM,
+    ZC2.ZC2_DTINI,
+    ZC2.ZC2_HRINI,
+    ZC2.ZC2_DTFIM,
+    ZC2.ZC2_HRFIM,
+    ZC2.ZC2_DATA,
+
     left(ZC1.ZC1_EMISSA, 6) as PERIODO_INIOS,
     cast(ZC1.ZC1_EMISSA as date) as DATA_INIOS,
     left(ZC1.ZC1_DTENCE, 6) as PERIODO_ENCOS,
@@ -32,21 +42,6 @@ select
     ZC1.ZC1_NAVIO as NAVIO,
     (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
-
-    DEV.A1_COD as CLI_CODIGO,
-    DEV.A1_LOJA as CLI_LOJA,
-    DEV.A1_CGC as CLI_CNPJ,
-    trim(DEV.A1_NOME) as CLIENTE,
-
-    ARM.A1_COD as ARM_CODIGO,
-    ARM.A1_LOJA as ARM_LOJA,
-    ARM.A1_CGC as ARM_CNPJ,
-    trim(DEV.A1_NOME) as ARMADORA,
-
-    DES.A2_COD as DESP_CODIGO,
-    DES.A2_LOJA as DESP_LOJA,
-    DES.A2_CGC as DESP_CNPJ,
-    trim(DES.A2_NOME) as DESPACHANTE,
     
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     concat(trim(ZC1.ZC1_TABPRC), ' - ', (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC)) as TABELA_PRECO,
@@ -85,31 +80,6 @@ select
     end as DESC_INSUMO,
     
     case cast(ZC2.ZC2_TIPO as int) when 3 then (select max(trim(ST9010.T9_CODFAMI)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3) else '-' end as FAMILIA_EQUIP,
-
-    case ZC1.ZC1_STATUS
-        when 1 then 'ABERTA'
-        when 2 then 'SOLICITADO CANCELAMENTO'
-        when 3 then 'CANCELADA'
-        when 5 then 'CORTESIA'
-        when 6 then 'ENCERRADA'
-        else 'OUTROS'
-    end as STATUS_OS,
-
-    case ZC2.ZC2_STATUS
-        when 1 then 'ABERTA'
-        when 2 then 'SOLICITADO CANCELAMENTO'
-        when 3 then 'CANCELADA'
-        when 5 then 'CORTESIA'
-        when 6 then 'ENCERRADA'
-        else 'OUTROS'
-    end as STATUS_ITEM,
-    
-    case ZC1.ZC1_STATU2
-        when 1 then 'PENDENTE'
-        when 2 then 'PARCIAL'
-        when 3 then 'FINALIZADO'
-        else 'OUTROS'
-    end as STATUS_PEDIDO,
     
     ZC2.ZC2_QTDPRV as QTD_PREV,
     ZC2.ZC2_QTDREA as QTD_REAL,
@@ -123,7 +93,7 @@ select
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
-    convert(date, ZC2.ZC2_DATA, 103) as DATA_ITEM,
+    convert(date, isnull(nullif(ZC2.ZC2_DATA, ''), ZC2.ZC2_DTFIM), 103) as DATA_ITEM,
     convert(datetime, case isdate(ZC2.ZC2_HRINI) when 1 then concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) else concat(ZC2.ZC2_DTINI, ' ', '00:00') end, 113) as DTINI_APONT,
     convert(datetime, case isdate(ZC2.ZC2_HRFIM) when 1 then concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) else concat(ZC2.ZC2_DTFIM, ' ', '00:00') end, 113) as DTFIM_APONT,
     case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
@@ -131,17 +101,20 @@ select
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
 
     case
-        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'AUT'
-        when isdate(ZC2.ZC2_DTINI) = 0 or nullif(ZC2.ZC2_DTINI, '') is null then 'apontamento sem data ini'
-        when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null then 'apontamento sem data fim'
-        when isdate(ZC2.ZC2_HRINI) = 0 or nullif(ZC2.ZC2_HRINI, '') is null then 'apontamento sem hora ini'
-        when isdate(ZC2.ZC2_HRFIM) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'apontamento sem hora fim'
-        when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.5 then 'MAIOR QUE 12,5 h'
-        when then
-        when then
-        when then
-        when then
-        else 'OK'
+        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A'
+        when day(ZC2.ZC2_DTINI) %2 = 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA PAR'
+        when day(ZC2.ZC2_DTINI) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA ÍMPAR'
+        when day(ZC2.ZC2_DTINI) %2 = 0 and (datepart(hour, ZC2.ZC2_HRINI) between 19 and 23 or ((day(ZC2.ZC2_DTINI) +1) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 0 and 6)) then 'NOITE PAR'
+        when day(ZC2.ZC2_DTINI) %2 != 0 and (datepart(hour, ZC2.ZC2_HRINI) between 19 and 23 or ((day(ZC2.ZC2_DTINI) +1) %2 = 0 and datepart(hour, ZC2.ZC2_HRINI) between 0 and 6)) then 'NOITE ÍMPAR'
+    else 'N/A' end as TURNO,
+    
+    case
+        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'não se aplica'
+        when isdate(ZC2.ZC2_DTINI) = 0 or nullif(ZC2.ZC2_DTINI, '') is null or isdate(ZC2.ZC2_HRINI) = 0 or nullif(ZC2.ZC2_HRINI, '') is null then 'data ou hora ini ausente'
+        when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(ZC2.ZC2_HRFIM) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
+        when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.5 then 'mais que 12,5 h apontadas'
+        when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM)) < 0.0 then 'data/hora ini maior que data/hora fim'
+        else 'item OK'
     end as STATUS_APONT
 
 from ZC2010 ZC2 (nolock)
@@ -149,32 +122,11 @@ from ZC2010 ZC2 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-        
-        left join SA1010 DEV (nolock)
-            on DEV.D_E_L_E_T_ = ''
-            and DEV.A1_COD = ZC1.ZC1_CODSA1
-            and DEV.A1_LOJA = ZC1.ZC1_LOJSA1
-        left join SA1010 ARM (nolock)
-            on ARM.D_E_L_E_T_ = ''
-            and ARM.A1_COD = ZC1.ZC1_ARMADO
-            and ARM.A1_LOJA = ZC1.ZC1_LJARMA
-        left join SA2010 DES (nolock)
-            on DES.D_E_L_E_T_ = ''
-            and DES.A2_COD = ZC1.ZC1_DESPA
-            and DES.A2_LOJA = ZC1.ZC1_LJDESP
-    
-    left join SA2010 TAX (nolock)
-        on TAX.D_E_L_E_T_ = ''
-        and TAX.A2_COD = ZC2.ZC2_YFORNE
-        and TAX.A2_LOJA = ZC2.ZC2_YLOJA
     left join ST9010 ST9 (nolock)
         on ST9.D_E_L_E_T_ = ''
         and trim(ST9.T9_CODBEM) = trim(ZC2.ZC2_COD)
 
-
 where
         ZC2.D_E_L_E_T_ = ''
     and ZC2.ZC2_INCLUS != 'C'
-    and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
-	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
     and substring(ZC1.ZC1_EMISSA, 1, 6) > 202312
