@@ -31,6 +31,7 @@ select distinct
 
     trim(TQR.TQR_DESMOD) as MODELO,
     trim(ST7.T7_NOME) as FABRICANTE,
+    trim(ST9.T9_RENAVAM) as RENAVAM,
 
     STG.TG_TIPOREG as TIPO,
     STG.TG_CODIGO as CODIGO,
