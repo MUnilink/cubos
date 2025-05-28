@@ -72,7 +72,10 @@
             on SR7.FILIAL = SRD.RD_FILIAL
             and SR7.MATR = SRD.RD_MAT
             and left(SR7.DATA_MUD, 6) = SRD.RD_DATARQ
-    where SRD.D_E_L_E_T_ = ''
+    where
+            SRD.D_E_L_E_T_ = ''
+        and SRD.RD_DATARQ > 202409
+        and concat(SRD.RD_DATARQ, '01') between <<START_DATE>> and <<FINAL_DATE>>
 union
     select
         trim(SRA.RA_FILIAL) as FILIAL,
@@ -148,4 +151,7 @@ union
             on SR7.FILIAL = SRD.RD_FILIAL
             and SR7.MATR = SRD.RD_MAT
             and left(SR7.DATA_MUD, 6) = SRD.RD_DATARQ
-    where SRD.D_E_L_E_T_ = ''
+    where
+            SRD.D_E_L_E_T_ = ''
+        and SRD.RD_DATARQ > 202409
+        and concat(SRD.RD_DATARQ, '01') between <<START_DATE>> and <<FINAL_DATE>>
