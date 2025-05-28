@@ -15,6 +15,7 @@ from
 	select
 		FOLHA.RD_FILIAL as FILIAL,
 		FOLHA.RD_MAT as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 		FOLHA.RD_CC as COD_CC,
 		FOLHA.RD_PD as VERBA,
 		CC.CTT_DESC01 as CENTRO_CUSTO,

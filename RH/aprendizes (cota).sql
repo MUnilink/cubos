@@ -1,6 +1,7 @@
 select
 	trim(isnull(FUNCIONARIO.RA_FILIAL, '-')) as FILIAL,
 	trim(isnull(FUNCIONARIO.RA_MAT, '-')) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	trim(isnull(FUNCIONARIO.RA_NOME, '-')) as FUNCIONARIO,
 	trim(isnull(FUNCIONARIO.RA_MUNICIP, '-')) as MUNICIPIO,
 	trim(isnull(FUNCIONARIO.RA_ESTADO, '-')) as UF,

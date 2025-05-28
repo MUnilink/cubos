@@ -1,6 +1,7 @@
 select
 	FOLHA.RD_FILIAL as FILIAL,
 	FOLHA.RD_MAT as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	DADOS_FUNC.RB_COD as DEPENDENTE,
 	FOLHA.RD_MAT as CONTADOR_FUNC,
 	DADOS_FUNC.RB_COD as CONTADOR_DEP,

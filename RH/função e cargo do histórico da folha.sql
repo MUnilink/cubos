@@ -1,6 +1,7 @@
 select
 	trim(SRA.RA_FILIAL) as FILIAL,
 	trim(SRA.RA_MAT) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	trim(SRA.RA_ESTADO) as UF,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
 	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,

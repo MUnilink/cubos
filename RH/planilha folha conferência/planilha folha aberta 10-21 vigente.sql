@@ -2,6 +2,7 @@ select
     trim(FOLHA_ABERTA.FILIAL) as FILIAL,
     trim(FOLHA_ABERTA.DATA_ADMISSAO) as DATA_ADMISSAO,
     trim(FOLHA_ABERTA.MATRICULA) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
     trim(FOLHA_ABERTA.NOME) as NOME,
     trim(FOLHA_ABERTA.CENTRO_DE_CUSTO) as CENTRO_DE_CUSTO,
     trim(FOLHA_ABERTA.SITUACAO_FOLHA) as SITUACAO_FOLHA,
@@ -118,7 +119,8 @@ from
 
         SRA010.RA_FILIAL AS FILIAL,
         SRA010.RA_ADMISSA DATA_ADMISSAO,
-        SRA010.RA_MAT AS MATRICULA,
+        SRA010.RA_MAT as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         SRA010.RA_NOME as NOME,
         
         substring(FOLHA.RC_PERIODO, 1, 4) as PERIODO_ANO,

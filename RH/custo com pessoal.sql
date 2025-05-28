@@ -30,6 +30,7 @@ from SRA010 SRA (nolock)
             isnull(SRD010.RD_FILIAL, SRT010.RT_FILIAL) as FILIAL,
             isnull(SRD010.RD_PERIODO, SRT010.RT_DATACAL) as PERIODO,
             isnull(SRD010.RD_MAT, SRT010.RT_MAT) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
             SRV010.RV_COD, /* VER ELIMINAÇÃO DE VERBAS INDIVIDUAIS, OQ PERMITIRIA USAR DISTINCT NESTA TABELA E VINCULAR AO EMPREGADO SEM DUPLICATAS */
             isnull(SRD010.RD_PD, SRT010.RT_VERBA) as VERBA,
             case when SRD010.RD_PD in ('008', '020', '025', '031', '039', '041', '051', '072', '094', '106', '201', '215', '220', '223', '343', '365', '783') then '02 Salários e Ordenados'
