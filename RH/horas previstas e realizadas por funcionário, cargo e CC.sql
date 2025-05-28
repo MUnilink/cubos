@@ -33,7 +33,6 @@
                 and SRD.RD_PD = '990'
         ) as EVENTOS_PONTO,
         
-        case when SRD.RD_PD = '990' then cast(SRA.RA_HRSMES as numeric(15, 2)) else 0.0 end as HORAS_FUNC,
         cast(SRA.RA_ADMISSA as date) as ADMISSAO,
         cast(SRA.RA_DEMISSA as date) as DEMISSAO,
         SRD.RD_DATARQ as PERIODO,
@@ -49,27 +48,20 @@
         
         case
             when SR7.CARGO is not null and SR7.CARGO_ANT != SR7.CARGO then datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, SR7.DATA_MUD)
-            else 1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end) end as DIAS_CARGO
+            else 1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end) end as DIAS_CARGO,
+        
+        SRD.RD_HORAS as HORAS,
+        SRD.RD_VALOR as VALOR,
+        case when SRD.RD_PD = '990' then cast(SRA.RA_HRSMES as numeric(15, 2)) else 0.0 end as HORAS_FUNC
 
     from SRD010 SRD (nolock)
         inner join SRV010 SRV (nolock)
             on SRV.D_E_L_E_T_ = ''
             and SRV.RV_COD = SRD.RD_PD
-
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SRD.RD_FILIAL
             and SRA.RA_MAT = SRD.RD_MAT
-
-            inner join SRJ010 SRJ (nolock)
-                on SRJ.D_E_L_E_T_ = ''
-                and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-
-                inner join SQ3010 SQ3 (nolock)
-                    on SQ3.D_E_L_E_T_ = ''
-                    and SQ3.Q3_CARGO = SRJ.RJ_CARGO
-
         left join
         (
             select
@@ -84,7 +76,7 @@
             on SR7.FILIAL = SRD.RD_FILIAL
             and SR7.MATR = SRD.RD_MAT
             and left(SR7.DATA_MUD, 6) = SRD.RD_DATARQ
-    where SRD.D_E_L_E_T_ = '' and SRD.RD_DATARQ like '202503'
+    where SRD.D_E_L_E_T_ = ''
 union
     select
         trim(SRA.RA_FILIAL) as FILIAL,
@@ -121,7 +113,6 @@ union
                 and SRD.RD_PD = '990'
         ) as EVENTOS_PONTO,
         
-        case when SRD.RD_PD = '990' then cast(SRA.RA_HRSMES as numeric(15, 2)) else 0.0 end as HORAS_FUNC,
         cast(SRA.RA_ADMISSA as date) as ADMISSAO,
         cast(SRA.RA_DEMISSA as date) as DEMISSAO,
         SRD.RD_DATARQ as PERIODO,
@@ -137,27 +128,20 @@ union
         
         case
             when SR7.CARGO is not null and SR7.CARGO_ANT != SR7.CARGO then datediff(day, SR7.DATA_MUD, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end) + 1
-            else 1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end) end as DIAS_CARGO
+            else 1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end) end as DIAS_CARGO,
+        
+        SRD.RD_HORAS as HORAS,
+        SRD.RD_VALOR as VALOR,
+        case when SRD.RD_PD = '990' then cast(SRA.RA_HRSMES as numeric(15, 2)) else 0.0 end as HORAS_FUNC
 
     from SRD010 SRD (nolock)
         inner join SRV010 SRV (nolock)
             on SRV.D_E_L_E_T_ = ''
             and SRV.RV_COD = SRD.RD_PD
-
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SRD.RD_FILIAL
             and SRA.RA_MAT = SRD.RD_MAT
-
-            inner join SRJ010 SRJ (nolock)
-                on SRJ.D_E_L_E_T_ = ''
-                and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-                and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-
-                inner join SQ3010 SQ3 (nolock)
-                    on SQ3.D_E_L_E_T_ = ''
-                    and SQ3.Q3_CARGO = SRJ.RJ_CARGO
-
         left join
         (
             select
@@ -172,4 +156,4 @@ union
             on SR7.FILIAL = SRD.RD_FILIAL
             and SR7.MATR = SRD.RD_MAT
             and left(SR7.DATA_MUD, 6) = SRD.RD_DATARQ
-    where SRD.D_E_L_E_T_ = '' and SRD.RD_DATARQ like '202503'
+    where SRD.D_E_L_E_T_ = ''
