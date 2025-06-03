@@ -15,7 +15,6 @@
         trim(SCP.CP_CONTA) as CONTA,
         (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA) as DESC_CONTA,
         null as FORNECEDOR,
-	    null as FORNECEDOR_RED,
 
         coalesce(DBM.DBM_TIPO, SCR.CR_TIPO, '') as TIPO,
         coalesce(DBM.DBM_GRUPO, SCR.CR_GRUPO, '') as GRUPO_APROV,
@@ -29,19 +28,21 @@
         left(SCP.CP_DATPRF, 6) as PERIODO_ITEM,
         
         case SCR.CR_DATALIB when '' then -.5 else datediff(day, SCP.CP_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
-        upper(trim(coalesce(SCR.CR_YNOMSOL, SCP.CP_SOLICIT))) as SOLICITANTE,
+        upper(trim(coalesce(nullif(SCR.CR_YNOMSOL, ''), SCP.CP_SOLICIT))) as SOLICITANTE,
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
-        SCR.CR_STATUS,
-        case SCR.CR_STATUS
-            when 1 then 'PENDENTE'
-            when 2 then 'PENDENTE'
-            when 3 then 'APROVADA'
-            when 5 then 'APROVADA'
-            when 6 then 'REJEITADA'
-            when 7 then 'REJEITADA'
-            else 'LIBERADA'
-        end as STATUS,
+        concat(trim(SCR.CR_STATUS), ' - ',
+            case SCR.CR_STATUS
+                when 1 then 'PENDENTE DE OUTREM'
+                when 2 then 'PENDENTE'
+                when 3 then 'LIBERADA'
+                when 4 then 'BLOQUEADA'
+                when 5 then 'LIBERADA POR OUTREM'
+                when 6 then 'REJEITADA'
+                when 7 then 'REJEITADA POR OUTREM'
+                else 'OUTROS'
+            end
+        ) as STATUS,
 
         cast(SCR.CR_NIVEL as int) as NIVEL,
         case DBM.DBM_APROV when 1 then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = DBM.DBM_USER) else '' end as APROVADOR,
@@ -85,6 +86,7 @@
             and STJ.TJ_ORDEM = left(SCP.CP_OP, 6)
     where
             SCP.D_E_L_E_T_ = ''
+            and STJ.TJ_CODBEM like 'GMK4100%'
 union
     select
         left(SC7.C7_OP, 6) as OS,
@@ -103,7 +105,6 @@ union
         trim(SC7.C7_CONTA) as CONTA,
         null as DESC_CONTA,
         trim(SA2.A2_NOME) as FORNECEDOR,
-	    trim(SA2.A2_NREDUZ) as FORNECEDOR_RED,
 
         SCR.CR_TIPO as TIPO,
         SCR.CR_GRUPO as GRUPO_APROV,
@@ -117,35 +118,24 @@ union
         left(SC7.C7_DATPRF, 6) as PERIODO_ITEM,
         
         case SCR.CR_DATALIB when '' then -.5 else datediff(day, SC7.C7_DATPRF, SCR.CR_DATALIB) end as DIAS_APROV,
-        upper(trim(isnull(nullif(SCR.CR_YNOMSOL, ''), (select max(SY1010.Y1_NOME) from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER)))) as SOLICITANTE,
+        upper(trim(coalesce(nullif(SCR.CR_YNOMSOL, ''), (select max(SY1010.Y1_NOME) from SY1010 (nolock) where SY1010.Y1_USER = SC7.C7_USER)))) as SOLICITANTE,
         case when SCR.CR_NUM = '' or SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
         
-        SCR.CR_STATUS,
-        case SCR.CR_STATUS
-            when '' then 'PENDENTE'
-            when 1 then 'PENDENTE'
-            when 2 then 'PENDENTE'
-            when 3 then 'APROVADA'
-            when 5 then 'APROVADA'
-            when 6 then 'REJEITADA'
-            when 7 then 'REJEITADA'
-            else 'LIBERADA'
-        end as STATUS,
+        concat(trim(SCR.CR_STATUS), ' - ',
+            case SCR.CR_STATUS
+                when 1 then 'PENDENTE DE OUTREM'
+                when 2 then 'PENDENTE'
+                when 3 then 'LIBERADA'
+                when 4 then 'BLOQUEADA'
+                when 5 then 'LIBERADA POR OUTREM'
+                when 6 then 'REJEITADA'
+                when 7 then 'REJEITADA POR OUTREM'
+                else 'OUTROS'
+            end
+        ) as STATUS,
 
         cast(SCR.CR_NIVEL as int) as NIVEL,
-        case when SCR.CR_NIVEL =
-            (
-                select max(SCR010.CR_NIVEL)
-                from SCR010 (nolock)
-                where
-                        SCR010.D_E_L_E_T_ = ''
-                    and SCR010.CR_TIPO = SCR.CR_TIPO
-                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
-                    and SCR010.CR_NUM = SCR.CR_NUM
-                    and SCR010.CR_STATUS in (3, 5)
-            ) then (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO)
-            else null 
-        end as APROVADOR,
+        (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO) as APROVADOR,
 
         case when SCR.CR_NIVEL =
             (

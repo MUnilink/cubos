@@ -12,7 +12,7 @@ select
 	trim(SC1.C1_ITEM) as ITEM_SC,
 	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
 	cast(SC1.C1_EMISSAO as date) as DATA_SC,
-	substring(SC1.C1_EMISSAO, 1, 6) as PERIODO_SC,
+	left(SC1.C1_EMISSAO, 6) as PERIODO_SC,
 	substring(SC1.C1_OP, 1, 6) as OS,
 	
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
@@ -83,7 +83,7 @@ select
 	trim(replace(replace(SC7.C7_OBSM, char(10), ''), char(13), '')) as MEMO_PC,
 
 	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
-	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
+	left(SC7.C7_EMISSAO, 6) as PERIODO_PC,
 	(select trim(upper(SY1010.Y1_NOME)) from SY1010 where SY1010.Y1_COD = SC7.C7_COMPRA) as SOLICITANTE_PC,
 	trim(upper(SY1.Y1_NOME)) as DIGITACAO_PC,
 

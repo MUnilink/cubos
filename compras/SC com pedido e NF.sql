@@ -10,8 +10,8 @@ select
 	trim(SC1.C1_ITEM) as ITEM_SC,
 	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
 	trim(SC1.C1_OBS) as OBS_SC,
-	convert(date, SC1.C1_EMISSAO, 103) as DATA_SC,
-	substring(SC1.C1_EMISSAO, 1, 6) as PERIODO_SC,
+	cast(SC1.C1_EMISSAO as date) as DATA_SC,
+	left(SC1.C1_EMISSAO, 6) as PERIODO_SC,
 	substring(SC1.C1_OP, 1, 6) as OS,
 	trim(FORSC.A2_COD) as FORSC_COD,
 	trim(FORSC.A2_LOJA) as FORSC_LOJA,
@@ -85,6 +85,31 @@ select
 			and SCR010.CR_FILIAL = SC7.C7_FILIAL
 			and SCR010.CR_NUM = SC7.C7_NUM
 	) as DATAAPROV_PC,
+
+	(
+		select upper(trim(max(SAK010.AK_LOGIN)))
+        from SCR010 SCR
+            inner join SAK010
+                on SAK010.D_E_L_E_T_ = ''
+                and SAK010.AK_COD = SCR.CR_LIBAPRO
+		where
+				SCR.D_E_L_E_T_ = ''
+			and SCR.CR_TIPO = 'PC'
+			and SCR.CR_FILIAL = SC7.C7_FILIAL
+			and SCR.CR_NUM = SC7.C7_NUM
+			and SCR.CR_NIVEL =
+		(
+			select max(SCR010.CR_NIVEL)
+			from SCR010 (nolock)
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and SCR010.CR_TIPO = SCR.CR_TIPO
+				and SCR010.CR_FILIAL = SCR.CR_FILIAL
+				and SCR010.CR_NUM = SCR.CR_NUM
+				and SCR010.CR_STATUS = '3'
+		)
+	) as APROVA1_PC,
+	
 	datediff(day, SC7.C7_EMISSAO, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM)) as DIASAPROV_PC,
 	datediff(day, (select top 1 convert(date, SCR010.CR_DATALIB, 103) from SCR010 where SCR010.D_E_L_E_T_ = '' and nullif(SCR010.CR_LIBAPRO, '') is not null and SCR010.CR_TIPO = 'PC' and SCR010.CR_NUM = SC7.C7_NUM), SD1.D1_DTDIGIT) as DIASAPROV_PC_NF,
 
@@ -141,8 +166,7 @@ select
 	convert(date, STJ.TJ_DTORIGI, 103) as DATA_OS,
 	STJ.TJ_USUAINI as USR_INI,
 	STJ.TJ_USUAFIM as USR_FIM,
-	STJ.TJ_TERMINO as OS_ENCERRADA,
-	SC2.C2_NUM as OP
+	STJ.TJ_TERMINO as OS_ENCERRADA
 
 from SC1010 SC1 (nolock)
 	left join CTT010 CTT (nolock)
@@ -196,9 +220,5 @@ from SC1010 SC1 (nolock)
 		and STJ.TJ_FILIAL = SC1.C1_FILIAL
 		and concat(STJ.TJ_ORDEM, 'OS') = left(SC1.C1_OP, 8)
 		and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP')
-	left join SC2010 SC2 (nolock)
-		on SC2.D_E_L_E_T_ = ''
-		and SC2.C2_FILIAL = SC1.C1_FILIAL
-		and concat(SC2.C2_NUM, SC2.C2_ITEM, SC2.C2_SEQUEN) = SC1.C1_OP
 where 
 		SC1.D_E_L_E_T_ = ''
