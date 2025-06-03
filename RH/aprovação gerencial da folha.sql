@@ -80,6 +80,7 @@
             and CTT010.CTT_CUSTO = SRC.RC_CC
         left join SRV010 SRV (nolock)
             on SRV.RV_COD = SRC.RC_PD
+            and SRV.D_E_L_E_T_ = ''
     where SRC.D_E_L_E_T_ = ''
 union
     select
@@ -164,6 +165,7 @@ union
             and CTT010.CTT_CUSTO = SRD.RD_CC
         left join SRV010 SRV (nolock)
             on SRV.RV_COD = SRD.RD_PD
+            and SRV.D_E_L_E_T_ = ''
     where
             datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 7
         and SRD.D_E_L_E_T_ = ''
