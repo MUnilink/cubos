@@ -242,11 +242,7 @@ select
     DTC.DTC_PESLIQ,
     trim(SB1.B1_DESC) as NFCLI_PRODUTO,
 
-    trim(DUA.DUA_NUMOCO) as OCORRENCIA,
-    trim(DUA.DUA_SEQOCO) as SEQ_OCOR,
     trim(DUA.DUA_NUMVTR) as VGATRA_OCOR,
-    convert(datetime, concat(DUA.DUA_DATOCO, ' ', nullif(concat(left(DUA.DUA_HOROCO, 2), ':', right(DUA.DUA_HOROCO, 2)), ':')), 113) as DT_OCOR,
-    concat(trim(DUA.DUA_CODOCO), ' - ', (select trim(DT2010.DT2_DESCRI) from DT2010 where DT2010.D_E_L_E_T_ = '' and DT2010.DT2_CODOCO = DUA.DUA_CODOCO)) as DESC_OCOR,
 
     DT5.DT5_NUMSOL,
     DT5.DT5_DOC,
@@ -394,11 +390,6 @@ from DTQ010 DTQ (nolock)
 
             inner join DA4010 DA4 (nolock)
                 on DA4.DA4_COD = DUP.DUP_CODMOT
-
-    left join DUA010 DUA (nolock)
-        on DUA.D_E_L_E_T_ = ''
-        and DUA.DUA_FILIAL = DTQ.DTQ_FILIAL
-        and DUA.DUA_VIAGEM = DTQ.DTQ_VIAGEM
 
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
