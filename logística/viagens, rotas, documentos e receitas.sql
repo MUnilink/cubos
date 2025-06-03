@@ -242,7 +242,11 @@ select
     DTC.DTC_PESLIQ,
     trim(SB1.B1_DESC) as NFCLI_PRODUTO,
 
-    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as STATUS,
+    trim(DUA.DUA_NUMOCO) as OCORRENCIA,
+    trim(DUA.DUA_SEQOCO) as SEQ_OCOR,
+    trim(DUA.DUA_NUMVTR) as VGATRA_OCOR,
+    convert(datetime, concat(DUA.DUA_DATOCO, ' ', nullif(concat(left(DUA.DUA_HOROCO, 2), ':', right(DUA.DUA_HOROCO, 2)), ':')), 113) as DT_OCOR,
+    concat(trim(DUA.DUA_CODOCO), ' - ', (select trim(DT2010.DT2_DESCRI) from DT2010 where DT2010.D_E_L_E_T_ = '' and DT2010.DT2_CODOCO = DUA.DUA_CODOCO)) as DESC_OCOR,
 
     DT5.DT5_NUMSOL,
     DT5.DT5_DOC,
@@ -252,8 +256,10 @@ select
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
     
+    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
     cast(DF1.DF1_DATCON as date) as DT_AGE,
-    substring(DF1.DF1_DATCON, 1, 6) as PERIODO_AGE,
+    left(DF1.DF1_DATCON, 6) as PERIODO_AGE,
+    datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0) as DATA_CONTEINER,
     DF1.DF1_NUMAGE as AGENDAMENTO,
     DF1.DF1_ITEAGE as ITEM_AGENDA,
     DF1.DF1_YDSPOR as PORTO,
@@ -264,7 +270,6 @@ select
     DF1.DF1_YVIAGE as VIAGEM_PORT,
     DF1.DF1_YCONT as CONTEINER,
     DF1.DF1_YLACRE as LACRE,
-    datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0) as DATA_CONTEINER,
     DF1.DF1_YARMAD as ARMADORA,
     DF1.DF1_YLJARM as LOJA_ARMADORA,
     DF1.DF1_CODOBC,
@@ -275,7 +280,7 @@ select
     COMP.D2_TOTAL as COMP_TOTAL,
     COMP.D2_VALIPI as COMP_VALIPI,
     COMP.D2_VALICM as COMP_VALICM,
-    convert(date, COMP.D2_EMISSAO, 103) as COMP_EMISSAO,
+    cast(COMP.D2_EMISSAO as date) as COMP_EMISSAO,
 
     SC5.C5_NUM as RPS_PEDIDO,
     RPS.D2_DOC as RPS_DOC,
@@ -283,7 +288,7 @@ select
     RPS.D2_TOTAL as RPS_TOTAL,
     RPS.D2_VALIPI as RPS_VALIPI,
     RPS.D2_VALICM as RPS_VALICM,
-    convert(date, RPS.D2_EMISSAO, 103) as RPS_EMISSAO,
+    cast(RPS.D2_EMISSAO as date) as RPS_EMISSAO,
 
     SE1.E1_NUM as ND_TITULO,
     SE1.E1_VALOR as ND_VALOR,
@@ -389,7 +394,12 @@ from DTQ010 DTQ (nolock)
 
             inner join DA4010 DA4 (nolock)
                 on DA4.DA4_COD = DUP.DUP_CODMOT
-    
+
+    left join DUA010 DUA (nolock)
+        on DUA.D_E_L_E_T_ = ''
+        and DUA.DUA_FILIAL = DTQ.DTQ_FILIAL
+        and DUA.DUA_VIAGEM = DTQ.DTQ_VIAGEM
+
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_FILORI = DTQ.DTQ_FILORI
