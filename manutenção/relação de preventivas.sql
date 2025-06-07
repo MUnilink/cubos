@@ -1,29 +1,37 @@
 select
     trim(STI.TI_FILIAL) as FILIAL,
-    convert(date, STI.TI_DATAPLA, 103) as PERIODO,
     trim(STI.TI_DESCRIC) as NOME_PLANO,
 
     trim(STJ.TJ_CCUSTO) as CC,
     trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+    trim(ST9.T9_CODFAMI) as FAMILIA,
     trim(STJ.TJ_ORDEM) as OS,
     trim(STJ.TJ_PLANO) as PLANO,
     trim(STJ.TJ_SERVICO) as SERVICO,
-    trim(STJ.TJ_TERMINO) as ENCERRADA,
-    convert(date, STJ.TJ_DTMRINI, 103) as DT_REAL_INI,
-    convert(date, STJ.TJ_DTMRFIM, 103) as DT_REAL_FIM,
-    convert(date, STJ.TJ_DTMPINI, 103) as DT_PREV_INI,
-    convert(date, STJ.TJ_DTMPFIM, 103) as DT_PREV_FIM,
-    trim(isnull(ST4.T4_NOME, '-')) as DESC_SERVICO,
+    trim(ST4.T4_NOME) as DESC_SERVICO,
+    
+    cast(STJ.TJ_DTMRINI as date) as DT_REAL_INI,
+    cast(STJ.TJ_DTMRFIM as date) as DT_REAL_FIM,
+    cast(STJ.TJ_DTMPINI as date) as DT_PREV_INI,
+    cast(STJ.TJ_DTMPFIM as date) as DT_PREV_FIM,
+    left(STJ.TJ_DTMPINI, 6) as PERIODO_PREVINI,
+    left(STJ.TJ_DTMRINI, 6) as PERIODO_REALINI,
 
     STJ.TJ_POSCONT as CONT_OS,
     STJ.TJ_SEQRELA as SEQ_OS,
-    case STJ.TJ_SITUACA when 'L' then 'LIBERADA' when 'P' then 'PENDENTE' else 'CANCELADA' end as STATUS_OS,
-    case STJ.TJ_SITUACA when 'L' then (select top 1 STL010.TL_NUMSA from STL010 where STL010.D_E_L_E_T_ = '' and STL010.TL_ORDEM = STJ.TJ_ORDEM and STL010.TL_FILIAL = STJ.TJ_FILIAL and STL010.TL_PLANO = STJ.TJ_PLANO) when 'C' then 999999 else 0 end as SA,
+    
+    case STJ.TJ_TERMINO when 'S' then 'SIM' when 'N' then 'NÃO' end as TERMINO,
+    case STJ.TJ_SITUACA
+        when 'C' then upper('Cancelado')
+        when 'L' then upper('Liberado')
+        when 'P' then upper('Pendente')
+        else 'OUTROS'
+    end as SITUACAO_OS,
 
     trim(STF.TF_NOMEMAN) as DESC_MAN,
     trim(STF.TF_PADRAO) as PADRAO,
-    convert(date, STF.TF_DTULTMA, 103) as DATA_ULTIMAN,
-    cast(datediff(month, STF.TF_DTULTMA, getdate()) /30 as numeric(15,1)) as MESES_ULTIMAN,
+    cast(STF.TF_DTULTMA as date) as DATA_ULTIMAN,
+    cast(datediff(month, STF.TF_DTULTMA, getdate()) /30.0 as numeric(15, 1)) as MESES_ULTIMAN,
     
     STF.TF_CONMANU as CONT_ULTIMAN,
     STF.TF_INENMAN as INCREMENTO,
@@ -31,7 +39,23 @@ select
     (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA) as CONT_ATUAL,
     abs((select max(STP010.TP_ACUMCON) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA) - STF.TF_CONMANU) as DIFF_CONT,
     abs(STF.TF_CONMANU - (select max(STP010.TP_ACUMCON) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA)) - STF.TF_INENMAN as VENCIDO,
-    case when (abs(STF.TF_CONMANU - (select max(STP010.TP_ACUMCON) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = STJ.TJ_CODBEM and STP010.TP_DTLEITU >= STF.TF_DTULTMA))) > STF.TF_INENMAN then 'ATRASADA' else 'EM DIA' end as STATUS_PREVENTIVA,
+    
+    case
+        when
+        (
+            abs(STF.TF_CONMANU -
+                (
+                    select max(STP010.TP_ACUMCON)
+                    from STP010
+                    where
+                            STP010.D_E_L_E_T_ = ''
+                        and STP010.TP_CODBEM = STJ.TJ_CODBEM
+                        and STP010.TP_DTLEITU >= STF.TF_DTULTMA
+                )
+            )
+        ) > STF.TF_INENMAN then 'ATRASADA'
+        else 'EM DIA'
+    end as STATUS_PREVENTIVA,
     
     STF.TF_TEENMAN as TEMPO_ENTRE,
     STF.TF_TOLECON as TOLERANCIA,
@@ -46,21 +70,6 @@ select
     trim(isnull(TT9.TT9_DESCRI, '-')) as DESC_TAREFA,
     trim(STG.TG_TIPOREG) as TIPO_INSUMO,
     STG.TG_CODIGO as INSUMO,
-
-    (
-        select count(*)
-        from STF010 (nolock)
-            inner join STG010 (nolock)
-                on STG010.D_E_L_E_T_ = ''
-                and STG010.TG_CODBEM = STF010.TF_CODBEM
-                and STG010.TG_SERVICO = STF010.TF_SERVICO
-                and STG010.TG_SEQRELA = STF010.TF_SEQRELA
-        where
-                STF010.D_E_L_E_T_ = ''
-            and STG010.TG_CODIGO = STG.TG_CODIGO
-            and STF010.TF_CONMANU = STF.TF_CONMANU
-            and STF010.TF_CODBEM = STJ.TJ_CODBEM
-    ) as contador,
 
     trim(SB1.B1_DESC) as PRODUTO,
     case SB1.B1_MSBLQL when 1 then 'SIM' else 'NAO' end as BLOQUEADO,
@@ -95,6 +104,8 @@ from STJ010 STJ (nolock)
     inner join ST4010 ST4 (nolock)
 		on ST4.D_E_L_E_T_ = ''
 		and ST4.T4_SERVICO = STJ.TJ_SERVICO
+    inner join ST9010 ST9 (nolock)
+        on ST9.D_E_L_E_T_ = ''
+        and ST9.T9_CODBEM = STJ.TJ_CODBEM
 where
-        substring(STI.TI_DATAPLA, 1, 6) > '202112'
-    and STJ.D_E_L_E_T_ = '' 
+        STJ.D_E_L_E_T_ = '' 
