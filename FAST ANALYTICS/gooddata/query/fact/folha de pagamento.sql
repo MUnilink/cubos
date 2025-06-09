@@ -1,5 +1,5 @@
 	select
-		trim(SRA.RA_FILIAL) as FILIAL,
+		case when SRA.RA_FILIAL is null then 'P |01||' else 'P |01|01'+ cast(SRA.RA_FILIAL as char(6)) end as BK_FILIAL,
     	concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRC.RC_CC) as CC,
         trim(SRC.RC_ITEM) as ITCT,
@@ -39,7 +39,7 @@
 	where SRC.D_E_L_E_T_ = ''
 union
 	select
-		trim(SRA.RA_FILIAL) as FILIAL,
+		case when SRA.RA_FILIAL is null then 'P |01||' else 'P |01|01'+ cast(SRA.RA_FILIAL as char(6)) end as BK_FILIAL,
     	concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRD.RD_CC) as CC,
         trim(SRD.RD_ITEM) as ITCT,
