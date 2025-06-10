@@ -39,6 +39,7 @@ select
 	substring(STL.TL_DTFIM, 1, 6) as PERIODO_FIM,
 
 	SRA.RA_MAT as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	SRA.RA_HRSMES HORAS_MES
 
 from STL010 STL (nolock)
