@@ -22,6 +22,7 @@ select distinct
     case when ZE1.ZE1_TIPO in (15, 16) then cast(RAT_IMPR.PERC_RATEIO * ZE1.ZE1_TOTAL as numeric(15 ,2)) else 0.00 end as VALOR_IMPR,
     case when ZE1.ZE1_TIPO in (15, 16) then RAT_IMPR.TIPO else ZE1.ZE1_TIPO end as ID_TIPO,
     case when ZE1.ZE1_TIPO in (15, 16) then 0.0 else cast(ZE1.ZE1_TOTAL as numeric(15, 2)) end as VALOR_PROD,
+    cast(ZE1.ZE1_TOTAL as numeric(15, 2)) as VGA_TOTAL,
 
     ZE1.ZE1_ITEM as VGA_ITEMCUSTO,
     ZE1.ZE1_TIPO as VGA_TIPO,
@@ -41,6 +42,7 @@ select distinct
         when ZE1.ZE1_TIPO = 13 then 'PNEUS'
         when ZE1.ZE1_TIPO = 14 then 'PROVISÕES'
         when ZE1.ZE1_TIPO = 17 then 'DIÁRIA'
+        when ZE1.ZE1_TIPO = 18 then 'SEGURO CARGA'
         when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 2 then 'FOLHA'
         when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 14 then 'PROVISÕES'
         when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 3 then 'MANUTENÇÃO'
@@ -75,6 +77,7 @@ from ZE1010 ZE1 (nolock)
             ZG1.ZG1_COMPET as COMPETENCIA,
             ZG1.ZG1_CODIGO as INSUMO,
             ZG1.ZG1_TIPO as TIPO,
+            ZG1.ZG1_VLIMPR as VLIMP_TOT,
             cast(
                 ZG1.ZG1_VLIMPR/
                 (
