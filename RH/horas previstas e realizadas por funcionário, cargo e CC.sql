@@ -44,7 +44,7 @@
         eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO,
 
         cast(SR7.DATA_MUD as date) as DATA_MUD,
-        coalesce(nullif(SR7.CARGO_ANT, ''), (select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_TIPO = '002' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as CARGO,
+        coalesce(nullif(SR7.CARGO_ANT, ''), nullif((select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_TIPO = '002' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))), '') as CARGO,
         
         case
             when SR7.CARGO is not null and SR7.CARGO_ANT != SR7.CARGO then datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, SR7.DATA_MUD)
@@ -124,7 +124,7 @@ union
         eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO,
 
         cast(SR7.DATA_MUD as date) as DATA_MUD,
-        coalesce(nullif(SR7.CARGO, ''), (select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_TIPO = '002' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as CARGO,
+        coalesce(nullif(SR7.CARGO, ''), (select top 1 nullif(last_value(SR7010.R7_CARGO), '') over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ) from SR7010 where SR7010.D_E_L_E_T_ = '' and SR7010.R7_TIPO = '002' and SR7010.R7_FILIAL = SRD.RD_FILIAL and SR7010.R7_MAT = SRD.RD_MAT and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01'))) as CARGO,
         
         case
             when SR7.CARGO is not null and SR7.CARGO_ANT != SR7.CARGO then datediff(day, SR7.DATA_MUD, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end) + 1

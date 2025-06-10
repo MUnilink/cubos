@@ -38,14 +38,14 @@ select
 	dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) as DTMOV_INIMES,
 
 	/* ver se o fim do mês ocorre antes da próxima movimentação; se sim, fim do mês */
-	case when eomonth(cast(TPN.TPN_DTINIC as date)) < lead(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
-		then eomonth(cast(TPN.TPN_DTINIC as date))
+	case
+		when eomonth(cast(TPN.TPN_DTINIC as date)) < lead(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) then eomonth(cast(TPN.TPN_DTINIC as date))
 		else lead(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
 	end as DT_FIMMOV,
 
 	/* ver se última movimentação ocorre antes do princípio do mês; se sim, princípio do mês */
-	case when dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) > lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
-		then dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC)))
+	case
+		when dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) > lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) then dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC)))
 		else lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
 	end as DT_INIMOV,
 
