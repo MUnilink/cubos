@@ -4,10 +4,10 @@
         'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SRC.RC_ITEM, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
         'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SRC.RC_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
 
-		trim(SRC.RC_PERIODO) as PERIODO,
-		trim(SRC.RC_PD) as VERBA,
+		concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
+        concat(trim(SRY.RY_FILIAL), trim(SRY.RY_CALCULO)) as ID_ROTEIRO,
+        trim(SRC.RC_PERIODO) as PERIODO,
 		trim(SRC.RC_SEQ) as SEQ,
-		trim(SRC.RC_ROTEIR) as ROTEIRO,
         SRC.RC_VALOR as VALOR,
 		SRC.RC_HORAS as HORAS,
 		cast(SRC.RC_DTREF as date) as DATARQ
@@ -23,6 +23,14 @@
         left join CTT010 CTT
             on CTT.CTT_CUSTO = SRC.RC_CC
             and CTT.D_E_L_E_T_ = ''
+        left join SRV010 SRV
+            on SRV.RV_COD = SRC.RC_PD
+            and SRV.RV_FILIAL = left(SRC.RC_FILIAL, 4)
+            and SRV.D_E_L_E_T_ = ''
+        left join SRY010 SRY
+            on SRY.RY_CALCULO = SRC.RC_ROTEIR
+            and SRY.RY_FILIAL = left(SRC.RC_FILIAL, 4)
+            and SRY.D_E_L_E_T_ = ''
 	where SRC.D_E_L_E_T_ = '' and SRC.RC_DTREF between <<START_DATE>> and <<FINAL_DATE>>
 union
 	select
@@ -31,10 +39,10 @@ union
         'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SRD.RD_ITEM, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
         'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SRD.RD_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
 
-		trim(SRD.RD_PERIODO) as PERIODO,
-		trim(SRD.RD_PD) as VERBA,
+		concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
+        concat(trim(SRY.RY_FILIAL), trim(SRY.RY_CALCULO)) as ID_ROTEIRO,
+        trim(SRD.RD_PERIODO) as PERIODO,
 		trim(SRD.RD_SEQ) as SEQ,
-		trim(SRD.RD_ROTEIR) as ROTEIRO,
 		SRD.RD_VALOR as VALOR,
 		SRD.RD_HORAS as HORAS,
 		eomonth(concat(SRD.RD_DATARQ, '01')) as DATARQ
@@ -50,4 +58,12 @@ union
         left join CTT010 CTT
             on CTT.CTT_CUSTO = SRD.RD_CC
             and CTT.D_E_L_E_T_ = ''
+        left join SRV010 SRV
+            on SRV.RV_COD = SRD.RD_PD
+            and SRV.RV_FILIAL = left(SRD.RD_FILIAL, 4)
+            and SRV.D_E_L_E_T_ = ''
+        left join SRY010 SRY
+            on SRY.RY_CALCULO = SRD.RD_ROTEIR
+            and SRY.RY_FILIAL = left(SRD.RD_FILIAL, 4)
+            and SRY.D_E_L_E_T_ = ''
 	where SRD.D_E_L_E_T_ = '' and concat(SRD.RD_DATARQ, '01') between <<START_DATE>> and <<FINAL_DATE>>
