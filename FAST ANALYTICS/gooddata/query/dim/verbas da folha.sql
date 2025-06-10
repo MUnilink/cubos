@@ -1,4 +1,6 @@
 select
+    concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
+    trim(SRV.RV_COD) as COD_VERBA,
 	trim(SRV.RV_DESC) as DESC_VERBA1,
 	trim(SRV.RV_DESCDET) as DESC_VERBA2,
 	case trim(SRV.RV_TIPOCOD)
@@ -7,5 +9,6 @@ select
 		when '3' then 'BASE PROVENTO'
 		when '4' then 'BASE DESCONTO'
 		else '-'
-	end as TIPO_VERBA,
-from SRD010 SRD (nolock)
+	end as TIPO_VERBA
+from SRV010 SRV (nolock)
+where SRV.D_E_L_E_T_ = ''
