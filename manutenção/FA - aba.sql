@@ -29,10 +29,23 @@ select
 			where
 					STP010.D_E_L_E_T_ = ''
 				and STP010.TP_CODBEM = ZD3.ZD3_VEICUL
-				and convert(datetime, concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA), 113) < convert(datetime, ZD3.DATA_ABA, 113)
-				and STP010.TP_TIPOLAN = 'A'
+				and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < ZD3.DATA_ABA
 		)
 	end as cont_TQN,
+
+	case
+		when ST9.T9_CODFAMI = 'VP' then ZD3.ZD3_KMRD
+		when ZD3.ZD3_HODOM < lag(ZD3.ZD3_HODOM, 1, 0) over (partition by ZD3.ZD3_VEICUL, ZD3.ZD3_COMB order by ZD3.ZD3_VEICUL, ZD3.ZD3_DATA, ZD3.ZD3_HORA) then ZD3.ZD3_HODOM /* quando quebra */
+		else ZD3.ZD3_HODOM -
+		(
+			select max(STP010.TP_POSCONT)
+			from STP010
+			where
+					STP010.D_E_L_E_T_ = ''
+				and STP010.TP_CODBEM = ZD3.ZD3_VEICUL
+				and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < ZD3.DATA_ABA
+		)
+	end as km_TQN,
 
 	left(ZD3.ZD3_DATA, 6) as PERIODO
 from
@@ -87,39 +100,21 @@ from
 		from ZD3010 ZD30
 		where ZD30.D_E_L_E_T_ = ''
 	) as ZD3
-
-	left join
-	(
-		select
-			TQI010.TQI_FILIAL,
-			TQI010.TQI_CODPOS,
-			TQI010.TQI_LOJA,
-			TQI010.TQI_TANQUE,
-			TQI010.TQI_YDETAN,
-			TQI010.TQI_CODCOM,
-			TQI010.TQI_PRODUT,
-			TQI010.TQI_FABRIC
-		from TQI010
-		where TQI010.D_E_L_E_T_ = ''
-	) as TQI
-		on TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
-		and TQI.TQI_TANQUE = ZD3.ZD3_TANQUE
-
-		left join
-		(
-			select 
-				TQF010.TQF_CODFIL as TQF_FILIAL,
-				TQF010.TQF_CODIGO,
-				TQF010.TQF_LOJA
-			from TQF010
-			where TQF010.D_E_L_E_T_ = ''
-		) as TQF
-			on TQF.TQF_FILIAL = TQI.TQI_FILIAL
-			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
-
+	
 	left join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
+
+	left join TQI010 TQI
+		on TQI.D_E_L_E_T_ = ''
+		and TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
+		and TQI.TQI_TANQUE = ZD3.ZD3_TANQUE
+
+		left join TQF010 TQF
+			on TQF.D_E_L_E_T_ = ''
+			and TQF.TQF_CODFIL = TQI.TQI_FILIAL
+			and TQF.TQF_CODIGO + TQF.TQF_LOJA = TQI.TQI_CODPOS + TQI.TQI_LOJA
+
 	left join TQM010 TQM
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
