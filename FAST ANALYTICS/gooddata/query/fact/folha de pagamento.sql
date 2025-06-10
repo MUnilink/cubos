@@ -7,8 +7,8 @@
 		concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
         concat(trim(SRY.RY_FILIAL), trim(SRY.RY_CALCULO)) as ID_ROTEIRO,
 		trim(SRC.RC_SEQ) as SEQ,
-        SRC.RC_VALOR as VALOR,
-		SRC.RC_HORAS as HORAS,
+        cast(isnull(SRC.RC_VALOR, 0.0) as numeric(15, 2)) as VALOR,
+		cast(isnull(SRC.RC_HORAS, 0.0) as numeric(15, 2)) as HORAS,
 		cast(SRC.RC_DTREF as date) as DATARQ
 
 	from SRC010 SRC
@@ -41,8 +41,8 @@ union
 		concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
         concat(trim(SRY.RY_FILIAL), trim(SRY.RY_CALCULO)) as ID_ROTEIRO,
 		trim(SRD.RD_SEQ) as SEQ,
-		SRD.RD_VALOR as VALOR,
-		SRD.RD_HORAS as HORAS,
+		cast(isnull(SRD.RD_VALOR, 0.0) as numeric(15, 2)) as VALOR,
+		cast(isnull(SRD.RD_HORAS, 0.0) as numeric(15, 2)) as HORAS,
 		eomonth(concat(SRD.RD_DATARQ, '01')) as DATARQ
 
 	from SRD010 SRD
