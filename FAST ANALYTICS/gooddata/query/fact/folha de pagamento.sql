@@ -6,7 +6,6 @@
 
 		concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
         concat(trim(SRY.RY_FILIAL), trim(SRY.RY_CALCULO)) as ID_ROTEIRO,
-        trim(SRC.RC_PERIODO) as PERIODO,
 		trim(SRC.RC_SEQ) as SEQ,
         SRC.RC_VALOR as VALOR,
 		SRC.RC_HORAS as HORAS,
@@ -41,7 +40,6 @@ union
 
 		concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
         concat(trim(SRY.RY_FILIAL), trim(SRY.RY_CALCULO)) as ID_ROTEIRO,
-        trim(SRD.RD_PERIODO) as PERIODO,
 		trim(SRD.RD_SEQ) as SEQ,
 		SRD.RD_VALOR as VALOR,
 		SRD.RD_HORAS as HORAS,
