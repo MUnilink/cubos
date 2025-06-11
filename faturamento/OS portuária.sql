@@ -230,8 +230,9 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
-        ZC2.D_E_L_E_T_ = ''
+        cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
     and ZC2.ZC2_INCLUS != 'C'
     and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
 	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
     and substring(ZC1.ZC1_EMISSA, 1, 6) > 202312
+    and ZC2.D_E_L_E_T_ = ''
