@@ -11,6 +11,6 @@ select
 		else '-'
 	end as TIPO_VERBA,
 	
-	case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'CUSTO/DESPESA OPERACIONAL' when SRV.RV_YCPOR = 'S' then 'CUSTO PORTUÁRIO' when SRV.RV_YCTMS = 'S' then 'CUSTO RODOVIÁRIO' else 'OUTRO TIPO' end as VERBA_CUSTO
+	case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'CUSTO/DESPESA GERAL' when SRV.RV_YCPOR = 'S' then 'CUSTO OP. PORTUÁRIA' when SRV.RV_YCTMS = 'S' then 'CUSTO OP. RODOVIÁRIA' else 'OUTRO TIPO' end as VERBA_CUSTO
 from SRV010 SRV (nolock)
 where SRV.D_E_L_E_T_ = ''
