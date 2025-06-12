@@ -2,7 +2,7 @@ select
     concat(trim(SRV.RV_FILIAL), trim(SRV.RV_COD)) as ID_VERBA,
     trim(SRV.RV_COD) as COD_VERBA,
 	trim(SRV.RV_DESC) as DESC_VERBA1,
-	trim(SRV.RV_DESCDET) as DESC_VERBA2,
+	coalesce(nullif(trim(SRV.RV_DESCDET), ''), trim(SRV.RV_DESC)) as DESC_VERBA2,
 	case trim(SRV.RV_TIPOCOD)
 		when '1' then 'PROVENTO'
 		when '2' then 'DESCONTO'
