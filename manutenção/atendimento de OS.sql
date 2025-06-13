@@ -107,7 +107,7 @@ select
 		when 'M' then trim(ST1.T1_NOME)
 		when 'E' then trim(ST0.T0_NOME)
 		when 'P' then trim(SB1.B1_DESC)
-		when 'T' then trim(SA2.A2_NOME)
+		when 'T' then coalesce(trim(SA2.A2_NOME), (select trim(SA2010.A2_NOME) from SA2010 (nolock) where SA2010.D_E_L_E_T_ = '' and SA2010.A2_COD + SA2010.A2_LOJA = STL.TL_FORNEC + STL.TL_LOJA))
 		else 'OUTROS'
 	end as DESC_INSUMO,
 
