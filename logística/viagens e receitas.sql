@@ -1,8 +1,6 @@
 select
     'P |01|01' AS BK_EMPRESA,
     VIAGEM.DTQ_VIAGEM as VIAGEM,
-    cast(VIAGEM.DATAFIM as date) as DATA_FIMVGA,
-    left(VIAGEM.DATAFIM, 6) as PERIODO_FIMVGA,
     
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
     trim(DEV.A1_COD) as DEV_COD,
@@ -19,7 +17,6 @@ select
     trim(DES.A1_LOJA) as DES_LOJA,
     trim(DES.A1_NOME) as CLI_DESTINO,
 
-    DTC.DTC_CODPRO as PRODUTO,
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
@@ -61,6 +58,15 @@ select
     left(VIAGEM.DTQ_DATGER, 6) as PERIODO_GERVGA,
     left(VIAGEM.DTQ_DATFEC, 6) as PERIODO_FECVGA,
     left(VIAGEM.DTQ_DATENC, 6) as PERIODO_ENCVGA,
+
+    trim(DTC.DTC_CTRDPC) as CTE_CLIENTE,
+    trim(DTC.DTC_NUMNFC) as NFCLI_DOC,
+    trim(DTC.DTC_SERNFC) as NFCLI_SERIE,
+    trim(DTC.DTC_CODPRO) as NFCLI_CODPROD,
+    (select trim(SB1010.B1_DESC) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and SB1010.B1_COD = DTC.DTC_CODPRO) as NFCLI_PRODUTO,
+    cast(DTC.DTC_VALOR as numeric(15, 2)) as NFCLI_VALOR,
+    cast(DTC.DTC_PESO as numeric(15, 2)) as NFCLI_PESO,
+    cast(DTC.DTC_PESLIQ as numeric(15, 2)) as NFCLI_PESOLIQ,
 
     case
         /* LP 610-001 */
@@ -206,17 +212,6 @@ from DUD010 DUD (nolock)
             DTQ.DTQ_DATGER,
             DTQ.DTQ_DATFEC,
             DTQ.DTQ_DATENC,
-
-            (
-                select DTW010.DTW_DATREA
-                from DTW010 
-                where 
-                        DTW010.D_E_L_E_T_ = ''
-                    and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                    and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                    and DTW010.DTW_ATIVID = 50
-            ) as DATAFIM,
-            
             concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
             trim(DA4010.DA4_COD) as ID_MOTORISTA,
             trim(DA4010.DA4_NOME) as MOTORISTA,
