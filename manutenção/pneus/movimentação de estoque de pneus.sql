@@ -45,8 +45,7 @@
         inner join SB1010 SB1 (nolock)
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = SD3.D3_COD
-            and SB1.B1_GRUPO like '1[1-2]%'
-            and SB1.B1_GRUPO != '1130'
+            and SB1.B1_GRUPO = '1130'
         inner join SB2010 SB2 (nolock)
             on SB2.D_E_L_E_T_ = ''
             and SB2.B2_FILIAL = SD3.D3_FILIAL
@@ -102,8 +101,7 @@ union
         inner join SB1010 SB1 (nolock)
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = SD1.D1_COD
-            and SB1.B1_GRUPO like '1[1-2]%'
-            and SB1.B1_GRUPO != '1130'
+            and SB1.B1_GRUPO = '1130'
         inner join SB2010 SB2 (nolock)
             on SB2.D_E_L_E_T_ = ''
             and SB2.B2_FILIAL = SD1.D1_FILIAL
@@ -159,8 +157,7 @@ union
         inner join SB1010 SB1 (nolock)
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = SD2.D2_COD
-            and SB1.B1_GRUPO like '1[1-2]%'
-            and SB1.B1_GRUPO != '1130'
+            and SB1.B1_GRUPO = '1130'
         inner join SB2010 SB2 (nolock)
             on SB2.D_E_L_E_T_ = ''
             and SB2.B2_FILIAL = SD2.D2_FILIAL
