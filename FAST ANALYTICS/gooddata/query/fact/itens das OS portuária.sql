@@ -43,6 +43,9 @@ select
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
+    cast(sum(OS.HIMP1) as numeric(15, 2)) as HIMP1,
+    cast(sum(OS.HIMP2) as numeric(15, 2)) as HIMP2,
+    cast(sum(OS.HIMP3) as numeric(15, 2)) as HIMP3,
     case when OS.ID_TIPO_ITEM not in (15, 16) then cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) else 0.0 end as VALOR_TOTAL,
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) as numeric (15, 2)) else 0.0 end as VL_IMPR
 from
@@ -80,6 +83,10 @@ from
             ZC1010.ZC1_FILIAL as FILIAL,
             null as COD_ZA7,
             null as COD_SE1,
+
+            ZC2010.ZC2_IMPR1 as HIMP1,
+            ZC2010.ZC2_IMPR2 as HIMP2,
+            ZC2010.ZC2_IMPR3 as HIMP3,
             
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2010.ZC2_HRINI) + isdate(ZC2010.ZC2_HRFIM) = 2 then cast(ZC2010.ZC2_QTDREC * datediff(minute, concat(ZC2010.ZC2_DTINI, ' ', ZC2010.ZC2_HRINI), concat(ZC2010.ZC2_DTFIM, ' ', ZC2010.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_TOTAIS,

@@ -43,6 +43,9 @@ select
     cast(sum(OS.QTD_RECURSO) as numeric(15, 2)) as QTD_RECURSO,
     cast(sum(OS.HORAS_APONT) as numeric(15, 2)) as HORAS_APONT,
 	cast(sum(OS.HORAS_TOTAIS) as numeric(15, 2)) as HORAS_TOTAIS,
+    cast(sum(OS.HIMP1) as numeric(15, 2)) as HIMP1,
+    cast(sum(OS.HIMP2) as numeric(15, 2)) as HIMP2,
+    cast(sum(OS.HIMP3) as numeric(15, 2)) as HIMP3,
     case when OS.ID_TIPO_ITEM not in (15, 16) then cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) else 0.0 end as VALOR_TOTAL,
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) as numeric (15, 2)) else 0.0 end as VL_IMPR,
 
@@ -103,7 +106,10 @@ from
 
             cast(ZC1010.ZC1_DTENCE as date) as DT_ENCOS,
             case when cast(ZC2010.ZC2_TIPO as int) in (5, 11) then concat(trim(ZC2010.ZC2_TIPO), ' ', trim(ZC2010.ZC2_YFORNE)) else concat(trim(ZC2010.ZC2_TIPO), ' ', trim(ZC2010.ZC2_COD)) end as ID_RECURSO,
-            
+            ZC2010.ZC2_IMPR1 as HIMP1,
+            ZC2010.ZC2_IMPR2 as HIMP2,
+            ZC2010.ZC2_IMPR3 as HIMP3,
+
             /* RM */
             substring(ZC2010.ZC2_NUM, 6, 10) as OS,
             case ZC1010.ZC1_TIPOP
