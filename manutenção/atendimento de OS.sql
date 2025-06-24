@@ -167,6 +167,7 @@ from STL010 STL (nolock)
         inner join ST4010 ST4 (nolock)
             on ST4.D_E_L_E_T_ = ''
             and ST4.T4_SERVICO = STJ.TJ_SERVICO
+            and ST4.T4_SERVICO not in ('PNEMOV', 'CONSEP', 'REFORP', 'PNEROD')
         inner join ST9010 ST9 (nolock)
             on ST9.D_E_L_E_T_ = ''
             and ST9.T9_CODBEM = STJ.TJ_CODBEM
