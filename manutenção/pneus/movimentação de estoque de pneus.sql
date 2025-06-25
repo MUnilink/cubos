@@ -1,4 +1,5 @@
     select
+        isnull(
         (
             select max(SB9010.B9_QINI)
             from SB9010
@@ -8,7 +9,7 @@
                 and SB9010.B9_LOCAL = SD3.D3_LOCAL
                 and SB9010.B9_COD = SD3.D3_COD
                 and SB9010.D_E_L_E_T_ = ''
-        ) as QTD_INI,
+        ), 0.0) as QTD_INI,
         
         SB1.B1_COD as contador,
         trim(SB1.B1_COD) as PRODUTO,
@@ -22,6 +23,7 @@
         
         substring(SD3.D3_EMISSAO, 1, 6) as PERIODO,
         cast(SD3.D3_EMISSAO as date) as EMISSAO,
+        SD3.D3_USUARIO as USUARIO,
         SD3.D3_OP as OP,
         SD3.D3_YOS as OS_PORT,
         SD3.D3_NUMSA as SA,
@@ -39,7 +41,7 @@
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_CUSTO1 else SD3.D3_CUSTO1 end as CUSTO_MOV,
         SD3.D3_QUANT as QTD,
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_QUANT else SD3.D3_QUANT end as QTD_MOV,
-        'INT' as TIPO_MOV
+        case when SD3.D3_CF like 'R%' then 'SAI' when SD3.D3_CF like 'D%' then 'ENT' else 'E/S' end as TIPO_MOV
         
     from SD3010 SD3 (nolock)
         inner join SB1010 SB1 (nolock)
@@ -55,6 +57,7 @@
             SD3.D_E_L_E_T_ = ''
 union
     select
+        isnull
         (
             select max(SB9010.B9_QINI)
             from SB9010
@@ -64,7 +67,7 @@ union
                 and SB9010.B9_LOCAL = SD1.D1_LOCAL
                 and SB9010.B9_COD = SD1.D1_COD
                 and SB9010.D_E_L_E_T_ = ''
-        ) as QTD_INI,
+        ), 0.0) as QTD_INI,
         
         SB1.B1_COD as contador,
         trim(SB1.B1_COD) as PRODUTO,
@@ -78,6 +81,7 @@ union
         
         substring(SD1.D1_DTDIGIT, 1, 6) as PERIODO,
         cast(SD1.D1_DTDIGIT as date) as EMISSAO,
+        null as USUARIO,
         SD1.D1_OP as OP,
         SD1.D1_YOS as OS_PORT,
         null as SA,
@@ -111,6 +115,7 @@ union
             SD1.D_E_L_E_T_ = ''
 union
     select
+        isnull
         (
             select max(SB9010.B9_QINI)
             from SB9010
@@ -120,7 +125,7 @@ union
                 and SB9010.B9_LOCAL = SD2.D2_LOCAL
                 and SB9010.B9_COD = SD2.D2_COD
                 and SB9010.D_E_L_E_T_ = ''
-        ) as QTD_INI,
+        ), 0.0) as QTD_INI,
         
         SB1.B1_COD as contador,
         trim(SB1.B1_COD) as PRODUTO,
@@ -134,6 +139,7 @@ union
         
         substring(SD2.D2_EMISSAO, 1, 6) as PERIODO,
         cast(SD2.D2_EMISSAO as date) as EMISSAO,
+        null as USUARIO,
         SD2.D2_OP as OP,
         null as OS_PORT,
         null as SA,
