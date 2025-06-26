@@ -1,3 +1,21 @@
 reunião mensal 202505
 
-presentes Manoel, Ernesto, Lucas e remotos Eduardo, Leonardo
+presentes Manoel, Ernesto, Wellington, Cezar, Lucas, Fátima, Anderson e remotos Eduardo, Leonardo
+
+Wellington começa a apresentação falando de SSMA sobre o acidente pela displicência no uso de EPI, sem perda de tempo, mas com demais indicadores sem valores expressivos;
+No consumo de combustível rodoviário novamente não se atingiu as metas, apesar do valor de km rodado acima da média histórica. Diz que é necessário reavaliar as médias, e relatos de motoristas falam de más condições na principal rota (Cristino Castro, PI). Cezar também fala da atenção dada ao serviço de regulagem de válvulas para futura melhora da média de consumo;
+No consumo portuário o CPK foi atingido e a média não foi atingida, com destaque para o total de km rodado acima dos seis meses anteriores;
+Os cavalos mecânicos rodotrem têm mantido a média observada desde março 2025, menor que a média até fevereiro, justificadas pelo Cezar pela mudança do transporte de contêiner vazios para contêiner cheio. Wellington diz que pretende analisar com Ernesto uma mudança de média para o segundo semestre 2025;
+Os guindastes MHC não atingiram a meta em maio, mas sem maiores mudanças de movimentação, com horas rodadas na média do mês;
+Analogamente para as máquinas pesadas sem as locadas para APM e sem as máquinas sem eletroímã, as horas rodadas maiores ajudaram a manter o atingimento da meta estabelecida;
+As máquinas com eletroímã não atingiram as metas, mas com valores em geral semelhantes, com um contador um pouco maior de horas;
+O guindaste Bardella 01 atingiu as metas, mas o Bardella 03 não, por ter trabalhado pouco e contabilizado o valor mínimo de pouco mais de 2 mil reais;
+Outro mês de não atingimento da meta de custo de manutenção, ao que o Lucas atribui à maior quantidade de manutenção dos veículos da rota Cristino Castro. Ao mesmo tempo o alto valor de km reduziu o custo proporcional por km;
+Se forma semelhante, o custo de manutenção portuário teve auxílio do maior km e conseguiu atingir a meta de gasto;
+Para os custos de rodotrem ambas as metas foram atingidas, até pelo valor fora da curva em fevereiro e abril;
+O custo dos guindastes inclui a aplicação do sistema anti-incêndio, e Ernesto relata conversa com Wellington sobre limitação de incluir itens imobilizados como custo de manutenção em OS. Adicionalmente, destacar os custos de sinistro, de acidentes, que não são diretament custos de desgaste do equipamento. Anderson relata que altos custos em meses anteriores de serviços de terceiros com autorizada Liebherr e fornecedor TFD.
+Para os guindastes elétricos Bardella os custos de manutenção foram baixos, basicamente custos de operação;
+Lucas diz que a chegada do técnico adicional para que seja terminada a reforma do Grove foi proveitosa, em vez de melhorias pontuais e pouco ousadas. Em junho houve várias melhorias, relatadas pelo Lucas, mas continua com alto custo para que seja liberado.
+Anderson destaca o alto custo de manutenção das máquinas pesadas nos meses recentes, destaque para RS10 com módulo, joystick e cilindros, KAL05 com sistema de freio, KAL04 manga de eixo.
+Wellington comenta a grande movimentação de placas em maio, algo confirmado pelo Leonardo, que cita a divulgação do recorde pela empresa. Anderson relata o caso da KAL06 com reparo pouco aceitável da torre, e indica reparos preventivos no sistema de torre para evitar demora em consertos mais complexos e mais caros.
+Wellington cita o programa de desenvolvimento de líderes para reforçar que as pessoas responsáveis por suas metas o façam com assiduidade, para que se consiga analisar os resultados e eventuais não atingimentos.
