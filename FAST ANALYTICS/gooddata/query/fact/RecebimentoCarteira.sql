@@ -1,0 +1,45 @@
+select
+    'P |01|01' as BK_EMPRESA,
+    case when E1_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(E1_FILIAL as CHAR (6)) end as BK_FILIAL,
+    case when E1_FILORIG is null then 'P |01||' else 'P |01|01'+ CAST(E1_FILORIG as CHAR (6)) end as BK_FILIAL_ORIGEM,
+    'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(TIPO.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(E1_TIPO, ' ')), ' '), '|') as BK_ESPEC_DOC,
+    'P |01|SA6010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A6_FILIAL, ' '))+'|'+RTRIM(COALESCE(E1_BCOCLI, ' '))+RTRIM(COALESCE(E1_AGEDEP, ' '))+RTRIM(COALESCE(E1_NUMCON, ' ')), ' '), '|') as BK_BCO,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(E1_CCUSTO, ' ')), ' '), '|') as BK_CENTRO_CUSTO,
+    'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(E1_NATUREZ, ' ')), ' '), '|') as BK_NAT_FINANCEIRA,
+    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(E1_CLIENTE, ' '))+RTRIM(COALESCE(E1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
+    'P |01|SA3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A3_FILIAL, ' '))+'|'+RTRIM(COALESCE(E1_VEND1, ' ')), ' '), '|') as BK_VENDEDOR,<<EXTRACTION_DATE>> as DATA_DA_EXTRACAO,
+    case when SA1.A1_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A1_EST, ' '))+RTRIM(COALESCE(A1_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    SE1.E1_EMISSAO as DATA_DE_EMISSAO,
+    SE1.E1_VENCREA as VENCIMENTO_REAL,
+    SE1.E1_PREFIXO as PREFIXO_TITULO,
+    SE1.E1_NUM as NUMERO_TITULO,
+    SE1.E1_PARCELA as NUMERO_DA_PARCELA,
+    SE1.E1_NUMBOR as NUMERO_DO_BORDERO,
+    SE1.E1_SALDO as SALDO_RECEBER,
+    SE1.E1_SITUACA as SITUACAO_TITULO
+from SE1010 SE1
+    left join SX5010 TIPO on TIPO.X5_FILIAL = '      '
+        and TIPO.X5_TABELA = '05'
+        and TIPO.X5_CHAVE = SE1.E1_TIPO
+        and TIPO.D_E_L_E_T_ = ' '
+    left join SA6010 SA6 on SA6.A6_FILIAL = SUBSTRING(E1_FILIAL, 1, 2)
+        and SA6.A6_COD = SE1.E1_BCOCLI
+        and SA6.A6_AGENCIA = SE1.E1_AGEDEP
+        and SA6.A6_NUMCON = SE1.E1_NUMCON
+        and SA6.D_E_L_E_T_ = ' '
+    left join CTT010 CTT on CTT.CTT_FILIAL = SUBSTRING(E1_FILIAL, 1, 4)
+        and CTT.CTT_CUSTO = SE1.E1_CCUSTO
+        and CTT.D_E_L_E_T_ = ' '
+    left join SED010 SED on SED.ED_FILIAL = '      '
+        and SED.ED_CODIGO = SE1.E1_NATUREZ
+        and SED.D_E_L_E_T_ = ' '
+    left join SA3010 SA3 on SA3.A3_FILIAL = '      '
+        and SA3.A3_COD = SE1.E1_VEND1
+        and SA3.D_E_L_E_T_ = ' '
+    left join SA1010 SA1 on SA1.A1_FILIAL = '      '
+        and SA1.A1_COD = SE1.E1_CLIENTE
+        and SA1.A1_LOJA = SE1.E1_LOJA
+        and SA1.D_E_L_E_T_= ' '
+where
+        SE1.E1_SALDO > 0
+    and SE1.D_E_L_E_T_ = ' '
