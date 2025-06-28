@@ -3,13 +3,6 @@ select
 	trim(SE2.E2_PREFIXO) as PREFIXO,
 	trim(SE2.E2_NUM) as TITULO,
 	trim(SE2.E2_TIPO) as TIPO_TITULO,
-	cast(SE2.E2_EMISSAO as date) as DATA_TITULO,
-	left(SE2.E2_EMISSAO, 6) as PERIODO,
-	cast(SE2.E2_VENCTO as date) as VENCIMENTO,
-	left(SE2.E2_VENCTO, 6) as PERIODO_VENCIMENTO,
-	cast(SE2.E2_VENCREA as date) as VENCREAL,
-	left(SE2.E2_VENCREA, 6) as PERIODO_VENCREAL,
-	cast(SE2.E2_BAIXA as date) as BAIXA,
 	SE2.E2_PARCELA as PARCELA,
 	cast(SE2.E2_VALOR as numeric(15, 2)) as VALOR_TITULO,
 	trim(SA2.A2_NOME) as NOME_FORNECEDOR,
@@ -18,12 +11,22 @@ select
 	trim(SA2.A2_CGC) as CNPJ,
 	trim(SA2.A2_EST) as UF,
 
-	month(SE2.E2_EMISSAO) as TITULO_MES,
-	year(SE2.E2_EMISSAO) as TITULO_ANO,
-	month(SE2.E2_VENCTO) as VENCIMENTO_MES,
-	year(SE2.E2_VENCTO) as VENCIMENTO_ANO,
-	month(SE2.E2_VENCREA) as VENCREAL_MES,
-	year(SE2.E2_VENCREA) as VENCREAL_ANO,
+	cast(SE2.E2_EMISSAO as date) as DATA_TITULO,
+	left(SE2.E2_EMISSAO, 6) as PERIODO_TITULO,
+	cast(SE2.E2_VENCTO as date) as VENCIMENTO,
+	left(SE2.E2_VENCTO, 6) as PERIODO_VENCIMENTO,
+	cast(SE2.E2_VENCREA as date) as VENCREAL,
+	left(SE2.E2_VENCREA, 6) as PERIODO_VENCREAL,
+	cast(SE2.E2_BAIXA as date) as BAIXA,
+	left(SE2.E2_BAIXA, 6) as PERIODO_BAIXA,
+	month(SE2.E2_EMISSAO) as MES_TITULO,
+	year(SE2.E2_EMISSAO) as ANO_TITULO,
+	month(SE2.E2_VENCTO) as MES_VENCIMENTO,
+	year(SE2.E2_VENCTO) as ANO_VENCIMENTO,
+	month(SE2.E2_VENCREA) as MES_VENCREAL,
+	year(SE2.E2_VENCREA) as ANO_VENCREAL,
+	month(SE2.E2_BAIXA) as MES_BAIXA,
+	year(SE2.E2_BAIXA) as ANO_BAIXA,
 
     trim(SE2.E2_HIST) as HISTORICO,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
@@ -60,13 +63,11 @@ select
 	trim(SB1.B1_UM) as UN,
 	trim(SC7.C7_ITEMCTA) as PC_AT,
 	trim(SC7.C7_CC) as PC_CC,
-	substring(SC7.C7_OP, 1, 6) as OS,
+	left(SC7.C7_OP, 6) as OS,
 	trim(SC7.C7_NUM) as PC_NUM,
 	trim(SC7.C7_ITEM) as PC_ITEM,
 	cast(SC7.C7_EMISSAO as date) as PC_DATA,
-	substring(SC7.C7_EMISSAO, 1, 6) as PC_PERIODO,
-	(select trim(upper(SY1010.Y1_NOME)) from SY1010 where SY1010.Y1_COD = SC7.C7_COMPRA) as SOLICITANTE_PC,
-	trim(upper(SY1.Y1_NOME)) as PC_DIGITADO,
+	left(SC7.C7_EMISSAO, 6) as PC_PERIODO,
 
 	case SC7.C7_CONAPRO
 		when 'B' then 'PENDENTE'
@@ -99,37 +100,27 @@ select
 		)
 	) as APROVADOR,
 
-	SC7.C7_COND as COND,
-	trim(SE4.E4_DESCRI) as CONDPGTO,
-	SC7.C7_QUANT as QTD_PC_PEDIDA,
-	SC7.C7_QUJE as QTD_PC_ATENDIDA,
-	SC7.C7_PRECO as PC_PRECO,
-	SC7.C7_TOTAL as PC_TOTAL,
-
-	case
-		when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
-		when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
-		when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
-		when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
-		when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.00 then 'PRÉ-NOTA' /* LARANJA */
-		when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
-	else 'OUTROS' end as STATUS_COMPRA,
+	concat(trim(SC7.C7_COND), ' - ', trim(SE4.E4_DESCRI)) as CONDPGTO,
+	cast(SC7.C7_QUANT as numeric(15, 2)) as QTD_PC_PEDIDA,
+	cast(SC7.C7_QUJE as numeric(15, 2)) as QTD_PC_ATENDIDA,
+	cast(SC7.C7_PRECO as numeric(15, 2)) as PC_PRECO,
+	cast(SC7.C7_TOTAL as numeric(15, 2)) as PC_TOTAL,
 
 	SD1.D1_DOC as NF_DOC,
 	SD1.D1_SERIE as NF_SERIE,
 	cast(SD1.D1_EMISSAO as date) as NF_EMI,
 	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
-	substring(SD1.D1_DTDIGIT, 1, 6) as NF_PERIODO,
+	left(SD1.D1_DTDIGIT, 6) as NF_PERIODO,
 	
-	SD1.D1_CC as NF_CC,
-	SD1.D1_ITEMCTA as NF_AT,
-	SD1.D1_ITEM as NF_ITEM,
-	SD1.D1_QUANT as NF_QUANT,
-	SD1.D1_VUNIT as NF_VUNIT,
-	SD1.D1_TOTAL as NF_TOTAL,
-	SD1.D1_TES as NF_TES,
-	SD1.D1_CUSTO as NF_CUSTO,
-	SD1.D1_VALDESC as NF_VALDESC,
+	trim(SD1.D1_CC) as NF_CC,
+	trim(SD1.D1_ITEMCTA) as NF_AT,
+	trim(SD1.D1_ITEM) as NF_ITEM,
+	trim(SD1.D1_TES) as NF_TES,
+	cast(SD1.D1_QUANT as numeric(15, 2)) as NF_QUANT,
+	cast(SD1.D1_VUNIT as numeric(15, 2)) as NF_VUNIT,
+	cast(SD1.D1_TOTAL as numeric(15, 2)) as NF_TOTAL,
+	cast(SD1.D1_CUSTO as numeric(15, 2)) as NF_CUSTO,
+	cast(SD1.D1_VALDESC as numeric(15, 2)) as NF_VALDESC,
 
     cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
     cast(SC7.C7_VALIPI as numeric(14, 2)) as VL_PC_IPI,
