@@ -23,7 +23,8 @@
         
         substring(SD3.D3_EMISSAO, 1, 6) as PERIODO,
         cast(SD3.D3_EMISSAO as date) as EMISSAO,
-        SD3.D3_USUARIO as USUARIO,
+        trim(SD3.D3_USUARIO) as USUARIO,
+        trim(replace(replace(SD3.D3_OBS, char(10), ''), char(13), '')) as OBS,
         SD3.D3_OP as OP,
         SD3.D3_YOS as OS_PORT,
         SD3.D3_NUMSA as SA,
@@ -57,7 +58,7 @@
             SD3.D_E_L_E_T_ = ''
 union
     select
-        isnull
+        isnull(
         (
             select max(SB9010.B9_QINI)
             from SB9010
@@ -82,6 +83,7 @@ union
         substring(SD1.D1_DTDIGIT, 1, 6) as PERIODO,
         cast(SD1.D1_DTDIGIT as date) as EMISSAO,
         null as USUARIO,
+        null as OBS,
         SD1.D1_OP as OP,
         SD1.D1_YOS as OS_PORT,
         null as SA,
@@ -115,7 +117,7 @@ union
             SD1.D_E_L_E_T_ = ''
 union
     select
-        isnull
+        isnull(
         (
             select max(SB9010.B9_QINI)
             from SB9010
@@ -140,6 +142,7 @@ union
         substring(SD2.D2_EMISSAO, 1, 6) as PERIODO,
         cast(SD2.D2_EMISSAO as date) as EMISSAO,
         null as USUARIO,
+        null as OBS,
         SD2.D2_OP as OP,
         null as OS_PORT,
         null as SA,
