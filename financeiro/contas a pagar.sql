@@ -46,6 +46,8 @@ select
     upper(trim(SE2.E2_APROVA)) as APR_TITULO,
     upper(trim(SE2.E2_USUALIB)) as LIB_TITULO,
 
+	(select top 1 concat(trim(SA6010.A6_COD), ' - ', trim(SA6010.A6_NOME)) from SA6010 where SA6010.D_E_L_E_T_ = '' and SA6010.A6_COD = SE2.E2_PORTADO) as BC_PORTADOR,
+	(select top 1 concat(trim(SA6010.A6_COD), ' - ', trim(SA6010.A6_NOME)) from SA6010 where SA6010.D_E_L_E_T_ = '' and SA6010.A6_COD = SE2.E2_BCOPAG) as BC_PAGAMENTO,
 	trim(SE2.E2_NATUREZ) as NATUREZA,
 	trim(SED.ED_DESCRIC) as DESC_NATUREZA,
     trim(SE2.E2_CONTAD) as CONTA,
@@ -55,134 +57,36 @@ select
     trim(SE2.E2_ITEMD) as ITEMC_DEB,
     trim(SE2.E2_CCC) as CC_CRE,
     trim(SE2.E2_ITEMC) as ITEMC_CRE,
-	
-    trim(SC7.C7_FILIAL) as FILIAL,
-	trim(SB1.B1_COD) as PRODUTO,
-	trim(SB1.B1_DESC) as NOMEPRODUTO,
-	trim(SB1.B1_GRUPO) as GRUPO,
-	trim(SB1.B1_UM) as UN,
-	trim(SC7.C7_ITEMCTA) as PC_AT,
-	trim(SC7.C7_CC) as PC_CC,
-	left(SC7.C7_OP, 6) as OS,
-	trim(SC7.C7_NUM) as PC_NUM,
-	trim(SC7.C7_ITEM) as PC_ITEM,
-	cast(SC7.C7_EMISSAO as date) as PC_DATA,
-	left(SC7.C7_EMISSAO, 6) as PC_PERIODO,
 
-	case SC7.C7_CONAPRO
-		when 'B' then 'PENDENTE'
-		when 'L' then 'APROVADO'
-		when 'R' then 'REJEITADO'
-		else 'OUTROS'
-	end as APROVACAO_PC,
+	SF1.F1_DOC as NF_DOC,
+	SF1.F1_SERIE as NF_SERIE,
+	cast(SF1.F1_EMISSAO as date) as NF_EMI,
+	cast(SF1.F1_DTDIGIT as date) as NF_DATA,
+	left(SF1.F1_DTDIGIT, 6) as NF_PERIODO,
+	concat(trim(SF1.F1_COND), ' - ', (select trim(SE4010.E4_COND) from SE4010 where SE4010.D_E_L_E_T_ = '' and SE4010.E4_COND = SF1.F1_COND)) as COND_PGTO,
 
-	(
-		select upper(trim(max(SAK010.AK_LOGIN)))
-        from SCR010 SCR
-            inner join SAK010
-                on SAK010.D_E_L_E_T_ = ''
-                and SAK010.AK_COD = SCR.CR_LIBAPRO
-		where
-				SCR.D_E_L_E_T_ = ''
-			and SCR.CR_TIPO = 'PC'
-			and SCR.CR_FILIAL = SE2.E2_FILIAL
-			and SCR.CR_NUM = SE2.E2_NUM
-			and SCR.CR_NIVEL =
-		(
-			select max(SCR010.CR_NIVEL)
-			from SCR010 (nolock)
-			where
-					SCR010.D_E_L_E_T_ = ''
-				and SCR010.CR_TIPO = SCR.CR_TIPO
-				and SCR010.CR_FILIAL = SCR.CR_FILIAL
-				and SCR010.CR_NUM = SCR.CR_NUM
-				and SCR010.CR_STATUS = '3'
-		)
-	) as APROVADOR,
-
-	concat(trim(SC7.C7_COND), ' - ', trim(SE4.E4_DESCRI)) as CONDPGTO,
-	cast(SC7.C7_QUANT as numeric(15, 2)) as QTD_PC_PEDIDA,
-	cast(SC7.C7_QUJE as numeric(15, 2)) as QTD_PC_ATENDIDA,
-	cast(SC7.C7_PRECO as numeric(15, 2)) as PC_PRECO,
-	cast(SC7.C7_TOTAL as numeric(15, 2)) as PC_TOTAL,
-
-	SD1.D1_DOC as NF_DOC,
-	SD1.D1_SERIE as NF_SERIE,
-	cast(SD1.D1_EMISSAO as date) as NF_EMI,
-	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
-	left(SD1.D1_DTDIGIT, 6) as NF_PERIODO,
-	
-	trim(SD1.D1_CC) as NF_CC,
-	trim(SD1.D1_ITEMCTA) as NF_AT,
-	trim(SD1.D1_ITEM) as NF_ITEM,
-	trim(SD1.D1_TES) as NF_TES,
-	cast(SD1.D1_QUANT as numeric(15, 2)) as NF_QUANT,
-	cast(SD1.D1_VUNIT as numeric(15, 2)) as NF_VUNIT,
-	cast(SD1.D1_TOTAL as numeric(15, 2)) as NF_TOTAL,
-	cast(SD1.D1_CUSTO as numeric(15, 2)) as NF_CUSTO,
-	cast(SD1.D1_VALDESC as numeric(15, 2)) as NF_VALDESC,
-
-    cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
-    cast(SC7.C7_VALIPI as numeric(14, 2)) as VL_PC_IPI,
-    cast(SC7.C7_VALFRE as numeric(14, 2)) as VL_PC_FRETE_NF,
-    cast(SC7.C7_DESPESA as numeric(14, 2)) as VL_PC_DESPESA,
-    cast(SC7.C7_VALIMP6 as numeric(14, 2)) as VL_PC_PIS,
-    cast(SC7.C7_VALIMP5 as numeric(14, 2)) as VL_PC_COFINS,
-    cast(SC7.C7_VALISS as numeric(14, 2)) as VL_PC_ISS,
-    cast(SC7.C7_ICMSRET as numeric(14, 2)) as VL_PC_ICMS_SUBST,
-    cast(SC7.C7_DESC as numeric(12, 2)) as VL_PC_DESCONTO,
-    cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
-	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO,
-	cast(SC7.C7_QUANT as numeric(13, 3)) as QTD_ITEM_PC,
-
-    cast(SD1.D1_VALICM as numeric(14, 2)) as VL_NFENT_ICMS,
-    cast(SD1.D1_VALIPI as numeric(14, 2)) as VL_NFENT_IPI,
-    cast(SD1.D1_VALFRE as numeric(14, 2)) as VL_NFENT_FRETE_NF,
-    cast(SD1.D1_DESPESA as numeric(14, 2)) as VL_NFENT_DESPESA,
-    cast(SD1.D1_VALIMP6 as numeric(14, 2)) as VL_NFENT_PIS,
-    cast(SD1.D1_VALIMP5 as numeric(14, 2)) as VL_NFENT_COFINS,
-    cast(SD1.D1_VALISS as numeric(14, 2)) as VL_NFENT_ISS,
-    cast(SD1.D1_ICMSRET as numeric(14, 2)) as VL_NFENT_ICMS_SUBST,
-    cast(SD1.D1_DESC as numeric(12, 2)) as VL_NFENT_DESCONTO,
-    cast(SD1.D1_VALIRR as numeric(14, 2)) as VL_NFENT_IRF,
-    cast(SD1.D1_VALINS as numeric(14, 2)) as VL_NFENT_INSS,
-	cast(SD1.D1_SEGURO as numeric(14, 2)) as VL_NFENT_SEGURO,
-	cast(SD1.D1_PESO * SD1.D1_QUANT as numeric(12, 4)) as PESO_LIQUIDO_NFENT
+	cast(SF1.F1_VALBRUT as numeric(14, 2)) as VL_NFENT_BRUTO,
+    cast(SF1.F1_VALMERC as numeric(14, 2)) as VL_NFENT_ICMS,
+    cast(SF1.F1_VALIPI as numeric(14, 2)) as VL_NFENT_IPI,
+    cast(SF1.F1_DESPESA as numeric(14, 2)) as VL_NFENT_DESPESA,
+    cast(SF1.F1_VALIMP6 as numeric(14, 2)) as VL_NFENT_PIS,
+    cast(SF1.F1_VALIMP5 as numeric(14, 2)) as VL_NFENT_COFINS,
+    cast(SF1.F1_ICMSRET as numeric(14, 2)) as VL_NFENT_ICMS_SUBST,
+	cast(SF1.F1_SEGURO as numeric(14, 2)) as VL_NFENT_SEGURO,
+	cast(SF1.F1_PESOL as numeric(12, 4)) as PESO_LIQUIDO_NFENT
 
 from SE2010 SE2 (nolock)
 	left join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SE2.E2_FORNECE
 		and SA2.A2_LOJA = SE2.E2_LOJA
-	
-    left join SD1010 SD1 (nolock)
+    left join SF1010 SF1 (nolock)
         on trim(SE2.E2_TIPO) = 'NF'
-        and SD1.D1_FILIAL = SE2.E2_FILIAL
-        and SD1.D1_DOC = SE2.E2_NUM
-        and SD1.D1_FORNECE = SE2.E2_FORNECE
-        and SD1.D1_LOJA = SE2.E2_LOJA
-        and SD1.D_E_L_E_T_ = ''
-	
-        left join SC7010 SC7 (nolock)
-            on SC7.D_E_L_E_T_ = ''
-            and SC7.C7_FILIAL = SD1.D1_FILIAL
-            and SC7.C7_NUM = SD1.D1_PEDIDO
-            and SC7.C7_ITEM = SD1.D1_ITEMPC
-
-            left join SE4010 SE4 (nolock)
-                on SE4.D_E_L_E_T_ = ''
-                and SE4.E4_CODIGO = SC7.C7_COND
-            left join SY1010 SY1 (nolock)
-		        on SY1.Y1_USER = SC7.C7_USER
-        
-        left join SB1010 SB1 (nolock)
-            on SB1.D_E_L_E_T_ = ''
-            and SB1.B1_COD = SD1.D1_COD
-
-            left join SBM010 SBM (nolock)
-                on SBM.D_E_L_E_T_ = ''
-                and SBM.BM_GRUPO = SB1.B1_GRUPO
-        
+        and SF1.F1_FILIAL = SE2.E2_FILIAL
+        and SF1.F1_DOC = SE2.E2_NUM
+        and SF1.F1_FORNECE = SE2.E2_FORNECE
+        and SF1.F1_LOJA = SE2.E2_LOJA
+        and SF1.D_E_L_E_T_ = ''
     left join CTT010 CTT (nolock)
         on CTT.D_E_L_E_T_ = ''
         and CTT.CTT_CUSTO = SE2.E2_CCUSTO
