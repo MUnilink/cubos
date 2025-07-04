@@ -28,6 +28,13 @@ select
         when 16 then 'TIPO MNT IMPROD'
         else 'OUTROS'
     end as TIPO_INSUMO,
+
+    case
+        when ZG1.ZG1_FILORI = '010101' and trim(ZG1.ZG1_CC) = '304' then 'TMS'
+        when ZG1.ZG1_FILORI = '010101' and trim(ZG1.ZG1_CC) = '305' then 'OPP MATRIZ'
+        when ZG1.ZG1_FILORI = '010102' and trim(ZG1.ZG1_CC) = '304' then 'TMS PECEM'
+        when ZG1.ZG1_FILORI = '010102' and trim(ZG1.ZG1_CC) = '305' then 'OPP'
+    else 'OUTROS' end as TIPO_RODA,
     
     ZG1.ZG1_TIPO as TIPO,
     ZG1.ZG1_VLTOTL as VL_TOTAL,
@@ -61,7 +68,7 @@ select
         and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
         and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
         and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-    ) as HIMP_AUSMNT,
+    ) as HIMP_AFAMNT,
     
     ZG1.ZG1_IMPR2/
     (
