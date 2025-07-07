@@ -44,8 +44,8 @@ select distinct
 		else 'OUTROS'
 	end as DESC_INSUMO,
     
-    STG.TG_QUANREC,
-    STG.TG_QUANTID,
+    STG.TG_QUANREC as QTD_RECURSO,
+    STG.TG_QUANTID as QTD_PREVIST,
     STG.TG_UNIDADE as UN
 
 from STF010 STF (nolock)
@@ -57,27 +57,28 @@ from STF010 STF (nolock)
             on ST5.D_E_L_E_T_ = ''
             and ST5.T5_SERVICO = ST4.T4_SERVICO
 
-    left join STG010 STG (nolock)
-        on STG.D_E_L_E_T_ = ''
-        and STG.TG_CODBEM = STF.TF_CODBEM
-        and STG.TG_SERVICO = STF.TF_SERVICO
-        and STG.TG_SEQRELA = STF.TF_SEQRELA
+            left join STG010 STG (nolock)
+                on STG.D_E_L_E_T_ = ''
+                and STG.TG_CODBEM = ST5.T5_CODBEM
+                and STG.TG_SERVICO = ST5.T5_SERVICO
+                and STG.TG_SEQRELA = ST5.T5_SEQRELA
+                and STG.TG_TAREFA = ST5.T5_TAREFA
 
-        left join SA2010 SA2 (nolock)
-            on SA2.D_E_L_E_T_ = ''
-            and SA2.A2_COD = STG.TG_CODIGO
-        left join SB1010 SB1 (nolock)
-            on SB1.D_E_L_E_T_ = ''
-            and SB1.B1_COD = STG.TG_CODIGO
-        left join SH4010 SH4 (nolock)
-            on SH4.D_E_L_E_T_ = ''
-            and SH4.H4_CODIGO = STG.TG_CODIGO
-        left join ST0010 ST0 (nolock)
-            on ST0.D_E_L_E_T_ = ''
-            and ST0.T0_ESPECIA = STG.TG_CODIGO
-        left join ST1010 ST1 (nolock)
-            on ST1.D_E_L_E_T_ = ''
-            and ST1.T1_CODFUNC = STG.TG_CODIGO
+                left join SA2010 SA2 (nolock)
+                    on SA2.D_E_L_E_T_ = ''
+                    and SA2.A2_COD = STG.TG_CODIGO
+                left join SB1010 SB1 (nolock)
+                    on SB1.D_E_L_E_T_ = ''
+                    and SB1.B1_COD = STG.TG_CODIGO
+                left join SH4010 SH4 (nolock)
+                    on SH4.D_E_L_E_T_ = ''
+                    and SH4.H4_CODIGO = STG.TG_CODIGO
+                left join ST0010 ST0 (nolock)
+                    on ST0.D_E_L_E_T_ = ''
+                    and ST0.T0_ESPECIA = STG.TG_CODIGO
+                left join ST1010 ST1 (nolock)
+                    on ST1.D_E_L_E_T_ = ''
+                    and ST1.T1_CODFUNC = STG.TG_CODIGO
 
     left join ST9010 ST9 (nolock)
         on ST9.D_E_L_E_T_ = ''
