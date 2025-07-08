@@ -129,7 +129,7 @@ select
         datetime,
         case isdate(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2)))
             when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', '00')), ':  :00'), '00:00'))
-            else concat(ZC1.ZC1_DTINI, ' ', '12:00')
+            else concat(ZC1.ZC1_DTINI, ' ', '00:00')
         end, 113
     ) as DTINI_OS,
     
@@ -138,7 +138,7 @@ select
         datetime,
         case isdate(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2)))
             when 1 then concat(ZC1.ZC1_DTFIM, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', '00')), ':  :00'), '00:00'))
-            else concat(ZC1.ZC1_DTFIM, ' ', '12:00')
+            else concat(ZC1.ZC1_DTFIM, ' ', '00:00')
         end, 113
     ) as DTFIM_OS,
     
@@ -231,8 +231,5 @@ from ZC2010 ZC2 (nolock)
 
 where
         cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
-    and ZC2.ZC2_INCLUS != 'C'
-    and nullif(nullif(ZC1.ZC1_DTINI, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRINI, ''), '  :  ') is not null
-	and nullif(nullif(ZC1.ZC1_DTFIM, ''), '  :  ') is not null and nullif(nullif(ZC1.ZC1_HRFIM, ''), '  :  ') is not null
     and substring(ZC1.ZC1_EMISSA, 1, 6) > 202312
     and ZC2.D_E_L_E_T_ = ''
