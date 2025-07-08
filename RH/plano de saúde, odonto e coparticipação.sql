@@ -7,7 +7,7 @@
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-            concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SQ3.Q3_DESCSUM) as CARGO,
@@ -231,7 +231,7 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-            concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SQ3.Q3_DESCSUM) as CARGO,
@@ -454,7 +454,7 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-            concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SQ3.Q3_DESCSUM) as CARGO,
@@ -676,7 +676,7 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
-            concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SQ3.Q3_DESCSUM) as CARGO,
