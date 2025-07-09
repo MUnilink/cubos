@@ -92,7 +92,7 @@ select
 
 	case when trim(SRA.RA_SITFOLH) = 'A' then 0 when SRA.RA_CODFUNC in ('664', '665', '556', '675', '686', '687', '715', '716', '732', '733', '735', '739', '740', '742', '746', '766', '769', '770', '771', '782', '786', '788', '802', '888', '847', '677', '886', '887', '859', '732', '872', '864', '733', '766', '371', '445', '842') then 0 else 1 end as QTD_EFETIVO,
 	case when SRA.RA_CODFUNC in ('664', '665') then 1 else 0 end as QTD_APRENDIZ,
-	case when SRA.RA_DEFIFIS when 1 then 1 else 0 end as QTD_PCD,
+	case SRA.RA_DEFIFIS when 1 then 1 else 0 end as QTD_PCD,
 	1 as QTD_GERAL
 
 from SRA010 SRA (nolock)
