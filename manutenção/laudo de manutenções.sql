@@ -13,11 +13,13 @@ select
 	trim(ST9.T9_RENAVAM) as RENAVAM,
     (select TQ0010.TQ0_EIXOS from TQ0010 where TQ0010.D_E_L_E_T_ = '' and TQ0010.TQ0_DESENH = ST9.T9_CODFAMI and TQ0010.TQ0_TIPMOD = ST9.T9_TIPMOD) as EIXOS,
     
-    cast(STJ.TJ_DTORIGI as date) as DATA_OS,
-    left(STJ.TJ_DTORIGI, 6) as PERIODO_OS,
+    cast(ST9.T9_DTBAIXA as date) as DT_BAIXA,
+	trim(STJ.TJ_USUAFIM) as USR_FIM,
+    trim(STJ.TJ_USUARIO) as USR_INI,
     trim(STJ.TJ_TERMINO) as TERMINO,
     trim(STJ.TJ_SITUACA) as SITUACAO,
 
+    cast(STI.TI_DATAPLA as date) as DATA_PLANO,
     trim(STI.TI_DESCRIC) as NOME_PLANO,
     trim(STI.TI_PLANO) as NUM_PLANO,
     
@@ -33,6 +35,9 @@ select
     case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), 113) else null end as DTH_INIPAR,
 	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DTH_FIMMNT,
     case when isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM), 113) else null end as DTH_FIMPAR,
+
+    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then cast(datediff(minute, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_PAR,
+    case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then cast(datediff(minute, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_MNT,
     
     left(STL.TL_DTFIM, 6) as PERIODO_APP,
     cast(STL.TL_DTFIM as date) as DATA_APP,
@@ -47,6 +52,8 @@ select
     STJ.TJ_YITMCT as ATIVIDADE,
 
     case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
+ 
+    trim(SB1.B1_GRUPO) as B1_GRUPO,
 
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
@@ -64,26 +71,10 @@ select
 		when 'T' then trim(SA2.A2_NOME)
 		else 'OUTROS'
 	end as DESC_INSUMO,
-
-    concat(trim(SH7.H7_CODIGO), ' - ', trim(SH7.H7_DESCRI)) as TURNO_MDO,
-    cast(ST1.T1_DTFIMDI as date) as FIM_DISP,
-    trim(ST1.T1_CCUSTO) as CC_FUNC,
-    case
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '017' then 180.0
-    else 0.0 end as HORA_PADRAO,
     
     trim(STJ.TJ_TIPO) as COD_CTIPO,
     trim(STE.TE_TIPOMAN) as TE_TIPOMAN,
 	trim(STE.TE_NOME) as CARAC_TIPO,
-    case STE.TE_CARACTE
-        when 'P' then 'PREVENTIVA'
-        when 'C' then 'CORRETIVA'
-        else 'OUTROS'
-    end as TE_CARACTE,
-    
     trim(ST4.T4_SERVICO) as COD_SERVICO,
 	trim(ST4.T4_NOME) as SERVICO,
     trim(STL.TL_TAREFA) as COD_TAREFA,
@@ -93,13 +84,13 @@ select
 	trim(ST1.T1_CODFUNC) as T1_CODFUNC,
 	trim(SB1.B1_COD) as COD_PRODUTO,
 	trim(SB1.B1_DESC) as PRODUTO,
-
-    TQB.TQB_SOLICI as SS,
-    convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INISS,
-    convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCSS,
-    TQB.TQB_USUARI,
-    TQB.TQB_SOLUCA,
-    TQB.TQB_CDEXEC
+	trim(SA2.A2_COD) as COD_FORNECEDOR,
+	trim(SA2.A2_NOME) as FORNECEDOR,
+    
+    trim(STL.TL_DOC) as NFE_NUM,
+    trim(STL.TL_ITEM) as NFE_ITEM,
+    trim(SD1.D1_PEDIDO) as PC_NUM,
+    trim(SD1.D1_ITEMPC) as PC_ITEM
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
@@ -111,21 +102,19 @@ from STL010 STL (nolock)
         inner join ST4010 ST4 (nolock)
             on ST4.D_E_L_E_T_ = ''
             and ST4.T4_SERVICO = STJ.TJ_SERVICO
+        
         inner join ST9010 ST9 (nolock)
             on ST9.D_E_L_E_T_ = ''
             and ST9.T9_CODBEM = STJ.TJ_CODBEM
-            
+
             inner join TQR010 TQR (nolock)
                 on TQR.D_E_L_E_T_ = ''
                 and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
-            inner join ST7010 ST7 (nolock)
-                on ST7.D_E_L_E_T_ = ''
-                and ST7.T7_FABRICA = TQR.TQR_FABRIC
-        
-        left join TQB010 TQB (nolock)
-            on TQB.D_E_L_E_T_ = ''
-            and TQB.TQB_FILIAL = STJ.TJ_FILIAL
-            and TQB.TQB_ORDEM = STJ.TJ_ORDEM
+                
+                inner join ST7010 ST7 (nolock)
+                    on ST7.D_E_L_E_T_ = ''
+                    and ST7.T7_FABRICA = TQR.TQR_FABRIC
+
         left join STI010 STI (nolock)
             on STI.D_E_L_E_T_ = ''
             and STI.TI_FILIAL = STJ.TJ_FILIAL
@@ -147,20 +136,39 @@ from STL010 STL (nolock)
         on ST1.D_E_L_E_T_ = ''
         and ST1.T1_FILIAL = STL.TL_FILIAL
         and ST1.T1_CODFUNC = STL.TL_CODIGO
-
-        left join SH7010 SH7 (nolock)
-            on SH7.D_E_L_E_T_ = ''
-            and SH7.H7_CODIGO = ST1.T1_TURNO
-
+    
     left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_ = ''
         and SB1.B1_COD = STL.TL_CODIGO
 
+    left join SD1010 SD1 (nolock)
+        on STL.TL_ORIGNFE = 'SD1'
+        and SD1.D_E_L_E_T_ = ''
+        and SD1.D1_FILIAL = STL.TL_FILIAL
+        and left(SD1.D1_OP, 6) = STL.TL_ORDEM
+        and SD1.D1_DOC = STL.TL_NOTFIS
+        and SD1.D1_SERIE = STL.TL_SERIE
+        and SD1.D1_ITEM = STL.TL_ITEM
+        and SD1.D1_FORNECE = STL.TL_FORNEC
+        and SD1.D1_LOJA = STL.TL_LOJA
+
+        left join SC7010 SC7 (nolock)
+            on SC7.D_E_L_E_T_ = ''
+            and SC7.C7_FILIAL = SD1.D1_FILIAL
+            and SC7.C7_NUM = SD1.D1_PEDIDO
+            and SC7.C7_ITEM = SD1.D1_ITEMPC
+
+            left join SA2010 SA2 (nolock)
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = SC7.C7_FORNECE
+                and SA2.A2_LOJA = SC7.C7_LOJA
+
 where
         STL.D_E_L_E_T_ = ''
-        STL.TL_SEQRELA > 0
-    and left(STL.TL_DTFIM, 6)>=:PERIODO_INI
-    and ST9.T9_CODFAMI=:FAMILIA
+    and STL.TL_SEQRELA > 0
+    and STJ.TJ_SERVICO != 'PNEROD'
+    and STJ.TJ_SERVICO != 'PNEMOV'
+
+	and left(STL.TL_DTFIM, 6)>=:PERIODO
     and STE.TE_CARACTE=:TIPO_MNT
-    and ST9.T9_CODBEM=:EQUIPAMENTO
-    and STL.TL_ORDEM=:OS
+    and trim(TQR.TQR_DESMOD)=:MODELO
