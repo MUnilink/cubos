@@ -26,6 +26,7 @@ select
     trim(ZE2.ZE2_CONTA) as CONTA,
     left(ZE3.ZE3_NUM, 6) as FILORI,
     right(trim(ZE3.ZE3_NUM), 11) as NUM_OS,
+    right(trim(ZE3.ZE3_NUM), 6) as NUM_VG,
     
     case
         when len(trim(ZE2.ZE2_COD)) <= 2 then 1
@@ -48,7 +49,14 @@ select
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
-    else 0.0 end as VALOR
+    else 0.0 end as VALOR,
+
+    case
+        when left(ZE3.ZE3_NUM, 6) = '010101' and trim(ZE3.ZE3_ORIGEM) = '304' then 'TMS'
+        when left(ZE3.ZE3_NUM, 6) = '010101' and trim(ZE3.ZE3_ORIGEM) = '305' then 'OPP MATRIZ'
+        when left(ZE3.ZE3_NUM, 6) = '010102' and trim(ZE3.ZE3_ORIGEM) = '304' then 'TMS PECEM'
+        when left(ZE3.ZE3_NUM, 6) = '010102' and trim(ZE3.ZE3_ORIGEM) = '305' then 'OPP'
+    else 'OUTROS' end as TIPO_RODA
 
 from ZE3010 ZE3 (nolock)
     inner join ZE2010 ZE2 (nolock)
