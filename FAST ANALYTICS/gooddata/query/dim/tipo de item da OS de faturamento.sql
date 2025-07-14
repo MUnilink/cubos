@@ -2,8 +2,8 @@
         cast(ZC2.ZC2_TIPO as int) as ID_TIPO_ITEM,
         case cast(ZC2.ZC2_TIPO as int)
             when 1 then 'RECEITA'
-            when 2 then 'FOLHA'
-            when 3 then 'MANUTENÇÃO'
+            when 2 then 'PESSOAL'
+            when 3 then 'EQUIPAMENTO'
             when 4 then 'MATERIAIS'
             when 5 then 'COMPRAS'
             when 6 then 'DEPRECIAÇÃO'
@@ -15,6 +15,9 @@
             when 12 then 'SEGURO EQUIPAMENTO'
             when 13 then 'PNEUS'
             when 14 then 'PROVISÕES'
+            when 17 then 'DIÁRIA'
+            when 18 then 'SEGURO AVARIA'
+            when 19 then 'SEGURO ROUBO'
             else 'OUTROS'
         end as TIPO_INSUMO
     from ZC2010 ZC2
