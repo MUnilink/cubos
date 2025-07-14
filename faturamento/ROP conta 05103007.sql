@@ -14,7 +14,7 @@
     from ZC2010 ZC2
     where
             ZC2.D_E_L_E_T_ = ''
-        and ZC2.ZC2_TIPO = 6
+        and ZC2.ZC2_TIPO = 18
         and left(ZC2.ZC2_COMPET, 6) = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM
 union
@@ -26,6 +26,6 @@ union
     from ZE1010 ZE1
     where
             ZE1.D_E_L_E_T_ = ''
-        and ZE1.ZE1_TIPO = 6
+        and ZE1.ZE1_TIPO = 18
         and left(ZE1.ZE1_COMPET, 6) = '"+cCompt+"' and ZE1.ZE1_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by ZE1.ZE1_FILIAL, ZE1.ZE1_NUM
