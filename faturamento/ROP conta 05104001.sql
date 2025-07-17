@@ -2,7 +2,7 @@ select
     ZC2.ZC2_FILIAL as FILIAL,
     ZC2.ZC2_NUM as NUM,
     (
-        select isnull(avg(cast(nullif(SC6010.C6_CC, '') as int)), '305') /* pois cortesia */
+        select isnull(max(nullif(SC6010.C6_CC, '')), '305') /* pois cortesia */
         from SC6010
         where
                 SC6010.D_E_L_E_T_ = ''
