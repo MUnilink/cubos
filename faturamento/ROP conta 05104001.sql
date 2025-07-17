@@ -8,7 +8,6 @@ select
                 SC6010.D_E_L_E_T_ = ''
             and SC6010.C6_FILIAL = ZC2.ZC2_FILIAL
             and SC6010.C6_YOS = ZC2.ZC2_NUM
-            and SC6010.C6_YITOS = ZC2.ZC2_ITEM
     ) as CC,
     sum(cast(coalesce(ZC2.ZC2_TOTAL, 0) as decimal (14, 2))) as TOTAL
 from ZC2010 ZC2
