@@ -14,7 +14,7 @@ select distinct
     trim(ZE5.ZE5_CARR2) as SR2,
     trim(ZE5.ZE5_CARR3) as SR3,
     
-    trim(ZE1.ZE1_COD) as VGA_CODIGO,
+    case when nullif(ZE1.ZE1_NOTA, '') is not null then trim(ZE1.ZE1_NOTA) else trim(ZE1.ZE1_COD) end as VGA_CODIGO,
     cast(ZE1.ZE1_DATA as date) as VGA_DATA,
     left(ZE1.ZE1_COMPET, 6) as PERIODO_CUSTO,
 
@@ -42,7 +42,8 @@ select distinct
         when ZE1.ZE1_TIPO = 13 then 'PNEUS'
         when ZE1.ZE1_TIPO = 14 then 'PROVISÕES'
         when ZE1.ZE1_TIPO = 17 then 'DIÁRIA'
-        when ZE1.ZE1_TIPO = 18 then 'SEGURO CARGA'
+        when ZE1.ZE1_TIPO = 18 then 'SEGURO AVARIA'
+        when ZE1.ZE1_TIPO = 19 then 'SEGURO ROUBO'
         when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 2 then 'FOLHA'
         when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 14 then 'PROVISÕES'
         when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 3 then 'MANUTENÇÃO'
