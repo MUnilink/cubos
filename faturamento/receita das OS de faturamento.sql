@@ -154,6 +154,9 @@ from
             cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
             cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
+            cast(ZC2010.ZC2_IMPR1 as numeric(15, 2)) as HIMP_AFAMNT,
+            cast(ZC2010.ZC2_IMPR2 as numeric(15, 2)) as HIMP_FER,
+            cast(ZC2010.ZC2_IMPR3 as numeric(15, 2)) as HIMP_PON,
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
         
         from ZC2010 (nolock)

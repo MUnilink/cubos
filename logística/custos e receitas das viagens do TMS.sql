@@ -22,6 +22,9 @@ select distinct
     case when ZE1.ZE1_TIPO in (15, 16) then cast(RAT_IMPR.PERC_RATEIO * ZE1.ZE1_TOTAL as numeric(15 ,2)) else 0.00 end as VALOR_IMPR,
     case when ZE1.ZE1_TIPO in (15, 16) then RAT_IMPR.TIPO else ZE1.ZE1_TIPO end as ID_TIPO,
     case when ZE1.ZE1_TIPO in (15, 16) then 0.0 else cast(ZE1.ZE1_TOTAL as numeric(15, 2)) end as VALOR_PROD,
+    cast(ZE1.ZE1_IMPR1 as numeric(15, 2)) as HIMP_AFAMNT,
+    cast(ZE1.ZE1_IMPR2 as numeric(15, 2)) as HIMP_FER,
+    cast(ZE1.ZE1_IMPR3 as numeric(15, 2)) as HIMP_PON,
     cast(ZE1.ZE1_TOTAL as numeric(15, 2)) as VGA_TOTAL,
 
     ZE1.ZE1_ITEM as VGA_ITEMCUSTO,
