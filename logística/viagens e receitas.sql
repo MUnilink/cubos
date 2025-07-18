@@ -24,6 +24,7 @@ select
     VIAGEM.ID_MOTORISTA,
     VIAGEM.MOTORISTA,
 
+    SF2.F2_ESPECIE as ESPECIE_NF,
     DT6.DT6_DOC CTE_DOC,
     DT6.DT6_SERIE CTE_SERIE,
     left(DT6.DT6_DATEMI, 6) as PERIODO_CTE,
@@ -32,6 +33,8 @@ select
     DT6.DT6_VALFRE as CTE_TOTAL,
     DT6.DT6_VALIMP / isnull((select nullif(count(DTR010.DTR_CODVEI), '') from DTR010 where DTR010.DTR_VIAGEM = DUD.DUD_VIAGEM), 1) as IMPOSTO_CM,
     DT6.DT6_VALIMP as IMPOSTO_TOTAL,
+    concat(trim(SD2.D2_TES), ' - ', trim(SF4.F4_TEXTO)) as TES,
+    concat(trim(SD2.D2_CF), ' - ', trim(CFOP.X5_DESCRI)) as CFOP,
 
     COMP.D2_DOC as DOCOMP_DOC,
     COMP.D2_SERIE as DOCOMP_SERIE,
@@ -150,6 +153,13 @@ from DUD010 DUD (nolock)
             and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
 
+            left join SF2010 SF2 (nolock)
+                on SF2.F2_FILIAL = SD2.D2_FILIAL
+                and SF2.F2_CLIENTE = SD2.D2_CLIENTE
+                and SF2.F2_LOJA = SD2.D2_LOJA
+                and SF2.F2_DOC = SD2.D2_DOC
+                and SF2.F2_SERIE = SD2.D2_SERIE
+                and SF2.D_E_L_E_T_= ' '
             left join SF4010 SF4 (nolock)
                 on SF4.D_E_L_E_T_ = ''
                 and SF4.F4_CODIGO = SD2.D2_TES
