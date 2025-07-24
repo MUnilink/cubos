@@ -2,9 +2,11 @@ select
     STL.TL_FILIAL as FILIAL,
     STL.TL_ORDEM as OS,
     trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+    trim(TQR.TQR_DESMOD) as MODELO,
+	trim(ST7.T7_NOME) as FABRICANTE,
     cast(STJ.TJ_DTORIGI as date) as DATA_OS,
     left(STJ.TJ_DTORIGI, 6) as PERIODO_OS,
-    ST9.T9_CODFAMI as FAMILIA,
+    trim(ST9.T9_CODFAMI) as FAMILIA,
     cast(ST9.T9_DTBAIXA as date) as DT_BAIXA,
 	trim(upper(STJ.TJ_USUAFIM)) as USR_FIM,
     trim(upper(STJ.TJ_USUARIO)) as USR_INI,
@@ -171,6 +173,15 @@ from STL010 STL (nolock)
         inner join ST9010 ST9 (nolock)
             on ST9.D_E_L_E_T_ = ''
             and ST9.T9_CODBEM = STJ.TJ_CODBEM
+
+            inner join TQR010 TQR (nolock)
+                on TQR.D_E_L_E_T_ = ''
+                and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+                
+                inner join ST7010 ST7 (nolock)
+                    on ST7.D_E_L_E_T_ = ''
+                    and ST7.T7_FABRICA = TQR.TQR_FABRIC
+        
         left join TQB010 TQB (nolock)
             on TQB.D_E_L_E_T_ = ''
             and TQB.TQB_FILIAL = STJ.TJ_FILIAL
