@@ -23,7 +23,7 @@ select
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
         ),
         (
-            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_ITEM, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
+            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
             from SD2010 SD2 (nolock)
                 left join DUD010 DUD (nolock)
                     on DUD.D_E_L_E_T_ = ''
@@ -71,7 +71,7 @@ select
                 ) = ZE3.ZE3_NUM
         ),
         (
-            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_ITEM, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
+            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
             from SE1010 (nolock)
                 inner join CTD010 (nolock)
                     on CTD010.D_E_L_E_T_ = ''
