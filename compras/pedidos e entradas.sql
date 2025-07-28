@@ -13,7 +13,7 @@ select
 	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
 	cast(SC1.C1_EMISSAO as date) as DATA_SC,
 	left(SC1.C1_EMISSAO, 6) as PERIODO_SC,
-	substring(SC1.C1_OP, 1, 6) as OS,
+	left(SC1.C1_OP, 6) as OS,
 	
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
@@ -202,7 +202,9 @@ select
 	SD1.D1_SERIE as NF_SERIE,
 	cast(SD1.D1_EMISSAO as date) as NF_EMI,
 	cast(SD1.D1_DTDIGIT as date) as NF_DATA,
-	substring(SD1.D1_DTDIGIT, 1, 6) as NF_PERIODO,
+	left(SD1.D1_DTDIGIT, 6) as NF_PERIODO,
+	case when exists (select * from SD2010 where SD2010.D_E_L_E_T_ = '' and SD2010.D2_TIPO = 'D' and SD2010.D2_NFORI = SD1.D1_DOC and SD2010.D2_SERIORI = SD1.D1_SERIE and SD2010.D2_ITEMORI = SD1.D1_ITEM and SD2010.D2_CLIENTE = SD1.D1_FORNECE and SD2010.D2_LOJA = SD1.D1_LOJA)
+		then 'R' else SD1.D1_TIPO end as NF_TIPO,
 	
 	datediff(day,
 		(
@@ -225,11 +227,12 @@ select
 	(select concat(trim(SD1.D1_CF), ' - ', trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '13' and SX5010.X5_CHAVE = SD1.D1_CF) as CFOP,
 	SD1.D1_QUANT as NF_QUANT,
 	SD1.D1_VUNIT as NF_VUNIT,
-	SD1.D1_TOTAL as NF_TOTAL,
-	SD1.D1_CUSTO as NF_CUSTO,
-	SD1.D1_VALDESC as NF_VALDESC,
+	cast(SD1.D1_CUSTO as numeric(15, 2)) as NF_CUSTO,
+	cast(SD1.D1_VALDESC as numeric(15, 2)) as NF_VALDESC,
+	cast(SD1.D1_VALDEV as numeric(15, 2)) as NF_VALDEV,
+	cast(SD1.D1_TOTAL as numeric(15, 2)) as NF_TOTAL,
 
-    cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
+	cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
     cast(SC7.C7_VALIPI as numeric(14, 2)) as VL_PC_IPI,
     cast(SC7.C7_VALFRE as numeric(14, 2)) as VL_PC_FRETE_NF,
     cast(SC7.C7_DESPESA as numeric(14, 2)) as VL_PC_DESPESA,
