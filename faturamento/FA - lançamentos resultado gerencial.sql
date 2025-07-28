@@ -23,75 +23,17 @@ select distinct
                         on SD2010.D_E_L_E_T_= ''
                         and SD2010.D2_FILIAL = SC6010.C6_FILIAL
                         and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                        
             where
                     SC6010.D_E_L_E_T_ = ''
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
         ),
         (
-            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
-            from SD2010 SD2 (nolock)
-                left join DUD010 DUD (nolock)
-                    on DUD.D_E_L_E_T_ = ''
-                    and DUD.DUD_FILDOC = SD2.D2_FILIAL
-                    and DUD.DUD_DOC = SD2.D2_DOC
-                    and DUD.DUD_SERIE = SD2.D2_SERIE
-                    and DUD.DUD_SERIE != 'COL'
-                
-                left join SD2010 COMP (nolock)
-                    on COMP.D_E_L_E_T_ = ''
-                    and COMP.D2_DOC = SD2.D2_NFORI
-                    and COMP.D2_SERIE = SD2.D2_SERIORI
-                    and COMP.D2_CLIENTE = SD2.D2_CLIENTE
-                    and COMP.D2_LOJA = SD2.D2_LOJA
-
-                    left join DUD010 VGA2 (nolock)
-                        on VGA2.D_E_L_E_T_ = ''
-                        and VGA2.DUD_FILDOC = COMP.D2_FILIAL
-                        and VGA2.DUD_DOC = COMP.D2_DOC
-                        and VGA2.DUD_SERIE = COMP.D2_SERIE
-                
-                left join SC5010 (nolock)
-                    on SC5010.D_E_L_E_T_ = ' '
-                    and SC5010.C5_FILIAL = SD2.D2_FILIAL
-                    and SC5010.C5_NOTA = SD2.D2_DOC
-                    and SC5010.C5_SERIE = SD2.D2_SERIE
-                    and SC5010.C5_CLIENTE = SD2.D2_CLIENTE
-                    and SC5010.C5_LOJACLI = SD2.D2_LOJA
-
-                    left join DUD010 VGA3 (nolock)
-                        on VGA3.D_E_L_E_T_ = ' '
-                        and VGA3.DUD_VIAGEM = SC5010.C5_YVIAGEM
-                
-                inner join CTD010 (nolock)
-                    on CTD010.D_E_L_E_T_ = ''
-                    and CTD010.CTD_ITEM = SD2.D2_ITEMCC
+            select top 1 ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
+            from DUD010 (nolock)
             where
-                    SD2.D_E_L_E_T_ = ''
-                and coalesce
-                (
-                    concat(DUD.DUD_FILDOC, DUD.DUD_VIAGEM),
-                    concat(VGA2.DUD_FILDOC, VGA2.DUD_VIAGEM),
-                    concat(VGA3.DUD_FILDOC, VGA3.DUD_VIAGEM),
-                    ''
-                ) = ZE3.ZE3_NUM
-        ),
-        (
-            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
-            from SE1010 (nolock)
-                inner join CTD010 (nolock)
-                    on CTD010.D_E_L_E_T_ = ''
-                    and CTD010.CTD_ITEM = SE1010.E1_ITEMCTA
-            where
-                    SE1010.D_E_L_E_T_ = ''
-                and
-                (
-                    select distinct concat(DUD010.DUD_FILDOC, DUD010.DUD_VIAGEM)
-                    from DUD010 (nolock)
-                        inner join SE1010 (nolock)
-                            on SE1010.D_E_L_E_T_ = ''
-                            and (trim(SE1010.E1_YVIATMS) = DUD010.DUD_VIAGEM or SE1010.E1_YVIAGEM = DUD010.DUD_VIAGEM)
-                    where SE1010.D_E_L_E_T_ = ''
-                ) = ZE3.ZE3_NUM
+                    DUD010.D_E_L_E_T_ = ''
+                and concat(DUD010.DUD_FILDOC, DUD010.DUD_VIAGEM) = ZE3.ZE3_NUM
         )
     ) as BK_ITEM_CONTABIL,
     
