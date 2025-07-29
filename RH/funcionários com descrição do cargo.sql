@@ -28,6 +28,7 @@ select
 	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	trim(SRA.RA_SITFOLH) as SITUACAO,
 	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
+	case SRA.RA_YPARENT when 1 then 'S' when 2 then 'N' else 'outros' end as PAIMAE,
 	
 	cast(SRA.RA_NASC as date) as NASCIMENTO,
 	trim(SRA.RA_ENDEREC) as ENDERECO,
