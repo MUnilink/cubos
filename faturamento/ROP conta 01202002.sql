@@ -1,12 +1,11 @@
 select
     SD2.D2_FILIAL as FILIAL,
-    
     coalesce
     (
-        DUD.DUD_VIAGEM, /* viagem normal */
-        VGA2.DUD_VIAGEM, /* se viagem atrelada ao complemento */
+        DUD.DUD_VIAGEM,
+        VGA2.DUD_VIAGEM,
         (
-            select distinct DUD010.DUD_VIAGEM /* NF de receita extra da viagem */
+            select distinct DUD010.DUD_VIAGEM
             from DUD010 (nolock)
                 inner join SC5010 (nolock)
                     on SC5010.D_E_L_E_T_ = ' '
@@ -20,7 +19,6 @@ select
                 and SD2.D2_LOJA = SC5010.C5_LOJACLI
         )
     ) as NUM,
-    
     SD2.D2_CCUSTO as CC,
     SD2.D2_DOC as PEDIDO,
     sum(cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
