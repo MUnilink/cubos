@@ -4,6 +4,7 @@ select distinct
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
+    concat(trim(DUD.DUD_FILIAL), trim(DUD.DUD_VIAGEM)) as ID_VIAGEMTMS,
     'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1.ZC1_MERCAD, ' ')), ' '), '|') as ID_MERCADORIA,
     null as ID_PEDIDODEVENDA,
     null as ID_NFS,
@@ -60,6 +61,9 @@ from ZE3010 ZE3
     left join ZC1010 ZC1
         on ZC1.D_E_L_E_T_ = ''
         and concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM) = ZE3.ZE3_NUM
+    left join DUD010 DUD
+        on DUD.D_E_L_E_T_ = ''
+        and concat(DUD.DUD_FILIAL, DUD.DUD_VIAGEM) = ZE3.ZE3_NUM
 
         left join SA1010 SA1
             on SA1.D_E_L_E_T_ = ''
