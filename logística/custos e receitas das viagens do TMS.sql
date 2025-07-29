@@ -1,9 +1,22 @@
 select distinct
     ZE1.ZE1_NUM as VIAGEM,
     cast(ZE4.ZE4_DATAFI as date) as DATA_FIM,
-    left(ZE4.ZE4_DATAFI, 6) as PERIODO,
+    left(ZE4.ZE4_DATAFI, 6) as PERIODO_VGA,
     ZE4.ZE4_TOTHR as VGA_HORAS,
-    ZE4.ZE4_STATUS as STATUS_TMS,
+    
+    concat
+    (
+        ZE4.ZE4_STATUS, ' - ',
+        case ZE4.ZE4_STATUS
+            when '1' then upper('Em Aberto')
+            when '2' then upper('Em Transito')
+            when '3' then upper('Encerrada')
+            when '4' then upper('Chegada em Filial')
+            when '5' then upper('Fechada')
+            when '9' then upper('Cancelada')
+            else 'Outros' end
+    ) as STATUS_TMS,
+    
     ZE4.ZE4_KMINI as km_ini,
     ZE4.ZE4_KMFIM as km_fim,
     
@@ -16,7 +29,7 @@ select distinct
     
     case when nullif(ZE1.ZE1_NOTA, '') is not null then trim(ZE1.ZE1_NOTA) else trim(ZE1.ZE1_COD) end as VGA_CODIGO,
     cast(ZE1.ZE1_DATA as date) as VGA_DATA,
-    left(ZE1.ZE1_COMPET, 6) as PERIODO_CUSTO,
+    left(ZE1.ZE1_COMPET, 6) as COMPETENCIA,
 
     RAT_IMPR.*,
     case when ZE1.ZE1_TIPO in (15, 16) then cast(RAT_IMPR.PERC_RATEIO * ZE1.ZE1_TOTAL as numeric(15 ,2)) else 0.00 end as VALOR_IMPR,
@@ -28,7 +41,7 @@ select distinct
     cast(ZE1.ZE1_TOTAL as numeric(15, 2)) as VGA_TOTAL,
 
     ZE1.ZE1_ITEM as VGA_ITEMCUSTO,
-    ZE1.ZE1_TIPO as VGA_TIPO,
+    cast(ZE1.ZE1_TIPO as int) as VGA_TIPO,
     case
         when ZE1.ZE1_TIPO = 1 then 'RECEITA'
         when ZE1.ZE1_TIPO = 2 then 'FOLHA'
@@ -64,15 +77,15 @@ select distinct
     else null end as DESC_RECURSO
 
 from ZE1010 ZE1 (nolock)
-    left join ZE4010 ZE4 (nolock)
-        on ZE4.D_E_L_E_T_ = ''
-        and ZE4.ZE4_FILIAL = ZE1.ZE1_FILIAL
-        and ZE4.ZE4_VIAGEM = ZE1.ZE1_NUM
-
-        left join ZE5010 ZE5 (nolock)
-            on ZE5.D_E_L_E_T_ = ''
-            and ZE5.ZE5_FILIAL = ZE4.ZE4_FILIAL
-            and ZE5.ZE5_VIAGEM = ZE4.ZE4_VIAGEM
+    inner join ZE5010 ZE5 (nolock)
+        on ZE5.D_E_L_E_T_ = ''
+        and ZE5.ZE5_FILIAL = ZE1.ZE1_FILIAL
+        and ZE5.ZE5_VIAGEM = ZE1.ZE1_NUM
+        
+        inner join ZE4010 ZE4 (nolock)
+            on ZE4.D_E_L_E_T_ = ''
+            and ZE4.ZE4_FILIAL = ZE5.ZE5_FILIAL
+            and ZE4.ZE4_VIAGEM = ZE5.ZE5_VIAGEM
 
     left join
     (
@@ -101,6 +114,6 @@ from ZE1010 ZE1 (nolock)
     ) RAT_IMPR
         on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZE1.ZE1_TIPO
         and RAT_IMPR.FILIAL = ZE1.ZE1_FILIAL
-        and RAT_IMPR.COMPETENCIA = left(ZE4.ZE4_DATAFI, 6)
+        and RAT_IMPR.COMPETENCIA = left(ZE1.ZE1_COMPET, 6)
         and RAT_IMPR.INSUMO = ZE1.ZE1_COD
 where ZE1.D_E_L_E_T_ = ''
