@@ -75,3 +75,4 @@ from ZE3010 ZE3 (nolock)
         and ZE2.ZE2_COD = ZE3.ZE3_ITEMPL
 where
         ZE3.D_E_L_E_T_ = ''
+    and ZE3.ZE3_COMPET=:PERIODO
