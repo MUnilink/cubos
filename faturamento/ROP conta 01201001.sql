@@ -22,35 +22,7 @@ select
     ) as NUM,
     
     SD2.D2_CCUSTO as CC,
-    SF2.F2_DOC as PEDIDO,
-    
-    case
-        /* LP 610-001 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
-        /* LP 610-040 */
-        when trim(CFOP.X5_CHAVE) = 5359 then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        /* LP 610-600 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
-        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        /* LP 610-010 */
-        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
-        /* LP 610-020 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
-        /* LP 610-030 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
-        /*LP 610-050 */
-        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES = '522' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
-        /* LP 610-015 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
-    else null end as LP_CRE,
-    
+    SD2.D2_DOC as PEDIDO,
     sum(cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2 (nolock)
@@ -134,6 +106,15 @@ where
             when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
         else null end
     = '310101001'
-    and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and DUD.DUD_FILDOC between '"+cFilIni+"' and '"+cFilFim+"'
+    and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 
-group by SD2.D2_FILIAL, SD2.D2_CCUSTO, SF2.F2_DOC, DUD.DUD_VIAGEM, VGA2.DUD_VIAGEM
+group by
+    SD2.D2_FILIAL,
+    SD2.D2_CCUSTO,
+    DUD.DUD_VIAGEM,
+    VGA2.DUD_VIAGEM,
+    SD2.D2_FILIAL,
+    SD2.D2_DOC,
+    SD2.D2_SERIE,
+    SD2.D2_CLIENTE,
+    SD2.D2_LOJA
