@@ -1,10 +1,59 @@
 select
     SD2.D2_FILIAL as FILIAL,
-    DUD.DUD_VIAGEM as NUM,
+    
+    coalesce
+    (
+        DUD.DUD_VIAGEM, /* viagem normal */
+        VGA2.DUD_VIAGEM, /* se viagem atrelada ao complemento */
+        (
+            select distinct DUD010.DUD_VIAGEM /* NF de receita extra da viagem */
+            from DUD010 (nolock)
+                inner join SC5010 (nolock)
+                    on SC5010.D_E_L_E_T_ = ' '
+                    and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
+            where
+                    DUD010.D_E_L_E_T_ = ''
+                and SD2.D2_FILIAL = SC5010.C5_FILIAL
+                and SD2.D2_DOC = SC5010.C5_NOTA
+                and SD2.D2_SERIE = SC5010.C5_SERIE
+                and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
+                and SD2.D2_LOJA = SC5010.C5_LOJACLI
+        )
+    ) as NUM,
+    
     SD2.D2_CCUSTO as CC,
-    sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
+    SF2.F2_DOC as PEDIDO,
+    
+    case
+        /* LP 610-001 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
+        /* LP 610-040 */
+        when trim(CFOP.X5_CHAVE) = 5359 then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        /* LP 610-600 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        /* LP 610-010 */
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /* LP 610-020 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /* LP 610-030 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        /*LP 610-050 */
+        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES = '522' then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
+        /* LP 610-015 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+    else null end as LP_CRE,
+    
+    sum(cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
-from SD2010 SD2
+from SD2010 SD2 (nolock)
     inner join SF2010 SF2 (nolock)
         on SF2.F2_FILIAL = SD2.D2_FILIAL
         and SF2.F2_CLIENTE = SD2.D2_CLIENTE
@@ -18,28 +67,41 @@ from SD2010 SD2
             and SA1.A1_COD = SF2.F2_CLIENTE
             and SA1.A1_LOJA = SF2.F2_LOJA
         
-    inner join SB1010 SB1 (nolock)
+    left join SB1010 SB1 (nolock)
         on SB1.D_E_L_E_T_= ''
         and SB1.B1_COD = SD2.D2_COD
-    inner join SF4010 SF4 (nolock)
+    
+        left join SBM010 SBM (nolock)
+            on SBM.D_E_L_E_T_ = ''
+            and SBM.BM_GRUPO = SB1.B1_GRUPO
+    
+    left join SF4010 SF4 (nolock)
         on SF4.D_E_L_E_T_ = ''
         and SF4.F4_CODIGO = SD2.D2_TES
-    inner join SX5010 CFOP (nolock)
+    left join SX5010 CFOP (nolock)
         on CFOP.D_E_L_E_T_ = ''
         and CFOP.X5_TABELA = '13'
         and CFOP.X5_CHAVE = SD2.D2_CF
-    
-    left join SC6010 SC6 (nolock)
-        on SC6.D_E_L_E_T_ = ''
-        and SC6.C6_FILIAL = SD2.D2_FILIAL
-        and SC6.C6_NUM = SD2.D2_PEDIDO
-        and SC6.C6_ITEM = SD2.D2_ITEMPV
         
-    inner join DUD010 DUD (nolock)
+    left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_FILDOC = SD2.D2_FILIAL
         and DUD.DUD_DOC = SD2.D2_DOC
         and DUD.DUD_SERIE = SD2.D2_SERIE
+        and DUD.DUD_SERIE != 'COL'
+
+    left join SD2010 COMP (nolock)
+        on COMP.D_E_L_E_T_ = ''
+        and COMP.D2_DOC = SD2.D2_NFORI
+        and COMP.D2_SERIE = SD2.D2_SERIORI
+        and COMP.D2_CLIENTE = SD2.D2_CLIENTE
+        and COMP.D2_LOJA = SD2.D2_LOJA
+
+        left join DUD010 VGA2 (nolock)
+            on VGA2.D_E_L_E_T_ = ''
+            and VGA2.DUD_FILDOC = COMP.D2_FILIAL
+            and VGA2.DUD_DOC = COMP.D2_DOC
+            and VGA2.DUD_SERIE = COMP.D2_SERIE
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
@@ -74,4 +136,4 @@ where
     = '310101002'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and DUD.DUD_FILDOC between '"+cFilIni+"' and '"+cFilFim+"'
 
-group by SD2.D2_FILIAL, DUD.DUD_VIAGEM, SD2.D2_CCUSTO
+group by SD2.D2_FILIAL, SD2.D2_CCUSTO, SF2.F2_DOC, DUD.DUD_VIAGEM, VGA2.DUD_VIAGEM
