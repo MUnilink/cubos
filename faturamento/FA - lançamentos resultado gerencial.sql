@@ -34,7 +34,7 @@ select distinct
             from DUD010 (nolock)
             where
                     DUD010.D_E_L_E_T_ = ''
-                and concat(DUD010.DUD_FILDOC, DUD010.DUD_VIAGEM) = ZE3.ZE3_NUM
+                and concat(trim(DUD010.DUD_FILIAL), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
         )
     ) as BK_ITEM_CONTABIL,
     
@@ -55,8 +55,13 @@ select distinct
     (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     
     /* para validação no RM */
+    trim(ZE3.ZE3_NUM) as OS_VGA,
+    trim(ZC1.ZC1_FILIAL) as FILIAL_OS,
+    trim(ZC1.ZC1_NUM) as NUM_OS,
+    trim(DUD.DUD_FILIAL) as FILIAL_VG,
+    trim(DUD.DUD_VIAGEM) as NUM_VG,
+    
     ZE3.ZE3_VALOR as VL_ORIGINAL,
-    cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
     trim(SA1.A1_NOME) as CLIENTE,
     trim(ZE2.ZE2_CONTA) as CONTA,
     trim(ZE2.ZE2_CLASS) as CLASSE,
@@ -106,7 +111,8 @@ from ZE3010 ZE3 (nolock)
         and concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM) = ZE3.ZE3_NUM
     left join DUD010 DUD
         on DUD.D_E_L_E_T_ = ''
-        and concat(DUD.DUD_FILIAL, DUD.DUD_VIAGEM) = ZE3.ZE3_NUM
+        and left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
+        and concat(left(ZE3.ZE3_NUM, 4), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
 
         left join SA1010 SA1
             on SA1.D_E_L_E_T_ = ''

@@ -22,7 +22,7 @@ select distinct
                     and CTD010.D_E_L_E_T_ = ''
 
                     inner join SD2010
-                        on SD2010.D_E_L_E_T_= ''
+                        on SD2010.D_E_L_E_T_ = ''
                         and SD2010.D2_FILIAL = SC6010.C6_FILIAL
                         and SD2010.D2_PEDIDO = SC6010.C6_NUM
                         
@@ -35,7 +35,7 @@ select distinct
             from DUD010 (nolock)
             where
                     DUD010.D_E_L_E_T_ = ''
-                and concat(DUD010.DUD_FILDOC, DUD010.DUD_VIAGEM) = ZE3.ZE3_NUM
+                and concat(trim(DUD010.DUD_FILIAL), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
         )
     ) as BK_ITEM_CONTABIL,
 
@@ -63,7 +63,7 @@ from ZE3010 ZE3
         and concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM) = ZE3.ZE3_NUM
     left join DUD010 DUD
         on DUD.D_E_L_E_T_ = ''
-        and concat(DUD.DUD_FILIAL, DUD.DUD_VIAGEM) = ZE3.ZE3_NUM
+        and concat(left(ZE3.ZE3_NUM, 4), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
 
         left join SA1010 SA1
             on SA1.D_E_L_E_T_ = ''
