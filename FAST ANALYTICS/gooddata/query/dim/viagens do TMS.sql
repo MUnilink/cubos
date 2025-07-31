@@ -1,5 +1,5 @@
 select
-    concat(trim(DUD.DUD_FILIAL), trim(DUD.DUD_VIAGEM)) as BK_VIAGEMTMS,
+    concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) as BK_VIAGEMTMS,
     DUD.DUD_VIAGEM as VIAGEM,
 
     case DTQ.DTQ_STATUS
