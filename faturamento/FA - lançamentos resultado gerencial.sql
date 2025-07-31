@@ -34,7 +34,7 @@ select distinct
             from DUD010 (nolock)
             where
                     DUD010.D_E_L_E_T_ = ''
-                and concat(trim(DUD010.DUD_FILIAL), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
+                and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
         )
     ) as BK_ITEM_CONTABIL,
     

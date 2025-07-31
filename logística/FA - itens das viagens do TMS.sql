@@ -14,6 +14,7 @@ select
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+            and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
             and DTW010.DTW_ATIVID = 49
     ) as DATAINI,
@@ -23,6 +24,7 @@ select
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+            and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
             and DTW010.DTW_ATIVID = 50
     ) as DATAFIM,
@@ -32,6 +34,7 @@ select
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+            and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
             and DTW010.DTW_ATIVID = 50
     ) as COMPETENCIA
