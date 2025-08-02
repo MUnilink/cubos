@@ -104,6 +104,7 @@ where
             when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
         else null end
     = '310101002'
+    and trim(SD2.D2_ITEMCC) = '11'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 
 group by
