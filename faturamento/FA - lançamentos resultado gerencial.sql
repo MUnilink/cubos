@@ -1,4 +1,4 @@
-select distinct
+select
     'P |01|01' AS BK_EMPRESA,
     CASE WHEN ZC1.ZC1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZC1.ZC1_FILIAL AS CHAR (6)) END AS BK_FILIAL,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
@@ -14,7 +14,7 @@ select distinct
     coalesce
     (
         (
-            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTD010.CTD_ITEM, ' ')), ' '), '|'))
+            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|'))
             from SC6010
                 inner join CTD010
                     on CTD010.CTD_FILIAL = ''
@@ -25,7 +25,6 @@ select distinct
                         on SD2010.D_E_L_E_T_= ''
                         and SD2010.D2_FILIAL = SC6010.C6_FILIAL
                         and SD2010.D2_PEDIDO = SC6010.C6_NUM
-                        
             where
                     SC6010.D_E_L_E_T_ = ''
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
