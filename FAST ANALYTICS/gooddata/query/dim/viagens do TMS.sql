@@ -19,5 +19,3 @@ from DUD010 DUD
         and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
 where
         DUD.D_E_L_E_T_ = ''
-
-union select null, null, null
