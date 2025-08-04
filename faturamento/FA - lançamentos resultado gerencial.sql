@@ -20,11 +20,11 @@ select
                     on CTD010.CTD_FILIAL = ''
                     and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
                     and CTD010.D_E_L_E_T_ = ''
-
-                    inner join SD2010
-                        on SD2010.D_E_L_E_T_= ''
-                        and SD2010.D2_FILIAL = SC6010.C6_FILIAL
-                        and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                inner join SD2010
+                    on SD2010.D_E_L_E_T_= ''
+                    and SD2010.D2_FILIAL = SC6010.C6_FILIAL
+                    and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                    and SD2010.D2_ITEMPV = SC6010.C6_ITEM
             where
                     SC6010.D_E_L_E_T_ = ''
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
@@ -34,6 +34,7 @@ select
             from DUD010 (nolock)
             where
                     DUD010.D_E_L_E_T_ = ''
+                and trim(ZE3.ZE3_ORIGEM) = '304'
                 and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
         )
     ) as BK_ITEM_CONTABIL,
@@ -138,6 +139,43 @@ from ZE3010 ZE3 (nolock)
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
         and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
+
+    left join
+    (
+        select distinct
+            SC6010.C6_FILIAL as FILIAL,
+            SC6010.C6_YOS as OS,
+            concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
+            concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
+            'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
+            'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+            1 as QTD
+        from SC6010
+            left join SD2010
+                on SD2010.D_E_L_E_T_= ''
+                and SD2010.D2_FILIAL = SC6010.C6_FILIAL
+                and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                and SD2010.D2_ITEMPV = SC6010.C6_ITEM
+                        
+                left join SF2010
+                    on SF2010.D_E_L_E_T_= ' '
+                    and SF2010.F2_FILIAL = SD2010.D2_FILIAL
+                    and SF2010.F2_CLIENTE = SD2010.D2_CLIENTE
+                    and SF2010.F2_LOJA = SD2010.D2_LOJA
+                    and SF2010.F2_DOC = SD2010.D2_DOC
+                    and SF2010.F2_SERIE = SD2010.D2_SERIE
+            
+            left join CTD010
+                on CTD010.CTD_FILIAL = ''
+                and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
+                and CTD010.D_E_L_E_T_ = ''
+            left join CTT010
+                on CTT010.D_E_L_E_T_ = ''
+                and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
+                and CTT010.CTT_CUSTO = SC6010.C6_CC
+        where
+                SC6010.D_E_L_E_T_ = ''
+    ) PV on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
 where
         ZE3.ZE3_COMPET=:PERIODO
     and ZE3.D_E_L_E_T_ = ''
