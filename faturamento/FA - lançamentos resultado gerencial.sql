@@ -43,8 +43,26 @@ select
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     ZE2.ZE2_COD as CONTAROP,
+    
     ZE2.ZE2_CONTA as CONTA_CONTABIL,
-    cast(case when ZC1.ZC1_STATUS = 1 then null when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM else ZC1.ZC1_DTENCE end as date) as DT_FIMOS,
+    
+    case
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS != '3') then null
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS = '3') then
+        (
+            select DTW010.DTW_DATREA
+            from DTW010 (nolock)
+            where 
+                    DTW010.D_E_L_E_T_ = ''
+                and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+                and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                and DTW010.DTW_ATIVID = 50
+        )
+        when ZC1.ZC1_STATUS = 1 then null
+        when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
+        else ZC1.ZC1_DTENCE end
+    as DT_FIMOS,
     
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
@@ -52,10 +70,9 @@ select
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
     else 0.0 end as VALOR,
-
-    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     
     /* para validação no RM */
+    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     trim(ZE3.ZE3_NUM) as OS_VGA,
     trim(ZC1.ZC1_FILIAL) as FILIAL_OS,
     trim(ZC1.ZC1_NUM) as NUM_OS,
@@ -139,43 +156,6 @@ from ZE3010 ZE3 (nolock)
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
         and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
-
-    left join
-    (
-        select distinct
-            SC6010.C6_FILIAL as FILIAL,
-            SC6010.C6_YOS as OS,
-            concat(trim(SC6010.C6_FILIAL), trim(SC6010.C6_NUM)) as ID_PEDIDODEVENDA,
-            concat('SF2', trim(SF2010.F2_FILIAL), trim(SF2010.F2_CLIENTE), trim(SF2010.F2_LOJA), trim(SF2010.F2_DOC), trim(SF2010.F2_SERIE)) as ID_NFS,
-            'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
-            'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
-            1 as QTD
-        from SC6010
-            left join SD2010
-                on SD2010.D_E_L_E_T_= ''
-                and SD2010.D2_FILIAL = SC6010.C6_FILIAL
-                and SD2010.D2_PEDIDO = SC6010.C6_NUM
-                and SD2010.D2_ITEMPV = SC6010.C6_ITEM
-                        
-                left join SF2010
-                    on SF2010.D_E_L_E_T_= ' '
-                    and SF2010.F2_FILIAL = SD2010.D2_FILIAL
-                    and SF2010.F2_CLIENTE = SD2010.D2_CLIENTE
-                    and SF2010.F2_LOJA = SD2010.D2_LOJA
-                    and SF2010.F2_DOC = SD2010.D2_DOC
-                    and SF2010.F2_SERIE = SD2010.D2_SERIE
-            
-            left join CTD010
-                on CTD010.CTD_FILIAL = ''
-                and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
-                and CTD010.D_E_L_E_T_ = ''
-            left join CTT010
-                on CTT010.D_E_L_E_T_ = ''
-                and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
-                and CTT010.CTT_CUSTO = SC6010.C6_CC
-        where
-                SC6010.D_E_L_E_T_ = ''
-    ) PV on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
 where
         ZE3.ZE3_COMPET=:PERIODO
     and ZE3.D_E_L_E_T_ = ''
