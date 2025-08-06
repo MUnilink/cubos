@@ -8,7 +8,8 @@
         trim(SB1.B1_UM) as UN,
         SCP.CP_QUANT as QTD_PEDIDA,
         SCP.CP_QUJE as QTD_ATENDIDA,
-        null as VALOR_APROV,
+        cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_TOTAL,
+        cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_APROV,
 
         trim(SCP.CP_ITEMCTA) as ATIVIDADE,
         trim(SCP.CP_CC) as CC,
@@ -86,7 +87,6 @@
             and STJ.TJ_ORDEM = left(SCP.CP_OP, 6)
     where
             SCP.D_E_L_E_T_ = ''
-            and STJ.TJ_CODBEM like 'GMK4100%'
 union
     select
         left(SC7.C7_OP, 6) as OS,
@@ -98,7 +98,8 @@ union
         trim(SB1.B1_UM) as UN,
         SC7.C7_QUANT as QTD_PEDIDA,
         SC7.C7_QUJE as QTD_ATENDIDA,
-        SCR.CR_TOTAL as VALOR_APROV,
+        cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_TOTAL,
+        cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_APROV,
 
         trim(SC7.C7_ITEMCTA) as ATIVIDADE,
         trim(SC7.C7_CC) as CC,
