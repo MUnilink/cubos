@@ -1,11 +1,11 @@
 select 
     trim(SRA.RA_FILIAL) as FILIAL,
     trim(SRA.RA_MAT) as MATRICULA,
-        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
     trim(SRA.RA_NOMECMP) as NOME,
     trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
-    convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
     case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
     trim(CTT.CTT_CUSTO) as CC,
@@ -22,12 +22,13 @@ select
     trim(SPF.PF_SEQUEDE) as SEQ_ORI,
     concat(SPF.PF_REGRADE, ' - ', (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRADE)) as REGRA_ORI,
     
-    concat(trim(SPF.PF_TURNODE), ' - ', (select trim(SR6010.R6_DESC) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF.PF_TURNOPA)) as TURNO_DES,
+    concat(trim(SPF.PF_TURNOPA), ' - ', (select trim(SR6010.R6_DESC) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF.PF_TURNOPA)) as TURNO_DES,
     trim(SPF.PF_SEQUEPA) as SEQ_DES,
     concat(SPF.PF_REGRAPA, ' - ', (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRAPA)) as REGRA_DES,
     
     cast(SPF.PF_DATA as date) as DATA,
     left(SPF.PF_DATA, 6) as PERIODO
+
 from SPF010 SPF (nolock)
     inner join SRA010 SRA (nolock)
         on SRA.D_E_L_E_T_ = ''
