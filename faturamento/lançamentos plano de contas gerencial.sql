@@ -4,8 +4,8 @@ select
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
     trim(ZE3.ZE3_ORIGEM) as CC,
     
-    coalesce
-    (
+    case
+        when ZC1.ZC1_NUM is not null then
         (
             select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|'))
             from SC6010
@@ -13,23 +13,19 @@ select
                     on CTD010.CTD_FILIAL = ''
                     and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
                     and CTD010.D_E_L_E_T_ = ''
-
-                    inner join SD2010
-                        on SD2010.D_E_L_E_T_= ''
-                        and SD2010.D2_FILIAL = SC6010.C6_FILIAL
-                        and SD2010.D2_PEDIDO = SC6010.C6_NUM
-            where
+                inner join SD2010
+                    on SD2010.D_E_L_E_T_= ''
+                    and SD2010.D2_FILIAL = SC6010.C6_FILIAL
+                    and SD2010.D2_PEDIDO = SC6010.C6_NUM
+                    and SD2010.D2_ITEMPV = SC6010.C6_ITEM
+        where
                     SC6010.D_E_L_E_T_ = ''
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
-        ),
-        (
-            select top 1 ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
-            from DUD010 (nolock)
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and concat(DUD010.DUD_FILDOC, DUD010.DUD_VIAGEM) = ZE3.ZE3_NUM
         )
-    ) as ATIVIDADE,
+        
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
+        else null
+    end as ATIVIDADE,
     
     ZE2.ZE2_MSBLQL as BLOQUEADO,
     ZE3.ZE3_COMPET as PERIODO,

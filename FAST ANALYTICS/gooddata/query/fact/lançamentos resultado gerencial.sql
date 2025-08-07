@@ -10,9 +10,9 @@ select
     null as ID_NFS,
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
-    
-    coalesce
-    (
+
+    case
+        when ZC1.ZC1_NUM is not null then
         (
             select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|'))
             from SC6010
@@ -28,15 +28,11 @@ select
         where
                     SC6010.D_E_L_E_T_ = ''
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
-        ),
-        (
-            select top 1 ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
-            from DUD010 (nolock)
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
         )
-    ) as BK_ITEM_CONTABIL,
+        
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
+        else null
+    end as BK_ITEM_CONTABIL,
 
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
@@ -44,7 +40,24 @@ select
     concat(ZE3.ZE3_COMPET, '01') as COMPETENCIA,
     ZE2.ZE2_COD as CONTAROP,
     ZE2.ZE2_CONTA as CONTA_CONTABIL,
-    cast(case when ZC1.ZC1_STATUS = 1 then null when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM else ZC1.ZC1_DTENCE end as date) as DT_FIMOS,
+    
+    case
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS != '3') then null
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS = '3') then
+        (
+            select DTW010.DTW_DATREA
+            from DTW010 (nolock)
+            where 
+                    DTW010.D_E_L_E_T_ = ''
+                and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+                and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                and DTW010.DTW_ATIVID = 50
+        )
+        when ZC1.ZC1_STATUS = 1 then null
+        when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
+        else ZC1.ZC1_DTENCE end
+    as DT_FIMOS,
     
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR

@@ -11,8 +11,8 @@ select
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     
-    coalesce
-    (
+    case
+        when ZC1.ZC1_NUM is not null then
         (
             select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|'))
             from SC6010
@@ -25,19 +25,14 @@ select
                     and SD2010.D2_FILIAL = SC6010.C6_FILIAL
                     and SD2010.D2_PEDIDO = SC6010.C6_NUM
                     and SD2010.D2_ITEMPV = SC6010.C6_ITEM
-            where
+        where
                     SC6010.D_E_L_E_T_ = ''
                 and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
-        ),
-        (
-            select top 1 ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
-            from DUD010 (nolock)
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and trim(ZE3.ZE3_ORIGEM) = '304'
-                and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
         )
-    ) as BK_ITEM_CONTABIL,
+        
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
+        else null
+    end as BK_ITEM_CONTABIL,
     
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
@@ -76,7 +71,7 @@ select
     trim(ZE3.ZE3_NUM) as OS_VGA,
     trim(ZC1.ZC1_FILIAL) as FILIAL_OS,
     trim(ZC1.ZC1_NUM) as NUM_OS,
-    trim(DUD.DUD_FILIAL) as FILIAL_VG,
+    trim(DUD.DUD_FILORI) as FILIAL_VG,
     trim(DUD.DUD_VIAGEM) as NUM_VG,
     
     ZE3.ZE3_VALOR as VL_ORIGINAL,
