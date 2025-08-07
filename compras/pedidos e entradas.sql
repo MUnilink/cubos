@@ -3,6 +3,7 @@ select
 	trim(SB1.B1_COD) as PRODUTO,
 	trim(SB1.B1_DESC) as NOMEPRODUTO,
 	trim(SB1.B1_GRUPO) as GRUPO,
+	(select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO) as NOMEGRUPO,
 	trim(SB1.B1_UM) as UN,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
 	trim(CTT.CTT_DESC01) as CCUSTO,
@@ -289,11 +290,6 @@ from SC7010 SC7 (nolock)
 	left join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
-
-		inner join SBM010 SBM (nolock)
-			on SBM.D_E_L_E_T_ = ''
-			and SBM.BM_GRUPO = SB1.B1_GRUPO
-
 	inner join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SC7.C7_FORNECE
