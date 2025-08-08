@@ -34,6 +34,26 @@ select
     left(ZE3.ZE3_NUM, 6) as FILORI,
     right(trim(ZE3.ZE3_NUM), 11) as NUM_OS,
     right(trim(ZE3.ZE3_NUM), 6) as NUM_VG,
+
+    left
+    (
+        case
+            when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS != '3') then null
+            when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS = '3') then
+            (
+                select DTW010.DTW_DATREA
+                from DTW010 (nolock)
+                where 
+                        DTW010.D_E_L_E_T_ = ''
+                    and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+                    and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                    and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                    and DTW010.DTW_ATIVID = 50
+            )
+            when ZC1.ZC1_STATUS = 1 then null
+            when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
+            else ZC1.ZC1_DTENCE end
+    ,6) as PERIODO_FIMOS,
     
     case
         when len(trim(ZE2.ZE2_COD)) <= 2 then 1
@@ -79,4 +99,5 @@ from ZE3010 ZE3 (nolock)
         and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
 where
         ZE3.D_E_L_E_T_ = ''
-    and ZE3.ZE3_COMPET=:PERIODO
+    and ZE3.ZE3_COMPET>=:PERIODO_INI
+    and ZE3.ZE3_COMPET<=:PERIODO_FIM
