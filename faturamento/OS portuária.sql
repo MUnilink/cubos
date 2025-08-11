@@ -143,7 +143,7 @@ select
     ) as DTFIM_OS,
     
     left(ZC2.ZC2_COMPET, 6) as PERIODO,
-    left(coalesce(nullif(ZC2.ZC2_DATA, ''), ZC2.ZC2_COMPET), 6) as PERIODO_APONT,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then left(nullif(ZC2.ZC2_DTFIM, ''), 6) else left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_COMPET, ''), nullif(ZC2.ZC2_DATA, '')), 6) end as PERIODO_APONT,
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
@@ -166,7 +166,7 @@ select
         when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'não se aplica'
         when isdate(ZC2.ZC2_DTINI) = 0 or nullif(ZC2.ZC2_DTINI, '') is null or isdate(ZC2.ZC2_HRINI) = 0 or nullif(ZC2.ZC2_HRINI, '') is null then 'data ou hora ini ausente'
         when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(ZC2.ZC2_HRFIM) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
-        when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.5 then 'mais que 12,5 h apontadas'
+        when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.999 then 'mais que 13 h apontadas'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM)) < 0.0 then 'data/hora ini maior que data/hora fim'
         else 'item OK'
     end as STATUS_APONT,
