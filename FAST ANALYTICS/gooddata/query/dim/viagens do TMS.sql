@@ -2,13 +2,10 @@ select
     concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) as BK_VIAGEMTMS,
     DUD.DUD_VIAGEM as VIAGEM,
 
-    case DTQ.DTQ_STATUS
-        when '1' then upper('Em Aberto')
-        when '2' then upper('Em Transito')
-        when '3' then upper('Encerrada')
-        when '4' then upper('Chegada em Filial')
-        when '5' then upper('Fechada')
-        when '9' then upper('Cancelada')
+    case
+        when DTQ.DTQ_STATUS in ('1', '2', '5') then 'ABERTA'
+        when DTQ.DTQ_STATUS in ('3', '4') then 'ENCERRADA'
+        when DTQ.DTQ_STATUS in ('9') then 'CANCELADA'
         else 'Outros'
     end as STATUS_VGA
 
