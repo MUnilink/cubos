@@ -40,6 +40,13 @@ select
         else 'Outros'
     end as STATUS_DOC,
 
+    /* 1=Em Aberto;2=Indicada para Coleta;3=Em Transito;4=Encerrada;5=Documento Informado;6=Bloqueada;7=Em Conferencia;9=Cancelada 
+
+    case when exists (select DUA010 from DUA010) when DT5.DT5_STATUS = '4' then 'INTERNA' when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end as STATUS_COL,
+    */
+    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
+    trim(DUA.DUA_NUMVTR) as VGATRA_OCOR,
+
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
     trim(DUYDES.DUY_DESCRI) as DESTINO,
     trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
@@ -243,8 +250,6 @@ select
     DTC.DTC_PESLIQ,
     trim(SB1.B1_DESC) as NFCLI_PRODUTO,
 
-    trim(DUA.DUA_NUMVTR) as VGATRA_OCOR,
-
     DT5.DT5_NUMSOL,
     DT5.DT5_DOC,
     DT5.DT5_SERIE,
@@ -253,7 +258,6 @@ select
     DT5.DT5_CODSOL,
     DT5.DT5_CODOBC,
     
-    case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
     cast(DF1.DF1_DATCON as date) as DT_AGE,
     left(DF1.DF1_DATCON, 6) as PERIODO_AGE,
     datetimefromparts(year(DF1.DF1_YDTCON), month(DF1.DF1_YDTCON), day(DF1.DF1_YDTCON), substring(DF1.DF1_YHRCON, 1, 2), substring(DF1.DF1_YHRCON, 4, 5), 0, 0) as DATA_CONTEINER,
