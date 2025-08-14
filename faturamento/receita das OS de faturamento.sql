@@ -6,6 +6,9 @@ select
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO else ZC2.TIPO end as ID_TIPO,
     case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTD_REAL_ITEM end as HORAS_PROD,
     case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTDxVALORUNI end as VALOR_PROD,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.HIMP_AFAMNT else 0.0 end as HIMP_AFAMNT,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.HIMP_FER else 0.0 end as HIMP_FER,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.HIMP_PON else 0.0 end as HIMP_PON,
 
     case
         when ZC2.TIPO = 1 then 'RECEITA'
