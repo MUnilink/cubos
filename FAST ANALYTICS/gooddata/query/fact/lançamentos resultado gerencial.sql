@@ -1,4 +1,4 @@
-select
+select distinct
     'P |01|01' AS BK_EMPRESA,
     case when nullif(ZC1.ZC1_FILIAL, '') is not null then 'P |01|01'+ CAST(ZC1.ZC1_FILIAL AS CHAR (6)) when nullif(DUD.DUD_FILORI, '') is not null then 'P |01|01'+ CAST(DUD.DUD_FILORI AS CHAR (6)) else 'P |01||' end as BK_FILIAL,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
