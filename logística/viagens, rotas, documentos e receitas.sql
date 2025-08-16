@@ -32,16 +32,27 @@ select
     end as STATUS_VGA,
 
     case DUD.DUD_STATUS
-        when 1 then upper('Em Aberto')
-        when 2 then upper('Em Transito')
-        when 3 then upper('Carregado')
-        when 4 then upper('Encerrado')
-        when 9 then upper('Cancelado')
+        when '1' then upper('Em Aberto')
+        when '2' then upper('Em Transito')
+        when '3' then upper('Carregado')
+        when '4' then upper('Encerrado')
+        when '9' then upper('Cancelado')
         else 'Outros'
     end as STATUS_DOC,
 
-    /* 1=Em Aberto;2=Indicada para Coleta;3=Em Transito;4=Encerrada;5=Documento Informado;6=Bloqueada;7=Em Conferencia;9=Cancelada 
+    case DT5.DT5_STATUS
+        when '1' then upper('Em Aberto')
+        when '2' then upper('Indicada para Coleta')
+        when '3' then upper('Em Transito')
+        when '4' then upper('Encerrada')
+        when '5' then upper('Documento Informado')
+        when '6' then upper('Bloqueada')
+        when '7' then upper('Em Conferencia')
+        when '9' then upper('Cancelada')
+        else 'Outros'
+    end as STATUS_COL,
 
+    /*
     case when exists (select DUA010 from DUA010) when DT5.DT5_STATUS = '4' then 'INTERNA' when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end as STATUS_COL,
     */
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
