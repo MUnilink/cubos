@@ -21,6 +21,15 @@ select
     substring(DTQ.DTQ_DATFEC, 1, 6) as PERIODO_FECVGA,
     substring(DTQ.DTQ_DATENC, 1, 6) as PERIODO_ENCVGA,
 
+    case DTQ.DTQ_TIPVIA
+        when '1' then upper('Normal')
+        when '2' then upper('Vazia')
+        when '3' then upper('Planejada')
+        when '4' then upper('Socorro')
+        when '5' then upper('Redespacho')
+        else 'Outros'
+    end as TIPO_VIAGEM,
+
     case DTQ.DTQ_STATUS
         when '1' then upper('Em Aberto')
         when '2' then upper('Em Transito')
@@ -52,9 +61,6 @@ select
         else 'Outros'
     end as STATUS_COL,
 
-    /*
-    case when exists (select DUA010 from DUA010) when DT5.DT5_STATUS = '4' then 'INTERNA' when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end as STATUS_COL,
-    */
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
     trim(DUA.DUA_NUMVTR) as VGATRA_OCOR,
 
@@ -388,10 +394,16 @@ select
             and DTW010.DTW_ATIVID = 50
     ) as COMPETENCIA
 
-from DTQ010 DTQ (nolock)
-    inner join DA8010 DA8 (nolock)
-        on DA8.D_E_L_E_T_ = ''
-        and DA8.DA8_COD = DTQ.DTQ_ROTA
+from DUD010 DUD (nolock)
+    left join DTQ010 DTQ (nolock)
+        on DTQ.D_E_L_E_T_ = ''
+        and DTQ.DTQ_FILORI = DUD.DUD_FILORI
+        and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
+        
+        inner join DA8010 DA8 (nolock)
+            on DA8.D_E_L_E_T_ = ''
+            and DA8.DA8_COD = DTQ.DTQ_ROTA
+    
     inner join DTR010 DTR (nolock)
         on DTR.D_E_L_E_T_ = ''
         and DTR.DTR_FILORI = DTQ.DTQ_FILORI
@@ -407,86 +419,81 @@ from DTQ010 DTQ (nolock)
             inner join DA4010 DA4 (nolock)
                 on DA4.DA4_COD = DUP.DUP_CODMOT
 
-    left join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILORI = DTQ.DTQ_FILORI
-        and DUD.DUD_VIAGEM = DTQ.DTQ_VIAGEM
+    left join DT5010 DT5 (nolock)
+        on DT5.D_E_L_E_T_ = ''
+        and DT5.DT5_FILDOC = DUD.DUD_FILDOC
+        and DT5.DT5_NUMSOL = DUD.DUD_DOC
+        and DUD.DUD_SERIE = 'COL'
 
-        left join DT5010 DT5 (nolock)
-            on DT5.D_E_L_E_T_ = ''
-            and DT5.DT5_FILDOC = DUD.DUD_FILDOC
-            and DT5.DT5_NUMSOL = DUD.DUD_DOC
-            and DUD.DUD_SERIE = 'COL'
+        left join DF1010 DF1 (nolock)
+            on DF1.D_E_L_E_T_ = ''
+            and DF1.DF1_FILDOC = DT5.DT5_FILORI
+            and DF1.DF1_DOC = DT5.DT5_DOC
+            and DF1.DF1_SERIE = DT5.DT5_SERIE
 
-            left join DF1010 DF1 (nolock)
-                on DF1.D_E_L_E_T_ = ''
-                and DF1.DF1_FILDOC = DT5.DT5_FILORI
-                and DF1.DF1_DOC = DT5.DT5_DOC
-                and DF1.DF1_SERIE = DT5.DT5_SERIE
+    left join DT6010 DT6 (nolock)
+        on DT6.D_E_L_E_T_ = ''
+        and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+        and DT6.DT6_DOC = DUD.DUD_DOC
+        and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-		left join DT6010 DT6 (nolock)
-			on DT6.D_E_L_E_T_ = ''
-			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-			and DT6.DT6_DOC = DUD.DUD_DOC
-			and DT6.DT6_SERIE = DUD.DUD_SERIE
+        left join SD2010 COMP (nolock)
+            on COMP.D_E_L_E_T_ = ''
+            and COMP.D2_NFORI = DT6.DT6_DOC
+            and COMP.D2_SERIORI = DT6.DT6_SERIE
+            and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
+            and COMP.D2_LOJA = DT6.DT6_LOJDEV
 
-            left join SD2010 COMP (nolock)
-                on COMP.D_E_L_E_T_ = ''
-                and COMP.D2_NFORI = DT6.DT6_DOC
-                and COMP.D2_SERIORI = DT6.DT6_SERIE
-                and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
-                and COMP.D2_LOJA = DT6.DT6_LOJDEV
+        left join SA1010 DEV (nolock)
+            on DEV.A1_FILIAL = '      '
+            and DEV.A1_COD = DT6.DT6_CLIDEV
+            and DEV.A1_LOJA = DT6.DT6_LOJDEV
+            and DEV.D_E_L_E_T_ = ' '
+        left join SA1010 REM
+            ON REM.A1_FILIAL = '      '
+            AND REM.A1_COD = DT6.DT6_CLIREM
+            AND REM.A1_LOJA = DT6.DT6_LOJREM
+            AND REM.D_E_L_E_T_ = ' '
+        left join SA1010 DES
+            ON DES.A1_FILIAL = '      '
+            AND DES.A1_COD = DT6.DT6_CLIDES
+            AND DES.A1_LOJA = DT6.DT6_LOJDES
+            AND DES.D_E_L_E_T_ = ' '
 
-            left join SA1010 DEV (nolock)
-                on DEV.A1_FILIAL = '      '
-                and DEV.A1_COD = DT6.DT6_CLIDEV
-                and DEV.A1_LOJA = DT6.DT6_LOJDEV
-                and DEV.D_E_L_E_T_ = ' '
-            left join SA1010 REM
-                ON REM.A1_FILIAL = '      '
-                AND REM.A1_COD = DT6.DT6_CLIREM
-                AND REM.A1_LOJA = DT6.DT6_LOJREM
-                AND REM.D_E_L_E_T_ = ' '
-            left join SA1010 DES
-                ON DES.A1_FILIAL = '      '
-                AND DES.A1_COD = DT6.DT6_CLIDES
-                AND DES.A1_LOJA = DT6.DT6_LOJDES
-                AND DES.D_E_L_E_T_ = ' '
+    LEFT JOIN DUY010 DUYORI
+        ON DUYORI.DUY_FILIAL = DT6_FILIAL
+        AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
+        AND DUYORI.D_E_L_E_T_ = ' '
+    LEFT JOIN DUY010 DUYDES
+        ON DUYDES.DUY_FILIAL = DT6_FILIAL
+        AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
+        AND DUYDES.D_E_L_E_T_ = ' '
+    LEFT JOIN DUY010 DUYDEV
+        ON DUYDEV.DUY_FILIAL = DT6_FILIAL
+        AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
+        AND DUYDEV.D_E_L_E_T_ = ' '
+    
+    left join DUY010 REG_COL (nolock)
+        ON REG_COL.D_E_L_E_T_ = ' '
+        and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
+        and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
+    left join DUY010 REG_ENT (nolock)
+        ON REG_ENT.D_E_L_E_T_ = ' '
+        and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
+        and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
+    left join DTC010 DTC (nolock)
+        on DTC.D_E_L_E_T_ = ''
+        and DTC.DTC_FILDOC = DT6.DT6_FILDOC
+        and DTC.DTC_DOC = DT6.DT6_DOC
+        and DTC.DTC_SERIE = DT6.DT6_SERIE
 
-        LEFT JOIN DUY010 DUYORI
-            ON DUYORI.DUY_FILIAL = DT6_FILIAL
-            AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
-            AND DUYORI.D_E_L_E_T_ = ' '
-        LEFT JOIN DUY010 DUYDES
-            ON DUYDES.DUY_FILIAL = DT6_FILIAL
-            AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
-            AND DUYDES.D_E_L_E_T_ = ' '
-        LEFT JOIN DUY010 DUYDEV
-            ON DUYDEV.DUY_FILIAL = DT6_FILIAL
-            AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
-            AND DUYDEV.D_E_L_E_T_ = ' '
-        
-        left join DUY010 REG_COL (nolock)
-            ON REG_COL.D_E_L_E_T_ = ' '
-            and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
-            and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
-        left join DUY010 REG_ENT (nolock)
-            ON REG_ENT.D_E_L_E_T_ = ' '
-            and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
-            and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
-        left join DTC010 DTC (nolock)
-            on DTC.D_E_L_E_T_ = ''
-            and DTC.DTC_FILDOC = DT6.DT6_FILDOC
-            and DTC.DTC_DOC = DT6.DT6_DOC
-            and DTC.DTC_SERIE = DT6.DT6_SERIE
-
-            left join SB1010 SB1 (nolock)
-                on SB1.D_E_L_E_T_ = ''
-                and SB1.B1_COD = DTC.DTC_CODPRO
+        left join SB1010 SB1 (nolock)
+            on SB1.D_E_L_E_T_ = ''
+            and SB1.B1_COD = DTC.DTC_CODPRO
     
     left join SC5010 SC5 (nolock)
         on SC5.D_E_L_E_T_ = ''
-        and trim(SC5.C5_YVIAGEM) = DTQ.DTQ_VIAGEM
+        and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
 
         left join SD2010 RPS (nolock)
             on RPS.D_E_L_E_T_ = ''
@@ -498,6 +505,6 @@ from DTQ010 DTQ (nolock)
     
     left join SE1010 SE1 (nolock)
         on SE1.D_E_L_E_T_ = ''
-        and (trim(SE1.E1_YVIATMS) = DTQ.DTQ_VIAGEM or SE1.E1_YVIAGEM = DTQ.DTQ_VIAGEM)
+        and (trim(SE1.E1_YVIATMS) = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
 where
         DTQ.D_E_L_E_T_ = ''
