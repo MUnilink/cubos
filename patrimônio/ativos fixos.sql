@@ -28,13 +28,14 @@ select
 	SN3.N3_TXDEPR3,
 	SN3.N3_TXDEPR4,
 	SN3.N3_TXDEPR5,
-
-	datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) as TEMPO_ATIVO,
+	
+	cast('20241231' as date) as DATA_BASE,
+	datediff(month, SN3.N3_DINDEPR, cast('20241231' as date)) as TEMPO_ATIVO,
 	100 / (SN3.N3_TXDEPR1 /12) as TEMPO_DEPREC,
 	SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as DEPRECMENSAL,
-    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
-    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, cast('20250731' as date))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
-	case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) else SN3.N3_VORIG1 end as ACUMULADO/*,((datediff(day, datefromparts(day(cast('20250731' as date)), 1, 1), cast('20250731' as date)))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
+    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20241231' as date)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
+    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20241231' as date)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, cast('20241231' as date))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
+	case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20241231' as date)) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, cast('20241231' as date)) else SN3.N3_VORIG1 end as ACUMULADO/*,((datediff(day, datefromparts(day(cast('20241231' as date)), 1, 1), cast('20241231' as date)))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
 
 from SN1010 SN1 (nolock)
     left join ST9010 ST9 (nolock)
