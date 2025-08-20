@@ -1,23 +1,20 @@
 select
     SN1.N1_GRUPO,
-	trim(isnull(SN1.N1_CBASE, '-')) as N1_CBASE,
-	trim(isnull(SN1.N1_DESCRIC, '-')) as N1_DESCRIC,
-    trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
-	convert(date, SN3.N3_DINDEPR, 103) as N3_DINDEPR,
+	trim(SN1.N1_CBASE) as N1_CBASE,
+	trim(SN1.N1_DESCRIC) as N1_DESCRIC,
+    trim(ST9.T9_CODBEM) as T9_CODBEM,
+	cast(SN3.N3_DINDEPR as date) as N3_DINDEPR,
 	SN3.N3_TXDEPR1 /12 as TXDEPRECMENSAL,
 	SNG.NG_TXDEPR1 /12 as TXDEPRECMENSALGRUPO,
 
-	SN3.N3_CUSTBEM as CC,
-	SN3.N3_SUBCCON as ATIVIDADE,
-	
-	SN3.N3_CCUSTO as CC_DESPESA,
-	SN3.N3_SUBCTA as ATIV_DESPESA,
-
-	SN3.N3_CCCDEP as CC_DEPR_ACUM,
-	SN3.N3_SUBCCDE as ATIV_DEPR_ACUM,
-
-	SN3.N3_CCDESP as CC_DESP_DEPR,
-	SN3.N3_SUBCDEP as ATIV_DESP_DEPR,
+	trim(SN3.N3_CUSTBEM) as CC,
+	trim(SN3.N3_SUBCCON) as ATIVIDADE,
+	trim(SN3.N3_CCUSTO) as CC_DESPESA,
+	trim(SN3.N3_SUBCTA) as ATIV_DESPESA,
+	trim(SN3.N3_CCCDEP) as CC_DEPR_ACUM,
+	trim(SN3.N3_SUBCCDE) as ATIV_DEPR_ACUM,
+	trim(SN3.N3_CCDESP) as CC_DESP_DEPR,
+	trim(SN3.N3_SUBCDEP) as ATIV_DESP_DEPR,
 
 	SN1.N1_QUANTD,
 	SN3.N3_VORIG1,
@@ -25,20 +22,19 @@ select
 	SN3.N3_VORIG3,
 	SN3.N3_VORIG4,
 	SN3.N3_VORIG5,
-
     SN1.N1_NFISCAL,
-
 	SN3.N3_TXDEPR1,
 	SN3.N3_TXDEPR2,
 	SN3.N3_TXDEPR3,
 	SN3.N3_TXDEPR4,
 	SN3.N3_TXDEPR5,
 
-	datediff(month, SN3.N3_DINDEPR, cast('20220731' as date)) TEMPO_ATIVO,
+	datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) as TEMPO_ATIVO,
 	100 / (SN3.N3_TXDEPR1 /12) as TEMPO_DEPREC,
 	SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as DEPRECMENSAL,
-    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20220731' as date)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
-    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20220731' as date)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, cast('20220731' as date))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL
+    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
+    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, cast('20250731' as date))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
+	case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, cast('20250731' as date)) else SN3.N3_VORIG1 end as ACUMULADO/*,((datediff(day, datefromparts(day(cast('20250731' as date)), 1, 1), cast('20250731' as date)))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
 
 from SN1010 SN1 (nolock)
     left join ST9010 ST9 (nolock)
