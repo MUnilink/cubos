@@ -29,6 +29,26 @@ SELECT
     
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as BK_PEDIDODEVENDA,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as BK_OSPORTUARIA,
+
+    coalesce
+    (
+        concat(DUD.DUD_FILORI, DUD.DUD_VIAGEM), /* viagem normal */
+        concat(VGA2.DUD_FILORI, VGA2.DUD_VIAGEM), /* se viagem atrelada ao complemento */
+        (
+            select distinct concat(DUD010.DUD_FILORI, DUD010.DUD_VIAGEM) /* NF de receita extra da viagem */
+            from DUD010 (nolock)
+                inner join SC5010 (nolock)
+                    on SC5010.D_E_L_E_T_ = ' '
+                    and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
+            where
+                    DUD010.D_E_L_E_T_ = ''
+                and SD2.D2_FILIAL = SC5010.C5_FILIAL
+                and SD2.D2_DOC = SC5010.C5_NOTA
+                and SD2.D2_SERIE = SC5010.C5_SERIE
+                and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
+                and SD2.D2_LOJA = SC5010.C5_LOJACLI
+        )
+    ) as ID_VIAGEMTMS,
     
     coalesce(SD2.D2_VALBRUT, 0.0) as VL_FATURAMENTO_TOTAL,
     coalesce(SD2.D2_VALICM, 0.0) as VL_ICMS_FATURAMENTO,
@@ -116,6 +136,32 @@ from SD2010 SD2
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = SC5.C5_FILIAL
         and ZC1.ZC1_NUM = SC5.C5_YOS
+
+    left join DUD010 DUD (nolock)
+        on DUD.D_E_L_E_T_ = ''
+        and DUD.DUD_FILDOC = SD2.D2_FILIAL
+        and DUD.DUD_DOC = SD2.D2_DOC
+        and DUD.DUD_SERIE = SD2.D2_SERIE
+        and DUD.DUD_SERIE != 'COL'
+
+		left join DT6010 DT6 (nolock)
+			on DT6.D_E_L_E_T_ = ''
+			and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+			and DT6.DT6_DOC = DUD.DUD_DOC
+			and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+    left join SD2010 COMP (nolock)
+        on COMP.D_E_L_E_T_ = ''
+        and COMP.D2_DOC = SD2.D2_NFORI
+        and COMP.D2_SERIE = SD2.D2_SERIORI
+        and COMP.D2_CLIENTE = SD2.D2_CLIENTE
+        and COMP.D2_LOJA = SD2.D2_LOJA
+
+        left join DUD010 VGA2 (nolock)
+            on VGA2.D_E_L_E_T_ = ''
+            and VGA2.DUD_FILDOC = COMP.D2_FILIAL
+            and VGA2.DUD_DOC = COMP.D2_DOC
+            and VGA2.DUD_SERIE = COMP.D2_SERIE
 where
         SD2.D2_EMISSAO between <<START_DATE>> and <<FINAL_DATE>>
     and SD2.D2_TIPO not in ('B', 'D')
