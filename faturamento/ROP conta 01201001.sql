@@ -52,13 +52,14 @@ from SD2010 SD2 (nolock)
         on CFOP.D_E_L_E_T_ = ''
         and CFOP.X5_TABELA = '13'
         and CFOP.X5_CHAVE = SD2.D2_CF
-        
     left join DUD010 DUD (nolock)
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_FILDOC = SD2.D2_FILIAL
         and DUD.DUD_DOC = SD2.D2_DOC
         and DUD.DUD_SERIE = SD2.D2_SERIE
         and DUD.DUD_SERIE != 'COL'
+        and DUD.DUD_STATUS != '9'
+        and exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILIAL = DUD.DUD_FILIAL and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_TIPVIA != '4')
 
     left join SD2010 COMP (nolock)
         on COMP.D_E_L_E_T_ = ''
