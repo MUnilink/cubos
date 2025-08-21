@@ -2,10 +2,19 @@ select
     SN1.N1_GRUPO,
 	trim(SN1.N1_CBASE) as N1_CBASE,
 	trim(SN1.N1_DESCRIC) as N1_DESCRIC,
+	trim(SN3.N3_ITEM) as ITEM_ATIVO,
     trim(ST9.T9_CODBEM) as T9_CODBEM,
-	cast(SN3.N3_DINDEPR as date) as N3_DINDEPR,
+	cast(SN3.N3_DINDEPR as date) as DATA_INIDEP,
+	cast(SN3.N3_AQUISIC as date) as DATA_AQUIS,
+	(select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'G1' and SX5010.X5_CHAVE = SN3.N3_TIPO) as TIPO_ATIVO,
 	SN3.N3_TXDEPR1 /12 as TXDEPRECMENSAL,
 	SNG.NG_TXDEPR1 /12 as TXDEPRECMENSALGRUPO,
+
+	trim(SN1.N1_FORNEC) as COD_FOR,
+	trim(SN1.N1_LOJA) as LOJA_FOR,
+	trim(SN1.N1_NFISCAL) as NFISCAL,
+	cast(SN1.N1_DTCLASS as date) as DATA_CLASS,
+	trim(SA2.A2_NOME) as FORNECEDOR,
 
 	trim(SN3.N3_CUSTBEM) as CC,
 	trim(SN3.N3_SUBCCON) as ATIVIDADE,
@@ -28,6 +37,13 @@ select
 	SN3.N3_TXDEPR3,
 	SN3.N3_TXDEPR4,
 	SN3.N3_TXDEPR5,
+
+	trim(SN3.N3_CCONTAB) as CONTA,
+	trim(SN3.N3_CDEPREC) as CONTA_DESDEPR,
+	trim(SN3.N3_CCDEPR) as CONTA_DEPACUM,
+	trim(SN3.N3_CDESP) as CONTA_CORDEPR,
+	trim(SN3.N3_CCORREC) as CONTA_CORRBEM,
+	trim(SN3.N3_HISTOR) as HISTORICO,
 	
 	cast('20241231' as date) as DATA_BASE,
 	datediff(month, SN3.N3_DINDEPR, cast('20241231' as date)) as TEMPO_ATIVO,
@@ -49,6 +65,10 @@ from SN1010 SN1 (nolock)
 		and cast(SN3.N3_TIPO as int) = 1
 		and SN3.N3_FILIAL = SN1.N1_FILIAL
 		and SN3.N3_CBASE = SN1.N1_CBASE
+	left join SA2010 SA2 (nolock)
+		on SA2.D_E_L_E_T_ = ''
+		and SA2.A2_COD = SN1.N1_FORNEC
+		and SA2.A2_LOJA = SN1.N1_LOJA
 where
         SN1.D_E_L_E_T_ = ''
     and cast(SN3.N3_TXDEPR1 as decimal) > 0
