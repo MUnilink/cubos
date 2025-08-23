@@ -60,7 +60,29 @@ from SD2010 SD2 (nolock)
         and DUD.DUD_SERIE = SD2.D2_SERIE
         and DUD.DUD_SERIE != 'COL'
         and DUD.DUD_STATUS != '9'
-        and exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILIAL = DUD.DUD_FILIAL and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_TIPVIA != '4')
+        and exists
+        (
+            select *
+            from DUD010
+                left join DUA010
+                    on DUA010.D_E_L_E_T_ = ''
+                    and DUA010.DUA_FILIAL = DUD010.DUD_FILIAL
+                    and DUA010.DUA_FILORI = DUD010.DUD_FILORI
+                    and DUA010.DUA_VIAGEM = DUD010.DUD_VIAGEM
+                    and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
+                    and DUA010.DUA_DOC = DUD010.DUD_DOC
+                    and DUA010.DUA_SERIE = DUD010.DUD_SERIE
+                    and DUA010.DUA_CODOCO != 'E004'
+                    and DUA010.DUA_NUMVTR = ''
+            where
+                    DUD010.D_E_L_E_T_ = ''
+                and DUD010.DUD_FILIAL = DUD.DUD_FILIAL
+                and DUD010.DUD_FILORI = DUD.DUD_FILORI
+                and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
+                and DUD010.DUD_FILDOC = DUD.DUD_FILDOC
+                and DUD010.DUD_DOC = DUD.DUD_DOC
+                and DUD010.DUD_SERIE = DUD.DUD_SERIE
+        )
 
     left join SD2010 COMP (nolock)
         on COMP.D_E_L_E_T_ = ''

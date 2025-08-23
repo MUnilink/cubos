@@ -19,7 +19,7 @@
             SD2.D_E_L_E_T_ = ''
         and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC
-union
+union /* descontos */
     select
         SD2.D2_FILIAL as FILIAL,
         coalesce
@@ -58,6 +58,30 @@ union
             and DUD.DUD_DOC = SD2.D2_DOC
             and DUD.DUD_SERIE = SD2.D2_SERIE
             and DUD.DUD_SERIE != 'COL'
+            and DUD.DUD_STATUS != '9'
+            and exists
+            (
+                select *
+                from DUD010
+                    left join DUA010
+                        on DUA010.D_E_L_E_T_ = ''
+                        and DUA010.DUA_FILIAL = DUD010.DUD_FILIAL
+                        and DUA010.DUA_FILORI = DUD010.DUD_FILORI
+                        and DUA010.DUA_VIAGEM = DUD010.DUD_VIAGEM
+                        and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
+                        and DUA010.DUA_DOC = DUD010.DUD_DOC
+                        and DUA010.DUA_SERIE = DUD010.DUD_SERIE
+                        and DUA010.DUA_CODOCO != 'E004'
+                        and DUA010.DUA_NUMVTR = ''
+                where
+                        DUD010.D_E_L_E_T_ = ''
+                    and DUD010.DUD_FILIAL = DUD.DUD_FILIAL
+                    and DUD010.DUD_FILORI = DUD.DUD_FILORI
+                    and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
+                    and DUD010.DUD_FILDOC = DUD.DUD_FILDOC
+                    and DUD010.DUD_DOC = DUD.DUD_DOC
+                    and DUD010.DUD_SERIE = DUD.DUD_SERIE
+            )
         left join SD2010 COMP (nolock)
             on COMP.D_E_L_E_T_ = ''
             and COMP.D2_DOC = SD2.D2_NFORI
