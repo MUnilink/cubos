@@ -116,4 +116,6 @@ from ZE1010 ZE1 (nolock)
         and RAT_IMPR.FILIAL = ZE1.ZE1_FILIAL
         and RAT_IMPR.COMPETENCIA = left(ZE1.ZE1_COMPET, 6)
         and RAT_IMPR.INSUMO = ZE1.ZE1_COD
-where ZE1.D_E_L_E_T_ = ''
+where
+        ZE1.D_E_L_E_T_ = ''
+    and left(ZE1.ZE1_COMPET,6)=:PERIODO
