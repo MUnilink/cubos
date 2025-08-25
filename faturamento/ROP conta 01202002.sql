@@ -52,17 +52,21 @@ from SD2010 SD2 (nolock)
         on CFOP.D_E_L_E_T_ = ''
         and CFOP.X5_TABELA = '13'
         and CFOP.X5_CHAVE = SD2.D2_CF
-        
-    left join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILDOC = SD2.D2_FILIAL
-        and DUD.DUD_DOC = SD2.D2_DOC
-        and DUD.DUD_SERIE = SD2.D2_SERIE
-        and DUD.DUD_SERIE != 'COL'
-        and DUD.DUD_STATUS != '9'
-        and exists
+
+        left join
         (
-            select *
+            select
+                DUD010.DUD_FILIAL,
+                DUD010.DUD_FILORI,
+                DUD010.DUD_VIAGEM,
+                DUD010.DUD_FILDOC,
+                DUD010.DUD_DOC,
+                DUD010.DUD_SERIE,
+                DUD010.DUD_STATUS,
+                DUA010.DUA_CODOCO, /* and DUA010.DUA_CODOCO != 'E004' */
+                DUA010.DUA_FILVTR,
+                DUA010.DUA_NUMVTR, /* and DUA010.DUA_NUMVTR = '' */
+                case when DUA010.DUA_CODOCO = 'E004' and concat(DUA010.DUA_FILVTR, DUA010.DUA_NUMVTR) != '' then 'SOC' else 'NOR' end as VGA_NORMAL
             from DUD010
                 left join DUA010
                     on DUA010.D_E_L_E_T_ = ''
@@ -72,17 +76,13 @@ from SD2010 SD2 (nolock)
                     and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
                     and DUA010.DUA_DOC = DUD010.DUD_DOC
                     and DUA010.DUA_SERIE = DUD010.DUD_SERIE
-                    and DUA010.DUA_CODOCO != 'E004'
-                    and DUA010.DUA_NUMVTR = ''
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and DUD010.DUD_FILIAL = DUD.DUD_FILIAL
-                and DUD010.DUD_FILORI = DUD.DUD_FILORI
-                and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
-                and DUD010.DUD_FILDOC = DUD.DUD_FILDOC
-                and DUD010.DUD_DOC = DUD.DUD_DOC
-                and DUD010.DUD_SERIE = DUD.DUD_SERIE
-        )
+            where DUD010.D_E_L_E_T_ = ''
+        ) DUD
+            on DUD.DUD_FILDOC = SD2.D2_FILIAL
+            and DUD.DUD_DOC = SD2.D2_DOC
+            and DUD.DUD_SERIE = SD2.D2_SERIE
+            and DUD.DUD_STATUS != '9'
+            and DUD.VGA_NORMAL != 'SOC'
 
     left join SD2010 COMP (nolock)
         on COMP.D_E_L_E_T_ = ''
