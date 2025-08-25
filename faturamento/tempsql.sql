@@ -21,7 +21,10 @@ select
     ) as NUM,
     SD2.D2_CCUSTO as CC,
     SD2.D2_DOC as PEDIDO,
-    sum(cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
+    DUD.DUD_STATUS,
+    isnull(DUD.DUA_CODOCO, 'SEM OCO') as CODOCO,
+    isnull(DUD.DUA_NUMVTR, 'SEM OCO') as NUMVTR,
+    cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2)) as TOTAL
 
 from SD2010 SD2 (nolock)
     inner join SF2010 SF2 (nolock)
@@ -53,16 +56,19 @@ from SD2010 SD2 (nolock)
         and CFOP.X5_TABELA = '13'
         and CFOP.X5_CHAVE = SD2.D2_CF
         
-    left join DUD010 DUD (nolock)
-        on DUD.D_E_L_E_T_ = ''
-        and DUD.DUD_FILDOC = SD2.D2_FILIAL
-        and DUD.DUD_DOC = SD2.D2_DOC
-        and DUD.DUD_SERIE = SD2.D2_SERIE
-        and DUD.DUD_SERIE != 'COL'
-        and DUD.DUD_STATUS != '9'
-        and exists
+        left join
         (
-            select *
+            select
+                DUD010.DUD_FILIAL,
+                DUD010.DUD_FILORI,
+                DUD010.DUD_VIAGEM,
+                DUD010.DUD_FILDOC,
+                DUD010.DUD_DOC,
+                DUD010.DUD_SERIE,
+                DUD010.DUD_STATUS,
+                nullif(nullif(DUA010.DUA_CODOCO, ''), 'E004') as DUA_CODOCO, /* and DUA010.DUA_CODOCO != 'E004' */
+                nullif(DUA010.DUA_NUMVTR, '') as DUA_NUMVTR, /* and DUA010.DUA_NUMVTR = '' */
+                case when nullif(nullif(DUA010.DUA_CODOCO, ''), 'E004') is null and nullif(DUA010.DUA_NUMVTR, '') is null then 'N' else DUA010.DUA_CODOCO end as VGA_NORMAL
             from DUD010
                 left join DUA010
                     on DUA010.D_E_L_E_T_ = ''
@@ -72,17 +78,13 @@ from SD2010 SD2 (nolock)
                     and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
                     and DUA010.DUA_DOC = DUD010.DUD_DOC
                     and DUA010.DUA_SERIE = DUD010.DUD_SERIE
-                    and DUA010.DUA_CODOCO != 'E004'
-                    and DUA010.DUA_NUMVTR = ''
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and DUD010.DUD_FILIAL = DUD.DUD_FILIAL
-                and DUD010.DUD_FILORI = DUD.DUD_FILORI
-                and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
-                and DUD010.DUD_FILDOC = DUD.DUD_FILDOC
-                and DUD010.DUD_DOC = DUD.DUD_DOC
-                and DUD010.DUD_SERIE = DUD.DUD_SERIE
-        )
+            where DUD010.D_E_L_E_T_ = ''
+        ) DUD
+            on DUD.DUD_FILDOC = SD2.D2_FILIAL
+            and DUD.DUD_DOC = SD2.D2_DOC
+            and DUD.DUD_SERIE = SD2.D2_SERIE
+            and DUD.DUD_STATUS != '9'
+            and DUD.VGA_NORMAL != 'N'
 
     left join SD2010 COMP (nolock)
         on COMP.D_E_L_E_T_ = ''
@@ -129,15 +131,4 @@ where
         else null end
     in ('310101001', '310101002')
     and trim(SD2.D2_ITEMCC) = '11'
-    and sd2.d2_emissao like '202503%'
-
-group by
-    SD2.D2_FILIAL,
-    SD2.D2_CCUSTO,
-    DUD.DUD_VIAGEM,
-    VGA2.DUD_VIAGEM,
-    SD2.D2_FILIAL,
-    SD2.D2_DOC,
-    SD2.D2_SERIE,
-    SD2.D2_CLIENTE,
-    SD2.D2_LOJA
+    and sd2.d2_emissao like '2025%'
