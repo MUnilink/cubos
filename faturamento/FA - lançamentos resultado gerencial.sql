@@ -1,6 +1,6 @@
-select
+select distinct
     'P |01|01' AS BK_EMPRESA,
-    CASE WHEN ZC1.ZC1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZC1.ZC1_FILIAL AS CHAR (6)) END AS BK_FILIAL,
+    case when nullif(ZC1.ZC1_FILIAL, '') is not null then 'P |01|01'+ CAST(ZC1.ZC1_FILIAL AS CHAR (6)) when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|01'+ CAST(DUD.DUD_FILORI AS CHAR (6)) else 'P |01||' end as BK_FILIAL,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
@@ -41,8 +41,8 @@ select
     
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
+    concat(ZE3.ZE3_COMPET, '01') as COMPETENCIA,
     ZE2.ZE2_COD as CONTAROP,
-    
     ZE2.ZE2_CONTA as CONTA_CONTABIL,
     
     case
@@ -62,7 +62,53 @@ select
         when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
         else ZC1.ZC1_DTENCE end
     as DT_FIMOS,
-    
+/*
+    case
+        when ZC1.ZC1_NUM is not null then
+        (
+            select min(SD2010.D2_EMISSAO)
+            from SD2010
+                inner join SC6010
+                    on SC6010.D_E_L_E_T_= ''
+                    and SC6010.C6_FILIAL = SD2010.D2_FILIAL
+                    and SC6010.C6_NUM = SD2010.D2_PEDIDO
+                    and SC6010.C6_ITEM = SD2010.D2_ITEMPV
+        where
+                    SD2010.D_E_L_E_T_ = ''
+                and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
+        )
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then
+        (
+            select min(SD2010.D2_EMISSAO)
+            from SD2010
+            where
+                    SD2010.D_E_L_E_T_ = ''
+                and SD2010.D2_FILIAL = DUD.DUD_FILORI
+                and SD2010.D2_DOC = DUD.DUD_DOC
+                and SD2010.D2_SERIE = DUD.DUD_SERIE
+                and coalesce
+                (
+                    DUD010.DUD_VIAGEM, /* viagem normal */
+                    VGA2.DUD_VIAGEM, /* se viagem atrelada ao complemento */
+                    (
+                        select distinct DUD010.DUD_VIAGEM /* NF de receita extra da viagem */
+                        from DUD010 (nolock)
+                            inner join SC5010 (nolock)
+                                on SC5010.D_E_L_E_T_ = ' '
+                                and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
+                        where
+                                DUD010.D_E_L_E_T_ = ''
+                            and SD2.D2_FILIAL = SC5010.C5_FILIAL
+                            and SD2.D2_DOC = SC5010.C5_NOTA
+                            and SD2.D2_SERIE = SC5010.C5_SERIE
+                            and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
+                            and SD2.D2_LOJA = SC5010.C5_LOJACLI
+                    )
+                )
+        )
+        else null
+    end as DT_NF,
+    */
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
@@ -71,7 +117,6 @@ select
     else 0.0 end as VALOR,
     
     /* para validação no RM */
-    (select trim(max(SX6010.X6_CONTEUD)) from SX6010 where SX6010.X6_FIL = ZC1.ZC1_FILIAL and SX6010.X6_VAR like 'UN_ULTOS%') as PERIODO_ATUAL,
     trim(ZE3.ZE3_NUM) as OS_VGA,
     trim(ZC1.ZC1_FILIAL) as FILIAL_OS,
     trim(ZC1.ZC1_NUM) as NUM_OS,
