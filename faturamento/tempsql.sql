@@ -1,134 +1,70 @@
-select
-    SD2.D2_FILIAL as FILIAL,
-    coalesce
-    (
-        DUD.DUD_VIAGEM,
-        VGA2.DUD_VIAGEM,
-        (
-            select distinct DUD010.DUD_VIAGEM
-            from DUD010 (nolock)
-                inner join SC5010 (nolock)
-                    on SC5010.D_E_L_E_T_ = ' '
-                    and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and SD2.D2_FILIAL = SC5010.C5_FILIAL
-                and SD2.D2_DOC = SC5010.C5_NOTA
-                and SD2.D2_SERIE = SC5010.C5_SERIE
-                and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
-                and SD2.D2_LOJA = SC5010.C5_LOJACLI
-        )
-    ) as NUM,
-    SD2.D2_CCUSTO as CC,
-    SD2.D2_DOC as PEDIDO,
-    DUD.DUD_STATUS,
-    isnull(DUD.DUA_CODOCO, 'SEM OCO') as CODOCO,
-    isnull(DUD.DUA_NUMVTR, 'SEM OCO') as NUMVTR,
-    cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2)) as TOTAL
-
-from SD2010 SD2 (nolock)
-    inner join SF2010 SF2 (nolock)
-        on SF2.F2_FILIAL = SD2.D2_FILIAL
-        and SF2.F2_CLIENTE = SD2.D2_CLIENTE
-        and SF2.F2_LOJA = SD2.D2_LOJA
-        and SF2.F2_DOC = SD2.D2_DOC
-        and SF2.F2_SERIE = SD2.D2_SERIE
-        and SF2.D_E_L_E_T_= ' '
-
-        left join SA1010 SA1 (nolock)
-            on SA1.D_E_L_E_T_= ''
-            and SA1.A1_COD = SF2.F2_CLIENTE
-            and SA1.A1_LOJA = SF2.F2_LOJA
-        
-    left join SB1010 SB1 (nolock)
-        on SB1.D_E_L_E_T_= ''
-        and SB1.B1_COD = SD2.D2_COD
+select distinct
+    'P |01|01' AS BK_EMPRESA,
+    case when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|01'+ CAST(DUD.DUD_FILORI AS CHAR (6)) else 'P |01||' end as BK_FILIAL,
     
-        left join SBM010 SBM (nolock)
-            on SBM.D_E_L_E_T_ = ''
-            and SBM.BM_GRUPO = SB1.B1_GRUPO
+    case
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
+        else null
+    end as BK_ITEM_CONTABIL,
+    case
+        when right(left(trim(ZE3.ZE3_NUM), 6), 1) = '1' then 'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('', ' ')), ' '), '|')
+        else 'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|')
+    end as BK_CENTRO_DE_CUSTO,
     
-    left join SF4010 SF4 (nolock)
-        on SF4.D_E_L_E_T_ = ''
-        and SF4.F4_CODIGO = SD2.D2_TES
-    left join SX5010 CFOP (nolock)
-        on CFOP.D_E_L_E_T_ = ''
-        and CFOP.X5_TABELA = '13'
-        and CFOP.X5_CHAVE = SD2.D2_CF
-        
-        left join
-        (
-            select
-                DUD010.DUD_FILIAL,
-                DUD010.DUD_FILORI,
-                DUD010.DUD_VIAGEM,
-                DUD010.DUD_FILDOC,
-                DUD010.DUD_DOC,
-                DUD010.DUD_SERIE,
-                DUD010.DUD_STATUS,
-                nullif(nullif(DUA010.DUA_CODOCO, ''), 'E004') as DUA_CODOCO, /* and DUA010.DUA_CODOCO != 'E004' */
-                nullif(DUA010.DUA_NUMVTR, '') as DUA_NUMVTR, /* and DUA010.DUA_NUMVTR = '' */
-                case when nullif(nullif(DUA010.DUA_CODOCO, ''), 'E004') is null and nullif(DUA010.DUA_NUMVTR, '') is null then 'N' else DUA010.DUA_CODOCO end as VGA_NORMAL
-            from DUD010
-                left join DUA010
-                    on DUA010.D_E_L_E_T_ = ''
-                    and DUA010.DUA_FILIAL = DUD010.DUD_FILIAL
-                    and DUA010.DUA_FILORI = DUD010.DUD_FILORI
-                    and DUA010.DUA_VIAGEM = DUD010.DUD_VIAGEM
-                    and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
-                    and DUA010.DUA_DOC = DUD010.DUD_DOC
-                    and DUA010.DUA_SERIE = DUD010.DUD_SERIE
-            where DUD010.D_E_L_E_T_ = ''
-        ) DUD
-            on DUD.DUD_FILDOC = SD2.D2_FILIAL
-            and DUD.DUD_DOC = SD2.D2_DOC
-            and DUD.DUD_SERIE = SD2.D2_SERIE
-            and DUD.DUD_STATUS != '9'
-            and DUD.VGA_NORMAL != 'N'
+    /* para validação no RM */
+    trim(ZE3.ZE3_NUM) as OS_VGA,
+    trim(DUD.DUD_FILORI) as FILIAL_VG,
+    trim(DUD.DUD_VIAGEM) as NUM_VG,
+    
+    ZE3.ZE3_VALOR as VL_ORIGINAL,
+    trim(ZE2.ZE2_CONTA) as CONTA,
+    trim(ZE2.ZE2_CLASS) as CLASSE,
 
-    left join SD2010 COMP (nolock)
-        on COMP.D_E_L_E_T_ = ''
-        and COMP.D2_DOC = SD2.D2_NFORI
-        and COMP.D2_SERIE = SD2.D2_SERIORI
-        and COMP.D2_CLIENTE = SD2.D2_CLIENTE
-        and COMP.D2_LOJA = SD2.D2_LOJA
+    case
+        when len(trim(ZE2.ZE2_COD)) <= 2 then 1
+        when len(trim(ZE2.ZE2_COD)) <= 3 then 2
+        when len(trim(ZE2.ZE2_COD)) <= 5 then 3
+        when len(trim(ZE2.ZE2_COD)) <= 8 then 4
+        else 0
+    end as NIVEL,
 
-        left join DUD010 VGA2 (nolock)
-            on VGA2.D_E_L_E_T_ = ''
-            and VGA2.DUD_FILDOC = COMP.D2_FILIAL
-            and VGA2.DUD_DOC = COMP.D2_DOC
-            and VGA2.DUD_SERIE = COMP.D2_SERIE
+    case
+        when len(trim(ZE2.ZE2_COD)) = 8 then left(trim(ZE2.ZE2_COD), 5)
+        when len(trim(ZE2.ZE2_COD)) = 5 then left(trim(ZE2.ZE2_COD), 3)
+        when len(trim(ZE2.ZE2_COD)) = 3 then left(trim(ZE2.ZE2_COD), 2)
+        else null
+    end as CODSUP,
+
+    case when len(trim(ZE2.ZE2_COD)) <= 2 then trim(ZE2.ZE2_COD) else left(trim(ZE2.ZE2_COD), 2) end as CODIGO_C1,
+    case when len(trim(ZE2.ZE2_COD)) <= 3 then trim(ZE2.ZE2_COD) else left(trim(ZE2.ZE2_COD), 3) end as CODIGO_C2,
+    case when len(trim(ZE2.ZE2_COD)) <= 5 then trim(ZE2.ZE2_COD) else left(trim(ZE2.ZE2_COD), 5) end as CODIGO_C3,
+    case when len(trim(ZE2.ZE2_COD)) <= 8 then trim(ZE2.ZE2_COD) else left(trim(ZE2.ZE2_COD), 8) end as CODIGO_C4,
+    
+    case when len(trim(ZE2.ZE2_COD)) <= 2 then upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) else (select upper(trim(ZE2010.ZE2_DESC)) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 2)) end as DESC_C1,
+    case when len(trim(ZE2.ZE2_COD)) <= 3 then upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) else (select upper(trim(ZE2010.ZE2_DESC)) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 3)) end as DESC_C2,
+    case when len(trim(ZE2.ZE2_COD)) <= 5 then upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) else (select upper(trim(ZE2010.ZE2_DESC)) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 5)) end as DESC_C3,
+    case when len(trim(ZE2.ZE2_COD)) <= 8 then upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) else (select upper(trim(ZE2010.ZE2_DESC)) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 8)) end as DESC_C4,
+
+    case when len(trim(ZE2.ZE2_COD)) <= 2 then concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) else (select concat(trim(ZE2010.ZE2_COD), ' ', upper(trim(ZE2010.ZE2_DESC))) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 2)) end as CODDESC_C1,
+    case when len(trim(ZE2.ZE2_COD)) <= 3 then concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) else (select concat(trim(ZE2010.ZE2_COD), ' ', upper(trim(ZE2010.ZE2_DESC))) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 3)) end as CODDESC_C2,
+    case when len(trim(ZE2.ZE2_COD)) <= 5 then concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) else (select concat(trim(ZE2010.ZE2_COD), ' ', upper(trim(ZE2010.ZE2_DESC))) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 5)) end as CODDESC_C3,
+    case when len(trim(ZE2.ZE2_COD)) <= 8 then concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) else (select concat(trim(ZE2010.ZE2_COD), ' ', upper(trim(ZE2010.ZE2_DESC))) from ZE2010 where ZE2010.D_E_L_E_T_ = '' and ZE2010.ZE2_COD = left(trim(ZE2.ZE2_COD), 8)) end as CODDESC_C4,
+    
+    ZE2.ZE2_COD as CODIGO,
+    upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) as DESCRICAO,
+    concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
+    trim(ZE2.ZE2_ORIGEM) as ORIGEM
+
+from ZE3010 ZE3 (nolock)
+    inner join ZE2010 ZE2 (nolock)
+        on ZE2.D_E_L_E_T_ = ''
+        and ZE2.ZE2_COD = ZE3.ZE3_ITEMPL
+    left join DUD010 DUD
+        on DUD.D_E_L_E_T_ = ''
+        and left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
+        and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
+    left join CTT010
+        on CTT010.D_E_L_E_T_ = ''
+        and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
 where
-        SD2.D_E_L_E_T_ = ' '
-    and SD2.D2_TIPO not in ('B', 'D')
-    and SD2.D2_SERIE not in ('003', '100')
-    and
-        case
-            /* LP 610-001 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
-            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
-            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
-            /* LP 610-040 */
-            when trim(CFOP.X5_CHAVE) = 5359 then trim(SB1.B1_YCTREC1)
-            /* LP 610-600 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509' then trim(SB1.B1_YCTREC2)
-            when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509' then trim(SB1.B1_YCTREC1)
-            /* LP 610-010 */
-            when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then trim(SB1.B1_YCTREC1)
-            when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
-            /* LP 610-020 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then trim(SB1.B1_YCTREC1)
-            when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then trim(SB1.B1_YCTREC2)
-            /* LP 610-030 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC1)
-            when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
-            /*LP 610-050 */
-            when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES = '522' then trim(SB1.B1_YCTREC5)
-            when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then trim(SB1.B1_YCTREC4)
-            /* LP 610-015 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then trim(SB1.B1_YCTREC1)
-            when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
-        else null end
-    in ('310101001', '310101002')
-    and trim(SD2.D2_ITEMCC) = '11'
-    and sd2.d2_emissao like '2025%'
+        ZE3.D_E_L_E_T_ = '' and ZE3.ZE3_COMPET like '2025%'
