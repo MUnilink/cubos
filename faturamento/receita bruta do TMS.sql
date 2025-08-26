@@ -49,7 +49,7 @@ select
     ) as NUM,
     SD2.D2_CCUSTO as CC,
     SD2.D2_DOC as PEDIDO,
-    cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2)) as TOTAL,
+    cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as TOTAL,
     cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2)) as ICMS,
     cast(coalesce(SD2.D2_VALIss, 0) as decimal(14, 2)) as ISS
 

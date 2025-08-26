@@ -21,7 +21,7 @@ select
     ) as NUM,
     SD2.D2_CCUSTO as CC,
     SD2.D2_DOC as PEDIDO,
-    sum(cast(coalesce(SF2.F2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
+    sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2 (nolock)
     inner join SF2010 SF2 (nolock)

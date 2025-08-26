@@ -54,7 +54,7 @@ union /* descontos */
             and SF2.D_E_L_E_T_= ' '
         left join
         (
-            select
+            select distinct
                 DUD010.DUD_FILIAL,
                 DUD010.DUD_FILORI,
                 DUD010.DUD_VIAGEM,
