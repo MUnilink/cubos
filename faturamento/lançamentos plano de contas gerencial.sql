@@ -1,8 +1,9 @@
-select
+select distinct
     ZE2.ZE2_COD as CODIGO,
     upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) as DESCRICAO,
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
     trim(ZE3.ZE3_ORIGEM) as CC,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
     
     case
         when ZC1.ZC1_NUM is not null then
@@ -97,6 +98,9 @@ from ZE3010 ZE3 (nolock)
         on DUD.D_E_L_E_T_ = ''
         and left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
         and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
+    left join CTT010
+        on CTT010.D_E_L_E_T_ = ''
+        and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
 where
         ZE3.D_E_L_E_T_ = ''
     and ZE3.ZE3_COMPET>=:PERIODO_INI
