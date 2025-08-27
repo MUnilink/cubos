@@ -34,11 +34,7 @@ select distinct
         else null
     end as BK_ITEM_CONTABIL,
 
-    case
-        when right(left(trim(ZE3.ZE3_NUM), 6), 1) = '1' then 'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('', ' ')), ' '), '|')
-        else 'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|')
-    end as BK_CENTRO_DE_CUSTO,
-    
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
     concat(ZE3.ZE3_COMPET, '01') as PERIODO,
     concat(ZE3.ZE3_COMPET, '01') as COMPETENCIA,
