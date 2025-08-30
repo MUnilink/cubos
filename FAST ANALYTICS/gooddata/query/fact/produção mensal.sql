@@ -1,5 +1,5 @@
 select
-    CASE WHEN ZG1.ZG1_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZG1.ZG1_FILORI AS CHAR (6)) END AS BK_FILIAL,
+    CASE WHEN ZG1.ZG1_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZG1.ZG1_FILORI AS CHAR (6)) END AS BK_FILIAL,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZG1.ZG1_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     case when ZG1.ZG1_TABELA = 'ST9' then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZG1.ZG1_CODIGO)) else null end as COD_DA3,
     case when ZG1.ZG1_TABELA = 'SQ3' then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZG1.ZG1_CODIGO)) else null end as COD_SRJ,
@@ -13,6 +13,9 @@ select
     cast(isnull(ZG1.ZG1_VLHORA, 0.0) as numeric(15, 2)) as VL_HORA,
     cast(isnull(ZG1.ZG1_VLPROD, 0.0) as numeric(15, 2)) as VL_PROD,
     cast(isnull(ZG1.ZG1_VLIMPR, 0.0) as numeric(15, 2)) as VL_IMPROD,
+    cast(isnull(ZG1.ZG1_IMPR1, 0.0) as numeric(15, 2)) as HR_IMPR1,
+    cast(isnull(ZG1.ZG1_IMPR2, 0.0) as numeric(15, 2)) as HR_IMPR2,
+    cast(isnull(ZG1.ZG1_IMPR3, 0.0) as numeric(15, 2)) as HR_IMPR3,
     concat(ZG1.ZG1_COMPET, '01') as COMPETENCIA
 
 from ZG1010 ZG1
@@ -23,3 +26,4 @@ where
         concat(ZG1.ZG1_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZG1.D_E_L_E_T_ = ''
     and ZG1.ZG1_ATIVO = 'S'
+    and ZG1.ZG1_TIPO in (2, 3)
