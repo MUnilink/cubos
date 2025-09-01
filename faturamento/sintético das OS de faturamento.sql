@@ -41,7 +41,14 @@ select
     ZG1.ZG1_VLHORA as VL_HORA,
     ZG1.ZG1_VLIMPR as VL_IMP,
     ZG1.ZG1_VLPROD as VL_PRO,
-    
+
+    ZG1.ZG1_HRPAD as HORA_PAD,
+    ZG1.ZG1_HRPRO as HORA_PRO,
+    ZG1.ZG1_HRIMPR as HORA_IMP,
+    ZG1.ZG1_IMPR1 as HIMP_AFAMNT,
+    ZG1.ZG1_IMPR2 as HIMP_FER,
+    ZG1.ZG1_IMPR3 as HIMP_PON,
+
     ZG1.ZG1_VLIMPR/
     (
         select sum(ZG1010.ZG1_VLIMPR)
@@ -52,46 +59,7 @@ select
         and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
         and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
         and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-    ) as VL_RIMP,
+    ) as VL_RIMP
 
-    ZG1.ZG1_HRPAD as HORA_PAD,
-    ZG1.ZG1_HRPRO as HORA_PRO,
-    ZG1.ZG1_HRIMPR as HORA_IMP,
-    
-    ZG1.ZG1_IMPR1/
-    (
-        select sum(ZG1010.ZG1_HRIMPR)
-        from ZG1010
-        where
-            ZG1010.D_E_L_E_T_ = ''
-        and ZG1010.ZG1_HRIMPR != 0
-        and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-        and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-        and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-    ) as HIMP_AFAMNT,
-    
-    ZG1.ZG1_IMPR2/
-    (
-        select sum(ZG1010.ZG1_HRIMPR)
-        from ZG1010
-        where
-            ZG1010.D_E_L_E_T_ = ''
-        and ZG1010.ZG1_HRIMPR != 0
-        and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-        and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-        and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-    ) as HIMP_FER,
-    
-    ZG1.ZG1_IMPR3/
-    (
-        select sum(ZG1010.ZG1_HRIMPR)
-        from ZG1010
-        where
-            ZG1010.D_E_L_E_T_ = ''
-        and ZG1010.ZG1_HRIMPR != 0
-        and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-        and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-        and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-    ) as HIMP_PON
 from ZG1010 ZG1 (nolock)
 where ZG1.D_E_L_E_T_ = ''
