@@ -55,7 +55,7 @@ select
         when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES != '522' then concat('REC 4 - ', trim(SB1.B1_YCTREC4))
         /* LP 610-015 */
         when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
-        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' and SD2.D2_TES != '558' then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
         /* outros */
         when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then '310101002'
         when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
@@ -140,4 +140,4 @@ where
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
     and trim(SD2.D2_ITEMCC) = '11'
-    and dud.dud_viagem = 16843
+    and dud.dud_viagem  in (16843, 16942, 16928, 16807)
