@@ -116,11 +116,11 @@ where
             when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
             /* LP 610-020 */
             when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then trim(SB1.B1_YCTREC1)
-            when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then trim(SB1.B1_YCTREC2)
+            when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
             /* LP 610-030 */
             when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC1)
             when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
-            /*LP 610-050 */
+            /* LP 610-050 */
             when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES = '522' then trim(SB1.B1_YCTREC5)
             when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES != '522' then trim(SB1.B1_YCTREC4)
             /* LP 610-015 */
@@ -129,6 +129,7 @@ where
             /* outros */
             when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then '310101002'
             when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
+            when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
         else null end
     = '310101002'
     and trim(SD2.D2_ITEMCC) = '11'
