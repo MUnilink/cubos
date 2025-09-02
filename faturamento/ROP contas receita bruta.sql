@@ -2,7 +2,9 @@ select
     cast(sd2.d2_emissao as date) as d2_emissao,
     SD2.D2_FILIAL as FILIAL,
     SD2.D2_CCUSTO as CC,
-    SD2.D2_DOC as PEDIDO,
+    SD2.D2_DOC as DOC,
+    SD2.D2_TES as TES,
+    SD2.D2_CF as CFOP,
     coalesce
     (
         DUD.DUD_VIAGEM,
@@ -31,29 +33,29 @@ select
 
     case
         /* LP 610-001 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then concat('REC 4 - ', trim(SB1.B1_YCTREC4))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then concat('REC 5 - ', trim(SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then concat('REC 3 - ', trim(SB1.B1_YCTREC3))
         /* LP 610-040 */
-        when trim(CFOP.X5_CHAVE) = 5359 then trim(SB1.B1_YCTREC1)
+        when trim(CFOP.X5_CHAVE) = '5359' then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
         /* LP 610-600 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509' then trim(SB1.B1_YCTREC2)
-        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509' then trim(SB1.B1_YCTREC1)
+        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509' then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
+        when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509' then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
         /* LP 610-010 */
-        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES = '520' then trim(SB1.B1_YCTREC1)
-        when trim(CFOP.X5_CHAVE) = 5360 and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
+        when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES = '520' then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES != '520' then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
         /* LP 610-020 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then trim(SB1.B1_YCTREC1)
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then trim(SB1.B1_YCTREC2)
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
         /* LP 610-030 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC1)
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
-        /*LP 610-050 */
-        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES = '522' then trim(SB1.B1_YCTREC5)
-        when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then trim(SB1.B1_YCTREC4)
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537') then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
+        /* LP 610-050 */
+        when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES = '522' then concat('REC 5 - ', trim(SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES != '522' then concat('REC 4 - ', trim(SB1.B1_YCTREC4))
         /* LP 610-015 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then trim(SB1.B1_YCTREC1)
-        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat('REC 1 - ', trim(SB1.B1_YCTREC1))
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat('REC 2 - ', trim(SB1.B1_YCTREC2))
         /* outros */
         when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then concat('310101002', ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and trim(CT1010.CT1_CONTA) = '310101002'))
         when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then concat('310101001', ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and trim(CT1010.CT1_CONTA) = '310101001'))
