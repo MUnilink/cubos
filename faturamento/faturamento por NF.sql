@@ -73,7 +73,7 @@ SELECT
         when trim(CFOP.X5_CHAVE) = 7949 and SD2.D2_TES != '522' then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         /* LP 610-015 */
         when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520' then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
-        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
+        when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' and SD2.D2_TES != '558' then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
         /* outros */
         when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then concat('310101002', ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and trim(CT1010.CT1_CONTA) = '310101002'))
         when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then concat('310101001', ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and trim(CT1010.CT1_CONTA) = '310101001'))
