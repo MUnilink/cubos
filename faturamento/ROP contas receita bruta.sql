@@ -140,4 +140,4 @@ where
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
     and trim(SD2.D2_ITEMCC) = '11'
-    and dud.dud_viagem  in (16843, 16942, 16928, 16807)
+    and dud.dud_viagem  in (16843, 16942, 16928, 16807, 17243, 17247)
