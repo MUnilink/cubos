@@ -12,6 +12,7 @@ select
                     and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
             where
                     DUD010.D_E_L_E_T_ = ''
+                and DUD010.DUD_STATUS != '9'
                 and SD2.D2_FILIAL = SC5010.C5_FILIAL
                 and SD2.D2_DOC = SC5010.C5_NOTA
                 and SD2.D2_SERIE = SC5010.C5_SERIE
@@ -55,7 +56,7 @@ from SD2010 SD2 (nolock)
 
         left join
         (
-            select
+            select distinct
                 DUD010.DUD_FILIAL,
                 DUD010.DUD_FILORI,
                 DUD010.DUD_VIAGEM,
@@ -96,6 +97,7 @@ from SD2010 SD2 (nolock)
             and VGA2.DUD_FILDOC = COMP.D2_FILIAL
             and VGA2.DUD_DOC = COMP.D2_DOC
             and VGA2.DUD_SERIE = COMP.D2_SERIE
+            and VGA2.DUD_STATUS != '9'
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
