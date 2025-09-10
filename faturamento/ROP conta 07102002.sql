@@ -28,6 +28,7 @@
             from ZG1010 G1 (nolock)
             where
                     G1.D_E_L_E_T_ = ''
+                and G1.ZG1_CC = '305'
                 and G1.ZG1_TIPO = '6'
         ) ZG1
             on left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
@@ -41,7 +42,7 @@ union
     select
         ZG1.ZG1_FILORI as FILIAL,
         ZE1.ZE1_NUM as NUM,
-        '304' as CC,
+        trim(ZG1.ZG1_CC) as CC,
         sum(ZE1.ZE1_TOTAL * ZG1.VL_RIMP) as TOTAL
     from ZE1010 ZE1 (nolock)
         inner join
@@ -77,4 +78,4 @@ union
             ZE1.D_E_L_E_T_ = ''
         and ZE1.ZE1_TIPO = '16'
         and left(ZE1.ZE1_COMPET, 6) = '"+cCompt+"' and ZE1.ZE1_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZG1.ZG1_FILORI, ZE1.ZE1_NUM
+    group by ZG1.ZG1_FILORI, ZE1.ZE1_NUM, ZG1.ZG1_CC
