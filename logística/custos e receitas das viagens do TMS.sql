@@ -77,12 +77,12 @@ select distinct
     else null end as DESC_RECURSO
 
 from ZE1010 ZE1 (nolock)
-    inner join ZE5010 ZE5 (nolock)
+    left join ZE5010 ZE5 (nolock)
         on ZE5.D_E_L_E_T_ = ''
         and ZE5.ZE5_FILIAL = ZE1.ZE1_FILIAL
         and ZE5.ZE5_VIAGEM = ZE1.ZE1_NUM
         
-        inner join ZE4010 ZE4 (nolock)
+        left join ZE4010 ZE4 (nolock)
             on ZE4.D_E_L_E_T_ = ''
             and ZE4.ZE4_FILIAL = ZE5.ZE5_FILIAL
             and ZE4.ZE4_VIAGEM = ZE5.ZE5_VIAGEM
