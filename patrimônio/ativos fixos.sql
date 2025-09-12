@@ -1,6 +1,6 @@
 
 select
-    SN1.N1_GRUPO,
+    trim(SN1.N1_GRUPO) as GRUPO_ATIVO,
 	trim(SN1.N1_CBASE) as N1_CBASE,
 	trim(SN1.N1_DESCRIC) as N1_DESCRIC,
 	trim(SN3.N3_ITEM) as ITEM_ATIVO,
@@ -48,11 +48,11 @@ select
 	
 	datefromparts(2024, 12, 31) as DATA_BASE,
 	datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) as TEMPO_ATIVO,
-	100 / (SN3.N3_TXDEPR1 /12) as TEMPO_DEPREC,
+	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then 100 / (SN3.N3_TXDEPR1 /12) else 0.0 end as TEMPO_DEPREC,
 	SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as DEPRECMENSAL,
-    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
-    case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
-	case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) else SN3.N3_VORIG1 end as ACUMULADO/*,((datediff(day, datefromparts(day(datefromparts(@), 12, 31exercicio), 1, 1), datefromparts(2024, 12, 31)))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
+    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 and (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
+    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 and (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
+	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 and (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) else SN3.N3_VORIG1 end as ACUMULADO/*,((datediff(day, datefromparts(day(datefromparts(@), 12, 31exercicio), 1, 1), datefromparts(2024, 12, 31)))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
 
 from SN1010 SN1 (nolock)
     left join ST9010 ST9 (nolock)
@@ -72,4 +72,3 @@ from SN1010 SN1 (nolock)
 		and SA2.A2_LOJA = SN1.N1_LOJA
 where
         SN1.D_E_L_E_T_ = ''
-    and cast(SN3.N3_TXDEPR1 as decimal) > 0
