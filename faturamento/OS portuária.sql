@@ -172,7 +172,7 @@ select
     end as STATUS_APONT,
 
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
-    case when (select SYS_USR.USR_MSBLQL from SYS_USR where USR_CODIGO = ZC2.ZC2_NMUSU and SYS_USR.D_E_L_E_T_ = '') = 2 then 'ATIVO' else 'INATIVO' end as TIPO_USR
+    case when (select SYS_USR.USR_MSBLQL from SYS_USR where USR_CODIGO = ZC2.ZC2_NMUSU and SYS_USR.D_E_L_E_T_ = '') = 2 then 'S' else 'N' end as USR_ATIVO
 
 from ZC2010 ZC2 (nolock)
     left join ZC1010 ZC1 (nolock)
