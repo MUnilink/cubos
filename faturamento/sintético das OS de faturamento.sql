@@ -4,11 +4,10 @@ select
     case when ZG1.ZG1_TABELA = 'ST9' then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZG1.ZG1_CODIGO)) else null end as COD_DA3,
     case when ZG1.ZG1_TABELA = 'SQ3' then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZG1.ZG1_CODIGO)) else null end as COD_SRJ,
     concat(trim(ZG1.ZG1_TIPO), ' ', trim(ZG1.ZG1_CODIGO)) as ID_RECURSO,
-    
+    cast(ZG1.ZG1_TIPO as int) as ID_TIPO_ITEM,
     cast(isnull(ZG1.ZG1_HRPAD, 0.0) as numeric(15, 2)) as HORA_PADRAO,
     cast(isnull(ZG1.ZG1_HRPRO, 0.0) as numeric(15, 2)) as HORA_PROD,
     cast(isnull(ZG1.ZG1_HRIMPR, 0.0) as numeric(15, 2)) as HORA_IMPROD,
-    cast(ZG1.ZG1_TIPO as int) as ID_TIPO_ITEM,
     cast(isnull(ZG1.ZG1_VLTOTL, 0.0) as numeric(15, 2)) as VL_TOTAL,
     cast(isnull(ZG1.ZG1_VLHORA, 0.0) as numeric(15, 2)) as VL_HORA,
     cast(isnull(ZG1.ZG1_VLPROD, 0.0) as numeric(15, 2)) as VL_PROD,
@@ -17,6 +16,7 @@ select
     cast(isnull(ZG1.ZG1_IMPR2, 0.0) as numeric(15, 2)) as HR_IMPR2,
     cast(isnull(ZG1.ZG1_IMPR3, 0.0) as numeric(15, 2)) as HR_IMPR3,
     concat(ZG1.ZG1_COMPET, '01') as COMPETENCIA,
+    case when ZG1.ZG1_TABELA = 'SQ3' then (select SRJ010.RJ_YHRPADR as numeric(15, 2))) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO) else ZG1.ZG1_HRPAD end as QTD_UNI,
 
     /* PARA RM */
     ZG1.ZG1_FILORI as FILIAL,
