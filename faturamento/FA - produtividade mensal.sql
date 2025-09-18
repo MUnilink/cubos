@@ -16,7 +16,7 @@ select
     cast(isnull(ZG1.ZG1_IMPR2, 0.0) as numeric(15, 2)) as HR_IMPR2,
     cast(isnull(ZG1.ZG1_IMPR3, 0.0) as numeric(15, 2)) as HR_IMPR3,
     concat(ZG1.ZG1_COMPET, '01') as COMPETENCIA,
-    case when ZG1.ZG1_TABELA = 'SQ3' then (select SRJ010.RJ_YHRPADR as numeric(15, 2))) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO) else ZG1.ZG1_HRPAD end as QTD_UNI,
+    case when ZG1.ZG1_TABELA = 'SQ3' then (select max(SRJ010.RJ_YHRPADR) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO) else ZG1.ZG1_HRPAD end as QTD_UNI,
 
     /* PARA RM */
     ZG1.ZG1_FILORI as FILIAL,
