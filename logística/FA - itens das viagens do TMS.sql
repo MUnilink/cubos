@@ -37,7 +37,61 @@ select
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
             and DTW010.DTW_ATIVID = 50
-    ) as COMPETENCIA
+    ) as COMPETENCIA,
+
+    (
+        select
+            isnull
+            (
+                (
+                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                    from ZB1010 (nolock)
+                    where
+                            ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_STATUS = 'OK'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and ZB1010.ZB1_MACRON = 7
+                        and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                )
+            , APT.DTW_YHODFI)
+        from DTW010 APT (nolock)
+        where
+                APT.D_E_L_E_T_ = ''
+            and APT.DTW_FILORI = DTR.DTR_FILORI
+            and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+            and APT.DTW_ATIVID = 50
+    ) as km_fim,
+    (
+        select
+            isnull
+            (
+                (
+                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                    from ZB1010 (nolock)
+                    where
+                            ZB1010.D_E_L_E_T_ = ''
+                        and ZB1010.ZB1_STATUS = 'OK'
+                        and
+                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                            =
+                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                        and ZB1010.ZB1_MACRON = 1
+                        and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                )
+            , APT.DTW_YHODIN)
+        from DTW010 APT (nolock)
+        where
+                APT.D_E_L_E_T_ = ''
+            and APT.DTW_FILORI = DTR.DTR_FILORI
+            and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+            and APT.DTW_ATIVID = 49
+    ) as km_ini,
+    concat(trim(ST9.T9_FILIAL), trim(ST9.T9_CODBEM)) as ID_VEICULOTMS
 
 from DUD010 DUD (nolock)
     left join DT6010 DT6 (nolock)
@@ -76,5 +130,14 @@ from DUD010 DUD (nolock)
             left join SB1010 SB1 (nolock)
                 on SB1.D_E_L_E_T_ = ''
                 and SB1.B1_COD = DTC.DTC_CODPRO
+    
+    left join DTR010 DTR
+        on DTR.D_E_L_E_T_ = ''
+        and DTR.DTR_FILORI = DUD.DUD_FILORI
+        and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+
+        left join ST9010 ST9
+            on ST9.D_E_L_E_T_ = ''
+            and ST9.T9_CODBEM = DTR.DTR_CODVEI
 where
         DUD.D_E_L_E_T_ = ''
