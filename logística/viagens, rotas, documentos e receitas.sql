@@ -62,20 +62,7 @@ select
     end as STATUS_COL,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
-    trim(DUA.DUA_NUMVTR) as VGATRA_OCOR,
-
-    trim(DUYORI.DUY_DESCRI) as ORIGEM,
-    trim(DUYDES.DUY_DESCRI) as DESTINO,
-    trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
-    trim(DEV.A1_COD) as DEV_COD,
-    trim(DEV.A1_LOJA) as DEV_LOJA,
-    trim(DEV.A1_NOME) as CLI_DEVEDOR,
-    trim(REM.A1_COD) as REM_COD,
-    trim(REM.A1_LOJA) as REM_LOJA,
-    trim(REM.A1_NOME) as CLI_ORIGEM,
-    trim(DES.A1_COD) as DES_COD,
-    trim(DES.A1_LOJA) as DES_LOJA,
-    trim(DES.A1_NOME) as CLI_DESTINO,
+    concat((DUA.DUA_FILVTR), (DUA.DUA_NUMVTR)) as VGATRA_OCOR,
 
 /*
     OPERAÇÕES
@@ -142,6 +129,19 @@ select
             and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
             and APT.DTW_ATIVID = 49
     ) as km_ini,
+
+    trim(DUYORI.DUY_DESCRI) as ORIGEM,
+    trim(DUYDES.DUY_DESCRI) as DESTINO,
+    trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
+    trim(DEV.A1_COD) as DEV_COD,
+    trim(DEV.A1_LOJA) as DEV_LOJA,
+    trim(DEV.A1_NOME) as CLI_DEVEDOR,
+    trim(REM.A1_COD) as REM_COD,
+    trim(REM.A1_LOJA) as REM_LOJA,
+    trim(REM.A1_NOME) as CLI_ORIGEM,
+    trim(DES.A1_COD) as DES_COD,
+    trim(DES.A1_LOJA) as DES_LOJA,
+    trim(DES.A1_NOME) as CLI_DESTINO,
 
     DTR.DTR_ITEM,
     DUP.DUP_CODMOT,
@@ -406,8 +406,8 @@ from DUD010 DUD (nolock)
     
     inner join DTR010 DTR (nolock)
         on DTR.D_E_L_E_T_ = ''
-        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+        and DTR.DTR_FILORI = DUD.DUD_FILORI
+        and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
 
         inner join DUP010 DUP (nolock)
             on DUP.D_E_L_E_T_ = ''
