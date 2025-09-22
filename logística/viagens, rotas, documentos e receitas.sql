@@ -62,13 +62,13 @@ select
     end as STATUS_COL,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
-    /*concat((DUA.DUA_FILVTR), (DUA.DUA_NUMVTR)) as VGATRA_OCOR,*/
+    /* concat((DUA.DUA_FILVTR), (DUA.DUA_NUMVTR)) as VGATRA_OCOR, */
 
 /*
     OPERAÇÕES
     01 – INICIO DE VIAGEM
     05 – CHEGADA NO CLIENTE
-    06 -  SAIDA DO CLIENTE
+    06 - SAIDA DO CLIENTE
     09 – CHEGADA NO PORTO - no TMS essa macro é apontada como chegada de cliente {porto}
     10 – SAIDA DO PORTO - no TMS essa macro é apontada como saída de cliente {porto}
     07 – FIM DE VIAGEM
@@ -94,10 +94,10 @@ select
                                 =
                                 datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
                             and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                            and ZB1010.ZB1_MACRON = 1
+                            and ZB1010.ZB1_MACRON = 7
                             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
                     ),
-                    APT.DTW_YHODIN,
+                    nullif(APT.DTW_YHODFI, ''),
                     0
                 )
             from DTW010 APT (nolock)
@@ -128,7 +128,7 @@ select
                             and ZB1010.ZB1_MACRON = 1
                             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
                     ),
-                    APT.DTW_YHODIN,
+                    nullif(APT.DTW_YHODIN, ''),
                     0
                 )
             from DTW010 APT (nolock)

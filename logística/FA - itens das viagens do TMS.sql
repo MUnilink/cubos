@@ -59,7 +59,7 @@ select
                             and ZB1010.ZB1_MACRON = 1
                             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
                     ),
-                    APT.DTW_YHODIN,
+                    nullif(APT.DTW_YHODFI, ''),
                     0
                 )
             from DTW010 APT (nolock)
@@ -90,7 +90,7 @@ select
                             and ZB1010.ZB1_MACRON = 1
                             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
                     ),
-                    APT.DTW_YHODIN,
+                    nullif(APT.DTW_YHODIN, ''),
                     0
                 )
             from DTW010 APT (nolock)
