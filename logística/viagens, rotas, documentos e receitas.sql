@@ -62,7 +62,7 @@ select
     end as STATUS_COL,
 
     case when DT5.DT5_STATUS = '4' then 'INTERNA' else case when DT5.DT5_STATUS like '[0-9]' then 'COLETA' else 'ENTREGA' end end as TIPO_VGA,
-    concat((DUA.DUA_FILVTR), (DUA.DUA_NUMVTR)) as VGATRA_OCOR,
+    /*concat((DUA.DUA_FILVTR), (DUA.DUA_NUMVTR)) as VGATRA_OCOR,*/
 
 /*
     OPERAÇÕES
@@ -77,57 +77,67 @@ select
     17 – ENTREGA EFETUADA
 */
 
+    cast
     (
-        select
-            isnull
-            (
+        (
+            select
+                coalesce
                 (
-                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-                    from ZB1010 (nolock)
-                    where
-                            ZB1010.D_E_L_E_T_ = ''
-                        and ZB1010.ZB1_STATUS = 'OK'
-                        and
-                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                            =
-                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
-                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                        and ZB1010.ZB1_MACRON = 7
-                        and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    (
+                        select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                        from ZB1010 (nolock)
+                        where
+                                ZB1010.D_E_L_E_T_ = ''
+                            and ZB1010.ZB1_STATUS = 'OK'
+                            and
+                                dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                                =
+                                datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                            and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                            and ZB1010.ZB1_MACRON = 1
+                            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    ),
+                    APT.DTW_YHODIN,
+                    0
                 )
-            , APT.DTW_YHODFI)
-        from DTW010 APT (nolock)
-        where
-                APT.D_E_L_E_T_ = ''
-            and APT.DTW_FILORI = DTR.DTR_FILORI
-            and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
-            and APT.DTW_ATIVID = 50
+            from DTW010 APT (nolock)
+            where
+                    APT.D_E_L_E_T_ = ''
+                and APT.DTW_FILORI = DTR.DTR_FILORI
+                and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                and APT.DTW_ATIVID = 50
+        ) as numeric(15, 2)
     ) as km_fim,
+    cast
     (
-        select
-            isnull
-            (
+        (
+            select
+                coalesce
                 (
-                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-                    from ZB1010 (nolock)
-                    where
-                            ZB1010.D_E_L_E_T_ = ''
-                        and ZB1010.ZB1_STATUS = 'OK'
-                        and
-                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                            =
-                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
-                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                        and ZB1010.ZB1_MACRON = 1
-                        and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    (
+                        select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                        from ZB1010 (nolock)
+                        where
+                                ZB1010.D_E_L_E_T_ = ''
+                            and ZB1010.ZB1_STATUS = 'OK'
+                            and
+                                dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                                =
+                                datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                            and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                            and ZB1010.ZB1_MACRON = 1
+                            and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                    ),
+                    APT.DTW_YHODIN,
+                    0
                 )
-            , APT.DTW_YHODIN)
-        from DTW010 APT (nolock)
-        where
-                APT.D_E_L_E_T_ = ''
-            and APT.DTW_FILORI = DTR.DTR_FILORI
-            and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
-            and APT.DTW_ATIVID = 49
+            from DTW010 APT (nolock)
+            where
+                    APT.D_E_L_E_T_ = ''
+                and APT.DTW_FILORI = DTR.DTR_FILORI
+                and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                and APT.DTW_ATIVID = 49
+        ) as numeric(15, 2)
     ) as km_ini,
 
     trim(DUYORI.DUY_DESCRI) as ORIGEM,
