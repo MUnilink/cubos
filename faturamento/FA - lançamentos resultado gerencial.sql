@@ -1,7 +1,13 @@
 select distinct
     'P |01|01' AS BK_EMPRESA,
     case when nullif(ZC1.ZC1_FILIAL, '') is not null then 'P |01|01'+ CAST(ZC1.ZC1_FILIAL AS CHAR (6)) when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|01'+ CAST(DUD.DUD_FILORI AS CHAR (6)) else 'P |01||' end as BK_FILIAL,
-    'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1.A1_COD, ' '))+RTRIM(COALESCE(SA1.A1_LOJA, ' ')), ' '), '|') as BK_CLIENTE,
+    
+    case
+        when nullif(ZC1.ZC1_CODSA1, '') is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLIOPP.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLIOPP.A1_COD, ' '))+RTRIM(COALESCE(CLIOPP.A1_LOJA, ' ')), ' '), '|')
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLITMS.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLITMS.A1_COD, ' '))+RTRIM(COALESCE(CLITMS.A1_LOJA, ' ')), ' '), '|')
+        else null
+    end as BK_CLIENTE,
+    
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
     concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) as ID_VIAGEMTMS,
@@ -124,7 +130,7 @@ select distinct
     trim(DUD.DUD_VIAGEM) as NUM_VG,
     
     ZE3.ZE3_VALOR as VL_ORIGINAL,
-    trim(SA1.A1_NOME) as CLIENTE,
+    coalesce(trim(CLIOPP.A1_NOME), trim(CLITMS.A1_NOME)) as CLIENTE,
     trim(ZE2.ZE2_CONTA) as CONTA,
     trim(ZE2.ZE2_CLASS) as CLASSE,
 
@@ -176,10 +182,73 @@ from ZE3010 ZE3 (nolock)
         and left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
         and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
 
-        left join SA1010 SA1
-            on SA1.D_E_L_E_T_ = ''
-            and SA1.A1_COD = ZC1.ZC1_CODSA1
-            and SA1.A1_LOJA = ZC1.ZC1_LOJSA1
+        left join
+        (
+            select
+                DT6010.DT6_FILDOC as CTE_FILDOC,
+                DT6010.DT6_DOC as CTE_DOC,
+                DT6010.DT6_SERIE as CTE_SERIE,
+                DT6010.DT6_CLIDEV as CTE_CLIENTE,
+                DT6010.DT6_LOJDEV as CTE_LOJA,
+                CMP.D2_DOC as CMP_DOC,
+                CMP.D2_SERIE as CMP_SERIE,
+                CMP.D2_CLIENTE as CMP_CLIENTE,
+                CMP.D2_LOJA as CMP_LOJA,
+                RPS.D2_FILIAL as RPS_FILIAL,
+                RPS.D2_DOC as RPS_DOC,
+                RPS.D2_SERIE as RPS_SERIE,
+                RPS.D2_CLIENTE as RPS_CLIENTE,
+                RPS.D2_LOJA as RPS_LOJA,
+                DUD010.DUD_FILDOC as FILDOC,
+                DUD010.DUD_DOC as DOC,
+                DUD010.DUD_VIAGEM as VIAGEM
+            from DUD010
+                left join DT6010
+                    on DT6010.D_E_L_E_T_ = ''
+                    and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
+                    and DT6010.DT6_DOC = DUD010.DUD_DOC
+                    and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+
+                    left join SD2010 CMP
+                        on CMP.D_E_L_E_T_ = ''
+                        and CMP.D2_NFORI = DT6010.DT6_DOC
+                        and CMP.D2_SERIORI = DT6010.DT6_SERIE
+                        and CMP.D2_CLIENTE = DT6010.DT6_CLIDEV
+                        and CMP.D2_LOJA = DT6010.DT6_LOJDEV
+
+                left join SC5010 SC5
+                    on SC5.D_E_L_E_T_ = ''
+                    and left(SC5.C5_FILIAL, 4) = DUD010.DUD_FILIAL
+                    and SC5.C5_FILIAL = DUD010.DUD_FILORI
+                    and SC5.C5_YVIAGEM = DUD010.DUD_VIAGEM
+
+                    left join SD2010 RPS
+                        on RPS.D_E_L_E_T_ = ''
+                        and RPS.D2_FILIAL = SC5.C5_FILIAL
+                        and RPS.D2_DOC = SC5.C5_NOTA
+                        and RPS.D2_SERIE = SC5.C5_SERIE
+                        and RPS.D2_CLIENTE = SC5.C5_CLIENTE
+                        and RPS.D2_LOJA = SC5.C5_LOJACLI
+            
+            where DUD010.D_E_L_E_T_ = ''
+        ) SD2
+            on SD2.FILDOC = DUD.DUD_FILDOC
+            and SD2.DOC = DUD.DUD_DOC
+            and SD2.VIAGEM = DUD.DUD_VIAGEM
+            
+            left join SA1010 CLITMS
+                on CLITMS.D_E_L_E_T_ = ''
+                and
+                (
+                    concat(CLITMS.A1_COD, CLITMS.A1_LOJA) = concat(SD2.CTE_CLIENTE, SD2.CTE_LOJA) or
+                    concat(CLITMS.A1_COD, CLITMS.A1_LOJA) = concat(SD2.CMP_CLIENTE, SD2.CMP_LOJA) or
+                    concat(CLITMS.A1_COD, CLITMS.A1_LOJA) = concat(SD2.RPS_CLIENTE, SD2.RPS_LOJA)
+                )
+
+        left join SA1010 CLIOPP
+            on CLIOPP.D_E_L_E_T_ = ''
+            and CLIOPP.A1_COD = ZC1.ZC1_CODSA1
+            and CLIOPP.A1_LOJA = ZC1.ZC1_LOJSA1
         left join SED010 SED
             on SED.D_E_L_E_T_ = ''
             and SED.ED_CODIGO = ZC1.ZC1_NATURE
