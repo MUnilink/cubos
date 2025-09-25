@@ -4,7 +4,7 @@ select distinct
     
     case
         when nullif(ZC1.ZC1_CODSA1, '') is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLIOPP.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLIOPP.A1_COD, ' '))+RTRIM(COALESCE(CLIOPP.A1_LOJA, ' ')), ' '), '|')
-        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLITMS.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLITMS.A1_COD, ' '))+RTRIM(COALESCE(CLITMS.A1_LOJA, ' ')), ' '), '|')
+        /* when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLITMS.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLITMS.A1_COD, ' '))+RTRIM(COALESCE(CLITMS.A1_LOJA, ' ')), ' '), '|') */
         else null
     end as BK_CLIENTE,
     
@@ -130,7 +130,7 @@ select distinct
     trim(DUD.DUD_VIAGEM) as NUM_VG,
     
     ZE3.ZE3_VALOR as VL_ORIGINAL,
-    coalesce(trim(CLIOPP.A1_NOME), trim(CLITMS.A1_NOME)) as CLIENTE,
+    trim(CLIOPP.A1_NOME) as CLIENTE,
     trim(ZE2.ZE2_CONTA) as CONTA,
     trim(ZE2.ZE2_CLASS) as CLASSE,
 
@@ -181,7 +181,7 @@ from ZE3010 ZE3 (nolock)
         on DUD.D_E_L_E_T_ = ''
         and left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
         and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
-
+/*
         left join
         (
             select
@@ -244,7 +244,7 @@ from ZE3010 ZE3 (nolock)
                     concat(CLITMS.A1_COD, CLITMS.A1_LOJA) = concat(SD2.CMP_CLIENTE, SD2.CMP_LOJA) or
                     concat(CLITMS.A1_COD, CLITMS.A1_LOJA) = concat(SD2.RPS_CLIENTE, SD2.RPS_LOJA)
                 )
-
+*/
         left join SA1010 CLIOPP
             on CLIOPP.D_E_L_E_T_ = ''
             and CLIOPP.A1_COD = ZC1.ZC1_CODSA1
