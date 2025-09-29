@@ -2,7 +2,7 @@ select
     trim(ST9.T9_CODBEM) as ID_EQUIPAMENTO,
     trim(ST9.T9_CODBEM) as CODBEM,
     trim(ST9.T9_NOME) as NOME,
-    trim(ST9.T9_CODFAMI) as FAMILIA,
+    (select trim(ST6010.T6_NOME) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as FAMILIA,
     <<CODE_INSTANCE>> AS INSTANCIA
 from ST9010 ST9
 where
