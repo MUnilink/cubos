@@ -4,6 +4,25 @@ select distinct
     
     case
         when nullif(ZC1.ZC1_CODSA1, '') is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLIOPP.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLIOPP.A1_COD, ' '))+RTRIM(COALESCE(CLIOPP.A1_LOJA, ' ')), ' '), '|')
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then
+        (
+            select max('P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1010.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1010.A1_COD, ' '))+RTRIM(COALESCE(SA1010.A1_LOJA, ' ')), ' '), '|'))
+            from DUD010 (nolock)
+                inner join DT6010 (nolock)
+                    on DT6010.D_E_L_E_T_ = ''
+                    and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
+                    and DT6010.DT6_DOC = DUD010.DUD_DOC
+                    and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+                    
+                    left join SA1010 (nolock)
+                        on SA1010.D_E_L_E_T_ = ''
+                        and SA1010.A1_COD = DT6010.DT6_CLIDEV
+                        and SA1010.A1_LOJA = DT6010.DT6_LOJDEV
+            where
+                    DUD010.D_E_L_E_T_ = ''
+                and DUD010.DUD_FILORI = DUD.DUD_FILORI
+                and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
+        )
         else null
     end as BK_CLIENTE,
     
