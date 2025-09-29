@@ -56,7 +56,7 @@ select
                                 =
                                 datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
                             and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                            and ZB1010.ZB1_MACRON = 1
+                            and ZB1010.ZB1_MACRON = 7
                             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
                     ),
                     nullif(APT.DTW_YHODFI, ''),

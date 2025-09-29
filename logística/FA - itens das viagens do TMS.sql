@@ -56,7 +56,7 @@ select
                                 =
                                 datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
                             and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                            and ZB1010.ZB1_MACRON = 1
+                            and ZB1010.ZB1_MACRON = 7
                             and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
                     ),
                     nullif(APT.DTW_YHODFI, ''),
@@ -142,13 +142,18 @@ from DUD010 DUD (nolock)
                 on SB1.D_E_L_E_T_ = ''
                 and SB1.B1_COD = DTC.DTC_CODPRO
     
-    left join DTR010 DTR
-        on DTR.D_E_L_E_T_ = ''
-        and DTR.DTR_FILORI = DUD.DUD_FILORI
-        and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+    left join DTQ010 DTQ (nolock)
+        on DTQ.D_E_L_E_T_ = ''
+        and DTQ.DTQ_FILORI = DUD.DUD_FILORI
+        and DTQ.DTQ_VIAGEM = DUD.DUD_VIAGEM
 
-        left join ST9010 ST9
-            on ST9.D_E_L_E_T_ = ''
-            and ST9.T9_CODBEM = DTR.DTR_CODVEI
+        left join DTR010 DTR
+            on DTR.D_E_L_E_T_ = ''
+            and DTR.DTR_FILORI = DUD.DUD_FILORI
+            and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
+
+            left join ST9010 ST9
+                on ST9.D_E_L_E_T_ = ''
+                and ST9.T9_CODBEM = DTR.DTR_CODVEI
 where
         DUD.D_E_L_E_T_ = ''
