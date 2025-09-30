@@ -62,7 +62,7 @@ select
     SR7.DIASANT_CARGO,
     case isnull(SR7.qtd_SR7, 0) when 0 then 1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) else SR7.DIASPRO_CARGO end as DIASPRO_CARGO,
     
-    cast(SPF.DATA_TRA as date) as DATA_TRA,
+    cast(SPF.DATA_TUR as date) as DATA_TUR,
     SPF.TURNO_ANT,
     SPF.TURNO_PRO,
     SPF.TURNO_PRO as TURNO_FOLHA,
@@ -88,6 +88,9 @@ select
     
     isnull(SR7.qtd_SR7, 0) as qtd_SR7,
     isnull(SPF.qtd_SPF, 0) as qtd_SPF,
+
+    case when lead(SPF.TURNO_PRO, 1, null) over(partition by SRA.RA_FILIAL, SRA.RA_MAT order by SRA.RA_FILIAL, SRA.RA_MAT, SPF.DATA_TUR) is not null then datediff(day, SPF.DATA_TUR, lead(SPF.DATA_TUR, 1, null) over(partition by SRA.RA_FILIAL, SRA.RA_MAT order by SRA.RA_FILIAL, SRA.RA_MAT, SPF.DATA_TUR)) else SPF.DIASPRO_TURNO end as DIAS_TUR,
+    case when lead(SR7.CARGO_PRO, 1, null) over(partition by SRA.RA_FILIAL, SRA.RA_MAT order by SRA.RA_FILIAL, SRA.RA_MAT, SR7.DATA_MUD) is not null then datediff(day, SR7.DATA_MUD, lead(SR7.DATA_MUD, 1, null) over(partition by SRA.RA_FILIAL, SRA.RA_MAT order by SRA.RA_FILIAL, SRA.RA_MAT, SR7.DATA_MUD)) else SR7.DIASPRO_CARGO end as DIAS_CAR,
 
     1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) as DIAS_PERIODO,
     cast(concat(SRD.RD_DATARQ, '01') as date) as INI_PERIODO,
@@ -159,7 +162,7 @@ from SRD010 SRD (nolock)
         select
             SPF010.PF_FILIAL as FILIAL,
             SPF010.PF_MAT as MATRICULA,
-            SPF010.PF_DATA as DATA_TRA,
+            SPF010.PF_DATA as DATA_TUR,
             SPF010.PF_TURNODE as TURNO_ANT,
             SPF010.PF_TURNOPA as TURNO_PRO,
 
@@ -202,7 +205,7 @@ from SRD010 SRD (nolock)
                 SPF010.D_E_L_E_T_ = ''
             and SPF010.PF_TURNODE != SPF010.PF_TURNOPA
     ) SPF
-        on left(SPF.DATA_TRA, 6) = SRD.RD_DATARQ
+        on left(SPF.DATA_TUR, 6) = SRD.RD_DATARQ
         and SPF.FILIAL = SRD.RD_FILIAL
         and SPF.MATRICULA = SRD.RD_MAT
 where
