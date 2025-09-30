@@ -1,54 +1,71 @@
 select
-	trim(SRA.RA_FILIAL) as FILIAL,
+    trim(SRA.RA_FILIAL) as FILIAL,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
-	trim(SRA.RA_MAT) as MATRICULA,
-	trim(SRA.RA_NOMECMP) as NOME,
-	trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	trim(SRA.RA_ESTADO) as UF,
-	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
-	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
-	SRA.RA_SITFOLH as SITUACAO,
-	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-	trim(SRD.RD_CC) as CC,
-	trim(SRD.RD_ITEM) as ITCT,
-	trim(SQB.QB_DEPTO) as DEPTO,
-	trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-	trim(SRA.RA_SEXO) as SEXO,
-	trim(SRA.RA_CIC) as CPF,
-	trim(SRD.RD_PERIODO) as PERIODO,
-	trim(SRD.RD_ROTEIR) as ROTEIRO,
+    trim(SRA.RA_MAT) as MATRICULA,
+    trim(SRA.RA_NOMECMP) as NOME,
+    trim(SRA.RA_MUNICIP) as MUNICIPIO,
+    trim(SRA.RA_ESTADO) as UF,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+    cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+    SRA.RA_SITFOLH as SITUACAO,
+    case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+    trim(SRD.RD_CC) as CC,
+    trim(SRD.RD_ITEM) as ITCT,
+    trim(SQB.QB_DEPTO) as DEPTO,
+    trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+    trim(SRA.RA_SEXO) as SEXO,
+    trim(SRA.RA_CIC) as CPF,
+    trim(SRD.RD_PERIODO) as PERIODO,
+    trim(SRD.RD_ROTEIR) as ROTEIRO,
 
-	case when SRD.RD_PD = '990' then 'REF' when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
-	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
-	
-	cast(SRD.RD_HORAS as numeric(15, 2)) as HORAS_VERBA,
-	SRD.RD_DATARQ as DATARQ,
-	SRD.RD_STATUS as STATUS_LANC,
-	trim(SRD.RD_PD) as VERBA,
-	trim(SRD.RD_SEQ) as SEQ_FOLHA,
-	isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
+    case when SRD.RD_PD = '990' then 'REF' when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+    case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
+    
+    cast(SRD.RD_HORAS as numeric(15, 2)) as HORAS_VERBA,
+    SRD.RD_DATARQ as DATARQ,
+    SRD.RD_STATUS as STATUS_LANC,
+    trim(SRD.RD_PD) as VERBA,
+    trim(SRD.RD_SEQ) as SEQ_FOLHA,
+    isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
 
-	case trim(SRV.RV_TIPOCOD)
-		when '1' then 'PROVENTO'
-		when '2' then 'DESCONTO'
-		when '3' then 'BASE PROVENTO'
-		when '4' then 'BASE DESCONTO'
-		else '-'
-	end as TIPO_VERBA,
-
-    1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) as DIAS_PERIODO,
-	cast(concat(SRD.RD_DATARQ, '01') as date) as INI_PERIODO,
-	eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO,
+    case trim(SRV.RV_TIPOCOD)
+        when '1' then 'PROVENTO'
+        when '2' then 'DESCONTO'
+        when '3' then 'BASE PROVENTO'
+        when '4' then 'BASE DESCONTO'
+        else '-'
+    end as TIPO_VERBA,
     
     cast(SR7.DATA_MUD as date) as DATA_MUD,
+    
     SR7.CARGO_ANT,
     SR7.CARGO_PRO,
+    isnull(SR7.CARGO_PRO,
+        (
+            select concat(trim(SQ3010.Q3_CARGO), ' - ', trim(SQ3010.Q3_DESCSUM))
+            from SQ3010
+            where
+                    SQ3010.D_E_L_E_T_ = ''
+                and SQ3010.Q3_CARGO =
+                (
+                    select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+                    from SR7010
+                    where
+                            SR7010.D_E_L_E_T_ = ''
+                        and SR7010.R7_FILIAL = SRD.RD_FILIAL
+                        and SR7010.R7_MAT = SRD.RD_MAT
+                        and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+                )
+        )
+    ) as CARGO_FOLHA,
+    
     SR7.DIASANT_CARGO,
     case isnull(SR7.qtd_SR7, 0) when 0 then 1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) else SR7.DIASPRO_CARGO end as DIASPRO_CARGO,
     
     cast(SPF.DATA_TRA as date) as DATA_TRA,
     SPF.TURNO_ANT,
     SPF.TURNO_PRO,
+    SPF.TURNO_PRO as TURNO_FOLHA,
     SPF.DIASANT_TURNO,
     SPF.DIASPRO_TURNO,
     SPF.CARGA_HANT as HORAS_ANT,
@@ -69,31 +86,36 @@ select
         else SPF.CARGA_HPRO
     end as HORAS_PRO,
     
-    isnull(SR7.qtd_SR7, 0) as qtd_SR7, isnull(SPF.qtd_SPF, 0) as qtd_SPF
+    isnull(SR7.qtd_SR7, 0) as qtd_SR7,
+    isnull(SPF.qtd_SPF, 0) as qtd_SPF,
+
+    1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) as DIAS_PERIODO,
+    cast(concat(SRD.RD_DATARQ, '01') as date) as INI_PERIODO,
+    eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO
 
 from SRD010 SRD (nolock)
-	inner join SRV010 SRV (nolock)
-		on SRV.D_E_L_E_T_ = ''
-		and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
-		and SRD.RD_PD = SRV.RV_COD
-	inner join SRA010 SRA (nolock)
-		on SRA.D_E_L_E_T_ = ''
-		and SRA.RA_FILIAL = SRD.RD_FILIAL
-		and SRA.RA_MAT = SRD.RD_MAT
-	
-		left join SQB010 SQB (nolock)
-			on SQB.D_E_L_E_T_ = ''
-			and SQB.QB_DEPTO = isnull(SRD.RD_DEPTO, SRA.RA_DEPTO)
-		left join SRJ010 SRJ (nolock)
-			on SRJ.D_E_L_E_T_ = ''
-			and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
-			and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-			
-			left join SQ3010 SQ3 (nolock)
-				on SQ3.D_E_L_E_T_ = ''
-				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
-	left join
-	(
+    inner join SRV010 SRV (nolock)
+        on SRV.D_E_L_E_T_ = ''
+        and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
+        and SRD.RD_PD = SRV.RV_COD
+    inner join SRA010 SRA (nolock)
+        on SRA.D_E_L_E_T_ = ''
+        and SRA.RA_FILIAL = SRD.RD_FILIAL
+        and SRA.RA_MAT = SRD.RD_MAT
+    
+        left join SQB010 SQB (nolock)
+            on SQB.D_E_L_E_T_ = ''
+            and SQB.QB_DEPTO = isnull(SRD.RD_DEPTO, SRA.RA_DEPTO)
+        left join SRJ010 SRJ (nolock)
+            on SRJ.D_E_L_E_T_ = ''
+            and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+            and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+            
+            left join SQ3010 SQ3 (nolock)
+                on SQ3.D_E_L_E_T_ = ''
+                and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+    left join
+    (
         select
             SR7010.R7_FILIAL as FILIAL,
             SR7010.R7_MAT as MATRICULA,
@@ -132,8 +154,8 @@ from SRD010 SRD (nolock)
         and SR7.FILIAL = SRD.RD_FILIAL
         and SR7.MATRICULA = SRD.RD_MAT
 
-	left join
-	(
+    left join
+    (
         select
             SPF010.PF_FILIAL as FILIAL,
             SPF010.PF_MAT as MATRICULA,
@@ -184,5 +206,6 @@ from SRD010 SRD (nolock)
         and SPF.FILIAL = SRD.RD_FILIAL
         and SPF.MATRICULA = SRD.RD_MAT
 where
-		SRD.RD_PERIODO =:PERIODO
-	and SRD.D_E_L_E_T_ = ''
+        SRD.RD_PERIODO =:PERIODO
+    and SRD.D_E_L_E_T_ = ''
+    and SRD.RD_PD = '990'
