@@ -38,7 +38,7 @@
         case when SRC.RC_PD in ('147', '091', '140', '304') then SRC.RC_VALOR else 0.0 end as ARRED_PROV,
         case when SRC.RC_PD in ('183', '999') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         case when SRC.RC_PD in ('420', '421', '422') then SRC.RC_VALOR else 0.0 end as IR,
-        case when SRC.RC_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRC.RC_VALOR else 0.0 end as HREXTRA_APROVADA,
+        case when SRC.RC_PD in ('113', '061', '062', '063', '064', '112', '116', '370', '344') then SRC.RC_VALOR else 0.0 end as HREXTRA_APROVADA,
         case when SRC.RC_PD in ('285', '561', '796') then SRC.RC_VALOR else 0.0 end as VTRA,
         case when SRC.RC_PD in ('562', '749') then SRC.RC_VALOR else 0.0 end as VCES,
         
@@ -123,7 +123,7 @@ union
         case when SRD.RD_PD in ('147', '091', '140', '304') then SRD.RD_VALOR else 0.0 end as ARRED_PROV,
         case when SRD.RD_PD in ('183', '999') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         case when SRD.RD_PD in ('420', '421', '422') then SRD.RD_VALOR else 0.0 end as IR,
-        case when SRD.RD_PD in ('113', '061', '062', '063', '064', '112', '116', '370') then SRD.RD_VALOR else 0.0 end as HREXTRA_APROVADA,
+        case when SRD.RD_PD in ('113', '061', '062', '063', '064', '112', '116', '370', '344') then SRD.RD_VALOR else 0.0 end as HREXTRA_APROVADA,
         case when SRD.RD_PD in ('285', '561', '796') then SRD.RD_VALOR else 0.0 end as VTRA,
         case when SRD.RD_PD in ('562', '749') then SRD.RD_VALOR else 0.0 end as VCES,
         
