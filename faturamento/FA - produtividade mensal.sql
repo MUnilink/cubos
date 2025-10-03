@@ -75,4 +75,9 @@ from ZG1010 ZG1 (nolock)
     left join CTT010 CTT
         on CTT.D_E_L_E_T_ = ''
         and CTT.CTT_CUSTO = ZG1.ZG1_CC
-where ZG1.D_E_L_E_T_ = ''
+    left join CTD010 CTD
+        on CTD.D_E_L_E_T_ = ''
+        and CTD.CTD_ITEM = ZG1.ZG1_ITEMCT
+where
+        ZG1.D_E_L_E_T_ = ''
+    and case when ZG1.ZG1_TABELA = 'SQ3' then (select trim(ST9010.T9_CODFAMI) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = ZG1.ZG1_CODIGO and ZG1.ZG1_TIPO in (3, 6, 9, 12)) else null end in ('VP', 'MP', 'GD', 'GD AUX', 'ML', 'VM')
