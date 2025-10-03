@@ -104,6 +104,17 @@ from
             left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
             cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
             left(ZC2010.ZC2_COMPET, 6) as PERIODO,
+            trim(ZC1010.ZC1_ATIVD) as ATIVIDADE_OS,
+            
+            case
+                when ZC1010.ZC1_CC = '' then
+                    case
+                        when trim(ZC1010.ZC1_ATIVD) in (11, 35) then '304'
+                        when trim(ZC1010.ZC1_ATIVD) = '32' and ZC1010.ZC1_MERCAD not in ('34010011', '') then '304'
+                        else '305'
+                    end
+                else ZC1010.ZC1_CC
+            end as CC_OS,
 
             case ZC1010.ZC1_STATUS
                 when 1 then 'ABERTA'
@@ -205,6 +216,8 @@ from
         (
             select
                 ZG1.ZG1_FILORI as FILIAL,
+                ZG1.ZG1_CC as CC,
+                ZG1.ZG1_ITEMCT as ATIVIDADE,
                 ZG1.ZG1_COMPET as COMPETENCIA,
                 trim(ZG1.ZG1_CODIGO) as INSUMO,
                 ZG1.ZG1_TIPO as TIPO,
@@ -216,6 +229,8 @@ from
                         where
                             ZG1010.ZG1_VLIMPR != 0
                         and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                        and ZG1010.ZG1_CC = ZG1.ZG1_CC
+                        and ZG1010.ZG1_ITEMCT = ZG1.ZG1_ITEMCT
                         and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
                         and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
                         and ZG1010.D_E_L_E_T_ = ''
@@ -227,5 +242,7 @@ from
         ) RAT_IMPR
             on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZC2.TIPO
             and RAT_IMPR.FILIAL = ZC2.FILIAL
+            and RAT_IMPR.CC = ZC2.CC_OS
+            and RAT_IMPR.ATIVIDADE = ZC2.ATIVIDADE_OS
             and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
             and RAT_IMPR.INSUMO = ZC2.INSUMO
