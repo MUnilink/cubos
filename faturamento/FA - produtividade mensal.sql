@@ -1,6 +1,7 @@
 select
     CASE WHEN ZG1.ZG1_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(ZG1.ZG1_FILORI AS CHAR (6)) END AS BK_FILIAL,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZG1.ZG1_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZG1.ZG1_ITEMCT, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
     case when ZG1.ZG1_TABELA = 'ST9' then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZG1.ZG1_CODIGO)) else null end as COD_DA3,
     case when ZG1.ZG1_TABELA = 'SQ3' then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZG1.ZG1_CODIGO)) else null end as COD_SRJ,
     concat(trim(ZG1.ZG1_TIPO), ' ', trim(ZG1.ZG1_CODIGO)) as ID_RECURSO,
