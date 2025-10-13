@@ -44,11 +44,9 @@ from
                   from SRD010 RD
                   inner join SRV010 RV on RV_FILIAL = '0101'
                   and RV_COD = RD_PD
-                  and RV_TIPOCOD in ('1',
-                                     '3',
-                                     '4')
+                  and RV_TIPOCOD in ('1', '3', '4')
                   and RV.D_E_L_E_T_ = ' '
-                  and RV_YCTMS = 'S' IN
+                  and RV_YCTMS = 'S'
                   where RD_FILIAL = RA_FILIAL
                       and RD_MAT = RA_MAT
                       and RD_PERIODO = RFQ_PERIOD
