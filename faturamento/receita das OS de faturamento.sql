@@ -90,7 +90,6 @@ select
     CAST(COALESCE(SD2.D2_PESO * SD2.D2_QUANT, 0) AS DECIMAL(12, 4)) AS PESO_LIQUIDO,
     CAST(COALESCE(SD2.D2_PRUNIT, 0) AS DECIMAL(16, 4)) AS VL_UNITARIO,
     CAST(COALESCE(SD2.D2_SEGURO, 0) AS DECIMAL(14, 2)) AS VL_SEGURO
-
 from
     (
         select
@@ -107,13 +106,13 @@ from
             trim(ZC1010.ZC1_ATIVD) as ATIVIDADE_OS,
             
             case
-                when ZC1010.ZC1_CC = '' then
+                when trim(ZC1010.ZC1_CC) = '' then
                     case
                         when trim(ZC1010.ZC1_ATIVD) in (11, 35) then '304'
                         when trim(ZC1010.ZC1_ATIVD) = '32' and ZC1010.ZC1_MERCAD not in ('34010011', '') then '304'
                         else '305'
                     end
-                else ZC1010.ZC1_CC
+                else trim(ZC1010.ZC1_CC)
             end as CC_OS,
 
             case ZC1010.ZC1_STATUS
@@ -179,7 +178,7 @@ from
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
         where
-                left(ZC2010.ZC2_COMPET, 4) > 2023
+                ZC2010.ZC2_COMPET > 20231231
             and ZC2010.D_E_L_E_T_ = ''
     ) ZC2
 
@@ -216,8 +215,8 @@ from
         (
             select
                 ZG1.ZG1_FILORI as FILIAL,
-                ZG1.ZG1_CC as CC,
-                ZG1.ZG1_ITEMCT as ATIVIDADE,
+                trim(ZG1.ZG1_CC) as CC,
+                trim(ZG1.ZG1_ITEMCT) as ATIVIDADE,
                 ZG1.ZG1_COMPET as COMPETENCIA,
                 trim(ZG1.ZG1_CODIGO) as INSUMO,
                 ZG1.ZG1_TIPO as TIPO,
