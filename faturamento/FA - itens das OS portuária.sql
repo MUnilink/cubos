@@ -110,6 +110,17 @@ from
             ZC2010.ZC2_IMPR2 as HIMP2,
             ZC2010.ZC2_IMPR3 as HIMP3,
 
+            trim(ZC1010.ZC1_ATIVD) as ATIVIDADE_OS,
+            case
+                when ZC1010.ZC1_CC = '' then
+                    case
+                        when trim(ZC1010.ZC1_ATIVD) in (11, 35) then '304'
+                        when trim(ZC1010.ZC1_ATIVD) = '32' and ZC1010.ZC1_MERCAD not in ('34010011', '') then '304'
+                        else '305'
+                    end
+                else ZC1010.ZC1_CC
+            end as CC_OS,
+
             /* RM */
             substring(ZC2010.ZC2_NUM, 6, 10) as OS,
             case ZC1010.ZC1_TIPOP
