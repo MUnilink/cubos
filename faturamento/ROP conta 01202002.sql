@@ -21,6 +21,7 @@ select
         )
     ) as NUM,
     SD2.D2_CCUSTO as CC,
+    SD2.D2_ITEMCC AS ITEMCC,
     SD2.D2_DOC as PEDIDO,
     sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
@@ -140,6 +141,7 @@ where
 group by
     SD2.D2_FILIAL,
     SD2.D2_CCUSTO,
+    SD2.D2_ITEMCC,
     DUD.DUD_VIAGEM,
     VGA2.DUD_VIAGEM,
     SD2.D2_FILIAL,
