@@ -117,7 +117,7 @@ where
             when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES = '520' then trim(SB1.B1_YCTREC1)
             when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES != '520' then trim(SB1.B1_YCTREC2)
             /* LP 610-020 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539') then trim(SB1.B1_YCTREC1)
+            when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539' and SD2.D2_TES = '501') then trim(SB1.B1_YCTREC1)
             when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') and SD2.D2_TES not in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC2)
             /* LP 610-030 */
             when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537') then trim(SB1.B1_YCTREC1)
@@ -133,7 +133,7 @@ where
             when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
             when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
         else null end
-    = '310101001'
+    = '310101001' /* NACIONAL */
     and trim(SD2.D2_ITEMCC) = '11'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 
