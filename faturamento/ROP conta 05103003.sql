@@ -1,21 +1,19 @@
     select
         ZC2.ZC2_FILIAL as FILIAL,
         ZC2.ZC2_NUM as NUM,
-        (
-            select isnull(max(nullif(SC6010.C6_CC, '')), '305') /* pois cortesia */
-            from SC6010
-            where
-                    SC6010.D_E_L_E_T_ = ''
-                and SC6010.C6_FILIAL = ZC2.ZC2_FILIAL
-                and SC6010.C6_YOS = ZC2.ZC2_NUM
-        ) as CC,
+        ZC1.ZC1_CC as CC,
+        ZC1.ZC1_ATIVD as ITEM,
         sum(cast(coalesce(ZC2.ZC2_TOTAL, 0) as decimal (14, 2))) as TOTAL
     from ZC2010 ZC2
+        left join ZC1
+            on ZC1.D_E_L_E_T_ = ''
+            and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+            and ZC1.ZC1_NUM = ZC2.ZC2_NUM
     where
             ZC2.D_E_L_E_T_ = ''
         and ZC2.ZC2_TIPO = 3
         and left(ZC2.ZC2_COMPET, 6) = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM
+    group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD
 union
     select
         ZE1.ZE1_FILIAL as FILIAL,
