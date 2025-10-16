@@ -2,6 +2,7 @@ select
     SD3.D3_FILIAL as FILIAL,
     ZC2.ZC2_NUM as NUM,
     SD3.D3_CC as CC,
+    SD3.D3_ITEMCTA as ITEM,
     sum(cast(coalesce(SD3.D3_CUSTO1, 0) as decimal (14, 2))) as TOTAL
 from SD3010 SD3
     inner join ZC2010 ZC2
@@ -18,4 +19,4 @@ where
     and SD3.D3_ESTORNO = ''
     and SD3.D_E_L_E_T_ = ''
     and left(SD3.D3_EMISSAO, 6) = '"+cCompt+"' and SD3.D3_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-group by SD3.D3_FILIAL, ZC2.ZC2_NUM, SD3.D3_CC
+group by SD3.D3_FILIAL, ZC2.ZC2_NUM, SD3.D3_CC, SD3.D3_ITEMCTA
