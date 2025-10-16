@@ -2,6 +2,7 @@
         SD2.D2_FILIAL as FILIAL,
         SC6.C6_YOS as NUM,
         SC6.C6_CC as CC,
+        SC6.C6_ITEMCTA as ITEM,
         sum(cast(coalesce(SD2.D2_VALIMP6, 0) as decimal(14, 2))) as TOTAL
     from SD2010 SD2
         inner join SC6010 SC6
@@ -18,7 +19,7 @@
     where
             SD2.D_E_L_E_T_ = ''
         and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC
+    group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC, SC6.C6_ITEMCTA
 union
     select
         SD2.D2_FILIAL as FILIAL,
@@ -42,6 +43,7 @@ union
             )
         ) as NUM,
         SD2.D2_CCUSTO as CC,
+        SD2.D2_ITEMCC as ITEM,
         sum(cast(coalesce(SD2.D2_VALIMP6, 0) as decimal(14, 2))) as TOTAL
 
     from SD2010 SD2 (nolock)
@@ -96,11 +98,11 @@ union
                 and VGA2.DUD_SERIE = COMP.D2_SERIE
     where
             SD2.D_E_L_E_T_ = ''
-        and trim(SD2.D2_ITEMCC) = '11'
         and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by
         SD2.D2_FILIAL,
         SD2.D2_CCUSTO,
+        SD2.D2_ITEMCC,
         DUD.DUD_VIAGEM,
         VGA2.DUD_VIAGEM,
         SD2.D2_FILIAL,
