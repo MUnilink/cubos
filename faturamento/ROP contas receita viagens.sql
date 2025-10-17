@@ -4,18 +4,11 @@ select
     coalesce(nullif(SD2.D2_CCUSTO, ''), nullif(COMP.D2_CCUSTO, ''), nullif(RPS.D2_CCUSTO, ''), nullif(SE1.E1_CCUSTO, '')) as CC,
     coalesce(nullif(SD2.D2_ITEMCC, ''), nullif(COMP.D2_ITEMCC, ''), nullif(RPS.D2_ITEMCC, ''), nullif(SE1.E1_ITEMCTA, '')) as ATIVIDADE,
 
-    concat
-    (
-        ZE4.ZE4_STATUS, ' - ',
-        case ZE4.ZE4_STATUS
-            when '1' then upper('Em Aberto')
-            when '2' then upper('Em Transito')
-            when '3' then upper('Encerrada')
-            when '4' then upper('Chegada em Filial')
-            when '5' then upper('Fechada')
-            when '9' then upper('Cancelada')
-            else 'Outros' end
-    ) as STATUS_TMS,
+    DT6.DT6_DOC,
+    DT6.DT6_SERIE,
+    cast(DT6.DT6_DATEMI as date) as DT6_DATEMI,
+    DUD.DUD_DOC,
+    DUD.DUD_SERIE,
     
     COMP.D2_DOC as COMP_DOC,
     COMP.D2_SERIE as COMP_SERIE,
@@ -34,22 +27,11 @@ select
     
     cast(coalesce(ZE1.ZE1_TOTAL, 0) as decimal (14, 2)) as TOTAL
 from ZE1010 ZE1
-    left join ZE5010 ZE5
-        on ZE5.D_E_L_E_T_ = ''
-        and ZE5.ZE5_FILIAL = ZE1.ZE1_FILIAL
-        and ZE5.ZE5_VIAGEM = ZE1.ZE1_NUM
-        
-        left join ZE4010 ZE4
-            on ZE4.D_E_L_E_T_ = ''
-            and ZE4.ZE4_FILIAL = ZE5.ZE5_FILIAL
-            and ZE4.ZE4_VIAGEM = ZE5.ZE5_VIAGEM
-    
     left join DUD010 DUD
         on DUD.D_E_L_E_T_ = ''
         and DUD.DUD_FILIAL = left(ZE1.ZE1_FILIAL, 4)
         and DUD.DUD_FILORI = ZE1.ZE1_FILIAL
         and DUD.DUD_VIAGEM = ZE1.ZE1_NUM
-        and DUD.DUD_SERIE != 'COL'
 
         left join DT6010 DT6
             on DT6.D_E_L_E_T_ = ''
@@ -90,5 +72,5 @@ from ZE1010 ZE1
 
 where
         ZE1.D_E_L_E_T_ = ''
-    and ZE1.ZE1_TIPO in (2, 3)
-    and left(ZE1.ZE1_COMPET, 4) like '2025%'
+    and ZE1.ZE1_TIPO in (3)
+    and ZE1.ZE1_COMPET between '20250331' and '20250430'
