@@ -1,36 +1,25 @@
     select
         ZC2.ZC2_FILIAL as FILIAL,
         ZC2.ZC2_NUM as NUM,
-        (
-            select isnull(max(nullif(SC6010.C6_CC, '')), '305') /* pois cortesia */
-            from SC6010
-            where
-                    SC6010.D_E_L_E_T_ = ''
-                and SC6010.C6_FILIAL = ZC2.ZC2_FILIAL
-                and SC6010.C6_YOS = ZC2.ZC2_NUM
-        ) as CC,
+        ZC1.ZC1_CC as CC,
+        ZC1.ZC1_ATIVD as ITEM,
         sum(cast(coalesce(ZC2.ZC2_TOTAL, 0) as decimal (14, 2))) as TOTAL
     from ZC2010 ZC2
+        left join ZC1010 ZC1
+            on ZC1.D_E_L_E_T_ = ''
+            and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+            and ZC1.ZC1_NUM = ZC2.ZC2_NUM
     where
             ZC2.D_E_L_E_T_ = ''
         and ZC2.ZC2_TIPO = 2
         and left(ZC2.ZC2_COMPET, 6) = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM
+    group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD
 union
     select
         ZE1.ZE1_FILIAL as FILIAL,
         ZE1.ZE1_NUM as NUM,
-        coalesce(nullif(SD2.D2_CCUSTO, ''), COMP.D2_CCUSTO, RPS.D2_CCUSTO) as CC,
-        coalesce(nullif(SD2.D2_ITEMCC, ''), COMP.D2_ITEMCC, RPS.D2_ITEMCC) as ATIVIDADE,
-        
-        trim(DUD.DUD_DOC) as CTE_DOC,
-        trim(DUD.DUD_SERIE) as CTE_SERIE,
-        trim(COMP.D2_DOC) as COMP_DOC,
-        trim(COMP.D2_SERIE) as COMP_SERIE,
-        trim(SC5.C5_NUM) as RPS_PEDIDO,
-        trim(RPS.D2_DOC) as RPS_DOC,
-        trim(RPS.D2_SERIE) as RPS_SERIE,
-
+        coalesce(nullif(SD2.D2_CCUSTO, ''), nullif(COMP.D2_CCUSTO, ''), nullif(RPS.D2_CCUSTO, '')) as CC,
+        coalesce(nullif(SD2.D2_ITEMCC, ''), nullif(COMP.D2_ITEMCC, ''), nullif(RPS.D2_ITEMCC, '')) as ATIVIDADE,
         sum(cast(coalesce(ZE1.ZE1_TOTAL, 0) as decimal (14, 2))) as TOTAL
     from ZE1010 ZE1
         left join DUD010 DUD
@@ -76,4 +65,7 @@ union
             ZE1.D_E_L_E_T_ = ''
         and ZE1.ZE1_TIPO = 2
         and left(ZE1.ZE1_COMPET, 6) = '"+cCompt+"' and ZE1.ZE1_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZE1.ZE1_FILIAL, ZE1.ZE1_NUM
+    group by
+        ZE1.ZE1_FILIAL, ZE1.ZE1_NUM,
+        SD2.D2_CCUSTO, COMP.D2_CCUSTO, RPS.D2_CCUSTO,
+        SD2.D2_ITEMCC, COMP.D2_ITEMCC, RPS.D2_ITEMCC
