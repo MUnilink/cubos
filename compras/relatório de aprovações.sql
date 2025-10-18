@@ -77,6 +77,8 @@
                 and SCR.CR_TIPO = DBM.DBM_TIPO
                 and SCR.CR_GRUPO = DBM.DBM_GRUPO
                 and SCR.CR_ITGRP = DBM.DBM_ITGRP
+
+                SAL010 SAL (nolock)
         
         left join SB1010 SB1 (nolock)
             on SB1.D_E_L_E_T_ = ''
@@ -87,6 +89,9 @@
             and STJ.TJ_ORDEM = left(SCP.CP_OP, 6)
     where
             SCP.D_E_L_E_T_ = ''
+        and SCR.CR_TIPO = 'SA'
+        and SCR.CR_FILIAL =:FILIAL
+        and SCR.CR_NUM =:NUMERO
 union
     select
         left(SC7.C7_OP, 6) as OS,
@@ -177,3 +182,5 @@ union
     where
             SC7.D_E_L_E_T_ = ''
         and SCR.CR_TIPO = 'PC'
+        and SCR.CR_FILIAL =:FILIAL
+        and SCR.CR_NUM =:NUMERO
