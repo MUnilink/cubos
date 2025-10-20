@@ -19,7 +19,7 @@ union
         ZE1.ZE1_FILIAL as FILIAL,
         ZE1.ZE1_NUM as NUM,
         coalesce(nullif(SD2.D2_CCUSTO, ''), nullif(COMP.D2_CCUSTO, ''), nullif(RPS.D2_CCUSTO, '')) as CC,
-        coalesce(nullif(SD2.D2_ITEMCC, ''), nullif(COMP.D2_ITEMCC, ''), nullif(RPS.D2_ITEMCC, '')) as ATIVIDADE,
+        coalesce(nullif(SD2.D2_ITEMCC, ''), nullif(COMP.D2_ITEMCC, ''), nullif(RPS.D2_ITEMCC, '')) as ITEM,
         sum(cast(coalesce(ZE1.ZE1_TOTAL, 0) as decimal (14, 2))) as TOTAL
     from ZE1010 ZE1
         left join DUD010 DUD
