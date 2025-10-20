@@ -2,7 +2,7 @@ select
     SD2.D2_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM,
     SC6.C6_CC as CC,
-    SC6.C6_NUM as PEDIDO,
+    SC6.C6_ITEMCTA as ITEM,
     sum(cast(coalesce(SC6.C6_VALOR, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
@@ -80,4 +80,4 @@ where
     = '310102003'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 
-group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_CC, SC6.C6_NUM
+group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_CC, SC6.C6_NUM, SC6.C6_ITEMCTA
