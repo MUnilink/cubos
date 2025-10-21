@@ -1,6 +1,6 @@
     select
         ZC2.ZC2_FILIAL as FILIAL,
-        ZC2.ZC2_NUM as NUM,
+        ZC2.ZC2_NUM as NUM,null as ITEM,
         (
             select isnull(max(nullif(SC6010.C6_CC, '')), '305') /* pois cortesia */
             from SC6010
@@ -21,7 +21,7 @@ union
     select
         ZE1.ZE1_FILIAL as FILIAL,
         ZE1.ZE1_NUM as NUM,
-        '304' as CC,
+        '304' as CC,null as ITEM,
         sum(cast(coalesce(ZE1.ZE1_TOTAL, 0) as decimal (14, 2))) as TOTAL
     from ZE1010 ZE1
     where

@@ -1,7 +1,7 @@
     select
         ZG1.ZG1_FILORI as FILIAL,
         ZC2.ZC2_NUM as NUM,
-        trim(ZG1.ZG1_CC) as CC,
+        trim(ZG1.ZG1_CC) as CC, null as ITEM,
         sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as TOTAL
     from ZC2010 ZC2 (nolock)
         inner join
@@ -42,8 +42,8 @@ union
     select
         ZG1.ZG1_FILORI as FILIAL,
         ZE1.ZE1_NUM as NUM,
-        trim(ZG1.ZG1_CC) as CC,
-        sum(ZE1.ZE1_TOTAL * ZG1.VL_RIMP) as TOTAL
+        trim(ZG1.ZG1_CC) as CC, null as ITEM,
+        null as ITEM, sum(ZE1.ZE1_TOTAL * ZG1.VL_RIMP) as TOTAL
     from ZE1010 ZE1 (nolock)
         inner join
         (
