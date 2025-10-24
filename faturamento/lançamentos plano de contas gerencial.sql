@@ -2,8 +2,10 @@ select distinct
     ZE2.ZE2_COD as CODIGO,
     upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) as DESCRICAO,
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
-    trim(ZE3.ZE3_ORIGEM) as CC,
+    trim(ZE3.ZE3_ORIGEM) as ORIGEM_CC,
+    trim(ZE3.ZE3_ITORIG) as ORIGEM_AT,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ITORIG, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
     
     case
         when ZC1.ZC1_NUM is not null then
@@ -101,6 +103,9 @@ from ZE3010 ZE3 (nolock)
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
         and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
+    left join CTD010
+        on CTD010.D_E_L_E_T_ = ''
+        and CTD010.CTD_ITEM = ZE3.ZE3_ITORIG
 where
         ZE3.D_E_L_E_T_ = ''
     and ZE3.ZE3_COMPET>=:PERIODO_INI
