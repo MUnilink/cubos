@@ -14,23 +14,23 @@
 		trim(SB1.B1_COD) as PRODUTO,
 		trim(SB1.B1_DESC) as NOMEPRODUTO,
 		trim(SB1.B1_GRUPO) as GRUPO_PROD,
-		null as OS,
-		null as EQUIPAMENTO,
+		trim(STJ.TJ_ORDEM) as OS,
+		trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
 
 		trim(SC7.C7_ITEMCTA) as ATIVIDADE,
         trim(SC7.C7_CC) as CC,
         null as CONTA,
 		
-		trim(SCR.CR_USER) as USUARIO,
+		trim(upper(SY1.Y1_NOME)) as SOLICITANTE,
 		trim(SCR.CR_APROV) as APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
-		trim(SCR.CR_USERLIB) as USR_LIB,
-		trim(SCR.CR_LIBAPRO) as APR_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO) as APROVADOR,
 		cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
+		case when SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
 
 		concat
 		(
@@ -59,9 +59,16 @@
 			on SA2.D_E_L_E_T_ = ''
 			and SA2.A2_COD = SC7.C7_FORNECE
 			and SA2.A2_LOJA = SC7.C7_LOJA
+		left join STJ010 STJ (nolock)
+			on STJ.D_E_L_E_T_ = ''
+			and STJ.TJ_FILIAL = SC7.C7_FILIAL
+			and concat(STJ.TJ_ORDEM, 'OS') = left(SC7.C7_OP, 8)
+		left join SY1010 SY1 (nolock)
+			on SY1.D_E_L_E_T_ = ''
+			and SY1.Y1_USER = SC7.C7_USER
 	where
 			SC7.D_E_L_E_T_ = ''
-		and datediff(month, SC7.C7_EMISSAO, getdate()) < 7
+		and datediff(month, SC7.C7_EMISSAO, getdate()) < 13
 union
 	select
 		trim(SC1.C1_FILIAL) as FILIAL,
@@ -79,23 +86,23 @@ union
 		trim(SB1.B1_COD) as PRODUTO,
 		trim(SB1.B1_DESC) as NOMEPRODUTO,
 		trim(SB1.B1_GRUPO) as GRUPO_PROD,
-		null as OS,
-		null as EQUIPAMENTO,
+		trim(STJ.TJ_ORDEM) as OS,
+		trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
 
 		trim(SC1.C1_ITEMCTA) as ATIVIDADE,
         trim(SC1.C1_CC) as CC,
         null as CONTA,
 		
-		trim(SCR.CR_USER) as USUARIO,
+		trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE,
 		trim(SCR.CR_APROV) as APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
-		trim(SCR.CR_USERLIB) as USR_LIB,
-		trim(SCR.CR_LIBAPRO) as APR_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO) as APROVADOR,
 		cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
+		case when SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
 
 		concat
 		(
@@ -117,16 +124,20 @@ union
 			and SB1.B1_COD = SC1.C1_PRODUTO
 		left join SCR010 SCR (nolock)
 			on SCR.D_E_L_E_T_ = ''
-			and SCR.CR_TIPO = 'PC'
+			and SCR.CR_TIPO = 'SC'
 			and SCR.CR_FILIAL = SC1.C1_FILIAL
 			and SCR.CR_NUM = SC1.C1_NUM
 		left join SA2010 SA2 (nolock)
 			on SA2.D_E_L_E_T_ = ''
 			and SA2.A2_COD = SC1.C1_FORNECE
 			and SA2.A2_LOJA = SC1.C1_LOJA
+		left join STJ010 STJ (nolock)
+			on STJ.D_E_L_E_T_ = ''
+			and STJ.TJ_FILIAL = SC1.C1_FILIAL
+			and concat(STJ.TJ_ORDEM, 'OS') = left(SC1.C1_OP, 8)
 	where
 			SC1.D_E_L_E_T_ = ''
-		and datediff(month, SC1.C1_EMISSAO, getdate()) < 7
+		and datediff(month, SC1.C1_EMISSAO, getdate()) < 13
 union
 	select
 		trim(SCP.CP_FILIAL) as FILIAL,
@@ -151,16 +162,16 @@ union
         trim(SCP.CP_CC) as CC,
         concat(trim(SCP.CP_CONTA), ' - ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA)) as CONTA,
 		
-		trim(SCR.CR_USER) as USUARIO,
+		(select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_USER) as SOLICITANTE,
 		trim(SCR.CR_APROV) as APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
-		trim(SCR.CR_USERLIB) as USR_LIB,
-		trim(SCR.CR_LIBAPRO) as APR_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_LIBAPRO) as APROVADOR,
 		cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
+		case when SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
 
 		concat
 		(
@@ -201,4 +212,4 @@ union
             and STJ.TJ_ORDEM = left(SCP.CP_OP, 6)
     where
             SCP.D_E_L_E_T_ = ''
-		and datediff(month, SCP.CP_EMISSAO, getdate()) < 7
+		and datediff(month, SCP.CP_EMISSAO, getdate()) < 13
