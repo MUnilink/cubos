@@ -58,13 +58,14 @@ SELECT
             )
     ) as BK_APROVADOR,
 
-    SD1.D1_EMISSAO as DATANF,
-    SD1.D1_DTDIGIT as DATA,
     SD1.D1_QUANT as QTD_ATENDIDA,
     SD1.D1_TOTAL as VALOR_TOTAL,
-    SC7.C7_EMISSAO as DTEPED,
+
+    concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC) as DTEORD,
+    SD1.D1_EMISSAO as DATANF,
+    concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF) as DATA,
+    concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC) as DTEPED,
     SC7.C7_DATPRF as DTPREV,
-    SC1.C1_EMISSAO as DTEORD,
 
     (
         select max(coalesce(SCR.CR_DATALIB, ''))
