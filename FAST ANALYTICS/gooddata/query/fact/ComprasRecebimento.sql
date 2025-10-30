@@ -61,11 +61,11 @@ SELECT
     SD1.D1_QUANT as QTD_ATENDIDA,
     SD1.D1_TOTAL as VALOR_TOTAL,
 
-    concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC) as DTEORD,
-    SD1.D1_EMISSAO as DATANF,
-    concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF) as DATA,
-    concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC) as DTEPED,
-    SC7.C7_DATPRF as DTPREV,
+    concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC) as DATA_SC,
+    SD1.D1_EMISSAO as DATA_EMINF,
+    concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF) as DATA_DIGNF,
+    concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC) as DATA_EMIPC,
+    SC7.C7_DATPRF as DATA_PRVPC,
 
     (
         select max(coalesce(SCR.CR_DATALIB, ''))
