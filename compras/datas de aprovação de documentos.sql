@@ -14,6 +14,7 @@
 		
 		trim(SB1.B1_COD) as PRODUTO,
 		trim(SB1.B1_DESC) as NOMEPRODUTO,
+		SB1.B1_UPRC as ULT_PRECO,
 		concat(trim(SB1.B1_GRUPO), ' - ', (select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO)) as GRUPO_PROD,
 		trim(STJ.TJ_ORDEM) as OS,
 		trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
@@ -23,7 +24,7 @@
         null as CONTA,
 		
 		trim(upper(SY1.Y1_NOME)) as SOLICITANTE,
-		trim(SCR.CR_APROV) as APROVA,
+		trim(SCR.CR_APROV) as ITEM_APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
@@ -31,6 +32,7 @@
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
 		cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
+		cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_DOC,
 		case when SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
 
 		trim(SCR.CR_STATUS) as CR_STATUS,
@@ -85,6 +87,7 @@ union
 		
 		trim(SB1.B1_COD) as PRODUTO,
 		trim(SB1.B1_DESC) as NOMEPRODUTO,
+		SB1.B1_UPRC as ULT_PRECO,
 		concat(trim(SB1.B1_GRUPO), ' - ', (select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO)) as GRUPO_PROD,
 		trim(STJ.TJ_ORDEM) as OS,
 		trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
@@ -94,7 +97,7 @@ union
         null as CONTA,
 		
 		trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE,
-		trim(SCR.CR_APROV) as APROVA,
+		trim(SCR.CR_APROV) as ITEM_APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
@@ -102,6 +105,7 @@ union
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
 		cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
+		cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_DOC,
 		case when SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
 
 		trim(SCR.CR_STATUS) as CR_STATUS,
@@ -153,6 +157,7 @@ union
 		
 		trim(SB1.B1_COD) as PRODUTO,
 		trim(SB1.B1_DESC) as NOMEPRODUTO,
+		SB1.B1_UPRC as ULT_PRECO,
 		concat(trim(SB1.B1_GRUPO), ' - ', (select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO)) as GRUPO_PROD,
 		trim(STJ.TJ_ORDEM) as OS,
 		trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
@@ -162,7 +167,7 @@ union
         concat(trim(SCP.CP_CONTA), ' - ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA)) as CONTA,
 		
 		(select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_USER) as SOLICITANTE,
-		trim(SCR.CR_APROV) as APROVA,
+		trim(SCR.CR_APROV) as ITEM_APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
@@ -170,6 +175,7 @@ union
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
 		cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
+		cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_DOC,
 		case when SCR.CR_NUM is null then 'SEM ALÇADA' else 'COM ALÇADA' end as ALCADA,
 
 		trim(SCR.CR_STATUS) as CR_STATUS,
@@ -199,4 +205,4 @@ union
             and STJ.TJ_ORDEM = left(SCP.CP_OP, 6)
     where
             SCP.D_E_L_E_T_ = ''
-		and datediff(month, SCP.CP_EMISSAO, getdate()) between 0 and 12
+		and datediff(month, SCP.CP_EMISSAO, getdate()) between 0 and 6
