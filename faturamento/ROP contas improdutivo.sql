@@ -1,8 +1,8 @@
     select
         ZG1.ZG1_FILORI as FILIAL,
         ZC2.ZC2_NUM as NUM,
-        ZG1.ZG1_CC as CC,
-        ZG1.ZG1_ITEMCT as ITEM,
+        ZC1.ZC1_CC as CC,
+        ZC1.ZC1_ATIVD as ITEM,
         ZC2.ZC2_TIPO as TIPO_ZCE,
         ZG1.ZG1_TIPO as TIPO_ZG1,
         sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as TOTAL
@@ -36,12 +36,17 @@
                 and G1.ZG1_TIPO = '2'
         ) ZG1
             on left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
-            and ZC2.ZC2_COD = trim(ZG1.ZG1_CODIGO)
+            and ZC2.ZC2_COD = ZG1.ZG1_CODIGO
+        
+        inner join ZC1010 ZC1
+            on ZC1.D_E_L_E_T_ = ''
+            and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+            and ZC1.ZC1_NUM = ZC2.ZC2_NUM
     where
             ZC2.D_E_L_E_T_ = ''
         and ZC2.ZC2_TIPO = '15'
         and left(ZC2.ZC2_COMPET, 6) = '202509'
-    group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM, ZG1.ZG1_CC, ZG1.ZG1_ITEMCT, ZC2.ZC2_TIPO, ZG1.ZG1_TIPO
+    group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD, ZC2.ZC2_TIPO, ZG1.ZG1_TIPO
 union
     select
         ZG1.ZG1_FILORI as FILIAL,
@@ -78,11 +83,10 @@ union
             from ZG1010 G1 (nolock)
             where
                     G1.D_E_L_E_T_ = ''
-                and G1.ZG1_CC = '304'
                 and G1.ZG1_TIPO = '2'
         ) ZG1
             on left(ZE1.ZE1_COMPET, 6) = ZG1.ZG1_COMPET
-            and ZE1.ZE1_COD = trim(ZG1.ZG1_CODIGO)
+            and ZE1.ZE1_COD = ZG1.ZG1_CODIGO
     where
             ZE1.D_E_L_E_T_ = ''
         and ZE1.ZE1_TIPO = '15'
