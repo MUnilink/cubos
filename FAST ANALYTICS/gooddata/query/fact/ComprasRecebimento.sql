@@ -61,10 +61,10 @@ SELECT
     SD1.D1_QUANT as QTD_ATENDIDA,
     SD1.D1_TOTAL as VALOR_TOTAL,
 
-    concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC) as DATA_SC,
+    trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC)) as DATA_SC,
     SD1.D1_EMISSAO as DATA_EMINF,
-    concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF) as DATA_DIGNF,
-    concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC) as DATA_EMIPC,
+    trim(concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF)) as DATA_DIGNF, /* data */
+    trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC)) as DATA_EMIPC,
     SC7.C7_DATPRF as DATA_PRVPC,
 
     (
@@ -206,12 +206,12 @@ FROM SD1010 SD1
             AND ACU.ACU_COD = ACV.ACV_CATEGO
             AND ACU.D_E_L_E_T_ = ' '
     
-    LEFT JOIN SC7010 SC7
-        ON SC7.C7_FILIAL = SD1.D1_FILIAL
-        AND SC7.C7_NUM = SD1.D1_PEDIDO
-        AND SC7.C7_ITEM = SD1.D1_ITEMPC
-        AND SC7.C7_PRODUTO = SD1.D1_COD
-        AND SC7.D_E_L_E_T_ = ' '
+    inner join SC7010 SC7
+        on SC7.C7_FILIAL = SD1.D1_FILIAL
+        and SC7.C7_NUM = SD1.D1_PEDIDO
+        and SC7.C7_ITEM = SD1.D1_ITEMPC
+        and SC7.C7_PRODUTO = SD1.D1_COD
+        and SC7.D_E_L_E_T_ = ' '
 
         LEFT JOIN SC1010 SC1
             ON SC1.C1_FILIAL = SC7.C7_FILIAL
