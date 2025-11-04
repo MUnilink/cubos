@@ -1,10 +1,27 @@
     select
         ZG1.ZG1_FILORI as FILIAL,
         ZC2.ZC2_NUM as NUM,
-        ZC1.ZC1_CC as CC,
-        ZC1.ZC1_ATIVD as ITEM,
+        ZC2.ZC2_CC as CC,
+        ZC2.ZC2_ATIVD as ITEM,
         sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as TOTAL
-    from ZC2010 ZC2
+    from
+    (
+        select
+            ZC1010.ZC1_FILIAL as ZC2_FILIAL,
+            ZC1010.ZC1_CC as ZC2_CC,
+            ZC1010.ZC1_ATIVD as ZC2_ATIVD,
+            ZC2010.ZC2_NUM,
+            left(ZC2010.ZC2_COMPET, 6) as ZC2_COMPET,
+            ZC2010.ZC2_COD,
+            ZC2010.ZC2_TIPO,
+            ZC2010.ZC2_TOTAL
+        from ZC2010
+            inner join ZC1010
+                on ZC1010.D_E_L_E_T_ = ''
+                and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+        where ZC2010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '16'
+    ) ZC2
         inner join
         (
             select
@@ -28,22 +45,18 @@
                     and ZG1010.ZG1_CC = G1.ZG1_CC
                     and ZG1010.ZG1_ITEMCT = G1.ZG1_ITEMCT
                 ) as VL_RIMP
-            from ZG1010 G1
+            from ZG1010 G1 (nolock)
             where
                     G1.D_E_L_E_T_ = ''
                 and G1.ZG1_TIPO = '3'
         ) ZG1
-            on left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
+            on ZC2.ZC2_COMPET = ZG1.ZG1_COMPET
+            and ZC2.ZC2_FILIAL = ZG1.ZG1_FILORI
             and ZC2.ZC2_COD = ZG1.ZG1_CODIGO
-        inner join ZC1010 ZC1
-            on ZC1.D_E_L_E_T_ = ''
-            and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
-            and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-    where
-            ZC2.D_E_L_E_T_ = ''
-        and ZC2.ZC2_TIPO = '16'
-        and left(ZC2.ZC2_COMPET, 6) = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD
+            and ZC2.ZC2_CC = ZG1.ZG1_CC
+            and ZC2.ZC2_ATIVD = ZG1.ZG1_ITEMCT
+    where ZC2.ZC2_COMPET = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
+    group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM, ZC2.ZC2_CC, ZC2.ZC2_ATIVD
 union
     select
         ZG1.ZG1_FILORI as FILIAL,
@@ -79,6 +92,9 @@ union
             where
                     G1.D_E_L_E_T_ = ''
                 and G1.ZG1_TIPO = '3'
+                and G1.ZG1_FILORI = '010101'
+                and G1.ZG1_CC = '304'
+                and G1.ZG1_ITEMCT = '11'
         ) ZG1
             on left(ZE1.ZE1_COMPET, 6) = ZG1.ZG1_COMPET
             and ZE1.ZE1_COD = ZG1.ZG1_CODIGO
