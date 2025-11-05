@@ -1,12 +1,23 @@
     select
         ZG1.ZG1_FILORI as FILIAL,
         ZC2.ZC2_NUM as NUM,
-        ZC1.ZC1_CC as CC,
-        ZC1.ZC1_ATIVD as ITEM,
+        ZC2.ZC1_CC as CC,
+        ZC2.ZC1_ATIVD as ITEM,
         ZC2.ZC2_TIPO as TIPO_ZCE,
-        ZG1.ZG1_TIPO as TIPO_ZG1,
-        sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as TOTAL
-    from ZC2010 ZC2 (nolock)
+        ZC2.ZC2_COD as CODIGO,
+        ZG1.*,
+        ZC2.ZC2_TOTAL as TOTAL_OSVGA,
+        ZC2.ZC2_TOTAL * ZG1.VL_RIMP as TOTAL_RAT
+    from
+        (
+            select ZC2010.*, ZC1010.ZC1_CC, ZC1010.ZC1_ATIVD
+            from ZC2010
+                inner join ZC1010
+                    on ZC1010.D_E_L_E_T_ = ''
+                    and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                    and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+            where ZC2010.D_E_L_E_T_ = ''
+        ) ZC2
         inner join
         (
             select
@@ -31,22 +42,17 @@
                     and ZG1010.ZG1_ITEMCT = G1.ZG1_ITEMCT
                 ) as VL_RIMP
             from ZG1010 G1 (nolock)
-            where
-                    G1.D_E_L_E_T_ = ''
-                and G1.ZG1_TIPO = '2'
+            where G1.D_E_L_E_T_ = ''
         ) ZG1
             on left(ZC2.ZC2_COMPET, 6) = ZG1.ZG1_COMPET
+            and ZC2.ZC2_FILIAL = ZG1.ZG1_FILORI
             and ZC2.ZC2_COD = ZG1.ZG1_CODIGO
-        
-        inner join ZC1010 ZC1
-            on ZC1.D_E_L_E_T_ = ''
-            and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
-            and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+            and ZC2.ZC1_CC = ZG1.ZG1_CC
+            and ZC2.ZC1_ATIVD = ZG1.ZG1_ITEMCT
     where
-            ZC2.D_E_L_E_T_ = ''
-        and ZC2.ZC2_TIPO = '15'
-        and left(ZC2.ZC2_COMPET, 6) = '202509'
-    group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD, ZC2.ZC2_TIPO, ZG1.ZG1_TIPO
+            
+        case when ZG1.ZG1_TIPO in (2, 14) then 15 when ZG1.ZG1_TIPO in (3, 6, 9, 12) then 16 else null end = ZC2.ZC2_TIPO
+        and left(ZC2.ZC2_COMPET, 6) =:PERIODO
 union
     select
         ZG1.ZG1_FILORI as FILIAL,
@@ -54,8 +60,10 @@ union
         ZG1.ZG1_CC as CC,
         ZG1.ZG1_ITEMCT as ITEM,
         ZE1.ZE1_TIPO as TIPO_ZCE,
-        ZG1.ZG1_TIPO as TIPO_ZG1,
-        sum(ZE1.ZE1_TOTAL * ZG1.VL_RIMP) as TOTAL
+        ZE1.ZE1_COD as CODIGO,
+        ZG1.*,
+        ZE1.ZE1_TOTAL as TOTAL_OSVGA,
+        ZE1.ZE1_TOTAL * ZG1.VL_RIMP as TOTAL_RAT
     from ZE1010 ZE1 (nolock)
         inner join
         (
@@ -83,12 +91,13 @@ union
             from ZG1010 G1 (nolock)
             where
                     G1.D_E_L_E_T_ = ''
-                and G1.ZG1_TIPO = '2'
+                and G1.ZG1_FILORI = '010101'
+                and G1.ZG1_CC = '304'
+                and G1.ZG1_ITEMCT = '11'
         ) ZG1
             on left(ZE1.ZE1_COMPET, 6) = ZG1.ZG1_COMPET
             and ZE1.ZE1_COD = ZG1.ZG1_CODIGO
     where
             ZE1.D_E_L_E_T_ = ''
-        and ZE1.ZE1_TIPO = '15'
-        and left(ZE1.ZE1_COMPET, 6) = '202509'
-    group by ZG1.ZG1_FILORI, ZE1.ZE1_NUM, ZG1.ZG1_CC, ZG1.ZG1_ITEMCT, ZE1.ZE1_TIPO, ZG1.ZG1_TIPO
+        and case when ZG1.ZG1_TIPO in (2, 14) then 15 when ZG1.ZG1_TIPO in (3, 6, 9, 12) then 16 else null end = ZE1.ZE1_TIPO
+        and left(ZE1.ZE1_COMPET, 6) =:PERIODO
