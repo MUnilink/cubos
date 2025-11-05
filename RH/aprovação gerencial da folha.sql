@@ -24,7 +24,7 @@
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
         case when trim(SRV.RV_TIPOCOD) != '2' then 0.0 when trim(SRV.RV_TIPOCOD) = '2' and SRC.RC_PD not in ('420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '456', '420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '45') then SRC.RC_VALOR else 0.0 end as OUTROS_DESCONTOS,
         
-        case SRC.RC_PD when '990' then SRC.RC_VALOR else 0.0 end as SALARIO_BASE,
+        case SRC.RC_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
         case when SRC.RC_PD in ('183', '999') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRC.RC_PD in ('020') then SRC.RC_VALOR else 0.0 end as DIAS_TRABALHADOS,
@@ -117,7 +117,7 @@ union
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
         case when trim(SRV.RV_TIPOCOD) != '2' then 0.0 when trim(SRV.RV_TIPOCOD) = '2' and SRD.RD_PD not in ('420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '456', '420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '45') then SRD.RD_VALOR else 0.0 end as OUTROS_DESCONTOS,
         
-        case SRD.RD_PD when '990' then SRD.RD_VALOR else 0.0 end as SALARIO_BASE,
+        case SRD.RD_PD when '990' then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
         case when SRD.RD_PD in ('183', '999') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRD.RD_PD in ('020') then SRD.RD_VALOR else 0.0 end as DIAS_TRABALHADOS,
