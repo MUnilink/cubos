@@ -5,17 +5,22 @@ select
 	trim(SN1.N1_DESCRIC) as N1_DESCRIC,
 	trim(SN3.N3_ITEM) as ITEM_ATIVO,
     trim(ST9.T9_CODBEM) as T9_CODBEM,
-	cast(SN3.N3_DINDEPR as date) as DATA_INIDEP,
-	cast(SN3.N3_AQUISIC as date) as DATA_AQUIS,
-	cast(SN3.N3_DTBAIXA as date) as DATA_BAIXA,
 	(select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'G1' and SX5010.X5_CHAVE = SN3.N3_TIPO) as TIPO_ATIVO,
 	SN3.N3_TXDEPR1 /12 as TXDEPRECMENSAL,
 	SNG.NG_TXDEPR1 /12 as TXDEPRECMENSALGRUPO,
 
+	cast(SN3.N3_DINDEPR as date) as DATA_INIDEP,
+	left(SN3.N3_DINDEPR, 6) as PERIODO_INIDEP,
+	cast(SN3.N3_AQUISIC as date) as DATA_AQUIS,
+	left(SN3.N3_AQUISIC, 6) as PERIODO_AQUIS,
+	cast(SN3.N3_DTBAIXA as date) as DATA_BAIXA,
+	left(SN3.N3_DTBAIXA, 6) as PERIODO_BAIXA,
+	cast(SN1.N1_DTCLASS as date) as DATA_CLASS,
+	left(SN1.N1_DTCLASS, 6) as PERIODO_CLASS,
+
 	trim(SN1.N1_FORNEC) as COD_FOR,
 	trim(SN1.N1_LOJA) as LOJA_FOR,
 	trim(SN1.N1_NFISCAL) as NFISCAL,
-	cast(SN1.N1_DTCLASS as date) as DATA_CLASS,
 	trim(SA2.A2_NOME) as FORNECEDOR,
 
 	trim(SN3.N3_CUSTBEM) as CC,
@@ -46,13 +51,14 @@ select
 	trim(SN3.N3_CCORREC) as CONTA_CORRBEM,
 	trim(SN3.N3_HISTOR) as HISTORICO,
 	
-	datefromparts(2024, 12, 31) as DATA_BASE,
-	datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) as TEMPO_ATIVO,
+	eomonth(dateadd(month, -1, eomonth(getdate()))) as DATA_BASE,
+	datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) as TEMPO_ATIVO,
 	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then 100 / (SN3.N3_TXDEPR1 /12) else 0.0 end as TEMPO_DEPREC,
 	SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as DEPRECMENSAL,
-    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 and (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as DEPRECATUAL,
-    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 and (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end as RESIDUAL,
-	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 and (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, datefromparts(2024, 12, 31)) else SN3.N3_VORIG1 end as ACUMULADO/*,((datediff(day, datefromparts(day(datefromparts(@), 12, 31exercicio), 1, 1), datefromparts(2024, 12, 31)))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
+    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end else 0.0 end as DEPRECATUAL,
+    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate()))))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end else 0.0 end as RESIDUAL,
+	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) else SN3.N3_VORIG1 end else SN3.N3_VORIG1 end as ACUMULADO
+	/*,((datediff(day, datefromparts(day(datefromparts(@), 12, 31exercicio), 1, 1), eomonth(dateadd(month, -1, eomonth(getdate())))))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
 
 from SN1010 SN1 (nolock)
     left join ST9010 ST9 (nolock)
