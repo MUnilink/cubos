@@ -12,7 +12,7 @@
     where
             ZC2.D_E_L_E_T_ = ''
         and ZC2.ZC2_TIPO = 7
-        and ZC2.ZC2_COD = '000001'
+        and ZC2.ZC2_COD = '000003'
         and left(ZC2.ZC2_COMPET, 6) = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD
 union
