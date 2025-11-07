@@ -92,7 +92,7 @@ union
             where
                     G1.D_E_L_E_T_ = ''
                 and G1.ZG1_TIPO = '2'
-                and G1.ZG1_FILORI = '010101'
+                and G1.ZG1_FILORI = '0101'
                 and G1.ZG1_CC = '304'
                 and G1.ZG1_ITEMCT = '11'
         ) ZG1
