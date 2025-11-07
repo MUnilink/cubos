@@ -1,5 +1,5 @@
     select
-        ZG1.ZG1_FILORI as FILIAL,
+        ZC2.ZC2_FILIAL as FILIAL,
         ZC2.ZC2_NUM as NUM,
         ZC2.ZC2_CC as CC,
         ZC2.ZC2_ATIVD as ITEM,
@@ -50,16 +50,16 @@
                     G1.D_E_L_E_T_ = ''
                 and G1.ZG1_TIPO = '2'
         ) ZG1
-            on ZC2.ZC2_COMPET = ZG1.ZG1_COMPET
-            and ZC2.ZC2_FILIAL = ZG1.ZG1_FILORI
+            on left(ZC2.ZC2_FILIAL, 4) = ZG1.ZG1_FILORI
+            and ZC2.ZC2_COMPET = ZG1.ZG1_COMPET
             and ZC2.ZC2_COD = ZG1.ZG1_CODIGO
             and ZC2.ZC2_CC = ZG1.ZG1_CC
             and ZC2.ZC2_ATIVD = ZG1.ZG1_ITEMCT
     where ZC2.ZC2_COMPET = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZG1.ZG1_FILORI, ZC2.ZC2_NUM, ZC2.ZC2_CC, ZC2.ZC2_ATIVD
+    group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM, ZC2.ZC2_CC, ZC2.ZC2_ATIVD
 union
     select
-        ZG1.ZG1_FILORI as FILIAL,
+        ZE1.ZE1_FILIAL as FILIAL,
         ZE1.ZE1_NUM as NUM,
         ZG1.ZG1_CC as CC,
         ZG1.ZG1_ITEMCT as ITEM,
@@ -97,9 +97,10 @@ union
                 and G1.ZG1_ITEMCT = '11'
         ) ZG1
             on left(ZE1.ZE1_COMPET, 6) = ZG1.ZG1_COMPET
+            and left(ZE1.ZE1_FILIAL, 4) = ZG1.ZG1_FILORI
             and ZE1.ZE1_COD = ZG1.ZG1_CODIGO
     where
             ZE1.D_E_L_E_T_ = ''
         and ZE1.ZE1_TIPO = '15'
         and left(ZE1.ZE1_COMPET, 6) = '"+cCompt+"' and ZE1.ZE1_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
-    group by ZG1.ZG1_FILORI, ZE1.ZE1_NUM, ZG1.ZG1_CC, ZG1.ZG1_ITEMCT
+    group by ZE1.ZE1_FILIAL, ZE1.ZE1_NUM, ZG1.ZG1_CC, ZG1.ZG1_ITEMCT
