@@ -2,11 +2,13 @@ select
     cast(sd2.d2_emissao as date) as d2_emissao,
     SD2.D2_FILIAL as FILIAL,
     SD2.D2_CCUSTO as CC,
+    SD2.D2_ITEMCC as ITEMCC,
     SD2.D2_DOC as DOC,
     SD2.D2_TES as TES,
     SD2.D2_CF as CFOP,
     coalesce
     (
+        ZC2.ZC2_NUM,
         DUD.DUD_VIAGEM,
         VGA2.DUD_VIAGEM,
         (
@@ -138,9 +140,26 @@ from SD2010 SD2 (nolock)
             and VGA2.DUD_DOC = COMP.D2_DOC
             and VGA2.DUD_SERIE = COMP.D2_SERIE
             and VGA2.DUD_STATUS != 9
+    
+    left join SC6010 SC6 (nolock)
+        on SC6.D_E_L_E_T_ = ''
+        and SC6.C6_FILIAL = SD2.D2_FILIAL
+        and SC6.C6_NUM = SD2.D2_PEDIDO
+        and SC6.C6_ITEM = SD2.D2_ITEMPV
+        
+        left join ZC2010 ZC2 (nolock)
+            on ZC2.D_E_L_E_T_ = ''
+            and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+            and ZC2.ZC2_NUM = SC6.C6_YOS
+            and ZC2.ZC2_ITEM = SC6.C6_YITOS
+
+            left join ZC1010 ZC1 (nolock)
+                on ZC1.D_E_L_E_T_ = ''
+                and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+                and ZC1.ZC1_NUM = ZC2.ZC2_NUM
 where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
-    and trim(SD2.D2_ITEMCC) = '11'
-    and dud.dud_viagem in (18287, 18202, 17651)
+    and sd2.d2_emissao>=:DATA_INI
+    and sd2.d2_emissao<=:DATA_FIM
