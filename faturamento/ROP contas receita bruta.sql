@@ -60,7 +60,7 @@ select
         then trim(SB1.B1_YCTREC2)
         
         /* LP 610-020 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES = '507' or SD2.D2_TES = '539' or SD2.D2_TES = '501')
+        when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and SD2.D2_TES in ('507', '539', '501', '534')
         then trim(SB1.B1_YCTREC1)
         when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') and SD2.D2_TES not in ('506', '534', '535', '536', '537')
         then trim(SB1.B1_YCTREC2)
