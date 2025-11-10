@@ -16,18 +16,18 @@ select
 	null as TQN_YITMCT,
 
     /* RM */
-    case when ZD3.TQN_YTIPO = 'C' then ZD3.DATA_HORA else ZD3.DATA_HORA +'*' end as ZD3_DATA,
+    ZD3.TQN_FILIAL as ZD3_FILIAL,
     ZD3.TQN_PLACA as ZD3_PLACA,
     ZD3.TQN_FROTA as ZD3_VEICUL,
     ZD3.TQN_TANQUE as ZD3_TANQUE,
     ZD3.TQN_CODCOM as ZD3_COMB,
-    ZD3.QTD_LITROS as ZD3_LITROS,
-    ZD3.HODOM_ATUAL as ZD3_KM,
-    ZD3.KMRD as ZD3_KMRD,
-    ZD3.KML as ZD3_KML,
     ZD3.VALOR_UNIT as ZD3_VLUNI,
     ZD3.VALOR_TOTAL as ZD3_TOTAL,
-    left(ZD3.ZD3_DATA, 6) as PERIODO
+    trim(ST9.T9_CODFAMI) as FAMILIA,
+    convert(datetime, ZD3.DATA_HORA, 113) as DATA,
+    ZD3.TQN_YTIPO as TIPO,
+    ZD3.ULT_HODOM_COMP as CONT_ANT,
+    left(ZD3.DATA_HORA, 6) as PERIODO
 from
     (
         select *, case when KMRD > 0 and QTD_LITROS > 0 then ROUND(KMRD/QTD_LITROS, 2) else 0 end as KML
@@ -39,6 +39,7 @@ from
             from
                 (
                     select
+                        TQN_FILIAL,
                         TQN_PLACA,
                         TQN_DTABAS,
                         DATA_HORA,
@@ -88,6 +89,7 @@ from
                 from
                     (
                         select
+                            TQN_FILIAL,
                             TQN_PLACA,
                             TQN_DTABAS,
                             concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS) as DATA_HORA,
@@ -123,12 +125,12 @@ from
     ) ZD3
 	left join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
-		and ST9.T9_CODBEM = ZD3.ZD3_VEICUL
+		and ST9.T9_CODBEM = ZD3.TQN_FROTA
 
 	left join TQI010 TQI
 		on TQI.D_E_L_E_T_ = ''
-		and TQI.TQI_FILIAL = ZD3.ZD3_FILIAL
-		and TQI.TQI_TANQUE = ZD3.ZD3_TANQUE
+		and TQI.TQI_FILIAL = ZD3.TQN_FILIAL
+		and TQI.TQI_TANQUE = ZD3.TQN_TANQUE
 
 		left join TQF010 TQF
 			on TQF.D_E_L_E_T_ = ''
@@ -138,4 +140,4 @@ from
 
 	left join TQM010 TQM
 		on TQM.D_E_L_E_T_ = ''
-		and TQM.TQM_CODCOM = ZD3.ZD3_COMB
+		and TQM.TQM_CODCOM = ZD3.TQN_CODCOM
