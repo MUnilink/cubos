@@ -1,21 +1,4 @@
-    select
-        ZC2.ZC2_FILIAL as FILIAL,
-        ZC2.ZC2_NUM as NUM,
-        ZC1.ZC1_CC as CC,
-        ZC1.ZC1_ATIVD as ITEM,
-        ZC2.ZC2_TIPO,
-        sum(cast(coalesce(ZC2.ZC2_TOTAL, 0) as decimal (14, 2))) as TOTAL
-    from ZC2010 ZC2
-        left join ZC1010 ZC1
-            on ZC1.D_E_L_E_T_ = ''
-            and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
-            and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-    where
-            ZC2.D_E_L_E_T_ = ''
-        and ZC2.ZC2_TIPO in (2, 3, 6, 9, 10, 12, 13, 14, 17)
-        and ZC2.ZC2_COMPET =:PERIODO_DATA
-    group by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM, ZC1.ZC1_CC, ZC1.ZC1_ATIVD, ZC2.ZC2_TIPO
-union
+
     select
         ZE1.ZE1_FILIAL as FILIAL,
         ZE1.ZE1_NUM as NUM,
@@ -65,7 +48,7 @@ union
                 and RPS.D2_LOJA = SC5.C5_LOJACLI
     where
             ZE1.D_E_L_E_T_ = ''
-        and ZE1.ZE1_TIPO in (2, 3, 6, 9, 10, 12, 13, 14, 17)
+        and ZE1.ZE1_TIPO in (2, 3, 6, 12, 14, 17)
         and ZE1.ZE1_COMPET =:PERIODO_DATA
     group by
         ZE1.ZE1_FILIAL, ZE1.ZE1_NUM, ZE1.ZE1_TIPO,
