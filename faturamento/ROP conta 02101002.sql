@@ -52,7 +52,7 @@ union
             ) as NUM,
             SD2.D2_CCUSTO as CC,
             SD2.D2_ITEMCC as ITEM,
-            case when SF2.F2_ESPECIE = 'RPS' then sum(cast(coalesce(SD2.D2_VALISS, 0) as decimal(14, 2))) else 0.00 end as TOTAL
+            case when SF2.F2_ESPECIE = 'RPS' then sum(cast(coalesce(SD2.D2_VALISS, 0) as decimal(14, 2))) else 0.00 end as TOTAL /* se RPS, então valor do ISS; se não, valor nulo */
 
         from SD2010 SD2 (nolock)
             inner join SF2010 SF2 (nolock)
