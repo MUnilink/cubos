@@ -26,6 +26,7 @@
         trim(SA2.A2_TIPO) as TIPO_CLIFOR,
         trim(SF1.F1_FORNECE) as BK_CLIFOR,
         trim(SA2.A2_NOME) as CLIENTE_FORNECEDOR,
+        trim(SA2.A2_EST) as UF_CLIFOR,
 
         cast(SF3.F3_ICMSCOM as numeric(15, 2)) as ICMS_COMPL,
         cast(SF3.F3_DIFAL as numeric(15, 2)) as DIFAL,
@@ -112,6 +113,7 @@ union
         trim(SA1.A1_TIPO) as TIPO_CLIFOR,
         trim(SF2.F2_CLIENTE) as BK_CLIFOR,
         trim(SA1.A1_NOME) as CLIENTE_FORNECEDOR,
+        trim(SA1.A1_EST) as UF_CLIFOR,
 
         cast(SF3.F3_ICMSCOM as numeric(15, 2)) as ICMS_COMPL,
         cast(SF3.F3_DIFAL as numeric(15, 2)) as DIFAL,
