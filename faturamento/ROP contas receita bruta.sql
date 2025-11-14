@@ -123,7 +123,7 @@ from SD2010 SD2 (nolock)
         on CFOP.D_E_L_E_T_ = ''
         and CFOP.X5_TABELA = '13'
         and CFOP.X5_CHAVE = SD2.D2_CF
-        
+
         left join
         (
             select distinct
@@ -167,7 +167,7 @@ from SD2010 SD2 (nolock)
             and VGA2.DUD_FILDOC = COMP.D2_FILIAL
             and VGA2.DUD_DOC = COMP.D2_DOC
             and VGA2.DUD_SERIE = COMP.D2_SERIE
-            and VGA2.DUD_STATUS != 9
+            and VGA2.DUD_STATUS != '9'
     
     left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
@@ -189,5 +189,4 @@ where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
-    and sd2.d2_emissao>=:DATA_INI
-    and sd2.d2_emissao<=:DATA_FIM
+    and SD2.D2_DOC in (64264, 64266, 64203, 64204, 64210, 64211)
