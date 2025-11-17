@@ -4,7 +4,6 @@ select
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	trim(SRA.RA_MAT) as contador,
 	trim(SRA.RA_NOMECMP) as NOME,
-	trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
 	trim(SRJ.RJ_CODCBO) as CBO,
 	trim(SRA.RA_SEXO) as SEXO,
@@ -29,6 +28,7 @@ select
 	trim(SRA.RA_SITFOLH) as SITUACAO,
 	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
 	case SRA.RA_YPARENT when 1 then 'S' when 2 then 'N' else 'outros' end as PAIMAE,
+	(select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_ESTCIVI and SX5010.X5_TABELA = '33') as ESTADO_CIVIL,
 	
 	cast(SRA.RA_NASC as date) as NASCIMENTO,
 	trim(SRA.RA_ENDEREC) as ENDERECO,
@@ -48,9 +48,11 @@ select
 	trim(SRA.RA_RGORG) as RG_ORGEXP,
 	trim(SRA.RA_PIS) as PIS_TITULAR,
 	trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
+	trim(SRA.RA_DDDFONE) as TELEFONE_DDD,
+	trim(SRA.RA_TELEFON) as TELEFONE_NUM,
 	
-	trim(SX5.X5_DESCRI) as ESCOLARIDADE,
-	datepart (week, SRA.RA_NASC) as sem_ANIVERSARIO,
+	(select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_GRINRAI and SX5010.X5_TABELA = '26') as ESCOLARIDADE,
+	datepart(week, SRA.RA_NASC) as sem_ANIVERSARIO,
 	month(SRA.RA_NASC) as mes_ANIVERSARIO,
 	day(SRA.RA_NASC) as dia_ANIVERSARIO,
 
@@ -109,17 +111,13 @@ from SRA010 SRA (nolock)
 			on SQ3.D_E_L_E_T_ = ''
 			and SQ3.Q3_CARGO = SRJ.RJ_CARGO
     
-	inner join CTT010 CTT (nolock)
+	left join CTT010 CTT (nolock)
     	on CTT.D_E_L_E_T_ = ''
     	and CTT.CTT_CUSTO = SRA.RA_CC
-    inner join CTD010 CTD (nolock)
+    left join CTD010 CTD (nolock)
     	on CTD.D_E_L_E_T_ = ''
     	and CTD.CTD_ITEM = SRA.RA_ITEM
-	inner join SX5010 SX5 (nolock)
-		on SX5.D_E_L_E_T_ = ''
-		and SX5.X5_CHAVE = SRA.RA_GRINRAI
-		and SX5.X5_TABELA = '26'
-	inner join SQB010 SQB (nolock)
+	left join SQB010 SQB (nolock)
 		on SQB.D_E_L_E_T_ = ''
 		and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 		and SQB.QB_DEPTO = SRA.RA_DEPTO
