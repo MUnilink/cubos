@@ -1,17 +1,18 @@
-select COMPET,
-       CCUSTO,
-       CTT_DESC01,
-       CITEM,
-       CTD_DESC01,
-       Q3_CARGO,
-       Q3_DESCSUM,
-       CONT_FUNC,
-       HORAS_TOT,
-       VLR_TOT,
-       HORAS_AFAST,
-       HORAS_FERIAS,
-       HORAS_PONTO,
-       SUM((datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0)*ZC2_QTDREC) as HrApont
+select
+    COMPET,
+    CCUSTO as CC_CARGO,
+    CITEM as AT_CARGO,
+    Q3_CARGO,
+    Q3_DESCSUM,
+    CONT_FUNC,
+    HORAS_TOT,
+    VLR_TOT,
+    HORAS_AFAST,
+    HORAS_FERIAS,
+    HORAS_PONTO,
+    ZC2.ZC2_CC as CC_OS,
+    ZC2.ZC2_ATIVD as AT_OS,
+    cast(sum((datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0)*ZC2.ZC2_QTDREC) as numeric(15, 2)) as HrApont
 from
     (
         select RFQ_PERIOD COMPET,
@@ -250,33 +251,54 @@ from
                 Q3_CARGO,
                 Q3_DESCSUM
     ) D
-    left join ZC2010 ZC2 on SUBSTRING(ZC2_DATA, 1, 6) = COMPET
-        and ZC2_TIPO='2'
-        and ZC2.D_E_L_E_T_=' '
-        and ZC2_QTDREA > 0
-        and (ZC2_DTINI <> ' ' and ZC2_DTFIM <> ' ' and ZC2_HRINI <> ' ' and ZC2_HRFIM <> ' ')
-        and ZC2_COD = Q3_CARGO
-        and ZC2_FILIAL + ZC2_NUM in
-            (
-                select ZC1_FILIAL + ZC1_NUM
-                from ZC1010 ZC1
-                where
-                        ZC1.D_E_L_E_T_ = ' '
-                    and (SUBSTRING(ZC1_DTFIM, 1, 6) >= COMPET or ZC1_DTFIM = ' ')
-                    and SUBSTRING(ZC1_DTINI, 1, 6) <= COMPET
-                    and ZC1_CC = CCUSTO
-                    and ZC1_ATIVD = CITEM
-            )
-group by COMPET,
-         CCUSTO,
-         CTT_DESC01,
-         CITEM,
-         CTD_DESC01,
-         Q3_CARGO,
-         Q3_DESCSUM,
-         CONT_FUNC,
-         HORAS_TOT,
-         VLR_TOT,
-         HORAS_AFAST,
-         HORAS_FERIAS,
-         HORAS_PONTO
+    left join
+    (
+        select
+            isnull(ZC1010.ZC1_CC, '999') as ZC2_CC,
+            isnull(ZC1010.ZC1_ATIVD, '999') as ZC2_ATIVD,
+            ZC2010.ZC2_TIPO,
+            ZC2010.ZC2_QTDREA,
+            ZC2010.ZC2_DTINI,
+            ZC2010.ZC2_DTFIM,
+            ZC2010.ZC2_HRINI,
+            ZC2010.ZC2_HRFIM,
+            ZC2010.ZC2_COD,
+            ZC2010.ZC2_QTDREC,
+            ZC2010.ZC2_DATA as ZC2_DATA
+        from ZC2010
+            inner join ZC1010
+                on ZC1010.D_E_L_E_T_ = ''
+                and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+        where
+                ZC2010.D_E_L_E_T_ = ''
+            and ZC2010.ZC2_TIPO = '2'
+            and ZC2010.D_E_L_E_T_=' '
+            and ZC2010.ZC2_QTDREA > 0
+            and (ZC2010.ZC2_DTINI <> ' ' and ZC2010.ZC2_DTFIM <> ' ' and ZC2010.ZC2_HRINI <> ' ' and ZC2010.ZC2_HRFIM <> ' ')
+    
+    ) ZC2
+        on SUBSTRING(ZC2.ZC2_DATA, 1, 6) = COMPET
+        and ZC2.ZC2_COD = Q3_CARGO
+        and (SUBSTRING(ZC2.ZC2_DTFIM, 1, 6) >= COMPET or ZC2.ZC2_DTFIM = ' ')
+        and SUBSTRING(ZC2.ZC2_DTINI, 1, 6) <= COMPET
+        and ZC2.ZC2_CC = CCUSTO
+        and ZC2.ZC2_ATIVD = CITEM
+where
+        Q3_CARGO in ('00005', '00009')
+group by
+    COMPET,
+    CCUSTO,
+    CTT_DESC01,
+    CITEM,
+    CTD_DESC01,
+    Q3_CARGO,
+    Q3_DESCSUM,
+    CONT_FUNC,
+    HORAS_TOT,
+    VLR_TOT,
+    HORAS_AFAST,
+    HORAS_FERIAS,
+    HORAS_PONTO,
+    ZC2.ZC2_CC,
+    ZC2.ZC2_ATIVD
