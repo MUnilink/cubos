@@ -106,13 +106,13 @@ union
                     select sum(ZG1010.ZG1_VLIMPR)
                     from ZG1010
                     where
-                        ZG1010.D_E_L_E_T_ = ''
-                    and ZG1010.ZG1_VLIMPR != 0
-                    and ZG1010.ZG1_FILORI = G1.ZG1_FILORI
-                    and ZG1010.ZG1_COMPET = G1.ZG1_COMPET
-                    and ZG1010.ZG1_CODIGO = G1.ZG1_CODIGO
-                    and ZG1010.ZG1_CC = G1.ZG1_CC
-                    and ZG1010.ZG1_ITEMCT = G1.ZG1_ITEMCT
+                            ZG1010.D_E_L_E_T_ = ''
+                        and ZG1010.ZG1_VLIMPR != 0
+                        and ZG1010.ZG1_FILORI = G1.ZG1_FILORI
+                        and ZG1010.ZG1_COMPET = G1.ZG1_COMPET
+                        and ZG1010.ZG1_CODIGO = G1.ZG1_CODIGO
+                        and ZG1010.ZG1_CC = G1.ZG1_CC
+                        and ZG1010.ZG1_ITEMCT = G1.ZG1_ITEMCT
                 ) as VL_RIMP
             from ZG1010 G1 (nolock)
             where
