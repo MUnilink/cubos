@@ -39,7 +39,7 @@
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_CUSTO1 else SD3.D3_CUSTO1 end as CUSTO_MOV,
         SD3.D3_QUANT as QTD,
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_QUANT else SD3.D3_QUANT end as QTD_MOV,
-        'INT' as TIPO_MOV
+        case when SD3.D3_CF like 'R%' then 'SAI EST' when SD3.D3_CF like 'D%' then 'ENT EST' else 'outros' end as TIPO_MOV
         
     from SD3010 SD3 (nolock)
         inner join SB1010 SB1 (nolock)
@@ -96,7 +96,7 @@ union
         SD1.D1_CUSTO as CUSTO_MOV,
         SD1.D1_QUANT as QTD,
         SD1.D1_QUANT as QTD_MOV,
-        'ENT' as TIPO_MOV
+        'ENT NF' as TIPO_MOV
         
     from SD1010 SD1 (nolock)
         inner join SB1010 SB1 (nolock)
@@ -153,7 +153,7 @@ union
         -1*SD2.D2_CUSTO1 as CUSTO_MOV,
         SD2.D2_QUANT as QTD,
         -1*SD2.D2_QUANT as QTD_MOV,
-        'SAI' as TIPO_MOV
+        'SAI NF' as TIPO_MOV
         
     from SD2010 SD2 (nolock)
         inner join SB1010 SB1 (nolock)
