@@ -172,6 +172,7 @@ SELECT
                     and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
             where
                     DUD010.D_E_L_E_T_ = ''
+                and DUD010.DUD_STATUS != 9
                 and SD2.D2_FILIAL = SC5010.C5_FILIAL
                 and SD2.D2_DOC = SC5010.C5_NOTA
                 and SD2.D2_SERIE = SC5010.C5_SERIE
