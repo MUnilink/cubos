@@ -12,8 +12,11 @@ select
 	(select TQ0010.TQ0_EIXOS from TQ0010 where TQ0010.D_E_L_E_T_ = '' and TQ0010.TQ0_DESENH = ST9.T9_CODFAMI and TQ0010.TQ0_TIPMOD = ST9.T9_TIPMOD) as EIXOS,
 	case ST9.T9_PROPRIE when 1 then 'SIM' when '2' then 'NAO' else 'OUTROS' end as PROPRIO,
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
+	
 	cast(ST9.T9_DTCOMPR as date) as DTCOMPR,
+	left(ST9.T9_DTCOMPR, 6) as PERIODO_COMPR,
 	cast(ST9.T9_DTBAIXA as date) as DTBAIXA,
+	left(ST9.T9_DTBAIXA, 6) as PERIODO_BAIXA,
 	(select trim(TPJ010.TPJ_DESMOT) from TPJ010 (nolock) where TPJ010.D_E_L_E_T_ = '' and TPJ010.TPJ_CODMOT = ST9.T9_MTBAIXA) as DESC_BAIXA,
 	ST9.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS,
