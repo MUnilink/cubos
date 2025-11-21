@@ -113,7 +113,7 @@ from ZE1010 ZE1 (nolock)
         where ZG1.D_E_L_E_T_ = ''
     ) RAT_IMPR
         on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZE1.ZE1_TIPO
-        and RAT_IMPR.FILIAL = ZE1.ZE1_FILIAL
+        and RAT_IMPR.FILIAL = left(ZE1.ZE1_FILIAL, 4)
         and RAT_IMPR.COMPETENCIA = left(ZE1.ZE1_COMPET, 6)
         and RAT_IMPR.INSUMO = ZE1.ZE1_COD
 where
