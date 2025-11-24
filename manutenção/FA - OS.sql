@@ -71,7 +71,7 @@ select
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
-	trim(STJ.TJ_YITMCT) as ATIVIDADE,
+	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 first_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC >= STL.TL_DTINICI), ''), nullif(ST9.T9_ITEMCTA, '')) as ATIVIDADE,
 	trim(SD1.D1_PEDIDO) as PEDCOMPRA,
 	null as B1_UPRC,
 	null as T1_SALARIO,
@@ -252,5 +252,5 @@ from STJ010 STJ (nolock)
 				and SA2.A2_COD = SD1.D1_FORNECE
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
-		year(STJ.TJ_DTORIGI) between 2019 and 2029
+		STJ.TJ_DTORIGI between '20201231' and '20261231'
 	and STL.D_E_L_E_T_ = ''
