@@ -12,8 +12,8 @@ select
 	trim(TQI.TQI_TANQUE) as TQI_TANQUE,
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
-	null as TQN_CCUSTO,
-	null as TQN_YITMCT,
+	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
+	trim(ZD3.TQN_YITMCT) as TQN_YITMCT,
 
     /* RM */
     ZD3.TQN_FILIAL as ZD3_FILIAL,
@@ -42,6 +42,8 @@ from
                         TQN_FILIAL,
                         TQN_PLACA,
                         TQN_DTABAS,
+                        TQN_CCUSTO,
+                        TQN_YITMCT,
                         DATA_HORA,
                         TQN_FROTA,
                         TQN_TANQUE,
@@ -92,6 +94,8 @@ from
                             TQN_FILIAL,
                             TQN_PLACA,
                             TQN_DTABAS,
+                            TQN_CCUSTO,
+                            TQN_YITMCT,
                             concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS) as DATA_HORA,
                             TQN_FROTA,
                             TQN_TANQUE,
