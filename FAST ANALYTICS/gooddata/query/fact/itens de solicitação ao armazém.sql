@@ -1,6 +1,6 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
-    concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NFE,
+    concat('SF1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NFE,
     concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
     concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACOM,
     concat(trim(SCP.CP_FILIAL), trim(SCP.CP_NUM)) as ID_SOLICITAARM,
@@ -145,7 +145,7 @@ SELECT
     SCP.CP_QUANT as QTD_SOLICITADA,
     SCP.CP_QUJE as QTD_ATENDIDA,
     SCP.CP_VUNIT as PRECO_ESTIM,
-    1 as QORDCP /* qtd de SAs */
+    1 as QTD_SA /* qtd de SAs */
 
 FROM SCP010 SCP
     left join SB1010 SB1
@@ -236,5 +236,5 @@ FROM SCP010 SCP
         and CTD.CTD_FILIAL = '      '
         and CTD.CTD_ITEM = SCP.CP_ITEMCTA
 where 
-        SCP.CP_EMISSAO like 
+        SCP.CP_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and SCP.D_E_L_E_T_ = ' '
