@@ -3,6 +3,8 @@ select
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
     ZC2.ZC2_ITEM as ITEM,
+    trim(ZC1.ZC1_ATIVD) as ATIVIDADE_OS,
+    trim(ZC1.ZC1_CC) as CC_OS,
     
     ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
