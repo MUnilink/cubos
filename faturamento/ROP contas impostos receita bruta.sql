@@ -4,6 +4,8 @@
         SC6.C6_CC as CC,
         SC6.C6_ITEMCTA as ITEM,
         null as ESPECIE,
+        null as ICMS,
+        null as ISS,
         cast(coalesce(sum(SD2.D2_QUANT), 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
         cast(coalesce(sum(SD2.D2_VALBRUT), 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
         cast(coalesce(sum(SD2.D2_VALICM), 0) as decimal(14, 2)) as VL_ICMS_FATURAMENTO,
@@ -24,7 +26,7 @@
         inner join SC6010 SC6
             on SC6.D_E_L_E_T_ = ''
             and SC6.C6_FILIAL = SD2.D2_FILIAL
-            and SC6.C6_NUM = SD2.D2_PEDIDO
+            and SC6.C6_NUM = SD2.D2_PEDIDO 
             and SC6.C6_ITEM = SD2.D2_ITEMPV
             
             inner join ZC2010 ZC2 (nolock)
@@ -42,7 +44,11 @@ union
         RECEITA_TMS.NUM,
         RECEITA_TMS.CC,
         RECEITA_TMS.ITEM,
+        RECEITA_TMS.DOCUMENTO,
+        RECEITA_TMS.EMISSAO,
         RECEITA_TMS.ESPECIE,
+        sum(RECEITA_TMS.ICMS) as ICMS,
+        sum(RECEITA_TMS.ISS) as ISS,
         cast(coalesce(sum(RECEITA_TMS.D2_QUANT), 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
         cast(coalesce(sum(RECEITA_TMS.D2_VALBRUT), 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
         cast(coalesce(sum(RECEITA_TMS.D2_VALICM), 0) as decimal(14, 2)) as VL_ICMS_FATURAMENTO,
@@ -85,6 +91,10 @@ union
             SD2.D2_CCUSTO as CC,
             SD2.D2_ITEMCC as ITEM,
             SF2.F2_ESPECIE as ESPECIE,
+            SD2.D2_DOC as DOCUMENTO,
+            cast(SD2.D2_EMISSAO as date) as EMISSAO,
+            case when SF2.F2_ESPECIE = 'CTE' then cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2)) else 0.00 end as ICMS,
+            case when SF2.F2_ESPECIE = 'RPS' then cast(coalesce(SD2.D2_VALISS, 0) as decimal(14, 2)) else 0.00 end as ISS,
             SD2.D2_QUANT,
             SD2.D2_VALBRUT,
             SD2.D2_VALICM,
@@ -154,6 +164,7 @@ union
                     and VGA2.DUD_SERIE = COMP.D2_SERIE
         where
                 SD2.D_E_L_E_T_ = ''
-            and left(SD2.D2_EMISSAO, 6) =:PERIODO
+            and SD2.D2_ITEMCC = '11'
     ) RECEITA_TMS
-    group by RECEITA_TMS.FILIAL, RECEITA_TMS.NUM, RECEITA_TMS.CC, RECEITA_TMS.ITEM, RECEITA_TMS.ESPECIE
+    where RECEITA_TMS.NUM in ('018503', '018513', '018286')
+    group by RECEITA_TMS.FILIAL, RECEITA_TMS.NUM, RECEITA_TMS.CC, RECEITA_TMS.ITEM, RECEITA_TMS.ESPECIE, RECEITA_TMS.DOCUMENTO, RECEITA_TMS.EMISSAO

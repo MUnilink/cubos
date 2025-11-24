@@ -8,9 +8,6 @@ select
     SD2.D2_CF as CFOP,
     coalesce
     (
-        ZC2.ZC2_NUM,
-        DUD.DUD_VIAGEM,
-        VGA2.DUD_VIAGEM,
         (
             select distinct DUD010.DUD_VIAGEM
             from DUD010 (nolock)
@@ -25,7 +22,10 @@ select
                 and SD2.D2_SERIE = SC5010.C5_SERIE
                 and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
                 and SD2.D2_LOJA = SC5010.C5_LOJACLI
-        )
+        ),
+        VGA2.DUD_VIAGEM,
+        DUD.DUD_VIAGEM,
+        ZC2.ZC2_NUM
     ) as NUM,
     cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as TOTAL,
     case when SF2.F2_ESPECIE = 'CTE' then cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2)) else 0.00 end as ICMS,
@@ -168,6 +168,18 @@ from SD2010 SD2 (nolock)
             and VGA2.DUD_DOC = COMP.D2_DOC
             and VGA2.DUD_SERIE = COMP.D2_SERIE
             and VGA2.DUD_STATUS != '9'
+
+            left join SC5010 SC5 (nolock)
+                on SC5.D_E_L_E_T_ = ''
+                and trim(SC5.C5_YVIAGEM) = DUD.DUD_VIAGEM
+
+                left join SD2010 RPS (nolock)
+                    on RPS.D_E_L_E_T_ = ''
+                    and RPS.D2_FILIAL = SC5.C5_FILIAL
+                    and RPS.D2_DOC = SC5.C5_NOTA
+                    and RPS.D2_SERIE = SC5.C5_SERIE
+                    and RPS.D2_CLIENTE = SC5.C5_CLIENTE
+                    and RPS.D2_LOJA = SC5.C5_LOJACLI
     
     left join SC6010 SC6 (nolock)
         on SC6.D_E_L_E_T_ = ''
@@ -189,4 +201,4 @@ where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
-    and SD2.D2_DOC in (64264, 64266, 64203, 64204, 64210, 64211)
+    and sd2.d2_emissao between '20250901' and '20250930'
