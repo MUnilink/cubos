@@ -28,7 +28,7 @@
         case when SRC.RC_PD in ('183', '999', '182') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRC.RC_PD in ('020') then SRC.RC_VALOR else 0.0 end as DIAS_TRABALHADOS,
-        case when SRC.RC_PD in ('039', '215', '017', '772') then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
+        case when SRC.RC_PD in ('039', '215', '017') then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
         case when SRC.RC_PD in ('041', '030', '371') then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
         case when SRC.RC_PD in ('451', '452') then SRC.RC_VALOR else 0.0 end as DOBRAS_DOMINGOS,
         case when SRC.RC_PD in ('353', '011') then SRC.RC_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
@@ -51,6 +51,8 @@
         case when SRC.RC_PD in ('719') then SRC.RC_VALOR else 0.0 end as VLALIM_BASE,
 
         case when SRC.RC_PD in ('290') then SRC.RC_HORAS else 0.0 end as AVOS_13,
+        case when SRC.RC_PD in ('167') then SRC.RC_VALOR else 0.0 end as INSALUBRIDADE_13,
+        case when SRC.RC_PD in ('772') then SRC.RC_VALOR else 0.0 end as ADRISCO_MATER_13,
         case when SRC.RC_PD in ('009', '768') then SRC.RC_VALOR else 0.0 end as MEDIA_VL_13,
         case when SRC.RC_PD in ('010', '769') then SRC.RC_VALOR else 0.0 end as MEDIA_HR_13,
 
@@ -125,7 +127,7 @@ union
         case when SRD.RD_PD in ('183', '999', '182') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRD.RD_PD in ('020') then SRD.RD_VALOR else 0.0 end as DIAS_TRABALHADOS,
-        case when SRD.RD_PD in ('039', '215', '017', '772') then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
+        case when SRD.RD_PD in ('039', '215', '017') then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
         case when SRD.RD_PD in ('041', '030', '371') then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
         case when SRD.RD_PD in ('451', '452') then SRD.RD_VALOR else 0.0 end as DOBRAS_DOMINGOS,
         case when SRD.RD_PD in ('353', '011') then SRD.RD_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
@@ -148,6 +150,8 @@ union
         case when SRD.RD_PD in ('719') then SRD.RD_VALOR else 0.0 end as VLALIM_BASE,
 
         case when SRD.RD_PD in ('290') then SRD.RD_HORAS else 0.0 end as AVOS_13,
+        case when SRD.RD_PD in ('167') then SRD.RD_VALOR else 0.0 end as INSALUBRIDADE_13,
+        case when SRD.RD_PD in ('772') then SRD.RD_VALOR else 0.0 end as ADRISCO_MATER_13,
         case when SRD.RD_PD in ('009', '768') then SRD.RD_VALOR else 0.0 end as MEDIA_VL_13,
         case when SRD.RD_PD in ('010', '769') then SRD.RD_VALOR else 0.0 end as MEDIA_HR_13,
 
