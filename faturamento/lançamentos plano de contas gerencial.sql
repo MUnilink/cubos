@@ -77,6 +77,16 @@ select distinct
     
     ZE3.ZE3_VALOR as VL_ORIGINAL,
     case
+        when exists
+        (
+            select 1
+            from CTS010
+            where
+                    CTS010.D_E_L_E_T_ = ''
+                and trim(CTS010.CTS_CODPLA) in ('997', '998', '999')
+                and ZE3.ZE3_ORIGEM between CTS010.CTS_CTTINI and CTS010.CTS_CTTFIM
+                and ZE3.ZE3_ITORIG between CTS010.CTS_CTDINI and CTS010.CTS_CTDFIM
+        ) and (left(ZE2.ZE2_COD, 2) like '[1-9]%' or left(ZE2.ZE2_COD, 2) = '09') then 0.0
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
@@ -89,7 +99,6 @@ from ZE3010 ZE3 (nolock)
         and ZE2.ZE2_COD = ZE3.ZE3_ITEMPL
     left join ZC1010 ZC1 (nolock)
         on ZC1.D_E_L_E_T_ = ''
-        and left(ZE3.ZE3_NUM, 6) = ZC1.ZC1_FILIAL
         and concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM) = ZE3.ZE3_NUM
     left join
     (
@@ -117,9 +126,7 @@ from ZE3010 ZE3 (nolock)
         where
                 DUD010.D_E_L_E_T_ = ''
             and DUD010.DUD_SERIE != 'COL'
-    ) DUD
-        on DUD.DUD_FILIAL = left(ZE3.ZE3_NUM, 4)
-        and nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) = trim(ZE3.ZE3_NUM)
+    ) DUD on nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) = trim(ZE3.ZE3_NUM)
         
         left join DT6010 DT6 (nolock)
             on DT6.D_E_L_E_T_ = ''
