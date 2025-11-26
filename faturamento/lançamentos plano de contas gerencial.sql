@@ -37,6 +37,9 @@ select distinct
         else 'N/A'
     end as STATUS_DOCOMPVGA,
 
+    SC5010.C5_NUM as RPS_PEDIDO,
+    RPS.D2_DOC as RPS_DOC,
+
     left
     (
         case
@@ -111,10 +114,12 @@ from ZE3010 ZE3 (nolock)
                 and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
                 and DUA010.DUA_DOC = DUD010.DUD_DOC
                 and DUA010.DUA_SERIE = DUD010.DUD_SERIE
-        where DUD010.D_E_L_E_T_ = ''
+        where
+                DUD010.D_E_L_E_T_ = ''
+            and DUD010.DUD_SERIE != 'COL'
     ) DUD
-        on left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
-        and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
+        on DUD.DUD_FILIAL = left(ZE3.ZE3_NUM, 4)
+        and nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) = trim(ZE3.ZE3_NUM)
         
         left join DT6010 DT6 (nolock)
             on DT6.D_E_L_E_T_ = ''
@@ -134,6 +139,18 @@ from ZE3010 ZE3 (nolock)
                     and VGA2.DUD_FILDOC = COMP.D2_FILIAL
                     and VGA2.DUD_DOC = COMP.D2_DOC
                     and VGA2.DUD_SERIE = COMP.D2_SERIE
+
+        left join SC5010 (nolock)
+            on SC5010.D_E_L_E_T_ = ''
+            and trim(SC5010.C5_YVIAGEM) = DUD.DUD_VIAGEM
+
+            left join SD2010 RPS (nolock)
+                on RPS.D_E_L_E_T_ = ''
+                and RPS.D2_FILIAL = SC5010.C5_FILIAL
+                and RPS.D2_DOC = SC5010.C5_NOTA
+                and RPS.D2_SERIE = SC5010.C5_SERIE
+                and RPS.D2_CLIENTE = SC5010.C5_CLIENTE
+                and RPS.D2_LOJA = SC5010.C5_LOJACLI
     
     left join CTT010 (nolock)
         on CTT010.D_E_L_E_T_ = ''
