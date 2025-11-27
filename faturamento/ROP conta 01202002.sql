@@ -86,7 +86,9 @@ from
                         and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
                         and DUA010.DUA_DOC = DUD010.DUD_DOC
                         and DUA010.DUA_SERIE = DUD010.DUD_SERIE
-                where DUD010.D_E_L_E_T_ = ''
+                where
+                        DUD010.D_E_L_E_T_ = ''
+                    and DUD010.DUD_SERIE != 'COL'
             ) DUD
                 on DUD.DUD_FILDOC = SD2.D2_FILIAL
                 and DUD.DUD_DOC = SD2.D2_DOC
