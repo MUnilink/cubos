@@ -6,50 +6,48 @@
         
         case
             when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD = '32' and ZC2.ZC2_TIPO = '15' then sum(ZC2.ZC2_TOTAL * ZG1.RAT_IMP)
-            when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.ZG1_VLIMPR) * avg(ZC2.VL_RECEITA) / 
-                case when ZC2.qtd = 1 then
-                    coalesce
+            when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.ZG1_VLIMPR) * avg(ZC2.VL_RECEITA) /
+                coalesce
+                (
                     (
-                        (
-                            select sum(ZC2010.ZC2_TOTAL)
-                            from ZC2010
-                                inner join ZC1010
-                                    on ZC1010.D_E_L_E_T_ = ''
-                                    and ZC1010.ZC1_FILIAL = ZC2.ZC2_FILIAL
-                                    and ZC1010.ZC1_NUM = ZC2.ZC2_NUM
-                            where
-                                    ZC2010.D_E_L_E_T_ = ''
-                                and ZC2010.ZC2_TIPO = '1'
-                                and ZC2010.ZC2_FILIAL = ZC2.ZC2_FILIAL
-                                and ZC1010.ZC1_CC = ZC2.ZC2_CC
-                                and ZC1010.ZC1_ATIVD = ZC2.ZC2_ATIVD
-                                and left(ZC2010.ZC2_COMPET, 6) = ZC2.ZC2_COMPET
-                        )
-                    , 999999999)
-                else 999999999 end
+                        select sum(ZC2010.ZC2_TOTAL)
+                        from ZC2010
+                            inner join ZC1010
+                                on ZC1010.D_E_L_E_T_ = ''
+                                and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                                and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+                        where
+                                ZC2010.D_E_L_E_T_ = ''
+                            and ZC2010.ZC2_TIPO = '1'
+                            and ZC2010.ZC2_FILIAL = ZC2.ZC2_FILIAL
+                            and ZC1010.ZC1_CC = ZC2.ZC2_CC
+                            and ZC1010.ZC1_ATIVD = ZC2.ZC2_ATIVD
+                            and left(ZC2010.ZC2_COMPET, 6) = ZC2.ZC2_COMPET
+                    ), 999999999
+                )
             else 0.0
         end as TOTAL
     from
     (
         select
-            ZC1010.ZC1_FILIAL as ZC2_FILIAL,
-            ZC1010.ZC1_CC as ZC2_CC,
-            ZC1010.ZC1_ATIVD as ZC2_ATIVD,
+            Z1.ZC1_FILIAL as ZC2_FILIAL,
+            Z1.ZC1_CC as ZC2_CC,
+            Z1.ZC1_ATIVD as ZC2_ATIVD,
             left(Z2.ZC2_COMPET, 6) as ZC2_COMPET,
             Z2.ZC2_NUM,
             Z2.ZC2_COD,
             Z2.ZC2_TIPO,
             sum(Z2.ZC2_TOTAL) as ZC2_TOTAL,
-            row_number() over(partition by Z2.ZC2_COMPET, Z2.ZC2_NUM, Z2.ZC2_TIPO, ZC1010.ZC1_FILIAL, ZC1010.ZC1_CC, ZC1010.ZC1_ATIVD, Z2.ZC2_FILIAL order by Z2.ZC2_COD) as qtd,
+            row_number() over(partition by Z2.ZC2_COMPET, Z2.ZC2_NUM, Z2.ZC2_TIPO, Z1.ZC1_FILIAL, Z1.ZC1_CC, Z1.ZC1_ATIVD, Z2.ZC2_FILIAL order by Z2.ZC2_COD) as qtd,
             (select sum(ZC2010.ZC2_TOTAL) from ZC2010 where ZC2010.D_E_L_E_T_ = '' and ZC2010.ZC2_TIPO = '1' and ZC2010.ZC2_FILIAL = Z2.ZC2_FILIAL and ZC2010.ZC2_NUM = Z2.ZC2_NUM and left(ZC2010.ZC2_COMPET, 6) = left(Z2.ZC2_COMPET, 6)) as VL_RECEITA
 
         from ZC2010 Z2
-            inner join ZC1010
-                on ZC1010.D_E_L_E_T_ = ''
-                and ZC1010.ZC1_FILIAL = Z2.ZC2_FILIAL
-                and ZC1010.ZC1_NUM = Z2.ZC2_NUM
+            inner join ZC1010 Z1
+                on Z1.D_E_L_E_T_ = ''
+                and Z1.ZC1_FILIAL = Z2.ZC2_FILIAL
+                and Z1.ZC1_NUM = Z2.ZC2_NUM
         where Z2.D_E_L_E_T_ = '' and Z2.ZC2_TIPO in ('2', '15')
-        group by Z2.ZC2_COMPET, Z2.ZC2_NUM, Z2.ZC2_TIPO, Z2.ZC2_COD, ZC1010.ZC1_FILIAL, ZC1010.ZC1_CC, ZC1010.ZC1_ATIVD, Z2.ZC2_FILIAL
+        group by Z2.ZC2_COMPET, Z2.ZC2_NUM, Z2.ZC2_TIPO, Z2.ZC2_COD, Z1.ZC1_FILIAL, Z1.ZC1_CC, Z1.ZC1_ATIVD, Z2.ZC2_FILIAL
     ) ZC2
         inner join
         (
