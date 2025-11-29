@@ -11,12 +11,11 @@ select
     sum(ZG1.ZG1_VLIMPR) as VLIMPR,
     sum(ZC2.ZC2_TOTAL) as VALOR_OS,
     sum(ZG1.VL_IMPRRAT) as VL_IMPRES,
+    sum(ZG1.RAT_IMP) as RAT_IMP,
     avg(ZC2.VL_RECEITA) as VALOR_REC,
 
-    case when ZC2.ZC2_TIPO = '1' then sum(ZC2.ZC2_TOTAL) over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_CC, ZC2.ZC2_ATIVD, ZC2.ZC2_COMPET, ZC2.ZC2_NUM order by ZC2.ZC2_NUM) else 0.0 end as REC_COMPET,
-
     coalesce
-    (1000000,
+    (10000000,
         (
             select sum(ZC2010.ZC2_TOTAL)
             from ZC2010
@@ -32,13 +31,13 @@ select
                 and ZC1010.ZC1_ATIVD = ZC2.ZC2_ATIVD
                 and left(ZC2010.ZC2_COMPET, 6) = ZC2.ZC2_COMPET
         )
-    , 999999999) as REC_TOTAL/*,
+    , 999999999) as REC_TOTAL,
     
     case
         when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD = '32' and ZC2.ZC2_TIPO = '15' then sum(ZC2.ZC2_TOTAL * ZG1.RAT_IMP)
-        when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.VL_IMPRRAT) * avg(ZC2.VL_RECEITA) / 
-            isnull
-            (
+        when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.ZG1_VLIMPR) * avg(ZC2.VL_RECEITA) / 
+            coalesce
+            (10000000,
                 (
                     select sum(ZC2010.ZC2_TOTAL)
                     from ZC2010
@@ -56,7 +55,7 @@ select
                 )
             , 999999999)
         else 0.0
-    end as VALOR_IMPR,*/
+    end as VALOR_IMPR,
     
     case
         when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD = '32' and ZC2.ZC2_TIPO = '15' then sum(ZC2.ZC2_TOTAL * ZG1.RAT_IMP)
@@ -134,7 +133,7 @@ from
         where
                 G1.D_E_L_E_T_ = ''
             and G1.ZG1_TIPO in ('2', '14')
-            and exists (select 1 from SRD010 where SRD010.D_E_L_E_T_ = '' and left(SRD010.RD_DATARQ, 6) = left(G1.ZG1_COMPET, 6) and SRD.RD_CC = G1.ZG1_CC and SRD010.RD_ITEM = G1.ZG1_ITEMCT)
+            and exists (select 1 from SRD010 where SRD010.D_E_L_E_T_ = '' and left(SRD010.RD_DATARQ, 6) = left(G1.ZG1_COMPET, 6) and SRD010.RD_CC = G1.ZG1_CC and SRD010.RD_ITEM = G1.ZG1_ITEMCT)
     ) ZG1
         on left(ZC2.ZC2_FILIAL, 4) = ZG1.ZG1_FILORI
         and ZC2.ZC2_COMPET = ZG1.ZG1_COMPET
