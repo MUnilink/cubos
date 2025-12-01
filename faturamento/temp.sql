@@ -14,6 +14,7 @@ select
     sum(ZG1.RAT_IMP) as RAT_IMP,
     avg(ZC2.VL_RECEITA) as VALOR_REC,
 
+    coalesce(sum(ZG1.REC_COMPET), 999999999),
     coalesce
     (10000000,
         (
@@ -21,8 +22,8 @@ select
             from ZC2010
                 inner join ZC1010
                     on ZC1010.D_E_L_E_T_ = ''
-                    and ZC1010.ZC1_FILIAL = ZC2.ZC2_FILIAL
-                    and ZC1010.ZC1_NUM = ZC2.ZC2_NUM
+                    and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                    and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
             where
                     ZC2010.D_E_L_E_T_ = ''
                 and ZC2010.ZC2_TIPO = '1'
@@ -35,25 +36,7 @@ select
     
     case
         when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD = '32' and ZC2.ZC2_TIPO = '15' then sum(ZC2.ZC2_TOTAL * ZG1.RAT_IMP)
-        when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.ZG1_VLIMPR) * avg(ZC2.VL_RECEITA) / 
-            coalesce
-            (10000000,
-                (
-                    select sum(ZC2010.ZC2_TOTAL)
-                    from ZC2010
-                        inner join ZC1010
-                            on ZC1010.D_E_L_E_T_ = ''
-                            and ZC1010.ZC1_FILIAL = ZC2.ZC2_FILIAL
-                            and ZC1010.ZC1_NUM = ZC2.ZC2_NUM
-                    where
-                            ZC2010.D_E_L_E_T_ = ''
-                        and ZC2010.ZC2_TIPO = '1'
-                        and ZC2010.ZC2_FILIAL = ZC2.ZC2_FILIAL
-                        and ZC1010.ZC1_CC = ZC2.ZC2_CC
-                        and ZC1010.ZC1_ATIVD = ZC2.ZC2_ATIVD
-                        and left(ZC2010.ZC2_COMPET, 6) = ZC2.ZC2_COMPET
-                )
-            , 999999999)
+        when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.ZG1_VLIMPR) * avg(ZC2.VL_RECEITA) / coalesce(sum(ZG1.REC_COMPET), 999999999)
         else 0.0
     end as VALOR_IMPR,
     
@@ -127,12 +110,27 @@ from
                         and ZC2010.ZC2_TIPO = G1.ZG1_TIPO
                 )
                 else 0.0
-            end as VL_IMPRRAT
+            end as VL_IMPRRAT,
+
+            (
+                select isnull(sum(ZC2010.ZC2_TOTAL), 0.0)
+                from ZC2010
+                    inner join ZC1010
+                        on ZC1010.D_E_L_E_T_ = ''
+                        and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
+                        and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+                where
+                        ZC2010.D_E_L_E_T_ = ''
+                    and ZC2010.ZC2_TIPO = '1'
+                    and ZC1010.ZC1_CC = G1.ZG1_CC
+                    and ZC1010.ZC1_ATIVD = G1.ZG1_ITEMCT
+                    and left(ZC2010.ZC2_COMPET, 6) = G1.ZG1_COMPET
+            ) as REC_COMPET
         
         from ZG1010 G1 (nolock)
         where
                 G1.D_E_L_E_T_ = ''
-            and G1.ZG1_TIPO in ('2', '14')
+            and G1.ZG1_TIPO in ('2')
             and exists (select 1 from SRD010 where SRD010.D_E_L_E_T_ = '' and left(SRD010.RD_DATARQ, 6) = left(G1.ZG1_COMPET, 6) and SRD010.RD_CC = G1.ZG1_CC and SRD010.RD_ITEM = G1.ZG1_ITEMCT)
     ) ZG1
         on left(ZC2.ZC2_FILIAL, 4) = ZG1.ZG1_FILORI
@@ -140,5 +138,5 @@ from
         and ZC2.ZC2_COD = ZG1.ZG1_CODIGO
         and ZC2.ZC2_CC = ZG1.ZG1_CC
         and case when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' then '21' else ZC2.ZC2_ATIVD end = ZG1.ZG1_ITEMCT
-where ZC2.ZC2_COMPET = '202502' and ZC2.ZC2_COD = '00009' and zc2.zc2_num in ('2025/002370', '2025/002378', '2025/002389', '2025/002393', '2025/002398')
+where floor(ZG1.REC_COMPET) != 0 and ZC2.ZC2_COMPET = '202502' and ZC2.ZC2_COD = '00009' and zc2.zc2_num in ('2025/002370', '2025/002378', '2025/002389', '2025/002393', '2025/002398')
 group by ZG1.ZG1_FILORI, ZC2.ZC2_COMPET, ZC2.ZC2_FILIAL, ZC2.ZC2_NUM, ZC2.ZC2_CC, ZC2.ZC2_ATIVD, ZC2.ZC2_TIPO, ZC2.ZC2_COD
