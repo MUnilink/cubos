@@ -15,6 +15,7 @@ select
     trim(STI.TI_PLANO) as NUM_PLANO,
 
     case STJ.TJ_TERMINO when 'S' then 'SIM' when 'N' then 'NÃO' end as TERMINO,
+    case STJ.TJ_TERCEIR when '2' then 'SIM' when '1' then 'NÃO' when 'N' then 'NÃO' end as EXTERNA,
     case STJ.TJ_SITUACA 
         when 'C' then upper('Cancelado')
         when 'L' then upper('Liberado')
@@ -60,7 +61,7 @@ select
     STL.TL_CUSTO as CUSTO_INSUMO,
     STL.TL_QUANTID as QTD_INSUMO,
     STJ.TJ_CCUSTO as CC,
-    STJ.TJ_YITMCT as ATIVIDADE,
+    coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 first_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC >= STL.TL_DTINICI), ''), nullif(ST9.T9_ITEMCTA, '')) as ATIVIDADE,
 
     case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
     case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
