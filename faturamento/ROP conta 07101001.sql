@@ -1,3 +1,11 @@
+select
+    RATEIO_PESSOAL.FILIAL,
+    RATEIO_PESSOAL.NUM,
+    RATEIO_PESSOAL.CC,
+    RATEIO_PESSOAL.ITEM,
+    sum(RATEIO_PESSOAL.VALOR_IMPROS) as TOTAL
+from
+(
     select
         ZC2.ZC2_FILIAL as FILIAL,
         ZC2.ZC2_NUM as NUM,
@@ -6,7 +14,7 @@
         
         case
             when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD = '32' and ZC2.ZC2_TIPO = '15' then sum(ZC2.ZC2_TOTAL * ZG1.RAT_IMP)
-            when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO not in ('15', '1') then sum(ZG1.ZG1_VLIMPR) * avg(ZC2.VL_RECEITA) /
+            when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' and ZC2.ZC2_TIPO != '15' then sum(ZG1.VALOR_IMPRAT) * avg(ZC2.VL_RECEITA) /
                 coalesce
                 (
                     (
@@ -26,7 +34,7 @@
                     ), 999999999
                 )
             else 0.0
-        end as TOTAL
+        end as VALOR_IMPROS
     from
     (
         select
@@ -60,7 +68,7 @@
                 G1.ZG1_ITEMCT,
                 G1.ZG1_VLTOTL,
                 G1.ZG1_VLPROD,
-                G1.ZG1_VLIMPR,
+                G1.ZG1_VLIMPR as VALOR_IMPRAT,
                 
                 G1.ZG1_VLIMPR/
                 (
@@ -106,9 +114,10 @@
             and ZC2.ZC2_COD = ZG1.ZG1_CODIGO
             and ZC2.ZC2_CC = ZG1.ZG1_CC
             and case when ZC2.ZC2_CC = '305' and ZC2.ZC2_ATIVD != '32' then '21' else ZC2.ZC2_ATIVD end = ZG1.ZG1_ITEMCT
-    /*where ZC2.ZC2_COMPET = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'*/
-    where ZC2.ZC2_COMPET = '202501' and ZC2.ZC2_COD = '00005'
+    where ZC2.ZC2_COMPET = '"+cCompt+"' and ZC2.ZC2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by ZC2.ZC2_FILIAL, ZC2.ZC2_CC, ZC2.ZC2_ATIVD, ZC2.ZC2_COMPET, ZC2.ZC2_NUM, ZC2.ZC2_TIPO
+    ) RATEIO_PESSOAL
+    group by RATEIO_PESSOAL.FILIAL, RATEIO_PESSOAL.NUM, RATEIO_PESSOAL.CC, RATEIO_PESSOAL.ITEM
 union
     select
         ZE1.ZE1_FILIAL as FILIAL,
