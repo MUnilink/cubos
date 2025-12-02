@@ -1,8 +1,11 @@
     select
         SD2.D2_FILIAL as FILIAL,
-        SC6.C6_YOS as NUM,
+        coalesce(trim(SC6.C6_YOS), 'N/A') as NUM,
         SC6.C6_CC as CC,
         SC6.C6_ITEMCTA as ITEM,
+        SD2.D2_DOC as DOCUMENTO,
+        SC6.C6_NUM as PEDIDO,
+        cast(SD2.D2_EMISSAO as date) as EMISSAO,
         null as ESPECIE,
         null as ICMS,
         null as ISS,
@@ -26,7 +29,7 @@
         inner join SC6010 SC6
             on SC6.D_E_L_E_T_ = ''
             and SC6.C6_FILIAL = SD2.D2_FILIAL
-            and SC6.C6_NUM = SD2.D2_PEDIDO 
+            and SC6.C6_NUM = SD2.D2_PEDIDO
             and SC6.C6_ITEM = SD2.D2_ITEMPV
             
             inner join ZC2010 ZC2 (nolock)
@@ -37,7 +40,7 @@
     where
             SD2.D_E_L_E_T_ = ''
         and left(SD2.D2_EMISSAO, 6) =:PERIODO
-    group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC, SC6.C6_ITEMCTA
+    group by SD2.D2_FILIAL, SC6.C6_YOS, SC6.C6_CC, SC6.C6_ITEMCTA, SD2.D2_DOC, SC6.C6_NUM, SD2.D2_EMISSAO
 union
     select
         RECEITA_TMS.FILIAL,
@@ -45,6 +48,7 @@ union
         RECEITA_TMS.CC,
         RECEITA_TMS.ITEM,
         RECEITA_TMS.DOCUMENTO,
+        null as PEDIDO,
         RECEITA_TMS.EMISSAO,
         RECEITA_TMS.ESPECIE,
         sum(RECEITA_TMS.ICMS) as ICMS,
@@ -86,7 +90,8 @@ union
                         and SD2.D2_SERIE = SC5010.C5_SERIE
                         and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
                         and SD2.D2_LOJA = SC5010.C5_LOJACLI
-                )
+                ),
+                'N/A'
             ) as NUM,
             SD2.D2_CCUSTO as CC,
             SD2.D2_ITEMCC as ITEM,
@@ -143,7 +148,9 @@ union
                         and DUA010.DUA_FILDOC = DUD010.DUD_FILDOC
                         and DUA010.DUA_DOC = DUD010.DUD_DOC
                         and DUA010.DUA_SERIE = DUD010.DUD_SERIE
-                where DUD010.D_E_L_E_T_ = ''
+                where
+                        DUD010.D_E_L_E_T_ = ''
+                    and DUD010.DUD_SERIE != 'COL'
             ) DUD
                 on DUD.DUD_FILDOC = SD2.D2_FILIAL
                 and DUD.DUD_DOC = SD2.D2_DOC
@@ -165,6 +172,6 @@ union
         where
                 SD2.D_E_L_E_T_ = ''
             and SD2.D2_ITEMCC = '11'
+            and left(SD2.D2_EMISSAO, 6) =:PERIODO
     ) RECEITA_TMS
-    where RECEITA_TMS.NUM in ('018503', '018513', '018286')
     group by RECEITA_TMS.FILIAL, RECEITA_TMS.NUM, RECEITA_TMS.CC, RECEITA_TMS.ITEM, RECEITA_TMS.ESPECIE, RECEITA_TMS.DOCUMENTO, RECEITA_TMS.EMISSAO
