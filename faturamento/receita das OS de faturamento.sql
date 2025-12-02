@@ -6,9 +6,9 @@ select
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO else ZC2.TIPO end as ID_TIPO,
     case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTD_REAL_ITEM end as HORAS_PROD,
     case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTDxVALORUNI end as VALOR_PROD,
-    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.HIMP_AFAMNT else 0.0 end as HIMP_AFAMNT,
-    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.HIMP_FER else 0.0 end as HIMP_FER,
-    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.HIMP_PON else 0.0 end as HIMP_PON,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR1 else 0.0 end as HIMP_AFAMNT,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR2 else 0.0 end as HIMP_FER,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR3 else 0.0 end as HIMP_PON,
 
     case
         when ZC2.TIPO = 1 then 'RECEITA'
@@ -167,9 +167,9 @@ from
             cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
             cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
-            cast(ZC2010.ZC2_IMPR1 as numeric(15, 2)) as HIMP_AFAMNT,
-            cast(ZC2010.ZC2_IMPR2 as numeric(15, 2)) as HIMP_FER,
-            cast(ZC2010.ZC2_IMPR3 as numeric(15, 2)) as HIMP_PON,
+            cast(ZC2010.ZC2_IMPR1 as numeric(15, 2)) as ZC2_IMPR1,
+            cast(ZC2010.ZC2_IMPR2 as numeric(15, 2)) as ZC2_IMPR2,
+            cast(ZC2010.ZC2_IMPR3 as numeric(15, 2)) as ZC2_IMPR3,
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
         
         from ZC2010 (nolock)
@@ -240,7 +240,7 @@ from
             where ZG1.D_E_L_E_T_ = ''
         ) RAT_IMPR
             on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZC2.TIPO
-            and RAT_IMPR.FILIAL = ZC2.FILIAL
+            and RAT_IMPR.FILIAL = left(ZC2.FILIAL, 4)
             and RAT_IMPR.CC = ZC2.CC_OS
             and RAT_IMPR.ATIVIDADE = ZC2.ATIVIDADE_OS
             and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
