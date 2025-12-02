@@ -145,6 +145,7 @@ select
     ) as DTFIM_OS,
     
     left(ZC2.ZC2_COMPET, 6) as PERIODO,
+    left(ZC2.ZC2_DATA, 6) as PERIODO_ITEM,
     case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then left(nullif(ZC2.ZC2_DTFIM, ''), 6) else left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_COMPET, ''), nullif(ZC2.ZC2_DATA, '')), 6) end as PERIODO_APONT,
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
@@ -177,10 +178,11 @@ select
     case when (select SYS_USR.USR_MSBLQL from SYS_USR where USR_CODIGO = ZC2.ZC2_NMUSU and SYS_USR.D_E_L_E_T_ = '') = 2 then 'S' else 'N' end as USR_ATIVO
 
 from ZC2010 ZC2 (nolock)
-    left join ZC1010 ZC1 (nolock)
+    inner join ZC1010 ZC1 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+        and SUBSTRING(ZC1.ZC1_DTINI, 1, 6) <= left(ZC2.ZC2_DATA, 6) AND (SUBSTRING(ZC1.ZC1_DTFIM, 1, 6) >= left(ZC2.ZC2_DATA, 6) OR ZC1.ZC1_DTFIM = ' ')
         
         left join SA1010 DEV (nolock)
             on DEV.D_E_L_E_T_ = ''
