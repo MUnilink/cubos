@@ -112,6 +112,5 @@ from TQS010 TQS (nolock)
 			on SB1.D_E_L_E_T_ = ''
 			and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
             and SB1.B1_COD != '11300096'
-
 where
         TQS.D_E_L_E_T_ = ''

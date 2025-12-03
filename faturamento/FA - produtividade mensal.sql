@@ -19,7 +19,7 @@ select
     concat(ZG1.ZG1_COMPET, '01') as COMPETENCIA,
     
     case
-        when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '305' and ZG1.ZG1_ITEMCT != '32' then (select max(SRJ010.RJ_YHRPADR) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO)
+        when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '305' and ZG1.ZG1_ITEMCT != '32' then isnull((select max(SRJ010.RJ_YHRPADR) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO), 0.0)
         when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '305' and ZG1.ZG1_ITEMCT = '32' then '220'
         when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '304' then '220'
         else ZG1.ZG1_HRPAD

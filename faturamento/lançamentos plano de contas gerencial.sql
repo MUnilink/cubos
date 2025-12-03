@@ -9,7 +9,7 @@ select distinct
     ZE3.ZE3_COMPET as PERIODO,
     trim(ZE3.ZE3_NUM) as OS_VGA,
     trim(ZE2.ZE2_CONTA) as CONTA,
-    left(ZE3.ZE3_NUM, 6) as FILORI,
+    left(ZE3.ZE3_NUM, 6) as FILIAL_OSVGA,
     
     trim(ZC1.ZC1_NUM) as NUM_OS,
     trim(DUD.DUD_VIAGEM) as NUM_VG,

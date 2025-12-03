@@ -171,6 +171,7 @@ select
         when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(ZC2.ZC2_HRFIM) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.999 then 'mais que 13 h apontadas'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM)) < 0.0 then 'data/hora ini maior que data/hora fim'
+        when ZC2.ZC2_ITEM != lag(ZC2.ITEM, 1, '000') over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM order by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM) and concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) = concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) 'item duplicado'
         else 'item OK'
     end as STATUS_APONT,
 
@@ -236,5 +237,5 @@ from ZC2010 ZC2 (nolock)
 
 where
         cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
-    and substring(ZC1.ZC1_EMISSA, 1, 6) > 202312
+    and ZC1.ZC1_EMISSA, 1, 6) > 202312
     and ZC2.D_E_L_E_T_ = ''

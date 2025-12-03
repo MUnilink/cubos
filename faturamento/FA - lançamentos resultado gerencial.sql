@@ -63,6 +63,16 @@ select distinct
     as DT_FIMOS,
 
     case
+        when exists
+        (
+            select 1
+            from CTS010
+            where
+                    CTS010.D_E_L_E_T_ = ''
+                and trim(CTS010.CTS_CODPLA) in ('997', '998', '999')
+                and ZE3.ZE3_ORIGEM between CTS010.CTS_CTTINI and CTS010.CTS_CTTFIM
+                and ZE3.ZE3_ITORIG between CTS010.CTS_CTDINI and CTS010.CTS_CTDFIM
+        ) and (left(ZE2.ZE2_COD, 2) like '[1-9]%' or left(ZE2.ZE2_COD, 2) = '09') then 0.0
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1

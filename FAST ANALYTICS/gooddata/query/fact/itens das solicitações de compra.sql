@@ -1,8 +1,9 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
-    concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NF,
+    concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NFE,
     concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
-    concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACAO,
+    concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACOM,
+    concat(trim(SCP.CP_FILIAL), trim(SCP.CP_NUM)) as ID_SOLICITAARM,
     case when SC1.C1_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SC1.C1_FILIAL as char (6)) end as BK_FILIAL,
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC1.C1_FORNECE, ' '))+RTRIM(COALESCE(SC1.C1_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
     'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC1.C1_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
@@ -118,41 +119,35 @@ SELECT
 FROM SC1010 SC1
     left join SB1010 SB1
         on SB1.D_E_L_E_T_ = ' '
-        and SB1.B1_FILIAL = '      '
         and SB1.B1_COD = SC1.C1_PRODUTO
-    left join SA2010 SA2
-        on SA2.D_E_L_E_T_ = ' '
-        and SA2.A2_FILIAL = '      '
-        and SA2.A2_COD = SC1.C1_FORNECE
-        and SA2.A2_LOJA = SC1.C1_LOJA
-    left join SBM010 SBM
-        on SBM.D_E_L_E_T_ = ' '
-        and SBM.BM_FILIAL = SB1.B1_FILIAL
-        and SBM.BM_GRUPO = SB1.B1_GRUPO
-    left join CTT010 CTT
-        on CTT.D_E_L_E_T_ = ' '
-        and CTT.CTT_FILIAL = SUBSTRING(SC1.C1_FILIAL, 1, 4)
-        and CTT.CTT_CUSTO = SC1.C1_CC
-    left join ACV010 ACV
-        on ACV.D_E_L_E_T_ = ' '
-        and ACV.ACV_FILIAL = SUBSTRING(SC1.C1_FILIAL, 1, 4)
-        and ACV.ACV_CODPRO = SC1.C1_PRODUTO
+        
+        left join SBM010 SBM
+            on SBM.D_E_L_E_T_ = ' '
+            and SBM.BM_GRUPO = SB1.B1_GRUPO
+        left join SAH010 SAH
+            on SAH.D_E_L_E_T_ = ''
+            and SAH.AH_UNIMED = SB1.B1_COD
+        left join ACV010 ACV
+            on ACV.D_E_L_E_T_ = ' '
+            and coalesce(nullif(ACV.ACV_FILIAL, ''), '0101') = coalesce(nullif(SB1.B1_FILIAL, ''), '0101')
+            and ACV.ACV_CODPRO = SB1.B1_COD
 
-        left join ACU010 ACU
-            on ACU.D_E_L_E_T_ = ' '
-            and ACU.ACU_FILIAL = ACV.ACV_FILIAL
-            and ACU.ACU_COD = ACV.ACV_CATEGO
-    
-    left join CTD010 CTD
-        on CTD.D_E_L_E_T_ = ' '
-        and CTD.CTD_FILIAL = '      '
-        and CTD.CTD_ITEM = SC1.C1_ITEMCTA
+            left join ACU010 ACU
+                on ACU.D_E_L_E_T_ = ' '
+                and ACU.ACU_FILIAL = coalesce(nullif(ACV.ACV_FILIAL, ''), '0101')
+                and ACU.ACU_COD = ACV.ACV_CATEGO
+        
     left join SC7010 SC7
         on SC7.D_E_L_E_T_ = ' '
         and SC7.C7_FILIAL = SC1.C1_FILIAL
-        and SC7.C7_NUMSC = SC1.C1_NUM
-        and SC7.C7_ITEMSC = SC1.C1_ITEM
+        and SC7.C7_NUM = SC1.C1_NUM
+        and SC7.C7_ITEM = SC1.C1_ITEM
 
+        left join SA2010 SA2
+            on SA2.D_E_L_E_T_ = ' '
+            and SA2.A2_FILIAL = '      '
+            and SA2.A2_COD = SC7.C7_FORNECE
+            and SA2.A2_LOJA = SC7.C7_LOJA
         left join SD1010 SD1
 			on SD1.D_E_L_E_T_ = ''
 			and SD1.D1_FILIAL = SC7.C7_FILIAL
@@ -166,10 +161,15 @@ FROM SC1010 SC1
                 and SF1.F1_FORNECE = SD1.D1_FORNECE
                 and SF1.F1_LOJA = SD1.D1_LOJA
                 and SF1.D_E_L_E_T_ = ' '
-		
+        
         left join SE4010 SE4
-			on SE4.D_E_L_E_T_ = ''
-			and SE4.E4_CODIGO = SC7.C7_COND
+            on SE4.D_E_L_E_T_ = ' '
+            and SE4.E4_FILIAL = '      '
+            and SE4.E4_CODIGO = SC7.C7_COND
+        left join SF4010 SF4
+            on SF4.D_E_L_E_T_ = ' '
+            and SF4.F4_FILIAL = '      '
+            and SF4.F4_CODIGO = SC7.C7_TES
         left join SY1010 Y1_DIG
             on Y1_DIG.Y1_FILIAL = left(SC7.C7_FILIAL, 2)
             and Y1_DIG.Y1_USER = SC7.C7_USER
@@ -179,10 +179,21 @@ FROM SC1010 SC1
             and Y1_COM.Y1_COD = SC7.C7_YNEGOCI
             and Y1_COM.Y1_COD not in (1, 6, 11, 19)
     
-    left join SAH010 SAH
-        on SAH.D_E_L_E_T_ = ' '
-        and SAH.AH_FILIAL = '      '
-        and SAH.AH_UNIMED = SC1.C1_UM
+    left join SCP010 SCP
+        on SCP.D_E_L_E_T_ = ' '
+        and SCP.CP_FILIAL = SC1.C1_FILIAL
+        and SCP.CP_NUMSC = SC1.C1_NUM
+        and SCP.CP_ITSC = SC1.C1_ITEM
+    
+    left join CTT010 CTT
+        on CTT.D_E_L_E_T_ = ' '
+        and CTT.CTT_FILIAL = SUBSTRING(SC7.C7_FILIAL, 1, 4)
+        and CTT.CTT_CUSTO = SC1.C1_CC
+    left join CTD010 CTD
+        on CTD.D_E_L_E_T_ = ' '
+        and CTD.CTD_FILIAL = '      '
+        and CTD.CTD_ITEM = SC1.C1_ITEMCTA
+
     left join SM2010 SM2
         on SM2.D_E_L_E_T_ = ' '
         and SM2.M2_DATA = SC1.C1_EMISSAO

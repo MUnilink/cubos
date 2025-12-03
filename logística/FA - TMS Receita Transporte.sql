@@ -182,6 +182,6 @@ FROM DT8010 DT8
             and SD2.D2_SERIORI = DT6.DT6_SERIE
             and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
-WHERE
+where
         DT8.D_E_L_E_T_ = ' '
-    and year(VIAGEM.DATAFIM) > 2021
+    and VIAGEM.DATAFIM > 20211231

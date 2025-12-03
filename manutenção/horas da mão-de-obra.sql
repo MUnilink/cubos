@@ -62,7 +62,6 @@ from STL010 STL (nolock)
 		and STJ.TJ_PLANO = STL.TL_PLANO
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
 		and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP')
-		and year(STJ.TJ_DTORIGI) > 2021
 where
 		STL.D_E_L_E_T_ = ''
 	and STL.TL_TIPOREG in ('E', 'M')

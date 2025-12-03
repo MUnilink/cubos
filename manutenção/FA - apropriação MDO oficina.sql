@@ -51,7 +51,7 @@ select
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
 	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 first_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC >= STL.TL_DTINICI), ''), nullif(ST9.T9_ITEMCTA, '')) as ATIVIDADE,
-	trim(SD1.D1_PEDIDO) as PEDCOMPRA,
+	null as PEDCOMPRA,
 	null as B1_UPRC,
 	null as T1_SALARIO,
 
@@ -60,7 +60,7 @@ select
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '017' then 180.0
-    else 0.0 end as HORAS_FUNC
+    else 0.0 end as HORAS_FUNC,
 
     /* PARA RM */
 	convert(datetime, datetimefromparts(year(STL.TL_DTINICI), month(STL.TL_DTINICI), day(STL.TL_DTINICI), substring(STL.TL_HOINICI, 1, 2), substring(STL.TL_HOINICI, 4, 5), 0, 0), 113) as INI_APONT,
@@ -73,8 +73,7 @@ select
 	trim(STL.TL_HOINICI) as HORA_INI,
 	trim(STL.TL_HOFIM) as HORA_FIM,
 
-	substring(STL.TL_DTINICI, 1, 6) as PERIODO_INI,
-	substring(STL.TL_DTFIM, 1, 6) as PERIODO_FIM,
+	left(STL.TL_DTFIM, 6) as PERIODO_APP,
 
 	SRA.RA_MAT as MATRICULA,
     case isnull(SPF.qtd_SPF, 0) when 0 then
@@ -90,8 +89,7 @@ select
             and SPF010.PF_FILIAL = STL.TL_FILIAL
             and SPF010.PF_MAT = STL.TL_CODIGO
     )
-    else SPF.CARGA_HPRO
-    end as HORAS_PRO
+    else SPF.CARGA_HPRO end as HORAS_PRO
 
 from STL010 STL (nolock)
 	left join ST0010 ST0 (nolock)
@@ -101,6 +99,10 @@ from STL010 STL (nolock)
 		on ST1.D_E_L_E_T_ = ''
 		and ST1.T1_FILIAL = STL.TL_FILIAL
 		and ST1.T1_CODFUNC = STL.TL_CODIGO
+
+        left join SH7010 SH7 (nolock)
+            on SH7.D_E_L_E_T_ = ''
+            and SH7.H7_CODIGO = ST1.T1_TURNO
 
 		left join SRA010 SRA (nolock)
 			on ST1.D_E_L_E_T_ = ''
@@ -112,6 +114,10 @@ from STL010 STL (nolock)
 		and STJ.TJ_ORDEM = STL.TL_ORDEM
 		and STJ.TJ_PLANO = STL.TL_PLANO
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
+
+        left join ST9010 ST9
+            on ST9.D_E_L_E_T_ = ''
+            and ST9.T9_CODBEM = STJ.TJ_CODBEM
 
     left join
     (

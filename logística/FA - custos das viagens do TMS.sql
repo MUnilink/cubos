@@ -213,4 +213,4 @@ from
             and VIAGEM.DUD_FILDOC = DT6.DT6_FILDOC
             and VIAGEM.DUD_DOC = DT6.DT6_DOC
             and VIAGEM.DUD_SERIE = DT6.DT6_SERIE
-where
+where ZE1.D_E_L_E_T_ = ''

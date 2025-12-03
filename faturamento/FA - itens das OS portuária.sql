@@ -31,6 +31,8 @@ select
     OS.DATA_APP,
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
+    OS.ATIVIDADE_OS,
+    OS.CC_OS,
 
     RAT_IMPR.TIPO as ITEM_RATEIO,
     sum(PV.QTD) as QTD_RATEIO,
@@ -46,7 +48,7 @@ select
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.HIMP1) as numeric (15, 2)) else 0.0 end as HIMP1,
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.HIMP2) as numeric (15, 2)) else 0.0 end as HIMP2,
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.HIMP3) as numeric (15, 2)) else 0.0 end as HIMP3,
-    case when OS.ID_TIPO_ITEM not in (15, 16) then cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) else 0.0 end as VALOR_TOTAL,
+    case when OS.ID_TIPO_ITEM in (15, 16) then 0.0 else cast(sum(OS.VALOR_TOTAL) as numeric(15, 2)) end as VALOR_TOTAL,
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) as numeric (15, 2)) else 0.0 end as VL_IMPR,
 
     /* RM */
@@ -246,7 +248,8 @@ from
             and RAT_IMPR.FILIAL = OS.FILIAL
             and RAT_IMPR.COMPETENCIA = left(OS.COMPETENCIA, 6)
             and RAT_IMPR.INSUMO = OS.INSUMO
-where OS.COMPETENCIA like '2025%'
+
+where OS.COMPETENCIA like '202508%'
 group by
     OS.BK_FILIAL,
     OS.BK_CLIENTE,
@@ -277,6 +280,8 @@ group by
     OS.DATA_APP,
     RAT_IMPR.TIPO,
     OS.ID_RECURSO,
+    OS.ATIVIDADE_OS,
+    OS.CC_OS,
 
     /* RM */
     OS.TIPO_OP,
