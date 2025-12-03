@@ -33,8 +33,8 @@ select
 	(select ZD3010.ZD3_KMRD from ZD3010 where ZD3010.D_E_L_E_T_ = '' and TQN.TQN_FROTA = ZD3010.ZD3_VEICUL and TQN.TQN_DTABAS = substring(ZD3010.ZD3_DATA, 1, 8) and TQN.TQN_HRABAS = substring(ZD3010.ZD3_DATA, 10, 14)) as km_ZD3,
 	
 	case
-		when ST9.T9_CODFAMI in ('VP', 'VM') and (TQN.TQN_YTIPO = 'P' or TQN.TQN_CODCOM = 2) then 0.0 /* não calcula para ARLA e parcial*/
-		when ST9.T9_CODFAMI in ('VP', 'VM') and TQN.TQN_YTIPO != 'P' then TQN.TQN_HODOM - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and TQN.TQN_YTIPO = 'C' and STP010.TP_TIPOLAN = 'A' and STP010.TP_CODBEM = TQN.TQN_FROTA and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS)) /* não calcula para ARLA e parcial*/
+		when ST9.T9_CODFAMI in ('VP', 'VM') and (TQN.TQN_YTIPO = 'P' or TQN.TQN_CODCOM != '001') then 0.0 /* não calcula para ARLA e parcial*/
+		when ST9.T9_CODFAMI in ('VP', 'VM') and TQN.TQN_YTIPO != 'P' then TQN.TQN_HODOM - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and TQN.TQN_YTIPO = 'C' and STP010.TP_TIPOLAN = 'A' and TQN.TQN_YTIPO = 'C' and STP010.TP_CODBEM = TQN.TQN_FROTA and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS))
 		when TQN.TQN_HODOM < lag(TQN.TQN_HODOM, 1, 0) over (partition by TQN.TQN_FROTA, TQN.TQN_CODCOM order by TQN.TQN_FROTA, TQN.TQN_DTABAS, TQN.TQN_HRABAS) then TQN.TQN_HODOM /* quando quebra */
 		else TQN.TQN_HODOM - (select max(STP010.TP_POSCONT) from STP010 where STP010.D_E_L_E_T_ = '' and STP010.TP_CODBEM = TQN.TQN_FROTA and concat(STP010.TP_DTLEITU, ' ', STP010.TP_HORA) < concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS))
 	end as km_TQN
