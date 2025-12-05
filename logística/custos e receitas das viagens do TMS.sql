@@ -1,8 +1,9 @@
 select distinct
     ZE1.ZE1_NUM as VIAGEM,
-    cast(ZE4.ZE4_DATAFI as date) as DATA_FIM,
     left(ZE4.ZE4_DATAFI, 6) as PERIODO_VGA,
-    ZE4.ZE4_TOTHR as VGA_HORAS,
+    convert(datetime, concat(ZE4.ZE4_DATAIN, ' ', replace(ZE4.ZE4_HORAIN, ',', ':')), 113) as DATA_INI,
+    convert(datetime, concat(ZE4.ZE4_DATAFI, ' ', replace(ZE4.ZE4_HORAFI, ',', ':')), 113) as DATA_FIM,
+    cast(ZE4.ZE4_TOTHR as decimal(15, 2)) as VGA_HORAS,
     
     concat
     (
