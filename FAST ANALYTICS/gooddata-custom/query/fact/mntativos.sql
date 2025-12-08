@@ -148,5 +148,5 @@ from STJ010 STJ
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
 		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
-		STJ.TJ_DTORIGI between '20201231' and '20261231'
+	and STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>
 	and STL.D_E_L_E_T_ = ''
