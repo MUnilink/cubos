@@ -44,7 +44,8 @@ select
 	trim(ST9.T9_CCUSTO) as CC_MNT,
 	trim(ST9.T9_ITEMCTA) as ATIVIDADE_MNT,
 	(select trim(CTT010.CTT_DESC01) from CTT010 where CTT010.D_E_L_E_T_ = '' and CTT010.CTT_CUSTO = ST9.T9_CCUSTO) as DESC_CC_MNT,
-	(select trim(CTD010.CTD_DESC01) from CTD010 where CTD010.D_E_L_E_T_ = '' and CTD010.CTD_ITEM = ST9.T9_ITEMCTA) as DESC_AT_MNT
+	(select trim(CTD010.CTD_DESC01) from CTD010 where CTD010.D_E_L_E_T_ = '' and CTD010.CTD_ITEM = ST9.T9_ITEMCTA) as DESC_AT_MNT,
+	case ST9.T9_YPORTAL when 'S' then 'SIM' else 'NÃO' end as APONTA_OPP
 
 from ST9010 ST9 (nolock)
 	inner join TQR010 TQR (nolock)
