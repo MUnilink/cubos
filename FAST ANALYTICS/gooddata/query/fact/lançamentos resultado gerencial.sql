@@ -35,29 +35,7 @@ select distinct
     'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SED.ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(SED.ED_CODIGO, ' ')), ' '), '|') AS BK_NAT_FINANCEIRA,
     'P |01|SE4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SE4.E4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SE4.E4_CODIGO, ' ')), ' '), '|') AS BK_CONDICAO_DE_PAGAMENTO,
     
-    case
-        when ZC1.ZC1_NUM is not null then
-        (
-            select min('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|'))
-            from SC6010
-                inner join CTD010
-                    on CTD010.CTD_FILIAL = ''
-                    and CTD010.CTD_ITEM = SC6010.C6_ITEMCTA
-                    and CTD010.D_E_L_E_T_ = ''
-                inner join SD2010
-                    on SD2010.D_E_L_E_T_= ''
-                    and SD2010.D2_FILIAL = SC6010.C6_FILIAL
-                    and SD2010.D2_PEDIDO = SC6010.C6_NUM
-                    and SD2010.D2_ITEMPV = SC6010.C6_ITEM
-        where
-                    SC6010.D_E_L_E_T_ = ''
-                and concat(SC6010.C6_FILIAL, SC6010.C6_YOS) = ZE3.ZE3_NUM
-        )
-        
-        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then ('P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE('', ' '))+'|'+RTRIM(COALESCE('11', ' ')), ' '), '|'))
-        else null
-    end as BK_ITEM_CONTABIL,
-    
+    'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ITORIG, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZE3.ZE3_ORIGEM, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
     
     concat(trim(DA0.DA0_FILIAL), trim(DA0.DA0_CODTAB)) as ID_TABELA_PRECO,
@@ -83,7 +61,18 @@ select distinct
         when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
         else ZC1.ZC1_DTENCE end
     as DT_FIMOS,
+    
     case
+        when exists
+        (
+            select 1
+            from CTS010
+            where
+                    CTS010.D_E_L_E_T_ = ''
+                and trim(CTS010.CTS_CODPLA) in ('997', '998', '999')
+                and ZE3.ZE3_ORIGEM between CTS010.CTS_CTTINI and CTS010.CTS_CTTFIM
+                and ZE3.ZE3_ITORIG between CTS010.CTS_CTDINI and CTS010.CTS_CTDFIM
+        ) and (left(ZE2.ZE2_COD, 2) like '[1-9]%' or left(ZE2.ZE2_COD, 2) = '09') then 0.0
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
@@ -96,12 +85,12 @@ from ZE3010 ZE3 (nolock)
         and ZE2.ZE2_COD = ZE3.ZE3_ITEMPL
     left join ZC1010 ZC1
         on ZC1.D_E_L_E_T_ = ''
-        and left(ZE3.ZE3_NUM, 6) = ZC1.ZC1_FILIAL
         and concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM) = ZE3.ZE3_NUM
+        and trim(ZC1.ZC1_NUM) != ''
     left join DUD010 DUD
         on DUD.D_E_L_E_T_ = ''
-        and left(ZE3.ZE3_NUM, 4) = DUD.DUD_FILIAL
         and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
+        and trim(DUD.DUD_VIAGEM) != ''
         
         left join SA1010 CLIOPP
             on CLIOPP.D_E_L_E_T_ = ''
@@ -127,6 +116,9 @@ from ZE3010 ZE3 (nolock)
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
         and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
+    left join CTD010
+        on CTD010.D_E_L_E_T_ = ''
+        and CTD010.CTD_ITEM = ZE3.ZE3_ITORIG
 where
         concat(ZE3.ZE3_COMPET, '01') BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and ZE3.D_E_L_E_T_ = ''
