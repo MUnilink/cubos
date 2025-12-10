@@ -4,7 +4,7 @@ select
 	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(ZD3.DATA_HORA, 6)) as ZD3_VLUNI,
 	
 	ZD3.HODOM_ATUAL as ZD3_HODOM,
-    case ZD3.TQN_YTIPO when 'C' then ZD3.KMRD when 'P' then 0.0 else 0.0 end as ZD3_KMRD,
+    ZD3.KMRD as ZD3_KMRD,
     ZD3.KML as ZD3_KML,
 	ZD3.VALOR_TOTAL as ZD3_TOTAL,
 	trim(ZD3.DATA_HORA) as ZD3_DATA,
@@ -13,7 +13,21 @@ select
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
 	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
-	ZD3.TQN_YITMCT as TQN_YITMCT
+	trim(ZD3.TQN_YITMCT) as TQN_YITMCT,
+
+    /* RM */
+    ZD3.TQN_FILIAL as ZD3_FILIAL,
+    ZD3.TQN_PLACA as ZD3_PLACA,
+    ZD3.TQN_FROTA as ZD3_VEICUL,
+    ZD3.TQN_TANQUE as ZD3_TANQUE,
+    ZD3.TQN_CODCOM as ZD3_COMB,
+    ZD3.VALOR_UNIT as ZD3_VLUNI,
+    ZD3.VALOR_TOTAL as ZD3_TOTAL,
+    trim(ST9.T9_CODFAMI) as FAMILIA,
+    convert(datetime, ZD3.DATA_HORA, 113) as DATA,
+    ZD3.TQN_YTIPO as TIPO,
+    ZD3.ULT_HODOM_COMP as CONT_ANT,
+    left(ZD3.DATA_HORA, 6) as PERIODO
 from
     (
         select *, case when KMRD > 0 and QTD_LITROS > 0 then ROUND(KMRD/QTD_LITROS, 2) else 0 end as KML
@@ -131,4 +145,3 @@ from
 	left join TQM010 TQM
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.TQN_CODCOM
-where ZD3.DATA_HORA between <<START_DATE>> AND <<FINAL_DATE>>
