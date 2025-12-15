@@ -48,36 +48,19 @@
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-
         datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR) as IDADE,
-
         RHP.RHP_COMPPG as PERIODO,
 
-        case when RHP.RHP_PD in ('087', '565', '571') and RHP.RHP_CODFOR = 2 then 'HAPVIDA'
-        else
-            case when RHP.RHP_PD in ('088', '626', '627') and RHP.RHP_CODFOR = 1 then 'UNIMED'
-            else
-                case when RHP.RHP_PD in ('087', '565', '571') and RHP.RHP_CODFOR = 4 then 'UNIMED'
-                else
-                    case when RHP.RHP_PD in ('428', '429') then 'REDE SAUDE'
-                    else
-                        case when RHP.RHP_PD in ('569', '570', '574', '575', '576', '577', '711', '078') and RHP.RHP_CODFOR = 2 then 'DENTAL MASTER'
-                        else
-                            case when RHP.RHP_PD in ('569', '570', '574', '575', '576', '577', '711', '078') and RHP.RHP_CODFOR = 4 then 'SUL-AMERICA'
-                            else
-                                case when RHP.RHP_PD in ('624', '625') and RHP.RHP_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
-                                else
-                                    case when RHP.RHP_PD in ('624', '625') and RHP.RHP_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
-                                    else 'OUTROS'
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
+        case
+            when RHP.RHP_PD in ('428', '429') then 'REDE SAUDE'
+            when RHP.RHP_CODFOR = 2 and RHP.RHP_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHP.RHP_CODFOR = 1 and RHP.RHP_PD in ('088', '626', '627') then 'UNIMED'
+            when RHP.RHP_CODFOR = 4 and RHP.RHP_PD in ('087', '565', '571') then 'UNIMED'
+            when RHP.RHP_CODFOR = 2 and RHP.RHP_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'DENTAL MASTER'
+            when RHP.RHP_CODFOR = 4 and RHP.RHP_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'SUL-AMERICA'
+            when RHP.RHP_CODFOR = 2 and RHP.RHP_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHP.RHP_CODFOR in (1, 4) and RHP.RHP_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -220,7 +203,7 @@
             and RHM.RHM_CODFOR = RHP.RHP_CODFOR
     where
             RHP.D_E_L_E_T_ = ''
-        and year(RHP.RHP_DTOCOR) > 2021
+        and RHP.RHP_DTOCOR > '20241231'
 union
     select /* COPARTICIPAÇÃO */
         trim(SRA.RA_FILIAL) as FILIAL,
@@ -272,36 +255,19 @@ union
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-        
         datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR) as IDADE,
-
         RHO.RHO_COMPPG as PERIODO,
 
-        case when RHO.RHO_PD in ('087', '565', '571') and RHO.RHO_CODFOR = 2 then 'HAPVIDA'
-        else
-            case when RHO.RHO_PD in ('088', '626', '627') and RHO.RHO_CODFOR = 1 then 'UNIMED'
-            else
-                case when RHO.RHO_PD in ('087', '565', '571') and RHO.RHO_CODFOR = 4 then 'UNIMED'
-                else
-                    case when RHO.RHO_PD in ('428', '429') then 'REDE SAUDE'
-                    else
-                        case when RHO.RHO_PD in ('569', '570', '574', '575', '576', '577', '711', '078') and RHO.RHO_CODFOR = 2 then 'DENTAL MASTER'
-                        else
-                            case when RHO.RHO_PD in ('569', '570', '574', '575', '576', '577', '711', '078') and RHO.RHO_CODFOR = 4 then 'SUL-AMERICA'
-                            else
-                                case when RHO.RHO_PD in ('624', '625') and RHO.RHO_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
-                                else
-                                    case when RHO.RHO_PD in ('624', '625') and RHO.RHO_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
-                                    else 'OUTROS'
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
+        case
+            when RHO.RHO_PD in ('428', '429') then 'REDE SAUDE'
+            when RHO.RHO_CODFOR = 2 and RHO.RHO_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHO.RHO_CODFOR = 1 and RHO.RHO_PD in ('088', '626', '627') then 'UNIMED'
+            when RHO.RHO_CODFOR = 4 and RHO.RHO_PD in ('087', '565', '571') then 'UNIMED'
+            when RHO.RHO_CODFOR = 2 and RHO.RHO_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'DENTAL MASTER'
+            when RHO.RHO_CODFOR = 4 and RHO.RHO_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'SUL-AMERICA'
+            when RHO.RHO_CODFOR = 2 and RHO.RHO_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHO.RHO_CODFOR in (1, 4) and RHO.RHO_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -495,36 +461,19 @@ union
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-
         datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
-        
         RHR.RHR_COMPPG as PERIODO,
 
-        case when RHR.RHR_PD in ('087', '565', '571') and RHR.RHR_CODFOR = 2 then 'HAPVIDA'
-        else
-            case when RHR.RHR_PD in ('088', '626', '627') and RHR.RHR_CODFOR = 1 then 'UNIMED'
-            else
-                case when RHR.RHR_PD in ('087', '565', '571') and RHR.RHR_CODFOR = 4 then 'UNIMED'
-                else
-                    case when RHR.RHR_PD in ('428', '429') then 'REDE SAUDE'
-                    else
-                        case when RHR.RHR_PD in ('569', '570', '574', '575', '576', '577', '711', '078') and RHR.RHR_CODFOR = 2 then 'DENTAL MASTER'
-                        else
-                            case when RHR.RHR_PD in ('569', '570', '574', '575', '576', '577', '711', '078') and RHR.RHR_CODFOR = 4 then 'SUL-AMERICA'
-                            else
-                                case when RHR.RHR_PD in ('624', '625') and RHR.RHR_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
-                                else
-                                    case when RHR.RHR_PD in ('624', '625') and RHR.RHR_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
-                                    else 'OUTROS'
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
+        case
+            when RHR.RHR_PD in ('428', '429') then 'REDE SAUDE'
+            when RHR.RHR_CODFOR = 2 and RHR.RHR_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHR.RHR_CODFOR = 1 and RHR.RHR_PD in ('088', '626', '627') then 'UNIMED'
+            when RHR.RHR_CODFOR = 4 and RHR.RHR_PD in ('087', '565', '571') then 'UNIMED'
+            when RHR.RHR_CODFOR = 2 and RHR.RHR_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'DENTAL MASTER'
+            when RHR.RHR_CODFOR = 4 and RHR.RHR_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'SUL-AMERICA'
+            when RHR.RHR_CODFOR = 2 and RHR.RHR_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHR.RHR_CODFOR in (1, 4) and RHR.RHR_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -715,35 +664,21 @@ union
         trim(SRA.RA_CEP) as CEP,
         trim(SRA.RA_MUNNASC) as MUNICIPIO_NASC,
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
-        coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,        
-        datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
 
+        coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
+        trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
+        datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
         RHS.RHS_COMPPG as PERIODO,
         
-        case when RHS.RHS_PD in ('087', '565', '571') and RHS.RHS_CODFOR = 2 then 'HAPVIDA'
-        else
-            case when RHS.RHS_PD in ('088', '626', '627') and RHS.RHS_CODFOR = 1 then 'UNIMED'
-            else
-                case when RHS.RHS_PD in ('087', '565', '571') and RHS.RHS_CODFOR = 4 then 'UNIMED'
-                else
-                    case when RHS.RHS_PD in ('428', '429') then 'REDE SAUDE'
-                    else
-                        case when (RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') or RHS.RHS_PD = BASE_ODONTO.RD_PD) and RHS.RHS_CODFOR = 2 then 'DENTAL MASTER'
-                        else
-                            case when (RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') or RHS.RHS_PD = BASE_ODONTO.RD_PD) and RHS.RHS_CODFOR = 4 then 'SUL-AMERICA'
-                            else
-                                case when RHS.RHS_PD in ('624', '625') and RHS.RHS_CODFOR = 2 then 'HAPVIDA - COPARTICIPACAO'
-                                else
-                                    case when RHS.RHS_PD in ('624', '625') and RHS.RHS_CODFOR in (1, 4) then 'UNIMED - COPARTICIPACAO'
-                                    else 'OUTROS'
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
+        case
+            when RHS.RHS_PD in ('428', '429') then 'REDE SAUDE'
+            when RHS.RHS_CODFOR = 2 and RHS.RHS_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHS.RHS_CODFOR = 1 and RHS.RHS_PD in ('088', '626', '627') then 'UNIMED'
+            when RHS.RHS_CODFOR = 4 and RHS.RHS_PD in ('087', '565', '571') then 'UNIMED'
+            when RHS.RHS_CODFOR = 2 and (RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'DENTAL MASTER'
+            when RHS.RHS_CODFOR = 4 and (RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'SUL-AMERICA'
+            when RHS.RHS_CODFOR = 2 and RHS.RHS_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHS.RHS_CODFOR in (1, 4) and RHS.RHS_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -892,4 +827,4 @@ union
             and RHM.RHM_CODFOR = RHS.RHS_CODFOR
     where
             RHS.D_E_L_E_T_ = ''
-        and year(RHS.RHS_DATA) > 2021
+        and RHS.RHS_DATA > '20241231'
