@@ -28,7 +28,7 @@
         case when SRC.RC_PD in ('182', '183', '995', '999') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRC.RC_PD in ('020') then SRC.RC_VALOR else 0.0 end as DIAS_TRABALHADOS,
-        case when SRC.RC_PD in ('017', '039', '215') then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
+        case when SRC.RC_PD in ('013', '017', '039', '215') then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
         case when SRC.RC_PD in ('030', '041', '371') then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
         case when SRC.RC_PD in ('451', '452') then SRC.RC_VALOR else 0.0 end as DOBRAS_DOMINGOS,
         case when SRC.RC_PD in ('011', '247', '353') then SRC.RC_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
@@ -52,7 +52,7 @@
 
         case when SRC.RC_PD in ('290', '300') then SRC.RC_HORAS else 0.0 end as AVOS_13,
         case when SRC.RC_PD in ('015', '167') then SRC.RC_VALOR else 0.0 end as INSALUBRIDADE_13,
-        case when SRC.RC_PD in ('013', '772') then SRC.RC_VALOR else 0.0 end as ADRISCO_MATER_13,
+        case when SRC.RC_PD in ('208', '772') then SRC.RC_VALOR else 0.0 end as ADRISCO_MATER_13,
         case when SRC.RC_PD in ('009', '204', '307', '768') then SRC.RC_VALOR else 0.0 end as MEDIA_VL_13,
         case when SRC.RC_PD in ('010', '205', '306', '769') then SRC.RC_VALOR else 0.0 end as MEDIA_HR_13,
 
@@ -127,7 +127,7 @@ union
         case when SRD.RD_PD in ('182', '183', '995', '999') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRD.RD_PD in ('020') then SRD.RD_VALOR else 0.0 end as DIAS_TRABALHADOS,
-        case when SRD.RD_PD in ('017', '039', '215') then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
+        case when SRD.RD_PD in ('013', '017', '039', '215') then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
         case when SRD.RD_PD in ('030', '041', '371') then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
         case when SRD.RD_PD in ('451', '452') then SRD.RD_VALOR else 0.0 end as DOBRAS_DOMINGOS,
         case when SRD.RD_PD in ('011', '247', '353') then SRD.RD_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
@@ -151,7 +151,7 @@ union
 
         case when SRD.RD_PD in ('290', '300') then SRD.RD_HORAS else 0.0 end as AVOS_13,
         case when SRD.RD_PD in ('015', '167') then SRD.RD_VALOR else 0.0 end as INSALUBRIDADE_13,
-        case when SRD.RD_PD in ('013', '772') then SRD.RD_VALOR else 0.0 end as ADRISCO_MATER_13,
+        case when SRD.RD_PD in ('208', '772') then SRD.RD_VALOR else 0.0 end as ADRISCO_MATER_13,
         case when SRD.RD_PD in ('009', '204', '307', '768') then SRD.RD_VALOR else 0.0 end as MEDIA_VL_13,
         case when SRD.RD_PD in ('010', '205', '306', '769') then SRD.RD_VALOR else 0.0 end as MEDIA_HR_13,
 
