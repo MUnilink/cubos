@@ -24,7 +24,7 @@
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
         case when trim(SRV.RV_TIPOCOD) != '2' then 0.0 when trim(SRV.RV_TIPOCOD) = '2' and SRC.RC_PD not in ('420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '456', '420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '045', '414', '533') then SRC.RC_VALOR else 0.0 end as OUTROS_DESCONTOS,
         
-        case when SRC.RC_PD in ('290', '990') then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
+        case when SRC.RC_PD in ('290', '300', '990') then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
         case when SRC.RC_PD in ('182', '183', '995', '999') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRC.RC_PD in ('020') then SRC.RC_VALOR else 0.0 end as DIAS_TRABALHADOS,
@@ -50,11 +50,11 @@
         case when SRC.RC_PD in ('749') then SRC.RC_VALOR else 0.0 end as VLCESTA_BASE,
         case when SRC.RC_PD in ('719') then SRC.RC_VALOR else 0.0 end as VLALIM_BASE,
 
-        case when SRC.RC_PD in ('290') then SRC.RC_HORAS else 0.0 end as AVOS_13,
+        case when SRC.RC_PD in ('290', '300') then SRC.RC_HORAS else 0.0 end as AVOS_13,
         case when SRC.RC_PD in ('015', '167') then SRC.RC_VALOR else 0.0 end as INSALUBRIDADE_13,
         case when SRC.RC_PD in ('013', '772') then SRC.RC_VALOR else 0.0 end as ADRISCO_MATER_13,
-        case when SRC.RC_PD in ('009', '204', '768') then SRC.RC_VALOR else 0.0 end as MEDIA_VL_13,
-        case when SRC.RC_PD in ('010', '205', '769') then SRC.RC_VALOR else 0.0 end as MEDIA_HR_13,
+        case when SRC.RC_PD in ('009', '204', '307', '768') then SRC.RC_VALOR else 0.0 end as MEDIA_VL_13,
+        case when SRC.RC_PD in ('010', '205', '306', '769') then SRC.RC_VALOR else 0.0 end as MEDIA_HR_13,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -123,7 +123,7 @@ union
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
         case when trim(SRV.RV_TIPOCOD) != '2' then 0.0 when trim(SRV.RV_TIPOCOD) = '2' and SRD.RD_PD not in ('420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '456', '420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '045', '414', '533') then SRD.RD_VALOR else 0.0 end as OUTROS_DESCONTOS,
         
-        case when SRD.RD_PD in ('290', '990') then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
+        case when SRD.RD_PD in ('290', '300', '990') then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
         case when SRD.RD_PD in ('182', '183', '995', '999') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
         
         case when SRD.RD_PD in ('020') then SRD.RD_VALOR else 0.0 end as DIAS_TRABALHADOS,
@@ -149,11 +149,11 @@ union
         case when SRD.RD_PD in ('749') then SRD.RD_VALOR else 0.0 end as VLCESTA_BASE,
         case when SRD.RD_PD in ('719') then SRD.RD_VALOR else 0.0 end as VLALIM_BASE,
 
-        case when SRD.RD_PD in ('290') then SRD.RD_HORAS else 0.0 end as AVOS_13,
+        case when SRD.RD_PD in ('290', '300') then SRD.RD_HORAS else 0.0 end as AVOS_13,
         case when SRD.RD_PD in ('015', '167') then SRD.RD_VALOR else 0.0 end as INSALUBRIDADE_13,
         case when SRD.RD_PD in ('013', '772') then SRD.RD_VALOR else 0.0 end as ADRISCO_MATER_13,
-        case when SRD.RD_PD in ('009', '204', '768') then SRD.RD_VALOR else 0.0 end as MEDIA_VL_13,
-        case when SRD.RD_PD in ('010', '205', '769') then SRD.RD_VALOR else 0.0 end as MEDIA_HR_13,
+        case when SRD.RD_PD in ('009', '204', '307', '768') then SRD.RD_VALOR else 0.0 end as MEDIA_VL_13,
+        case when SRD.RD_PD in ('010', '205', '306', '769') then SRD.RD_VALOR else 0.0 end as MEDIA_HR_13,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
