@@ -7,10 +7,23 @@ select
 	ST9.T9_SITBEM,
     ST9.T9_CODESTO,
     ST9.T9_LOCPAD,
-    
     ST9.T9_STATUS,
     trim(TQY.TQY_DESTAT) as STATUS_PNEU,
 
+    trim(STJ.TJ_CCUSTO) as CC,
+    trim(STJ.TJ_YITMCT) as ATIVIDADE,
+
+    case STJ.TJ_TERMINO when 'S' then 'SIM' when 'N' then 'NÃO' end as TERMINO,
+    case STJ.TJ_SITUACA 
+        when 'C' then upper('Cancelado')
+        when 'L' then upper('Liberado')
+        when 'P' then upper('Pendente')
+        else 'OUTROS'
+    end as SITUACAO_OS,
+
+    trim(upper(STJ.TJ_USUAFIM)) as USR_FIM,
+    trim(upper(STJ.TJ_USUARIO)) as USR_INI,
+    
     TR7.TR7_LOTE,
     TR7.TR7_SERVIC,
     TR7.TR7_NFE,
@@ -19,7 +32,6 @@ select
     TR7.TR7_LOJA,
     trim(SA2.A2_NOME) as RAZAO_SOCIAL,
     trim(SA2.A2_NREDUZ) as NOME_FANTASIA,
-    
     TR8.TR8_ORDEM,
     trim(TR8.TR8_MOTIVO) as TR8_MOTIVO,
     trim(ST8.T8_NOME) as MOTIVO,
@@ -35,7 +47,7 @@ select
     trim(SC1.C1_OBS) as OBS_SC,
     SC1.C1_USER,
     SC1.C1_CODCOMP,
-    SC1.C1_SOLICIT,
+    trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
     
     SC7.C7_NUM as NUM_PC,
     convert(date, SC7.C7_EMISSAO, 103) as DATA_PC,
@@ -81,6 +93,10 @@ from TQS010 TQS (nolock)
                 and SA2.A2_COD = TR7.TR7_FORNEC
                 and SA2.A2_LOJA = TR7.TR7_LOJA
         
+        left join STJ010 STJ (nolock)
+            on STJ.TJ_FILIAL = TR8.TR8_FILIAL
+            and STJ.TJ_ORDEM = TR8.TR8_ORDEM
+            and STJ.TJ_PLANO = TR8.TR8_PLANO
         left join ST8010 ST8 (nolock)
             on ST8.D_E_L_E_T_ = ''
             and ST8.T8_CODOCOR = TR8.TR8_MOTIVO
