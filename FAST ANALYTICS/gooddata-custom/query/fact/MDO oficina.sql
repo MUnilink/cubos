@@ -4,17 +4,16 @@ select
     trim(ST1.T1_CCUSTO) as CC_FUNC,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
     cast(ST1.T1_DTFIMDI as date) as FIM_VINC,
-    concat(SH7.H7_CODIGO, ' - ', SH7.H7_DESCRI) as TURNO_FUNC,
+    SH7.H7_CODIGO as TURNO_FUNC,
     concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(trim(RCM010.RCM_DESCRI)) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
     cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
-    cast(SR8.R8_DATA as date) as DATA_AFASTA,
-    cast(SPF.DATA_TUR as date) as DATA_TUR,
+    SR8.R8_DATA as DATA_AFASTA,
+    SPF.DATA_TUR,
     SPF.TURNO_ANT,
     SPF.TURNO_PRO,
     SPF.CARGA_HANT,
     SPF.CARGA_HPRO,
     
-    SPF.qtd_SPF,
     isnull
     (
         SPF.CARGA_HPRO,
@@ -53,7 +52,6 @@ from ST1010 ST1 (nolock)
 		on SRA.D_E_L_E_T_ = ''
 		and SR8.R8_MAT = SRA.RA_MAT
 		and SR8.R8_FILIAL = SRA.RA_FILIAL
-        and SR8.R8_DATA between '20200101' and '20261231'
 
         left join
         (
@@ -107,3 +105,4 @@ from ST1010 ST1 (nolock)
             and SPF.MATRICULA = ST1.T1_CODFUNC
 where
 		ST1.D_E_L_E_T_ = ''
+    and SR8.R8_DATA between <<START_DATE>> AND <<FINAL_DATE>>
