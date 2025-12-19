@@ -55,6 +55,7 @@
         case when SRC.RC_PD in ('208', '772') then SRC.RC_VALOR else 0.0 end as ADRISCO_MATER_13,
         case when SRC.RC_PD in ('009', '204', '307', '768') then SRC.RC_VALOR else 0.0 end as MEDIA_VL_13,
         case when SRC.RC_PD in ('010', '205', '306', '769') then SRC.RC_VALOR else 0.0 end as MEDIA_HR_13,
+        case when SRC.RC_PD in ('35A') then SRC.RC_VALOR else 0.0 end as VLEX_TEMPOCASA,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -154,6 +155,7 @@ union
         case when SRD.RD_PD in ('208', '772') then SRD.RD_VALOR else 0.0 end as ADRISCO_MATER_13,
         case when SRD.RD_PD in ('009', '204', '307', '768') then SRD.RD_VALOR else 0.0 end as MEDIA_VL_13,
         case when SRD.RD_PD in ('010', '205', '306', '769') then SRD.RD_VALOR else 0.0 end as MEDIA_HR_13,
+        case when SRD.RD_PD in ('35A') then SRD.RD_VALOR else 0.0 end as VLEX_TEMPOCASA,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
