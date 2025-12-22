@@ -14,6 +14,9 @@ select
     SPF.CARGA_HANT,
     SPF.CARGA_HPRO,
     
+    cast(STL.QTD_APONT as numeric(15, 2)) as QTD_APONT,
+    cast(STL.DATA_APONT as date) as DATA_APONT,
+    
     SPF.qtd_SPF,
     isnull
     (
@@ -30,13 +33,15 @@ select
                 and SPF010.PF_FILIAL = ST1.T1_FILIAL
                 and SPF010.PF_MAT = ST1.T1_CODFUNC
         )
-    ) as HORAS_PRO
+    ) as HORAS_PRO,
+
+    /*, RM */
 
 from ST1010 ST1 (nolock)
     left join SH7010 SH7 (nolock)
         on SH7.D_E_L_E_T_ = ''
         and SH7.H7_CODIGO = ST1.T1_TURNO
-    left join SRA010 SRA (nolock)
+    inner join SRA010 SRA (nolock)
         on SRA.D_E_L_E_T_ = ''
         and SRA.RA_FILIAL = ST1.T1_FILIAL
         and SRA.RA_MAT = ST1.T1_CODFUNC
@@ -105,5 +110,24 @@ from ST1010 ST1 (nolock)
         ) SPF
             on SPF.FILIAL = ST1.T1_FILIAL
             and SPF.MATRICULA = ST1.T1_CODFUNC
+
+    left join
+    (
+        select
+            STL010.TL_QUANTID as QTD_APONT,
+            STL010.TL_DTINICI as DATA_APONT,
+            trim(STL010.TL_FILIAL) as FILIAL,
+            trim(STL010.TL_CODIGO) as CODFUNC
+        from STL010 (nolock)
+        where
+                cast(trim(STL010.TL_SEQRELA) as int) != 0
+            and STL010.D_E_L_E_T_ = ''
+            and STL010.TL_TIPOREG = 'M'
+            and STL010.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
+    ) STL
+        on (STL.DATA_APONT <= ST1.T1_DTFIMDI or ST1.T1_DTFIMDI = '')
+        and STL.FILIAL = ST1.T1_FILIAL
+        and STL.CODFUNC = ST1.T1_CODFUNC
+        and STL.DATA_APONT not between SR8.R8_DATA and dateadd(day, SR8.R8_DURACAO, SR8.R8_DATA)
 where
 		ST1.D_E_L_E_T_ = ''
