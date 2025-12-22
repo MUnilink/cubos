@@ -8,7 +8,7 @@ select
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
 	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
-    case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+    SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	trim(CTT.CTT_CUSTO) as CC,
 	trim(CTT.CTT_DESC01) as CCUSTO,
@@ -44,7 +44,8 @@ select
     cast(SRG.RG_DTGERAR as date) as DT_GERACAOF,
     cast(SRG.RG_DTPROAV as date) as DT_PROJAVIS,
     
-    SRG.RG_TIPORES,
+    concat(trim(SRG.RG_TIPORES), ' - ', (select trim(substring(RCC010.RCC_CONTEU, 2, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRG.RG_TIPORES))) as TIPO_RESCISAO,
+    trim(SRG.RG_OBS) as OBS,
     SRG.RG_DAVCUM as DIAS_REC_CUMPRIDO,
     SRG.RG_DAVIND as DIAS_REC_INDENIZADO,
     SRG.RG_DAVISO as DIAS_REC,
@@ -52,9 +53,8 @@ select
     SRG.RG_DFERVEN as DIAS_FER_VENC,
     SRG.RG_DFERAVI as DIAS_FER_AVIS,
     
-    trim(SRG.RG_OBS) as OBS,
     SRR.RR_VALOR as VALOR,
-    SRR.RR_ROTEIR as ROTEIRO,
+    concat(trim(SRR.RR_ROTEIR), ' - ', (select trim(SRY010.RY_DESC) from SRY010 where SRY010.D_E_L_E_T_ = '' and SRY010.RY_CALCULO = SRR.RR_ROTEIR)) as ROTEIRO,
     SRR.RR_HORAS as HORAS,
     SRR.RR_PERIODO as PERIODO,
     SRR.RR_SEQ as SEQ
