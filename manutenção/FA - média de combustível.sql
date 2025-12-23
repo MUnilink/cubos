@@ -6,7 +6,7 @@ select
 	ZD3.HODOM_ATUAL as ZD3_HODOM,
     ZD3.KMRD as ZD3_KMRD,
     ZD3.KML as ZD3_KML,
-	ZD3.VALOR_TOTAL as CUSTO_ABA,
+    ZD3.VALOR_TOTAL as CUSTO_ABA,
 	trim(ZD3.DATA_HORA) as ZD3_DATA,
 
 	trim(TQI.TQI_TANQUE) as TQI_TANQUE,
@@ -16,18 +16,26 @@ select
 	trim(ZD3.TQN_YITMCT) as TQN_YITMCT,
 
     /* RM */
-    ZD3.TQN_FILIAL as ZD3_FILIAL,
-    ZD3.TQN_PLACA as ZD3_PLACA,
+    trim(TQR.TQR_DESMOD) as MODELO,
+    trim(ST9.T9_CODFAMI) as FAMILIA,
+    cast(ZD3.DATA_HORA as date) as DATA,
+    convert(datetime, ZD3.DATA_HORA, 113) as DATA_HORA,
+    left(ZD3.DATA_HORA, 6) as PERIODO,
+    
+    case
+        when round(ZD3.QTD_LITROS, 1) != 0.0 and trim(ST9.T9_CODFAMI) in ('VP', 'VM') then cast(ZD3.KMRD/ZD3.QTD_LITROS as numeric(15, 2))
+        when round(ZD3.KMRD, 1) != 0.0 and trim(ST9.T9_CODFAMI) not in ('VP', 'VM') then cast(ZD3.QTD_LITROS/ZD3.KMRD as numeric(15, 2))
+        else 0.0
+    end as MEDIA,
+    
+    ZD3.TQN_FILIAL as FILIAL,
+    ZD3.TQN_PLACA as PLACA,
     ZD3.TQN_FROTA as ZD3_VEICUL,
     ZD3.TQN_TANQUE as ZD3_TANQUE,
-    ZD3.TQN_CODCOM as ZD3_COMB,
+    concat(ZD3.TQN_CODCOM, ' - ', TQM.TQM_NOMCOM) as ZD3_COMB,
     ZD3.VALOR_UNIT as ZD3_VLUNI,
-    ZD3.VALOR_TOTAL as ZD3_TOTAL,
-    trim(ST9.T9_CODFAMI) as FAMILIA,
-    convert(datetime, ZD3.DATA_HORA, 113) as DATA,
     ZD3.TQN_YTIPO as TIPO,
-    ZD3.ULT_HODOM_COMP as CONT_ANT,
-    left(ZD3.DATA_HORA, 6) as PERIODO
+    ZD3.ULT_HODOM_COMP as CONT_ANT
 from
     (
         select *, case when KMRD > 0 and QTD_LITROS > 0 then ROUND(KMRD/QTD_LITROS, 2) else 0 end as KML
@@ -126,10 +134,15 @@ from
                     ) A
                 ) B
             ) C
+        where left(DATA_HORA, 8) > '20201231'
     ) ZD3
 	left join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.TQN_FROTA
+
+        left join TQR010 TQR (nolock)
+			on 	TQR.D_E_L_E_T_ = ''
+			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
 
 	left join TQI010 TQI
 		on TQI.D_E_L_E_T_ = ''
