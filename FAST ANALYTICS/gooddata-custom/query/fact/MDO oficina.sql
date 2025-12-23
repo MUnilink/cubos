@@ -5,14 +5,9 @@ select
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
     ST1.T1_DTFIMDI as FIM_VINC,
     SH7.H7_CODIGO as TURNO_FUNC,
-    concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
+    (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
     cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
     SR8.R8_DATA as DATA_AFASTA,
-    SPF.DATA_TUR,
-    SPF.TURNO_ANT,
-    SPF.TURNO_PRO,
-    SPF.CARGA_HANT,
-    SPF.CARGA_HPRO,
     
     isnull
     (
@@ -35,10 +30,6 @@ from ST1010 ST1 (nolock)
     left join SH7010 SH7 (nolock)
         on SH7.D_E_L_E_T_ = ''
         and SH7.H7_CODIGO = ST1.T1_TURNO
-    left join SRA010 SRA (nolock)
-        on SRA.D_E_L_E_T_ = ''
-        and SRA.RA_FILIAL = ST1.T1_FILIAL
-        and SRA.RA_MAT = ST1.T1_CODFUNC
 
     left join ST2010 ST2 (nolock)
         on ST2.D_E_L_E_T_ = ''
@@ -47,11 +38,16 @@ from ST1010 ST1 (nolock)
         left join ST0010 ST0 (nolock)
             on ST0.D_E_L_E_T_ = ''
             and ST0.T0_ESPECIA = ST2.T2_ESPECIA
-
-    left join SR8010 SR8 (nolock)
-		on SRA.D_E_L_E_T_ = ''
-		and SR8.R8_MAT = SRA.RA_MAT
-		and SR8.R8_FILIAL = SRA.RA_FILIAL
+    
+    inner join SRA010 SRA (nolock)
+        on SRA.D_E_L_E_T_ = ''
+        and SRA.RA_FILIAL = ST1.T1_FILIAL
+        and SRA.RA_MAT = ST1.T1_CODFUNC
+        
+        left join SR8010 SR8 (nolock)
+            on SR8.D_E_L_E_T_ = ''
+            and SR8.R8_FILIAL = SRA.RA_FILIAL
+            and SR8.R8_MAT = SRA.RA_MAT
 
         left join
         (
@@ -101,8 +97,8 @@ from ST1010 ST1 (nolock)
                     SPF010.D_E_L_E_T_ = ''
                 and SPF010.PF_TURNODE != SPF010.PF_TURNOPA
         ) SPF
-            on SPF.FILIAL = ST1.T1_FILIAL
-            and SPF.MATRICULA = ST1.T1_CODFUNC
+            on SPF.FILIAL = SRA.RA_FILIAL
+            and SPF.MATRICULA = SRA.RA_MAT
 where
 		ST1.D_E_L_E_T_ = ''
     and SR8.R8_DATA between <<START_DATE>> AND <<FINAL_DATE>>
