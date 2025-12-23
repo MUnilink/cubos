@@ -43,10 +43,11 @@ from SC5010 SC5
         and SC6.D_E_L_E_T_ = ' '
 
         left join ZC2010 ZC2 (nolock)
-            on ZC2.D_E_L_E_T_ = ''
+            on ZC2.ZC2_TIPO = '1'
             and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
             and ZC2.ZC2_NUM = SC6.C6_YOS
             and ZC2.ZC2_ITEM = SC6.C6_YITOS
+            and ZC2.D_E_L_E_T_ = ''
 
             left join ZC1010 ZC1
                 on ZC1.D_E_L_E_T_ = ''
