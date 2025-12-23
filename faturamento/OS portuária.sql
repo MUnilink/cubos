@@ -1,4 +1,5 @@
 select
+    case when SUBSTRING(ZC1.ZC1_DTINI, 1, 6) <= left(ZC2.ZC2_DATA, 6) AND (SUBSTRING(ZC1.ZC1_DTFIM, 1, 6) >= left(ZC2.ZC2_DATA, 6) OR ZC1.ZC1_DTFIM = ' ') then 'apontamento durante OS aberta' else 'apontamento fora das datas OS' end as APONT_COMPET, /* se ini OS antes do apontamento e fim OS pós apontamento ou fim OS vazio */
     ZC1.ZC1_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
@@ -146,11 +147,11 @@ select
     
     left(ZC2.ZC2_COMPET, 6) as PERIODO,
     left(ZC2.ZC2_DATA, 6) as PERIODO_ITEM,
-    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then left(nullif(ZC2.ZC2_DTFIM, ''), 6) else left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_COMPET, ''), nullif(ZC2.ZC2_DATA, '')), 6) end as PERIODO_APONT,
+    case when cast(ZC2.ZC2_TIPO as int) in ('2', '3') then left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_DTINI, '')), 6) else left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_COMPET, ''), nullif(ZC2.ZC2_DATA, '')), 6) end as PERIODO_APONT,
     
     convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
     convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
-    convert(date, ZC2.ZC2_DTFIM, 103) as DATA_ITEM,
+    convert(date, ZC2.ZC2_DATA, 103) as DATA_ITEM,
     convert(datetime, case isdate(ZC2.ZC2_HRINI) when 1 then concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) else concat(ZC2.ZC2_DTINI, ' ', '00:00') end, 113) as DTINI_APONT,
     convert(datetime, case isdate(ZC2.ZC2_HRFIM) when 1 then concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) else concat(ZC2.ZC2_DTFIM, ' ', '00:00') end, 113) as DTFIM_APONT,
     case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_HRFIM) = 2 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
@@ -171,9 +172,10 @@ select
         when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(ZC2.ZC2_HRFIM) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.999 then 'mais que 13 h apontadas'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM)) < 0.0 then 'data/hora ini maior que data/hora fim'
-        when ZC2.ZC2_ITEM != lag(ZC2.ITEM, 1, '000') over(partition by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM order by ZC2.ZC2_FILIAL, ZC2.ZC2_NUM) and concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) = concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) 'item duplicado'
         else 'item OK'
     end as STATUS_APONT,
+
+    dense_rank() over(partition by ZC1.ZC1_FILIAL, ZC1.ZC1_NUM, ZC2.ZC2_DTINI, ZC2.ZC2_DTFIM order by ZC2.ZC2_DTINI, ZC2.ZC2_DTFIM) as TURNO_OS,
 
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
     case when (select SYS_USR.USR_MSBLQL from SYS_USR where USR_CODIGO = ZC2.ZC2_NMUSU and SYS_USR.D_E_L_E_T_ = '') = 2 then 'S' else 'N' end as USR_ATIVO
@@ -183,7 +185,6 @@ from ZC2010 ZC2 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
         and ZC1.ZC1_NUM = ZC2.ZC2_NUM
-        and SUBSTRING(ZC1.ZC1_DTINI, 1, 6) <= left(ZC2.ZC2_DATA, 6) AND (SUBSTRING(ZC1.ZC1_DTFIM, 1, 6) >= left(ZC2.ZC2_DATA, 6) OR ZC1.ZC1_DTFIM = ' ')
         
         left join SA1010 DEV (nolock)
             on DEV.D_E_L_E_T_ = ''
@@ -236,6 +237,6 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
-        cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
-    and ZC1.ZC1_EMISSA, 1, 6) > 202312
+        (ZC2.ZC2_COMPET > '20241231' or ZC2.ZC2_COMPET = '')
+    and cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
     and ZC2.D_E_L_E_T_ = ''
