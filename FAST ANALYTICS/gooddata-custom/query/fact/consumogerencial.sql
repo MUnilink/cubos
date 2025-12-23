@@ -13,7 +13,7 @@ select
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
 	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
-	ZD3.TQN_YITMCT as TQN_YITMCT
+	trim(ZD3.TQN_YITMCT) as TQN_YITMCT
 from
     (
         select *, case when KMRD > 0 and QTD_LITROS > 0 then ROUND(KMRD/QTD_LITROS, 2) else 0 end as KML
