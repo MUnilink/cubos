@@ -1,12 +1,12 @@
-select
+select distinct
     trim(ST1.T1_FILIAL) as FILIAL,
     trim(ST1.T1_CODFUNC) as MATRICULA,
     trim(ST1.T1_CCUSTO) as CC_FUNC,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
     ST1.T1_DTFIMDI as FIM_VINC,
-    SH7.H7_CODIGO as TURNO_FUNC,
+    concat(SH7.H7_CODIGO, ' - ', trim(SH7.H7_DESCRI)) as TURNO_FUNC,
     (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
-    cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
+    cast(SR8.R8_DURACAO * (case when SH7.H7_CODIGO in ('001', '015') then 7.333333 else 12.0 end) as numeric(15, 2)) as DURACAO_AFASTA,
     SR8.R8_DATA as DATA_AFASTA,
     
     isnull
@@ -48,6 +48,7 @@ from ST1010 ST1 (nolock)
             on SR8.D_E_L_E_T_ = ''
             and SR8.R8_FILIAL = SRA.RA_FILIAL
             and SR8.R8_MAT = SRA.RA_MAT
+            and SR8.R8_DATA between <<START_DATE>> AND <<FINAL_DATE>>
 
         left join
         (
@@ -101,4 +102,3 @@ from ST1010 ST1 (nolock)
             and SPF.MATRICULA = SRA.RA_MAT
 where
 		ST1.D_E_L_E_T_ = ''
-    and SR8.R8_DATA between <<START_DATE>> AND <<FINAL_DATE>>
