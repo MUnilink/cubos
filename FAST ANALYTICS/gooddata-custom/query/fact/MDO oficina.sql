@@ -6,10 +6,10 @@ select distinct
     ST1.T1_DTFIMDI as FIM_VINC,
     concat(SH7.H7_CODIGO, ' - ', trim(SH7.H7_DESCRI)) as TURNO_FUNC,
     (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
-    cast(SR8.R8_DURACAO * (case when SH7.H7_CODIGO in ('001', '015') then 7.333333 else 12.0 end) as numeric(15, 2)) as DURACAO_AFASTA,
-    SR8.R8_DATA as DATA_AFASTA,
+    cast(isnull(SR8.R8_DURACAO * (case when SH7.H7_CODIGO in ('001', '015') then 7.333333 else 12.0 end), 0) as numeric(15, 2)) as DURACAO_AFASTA,
+    isnull(SR8.R8_DATA, '20000101') as DATA_AFASTA,
     
-    isnull
+    coalesce
     (
         SPF.CARGA_HPRO,
         (
@@ -23,7 +23,8 @@ select distinct
                 and (left(SPF010.PF_DATA, 6) != left(SPF.DATA_TUR, 6) or SPF.DATA_TUR is null)
                 and SPF010.PF_FILIAL = ST1.T1_FILIAL
                 and SPF010.PF_MAT = ST1.T1_CODFUNC
-        )
+        ),
+        0.0
     ) as HORAS_PRO
 
 from ST1010 ST1 (nolock)
