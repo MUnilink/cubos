@@ -7,7 +7,7 @@ select distinct
     concat(SH7.H7_CODIGO, ' - ', SH7.H7_DESCRI) as TURNO_FUNC,
     concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
     cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
-    cast(SR8.R8_DATA as date) as DATA_AFASTA,
+    cast(SR8.SR8_INI as date) as DATA_AFASTA,
     cast(isnull(SPF.DATA_TUR, max() over(partition by order by )) as date) as DATA_TURNO,
 
     coalesce
@@ -29,6 +29,7 @@ select distinct
     ) as HORAS_PRO,
 
     /* RM */
+    STL.*,SR8.*,
     SPF.CARGA_HANT,
     SPF.CARGA_HPRO,
     SPF.qtd_SPF as qtd
@@ -50,19 +51,36 @@ from ST1010 ST1 (nolock)
         on SRA.D_E_L_E_T_ = ''
         and SRA.RA_FILIAL = ST1.T1_FILIAL
         and SRA.RA_MAT = ST1.T1_CODFUNC
-
-        left join STL010 STL (nolock)
-            on STL.D_E_L_E_T_ = ''
-            and STL.TL_TIPOREG = 'M'
-            and STL.TL_SEQRELA != '0'
-            and STL.TL_FILIAL = ST1.T1_FILIAL
-            and STL.TL_CODIGO = ST1.T1_CODFUNC
-            
-            left join SR8010 SR8 (nolock)
-                on SR8.D_E_L_E_T_ = ''
-                and SR8.R8_FILIAL = SRA.RA_FILIAL
-                and SR8.R8_MAT = SRA.RA_MAT
-                and SR8.R8_DATA  STL.TL_DTINICI
+        
+    left join
+    (
+        select distinct
+            STL010.TL_FILIAL,
+            STL010.TL_CODIGO,
+            concat(left(STL010.TL_DTINICI, 6), '01') as STL_PERIODO
+        from STL010 (nolock)
+        where
+                STL010.D_E_L_E_T_ = ''
+            and STL010.TL_TIPOREG = 'M'
+            and STL010.TL_SEQRELA != '0'
+    ) STL
+        on STL.TL_FILIAL = ST1.T1_FILIAL
+        and STL.TL_CODIGO = ST1.T1_CODFUNC
+        
+        full join
+        (
+            select
+                SR8010.R8_FILIAL,
+                SR8010.R8_MAT,
+                SR8010.R8_TIPOAFA,
+                SR8010.R8_DURACAO,
+                convert(date, SR8010.R8_DATA, 103) as SR8_INI,
+                convert(date, dateadd(day, SR8010.R8_DURACAO, SR8010.R8_DATA), 103) as SR8_FIM
+            from SR8010 (nolock)
+            where SR8010.D_E_L_E_T_ = ''
+        ) SR8
+            on SR8.R8_FILIAL = STL.TL_FILIAL
+            and SR8.R8_MAT = STL.TL_CODIGO
 
         left join
         (
@@ -116,4 +134,5 @@ from ST1010 ST1 (nolock)
             and SPF.MATRICULA = SRA.RA_MAT
 where
 		ST1.D_E_L_E_T_ = ''
-    and SR8.R8_DATA > '20250101'
+    and (SR8.SR8_INI >= '20251001' or SR8.SR8_INI is null)
+    and (STL.STL_PERIODO >= '20251001' or STL.STL_PERIODO is null)
