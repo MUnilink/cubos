@@ -1,4 +1,4 @@
-select
+select distinct
     trim(ST1.T1_FILIAL) as FILIAL,
     trim(ST1.T1_CODFUNC) as MATRICULA,
     trim(ST1.T1_CCUSTO) as CC_FUNC,
@@ -8,8 +8,9 @@ select
     concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
     cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
     cast(SR8.R8_DATA as date) as DATA_AFASTA,
+    cast(isnull(SPF.DATA_TUR, max() over(partition by order by )) as date) as DATA_TURNO,
 
-    isnull
+    coalesce
     (
         SPF.CARGA_HPRO,
         (
@@ -23,10 +24,14 @@ select
                 and (left(SPF010.PF_DATA, 6) != left(SPF.DATA_TUR, 6) or SPF.DATA_TUR is null)
                 and SPF010.PF_FILIAL = ST1.T1_FILIAL
                 and SPF010.PF_MAT = ST1.T1_CODFUNC
-        )
-    ) as HORAS_PRO
+        ),
+        0.0
+    ) as HORAS_PRO,
 
-    /*, RM */
+    /* RM */
+    SPF.CARGA_HANT,
+    SPF.CARGA_HPRO,
+    SPF.qtd_SPF as qtd
 
 from ST1010 ST1 (nolock)
     left join SH7010 SH7 (nolock)
@@ -45,11 +50,19 @@ from ST1010 ST1 (nolock)
         on SRA.D_E_L_E_T_ = ''
         and SRA.RA_FILIAL = ST1.T1_FILIAL
         and SRA.RA_MAT = ST1.T1_CODFUNC
-        
-        left join SR8010 SR8 (nolock)
-            on SR8.D_E_L_E_T_ = ''
-            and SR8.R8_FILIAL = SRA.RA_FILIAL
-            and SR8.R8_MAT = SRA.RA_MAT
+
+        left join STL010 STL (nolock)
+            on STL.D_E_L_E_T_ = ''
+            and STL.TL_TIPOREG = 'M'
+            and STL.TL_SEQRELA != '0'
+            and STL.TL_FILIAL = ST1.T1_FILIAL
+            and STL.TL_CODIGO = ST1.T1_CODFUNC
+            
+            left join SR8010 SR8 (nolock)
+                on SR8.D_E_L_E_T_ = ''
+                and SR8.R8_FILIAL = SRA.RA_FILIAL
+                and SR8.R8_MAT = SRA.RA_MAT
+                and SR8.R8_DATA  STL.TL_DTINICI
 
         left join
         (
