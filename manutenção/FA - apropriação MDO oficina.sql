@@ -8,7 +8,6 @@ select distinct
     concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
     cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
     cast(SR8.SR8_INI as date) as DATA_AFASTA,
-    cast(SPF.DATA_TUR as date) as DATA_TURNO,
 
     coalesce
     (
@@ -30,6 +29,7 @@ select distinct
 
     /* RM */
     SR8.*,
+    cast(SPF.DATA_TUR as date) as DATA_TURNO,
     STL.STL_PERIODO,
     SPF.qtd_SPF as qtd
 
@@ -57,6 +57,7 @@ from ST1010 ST1 (nolock)
             STL010.TL_FILIAL,
             STL010.TL_CODIGO,
             STL010.TL_DTINICI,
+            eomonth(STL010.TL_DTINICI) as STL_DATA,
             concat(left(STL010.TL_DTINICI, 6), '01') as STL_PERIODO
         from STL010 (nolock)
         where

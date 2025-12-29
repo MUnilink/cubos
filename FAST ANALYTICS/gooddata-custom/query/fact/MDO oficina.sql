@@ -7,7 +7,7 @@ select distinct
     concat(SH7.H7_CODIGO, ' - ', trim(SH7.H7_DESCRI)) as TURNO_FUNC,
     (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
     cast(isnull(SR8.R8_DURACAO * (case when SH7.H7_CODIGO in ('001', '015') then 7.333333 else 12.0 end), 0) as numeric(15, 2)) as DURACAO_AFASTA,
-    isnull(SR8.R8_DATA, '20000101') as DATA_AFASTA,
+    isnull(STL.STL_DATA, '20000101') as DATA_AFASTA,
     
     coalesce
     (
@@ -45,11 +45,40 @@ from ST1010 ST1 (nolock)
         and SRA.RA_FILIAL = ST1.T1_FILIAL
         and SRA.RA_MAT = ST1.T1_CODFUNC
         
-        left join SR8010 SR8 (nolock)
-            on SR8.D_E_L_E_T_ = ''
-            and SR8.R8_FILIAL = SRA.RA_FILIAL
-            and SR8.R8_MAT = SRA.RA_MAT
-            and SR8.R8_DATA between <<START_DATE>> AND <<FINAL_DATE>>
+    left join
+    (
+        select distinct
+            STL010.TL_FILIAL,
+            STL010.TL_CODIGO,
+            STL010.TL_DTINICI,
+            eomonth(STL010.TL_DTINICI) as STL_DATA,
+            concat(left(STL010.TL_DTINICI, 6), '01') as STL_PERIODO
+        from STL010 (nolock)
+        where
+                STL010.D_E_L_E_T_ = ''
+            and STL010.TL_TIPOREG = 'M'
+            and STL010.TL_SEQRELA != '0'
+    ) STL
+        on STL.TL_FILIAL = ST1.T1_FILIAL
+        and STL.TL_CODIGO = ST1.T1_CODFUNC
+        
+        full join
+        (
+            select
+                SR8010.R8_FILIAL,
+                SR8010.R8_MAT,
+                SR8010.R8_TIPOAFA,
+                SR8010.R8_DURACAO,
+                concat(left(SR8010.R8_DATA, 6), '01') as SR8_PERIODO,
+                convert(date, SR8010.R8_DATA, 103) as SR8_INI,
+                convert(date, dateadd(day, SR8010.R8_DURACAO, SR8010.R8_DATA), 103) as SR8_FIM
+            from SR8010 (nolock)
+            where SR8010.D_E_L_E_T_ = ''
+        ) SR8
+            on SR8.R8_FILIAL = STL.TL_FILIAL
+            and SR8.R8_MAT = STL.TL_CODIGO
+            and SR8.SR8_INI < STL.TL_DTINICI
+            and SR8.SR8_FIM > STL.TL_DTINICI
 
         left join
         (
