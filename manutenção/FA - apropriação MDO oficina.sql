@@ -6,8 +6,17 @@ select distinct
     ST1.T1_DTFIMDI as FIM_VINC,
     concat(SH7.H7_CODIGO, ' - ', SH7.H7_DESCRI) as TURNO_FUNC,
     concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(translate(lower(trim(RCM010.RCM_DESCRI)), 'áéíóúãõç', 'aeiouaoc')) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
-    cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO_AFASTA,
-    cast(SR8.SR8_INI as date) as DATA_AFASTA,
+    convert(date, SR8.SR8_INI, 112) as DT_AFAINI,
+    convert(date, SR8.SR8_FIM, 112) as DT_AFAFIM,
+    convert(date, STL.STL_INI, 112) as APONT_INI,
+    convert(date, STL.STL_FIM, 112) as APONT_FIM,
+
+    case
+        when SR8.SR8_INI < STL.STL_INI and SR8.SR8_FIM > STL.STL_FIM then datediff(day, STL.STL_INI, STL.STL_FIM)
+        when SR8.SR8_INI >= STL.STL_INI and SR8.SR8_FIM > STL.STL_FIM then datediff(day, SR8.SR8_INI, STL.STL_FIM)
+        when SR8.SR8_INI < STL.STL_INI and SR8.SR8_FIM <= STL.STL_FIM then datediff(day, STL.STL_INI, SR8.SR8_FIM)
+        else SR8.R8_DURACAO
+    end as DURACAO_AFASTA,
 
     coalesce
     (
@@ -56,9 +65,8 @@ from ST1010 ST1 (nolock)
         select distinct
             STL010.TL_FILIAL,
             STL010.TL_CODIGO,
-            STL010.TL_DTINICI,
-            eomonth(STL010.TL_DTINICI) as STL_DATA,
-            concat(left(STL010.TL_DTINICI, 6), '01') as STL_PERIODO
+            eomonth(STL010.TL_DTINICI) as STL_FIM,
+            concat(left(STL010.TL_DTINICI, 6), '01') as STL_INI
         from STL010 (nolock)
         where
                 STL010.D_E_L_E_T_ = ''
@@ -74,7 +82,7 @@ from ST1010 ST1 (nolock)
                 SR8010.R8_FILIAL,
                 SR8010.R8_MAT,
                 SR8010.R8_TIPOAFA,
-                SR8010.R8_DURACAO,
+                cast(SR8010.R8_DURACAO as numeric(15, 2)) as DIAS_AFA,
                 concat(left(SR8010.R8_DATA, 6), '01') as SR8_PERIODO,
                 convert(date, SR8010.R8_DATA, 103) as SR8_INI,
                 convert(date, dateadd(day, SR8010.R8_DURACAO, SR8010.R8_DATA), 103) as SR8_FIM
@@ -83,8 +91,6 @@ from ST1010 ST1 (nolock)
         ) SR8
             on SR8.R8_FILIAL = STL.TL_FILIAL
             and SR8.R8_MAT = STL.TL_CODIGO
-            and SR8.SR8_INI < STL.TL_DTINICI
-            and SR8.SR8_FIM > STL.TL_DTINICI
 
         left join
         (
