@@ -58,6 +58,7 @@ select
 
 	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
 	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE,
+	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
 
 	case SRA.RA_TPDEFFI 
 		when '0' then '0 - NENHUMA'
@@ -94,8 +95,7 @@ select
 		when '3' then '3 - NAO APLICAVEL'
 	else 'ANONIMIZADO' end as BRPDH,
 
-	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
-
+	concat(trim(SRA.RA_AFASFGT), ' - ', (select trim(substring(RCC010.RCC_CONTEU, 2, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRA.RA_AFASFGT))) as AFA_FGTS,
 	case when trim(SRA.RA_SITFOLH) = 'A' then 0 when SRA.RA_CODFUNC in ('664', '665', '556', '675', '686', '687', '715', '716', '732', '733', '735', '739', '740', '742', '746', '766', '769', '770', '771', '782', '786', '788', '802', '888', '847', '677', '886', '887', '859', '732', '872', '864', '733', '766', '371', '445', '842') then 0 else 1 end as QTD_EFETIVO,
 	case when SRA.RA_CODFUNC in ('664', '665') then 1 else 0 end as QTD_APRENDIZ,
 	case SRA.RA_DEFIFIS when 1 then 1 else 0 end as QTD_PCD,
