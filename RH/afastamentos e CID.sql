@@ -30,7 +30,7 @@ select
 	
 	trim(SR8.R8_CID) as CID,
 	TMR.TMR_DOENCA as DESCRICAO,
-	(select upper(trim(RCM010.RCM_DESCRI)) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA) as TIPO_AFASTA,
+	concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(trim(RCM010.RCM_DESCRI)) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
 	
 	trim(SR8.R8_NMMED) as EMITENTE,
 	trim(SR8.R8_CRMMED) as COD_EMITENTE,
@@ -39,7 +39,7 @@ select
 	cast(SR8.R8_DATA as date) as DATA,
 	cast(SR8.R8_DATAINI as date) as INI_AFASTAMENTO,
 	cast(SR8.R8_DATAFIM as date) as FIM_AFASTAMENTO,
-	SR8.R8_DURACAO as DURACAO,
+	cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO,
 	left(SR8.R8_PER, 6) as PERIODO
 
 from SR8010 SR8 (nolock)
