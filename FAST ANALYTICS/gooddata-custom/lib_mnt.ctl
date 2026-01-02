@@ -123,6 +123,8 @@ function date formatDate(string format) {
     } else {
     	if(isDate(format, "${DATE_PATTERN}", "${DATE_LOCALE}") == true)
         	data = str2date(format, "${DATE_PATTERN}", "${DATE_LOCALE}");
+        if(isDate(format, "${DATE_PATTERN2}", "${DATE_LOCALE}") == true)
+            data = str2date(format, "${DATE_PATTERN2}", "${DATE_LOCALE}");
         if ((data < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
             return null;
         } else {
