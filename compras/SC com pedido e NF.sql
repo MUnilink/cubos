@@ -2,8 +2,10 @@ select
 	trim(SC1.C1_FILIAL) as FILIAL,
 	trim(SB1.B1_COD) as PRODUTO,
 	trim(SB1.B1_DESC) as NOMEPRODUTO,
+	concat(trim(SB1.B1_COD), ' - ', trim(SB1.B1_DESC)) as PROD_NOME,
 	trim(SB1.B1_GRUPO) as GRUPO,
 	(select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO) as NOMEGRUPO,
+	concat(trim(SB1.B1_GRUPO), ' - ', (select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO)) as GRUPO_PROD,
 	trim(SB1.B1_UM) as UN,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
 	trim(CTT.CTT_DESC01) as CCUSTO,
@@ -219,7 +221,6 @@ from SC1010 SC1 (nolock)
 	left join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''
 		and STJ.TJ_FILIAL = SC1.C1_FILIAL
-		and concat(STJ.TJ_ORDEM, 'OS') = left(SC1.C1_OP, 8)
-		and STJ.TJ_SERVICO not in ('CONSEP', 'REFORP')
+		and STJ.TJ_ORDEM = concat(left(SC1.C1_OP, 8), 'OS')
 where 
 		SC1.D_E_L_E_T_ = ''
