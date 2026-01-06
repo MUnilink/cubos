@@ -3,7 +3,7 @@ select distinct
     left(ZE4.ZE4_DATAFI, 6) as PERIODO_VGA,
     case when isdate(concat(ZE4.ZE4_DATAIN, ' ', replace(ZE4.ZE4_HORAIN, ',', ':'))) = 1 then convert(datetime, concat(ZE4.ZE4_DATAIN, ' ', replace(ZE4.ZE4_HORAIN, ',', ':')), 113) else cast(ZE4.ZE4_DATAIN as date) end as DATA_INI,
     case when isdate(concat(ZE4.ZE4_DATAFI, ' ', replace(ZE4.ZE4_HORAFI, ',', ':'))) = 1 then convert(datetime, concat(ZE4.ZE4_DATAFI, ' ', replace(ZE4.ZE4_HORAFI, ',', ':')), 113) else cast(ZE4.ZE4_DATAFI as date) end as DATA_FIM,
-    cast(ZE4.ZE4_TOTHR as decimal(15, 2)) as VGA_HORAS,
+    case when ZE1.ZE1_TIPO = 16 or ZE1.ZE1_TIPO = 15 then 0.0 else cast(ZE4.ZE4_TOTHR as decimal(15, 2)) end as VGA_HORAS,
     
     concat
     (
