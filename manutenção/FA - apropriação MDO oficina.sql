@@ -31,16 +31,17 @@ select distinct
         SPF.CARGA_HPRO,
         (
             select avg(SR6010.R6_HRNORMA)
-            from SPF010
+            from SPF010 PF2
                 left join SR6010
                     on SR6010.D_E_L_E_T_ = ''
-                    and SR6010.R6_TURNO = SPF010.PF_TURNOPA
+                    and SR6010.R6_TURNO = PF2.PF_TURNOPA
             where
-                    SPF010.D_E_L_E_T_ = ''
-                and (left(SPF010.PF_DATA, 6) != left(SPF.DATA_TUR, 6) or SPF.DATA_TUR is null)
-                and SPF010.PF_FILIAL = ST1.T1_FILIAL
-                and SPF010.PF_MAT = ST1.T1_CODFUNC
+                    PF2.D_E_L_E_T_ = ''
+                and PF2.PF_FILIAL = ST1.T1_FILIAL
+                and PF2.PF_MAT = ST1.T1_CODFUNC
+                and PF2.PF_TURNOPA = (select top 1 last_value(SPF010.PF_TURNOPA) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_FILIAL, SPF010.PF_MAT, SPF010.PF_DATA) from SPF010 where SPF010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = PF2.PF_FILIAL and SPF010.PF_MAT = PF2.PF_MAT and SPF010.PF_DATA < PF2.PF_DATA)
         ),
+        case when SH7.H7_CODIGO in ('001', '015') then 220.0 else 180.0 end,
         0.0
     ) as HORAS_PRO,
 
@@ -165,3 +166,4 @@ where
 		ST1.D_E_L_E_T_ = ''
     and (SR8.SR8_INI >= '20240601' or SR8.SR8_INI is null)
     and (STL.STL_INI >= '20240601' or STL.STL_INI is null)
+    and st1.t1_codfunc in ('003382', '003711', '004145')

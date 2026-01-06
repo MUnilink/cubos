@@ -31,16 +31,17 @@ select distinct
         SPF.CARGA_HPRO,
         (
             select avg(SR6010.R6_HRNORMA)
-            from SPF010
+            from SPF010 PF2
                 left join SR6010
                     on SR6010.D_E_L_E_T_ = ''
-                    and SR6010.R6_TURNO = SPF010.PF_TURNOPA
+                    and SR6010.R6_TURNO = PF2.PF_TURNOPA
             where
-                    SPF010.D_E_L_E_T_ = ''
-                and (left(SPF010.PF_DATA, 6) != left(SPF.DATA_TUR, 6) or SPF.DATA_TUR is null)
-                and SPF010.PF_FILIAL = ST1.T1_FILIAL
-                and SPF010.PF_MAT = ST1.T1_CODFUNC
+                    PF2.D_E_L_E_T_ = ''
+                and PF2.PF_FILIAL = ST1.T1_FILIAL
+                and PF2.PF_MAT = ST1.T1_CODFUNC
+                and PF2.PF_TURNOPA = (select top 1 last_value(SPF010.PF_TURNOPA) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_FILIAL, SPF010.PF_MAT, SPF010.PF_DATA) from SPF010 where SPF010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = PF2.PF_FILIAL and SPF010.PF_MAT = PF2.PF_MAT and SPF010.PF_DATA < PF2.PF_DATA)
         ),
+        case when SH7.H7_CODIGO in ('001', '015') then 220.0 else 180.0 end,
         0.0
     ) as HORAS_PRO
 
@@ -77,7 +78,8 @@ from ST1010 ST1 (nolock)
             and STL010.TL_TIPOREG = 'M'
             and STL010.TL_SEQRELA != '0'
     ) STL
-        on STL.TL_FILIAL = ST1.T1_FILIAL
+        on STL.STL_PERIODO between <<START_DATE>> AND <<FINAL_DATE>>
+        and STL.TL_FILIAL = ST1.T1_FILIAL
         and STL.TL_CODIGO = ST1.T1_CODFUNC
         
         full join
@@ -94,7 +96,8 @@ from ST1010 ST1 (nolock)
             from SR8010 (nolock)
             where SR8010.D_E_L_E_T_ = ''
         ) SR8
-            on SR8.R8_FILIAL = STL.TL_FILIAL
+            on SR8.SR8_PERINI between <<START_DATE>> AND <<FINAL_DATE>>
+            and SR8.R8_FILIAL = STL.TL_FILIAL
             and SR8.R8_MAT = STL.TL_CODIGO
             and (SR8.SR8_INI between STL.STL_INI and STL.STL_FIM or SR8.SR8_FIM between STL.STL_INI and STL.STL_FIM)
 
@@ -148,7 +151,8 @@ from ST1010 ST1 (nolock)
                     SPF010.D_E_L_E_T_ = ''
                 and SPF010.PF_TURNODE != SPF010.PF_TURNOPA
         ) SPF
-            on SPF.FILIAL = ST1.T1_FILIAL
-            and SPF.MATRICULA = ST1.T1_CODFUNC
+            on SPF.FILIAL = STL.TL_FILIAL
+            and SPF.MATRICULA = STL.TL_CODIGO
+            and SPF.DATA_TUR between STL.STL_INI and STL.STL_FIM
 where
 		ST1.D_E_L_E_T_ = ''
