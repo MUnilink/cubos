@@ -32,7 +32,6 @@ select distinct
     cast(ZE1.ZE1_DATA as date) as VGA_DATA,
     left(ZE1.ZE1_COMPET, 6) as COMPETENCIA,
 
-    RAT_IMPR.*,
     case when ZE1.ZE1_TIPO in (15, 16) then cast(RAT_IMPR.PERC_RATEIO * ZE1.ZE1_TOTAL as numeric(15 ,2)) else 0.00 end as VALOR_IMPR,
     case when ZE1.ZE1_TIPO in (15, 16) then RAT_IMPR.TIPO else ZE1.ZE1_TIPO end as ID_TIPO,
     case when ZE1.ZE1_TIPO in (15, 16) then 0.0 else cast(ZE1.ZE1_TOTAL as numeric(15, 2)) end as VALOR_PROD,
