@@ -56,6 +56,13 @@ select
 	month(SRA.RA_NASC) as mes_ANIVERSARIO,
 	day(SRA.RA_NASC) as dia_ANIVERSARIO,
 
+	case SRA.RA_TPCONTR
+		when 1 then upper('Indeterminado')
+		when 2 then upper('Determinado')
+		when 3 then upper('Intermitente')
+		else 'outros'
+	end as TIPO_CONTRATO,
+
 	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
 	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE,
 	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
@@ -95,9 +102,13 @@ select
 		when '3' then '3 - NAO APLICAVEL'
 	else 'ANONIMIZADO' end as BRPDH,
 
-	concat(trim(SRA.RA_AFASFGT), ' - ', (select trim(substring(RCC010.RCC_CONTEU, 2, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRA.RA_AFASFGT))) as AFA_FGTS,
-	case when trim(SRA.RA_SITFOLH) = 'A' then 0 when SRA.RA_CODFUNC in ('664', '665', '556', '675', '686', '687', '715', '716', '732', '733', '735', '739', '740', '742', '746', '766', '769', '770', '771', '782', '786', '788', '802', '888', '847', '677', '886', '887', '859', '732', '872', '864', '733', '766', '371', '445', '842') then 0 else 1 end as QTD_EFETIVO,
-	case when SRA.RA_CODFUNC in ('664', '665') then 1 else 0 end as QTD_APRENDIZ,
+	concat(trim(SRA.RA_VIEMRAI), ' - ', (select upper(trim(SX5010.X5_DESCRI)) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_VIEMRAI and SX5010.X5_TABELA = '25')) as VINC_RAIS,
+	concat(trim(SRA.RA_CATEFD), ' - ', substring((select max(upper(trim(RCC010.RCC_CONTEU))) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S049' and left(RCC010.RCC_CONTEU, 3) = SRA.RA_CATEFD), 3, 250)) as CAT_ESOCIAL,
+	concat(trim(SRA.RA_AFASFGT), ' - ', substring((select max(upper(trim(RCC010.RCC_CONTEU))) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S046' and left(RCC010.RCC_CONTEU, 2) = SRA.RA_AFASFGT), 3, 200)) as AFA_FGTS,
+
+	case when SRA.RA_CATEFD in ('103', '901') or SRA.RA_CODFUNC in ('732', '929', '688', '926', '687', '590', '771', '914', '844', '928', '931', '677', '895', '766', '847', '855', '888', '886', '895', '390', '861', '862', '829', '860', '887', '864', '734') then 0 else 1 end as QTD_EFETIVO,
+	case when SRA.RA_CATEFD = '103' then 1 else 0 end as QTD_APRENDIZ,
+	case when SRA.RA_CATEFD = '901' then 1 else 0 end as QTD_ESTAGIAR,
 	case SRA.RA_DEFIFIS when 1 then 1 else 0 end as QTD_PCD,
 	1 as QTD_GERAL
 
