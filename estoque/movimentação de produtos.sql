@@ -30,10 +30,13 @@
         SD3.D3_TM as TM,
         SD3.D3_CF as CF,
         SD3.D3_DOC as DOC,
+        null as CLIFOR_COD,
+        null as CLIFOR_LOJA,
+        null as CLIFOR_DESC,
         SD3.D3_NUMSEQ as SEQ,
         SD3.D3_ESTORNO as ESTORNO,
-        SD3.D3_CC as CCUSTO,
-        SD3.D3_ITEMCTA as ATIVIDADE,
+        trim(SD3.D3_CC) as CCUSTO,
+        trim(SD3.D3_ITEMCTA) as ATIVIDADE,
         
         SD3.D3_CUSTO1 as CUSTO,
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_CUSTO1 else SD3.D3_CUSTO1 end as CUSTO_MOV,
@@ -87,10 +90,13 @@ union
         SD1.D1_TES as TM,
         SD1.D1_CF as CF,
         SD1.D1_DOC as DOC,
+        trim(SA2.A2_COD) as CLIFOR_COD,
+        trim(SA2.A2_LOJA) as CLIFOR_LOJA,
+        trim(SA2.A2_NOME) as CLIFOR_DESC,
         null as SEQ,
         null as ESTORNO,
-        SD1.D1_CC as CCUSTO,
-        SD1.D1_ITEMCTA as ATIVIDADE,
+        trim(SD1.D1_CC) as CCUSTO,
+        trim(SD1.D1_ITEMCTA) as ATIVIDADE,
         
         SD1.D1_CUSTO as CUSTO,
         SD1.D1_CUSTO as CUSTO_MOV,
@@ -109,6 +115,10 @@ union
             and SB2.B2_FILIAL = SD1.D1_FILIAL
             and SB2.B2_LOCAL = SD1.D1_LOCAL
             and SB2.B2_COD = SD1.D1_COD
+        left join SA2010 SA2 (nolock)
+            on SA2.D_E_L_E_T_= ''
+            and SA2.A2_COD = SD1.D1_FORNECE
+            and SA2.A2_LOJA = SD1.D1_LOJA
     where
             SD1.D_E_L_E_T_ = ''
 union
@@ -144,10 +154,13 @@ union
         SD2.D2_TES as TM,
         SD2.D2_CF as CF,
         SD2.D2_DOC as DOC,
+        trim(SA1.A1_COD) as CLIFOR_COD,
+        trim(SA1.A1_LOJA) as CLIFOR_LOJA,
+        trim(SA1.A1_NOME) as CLIFOR_DESC,
         null as SEQ,
         null as ESTORNO,
-        SD2.D2_CCUSTO as CCUSTO,
-        SD2.D2_ITEMCC as ATIVIDADE,
+        trim(SD2.D2_CCUSTO) as CCUSTO,
+        trim(SD2.D2_ITEMCC) as ATIVIDADE,
         
         SD2.D2_CUSTO1 as CUSTO,
         -1*SD2.D2_CUSTO1 as CUSTO_MOV,
@@ -166,5 +179,9 @@ union
             and SB2.B2_FILIAL = SD2.D2_FILIAL
             and SB2.B2_LOCAL = SD2.D2_LOCAL
             and SB2.B2_COD = SD2.D2_COD
+        left join SA1010 SA1 (nolock)
+            on SA1.D_E_L_E_T_= ''
+            and SA1.A1_COD = SD2.D2_CLIENTE
+            and SA1.A1_LOJA = SD2.D2_LOJA
     where
             SD2.D_E_L_E_T_ = ''
