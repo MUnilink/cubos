@@ -30,6 +30,8 @@ date ETL_MAXDATE = dateAdd(str2date("01/" + THIS_MONTH + "/" + THIS_YEAR, "dd/MM
 //===============================================//
 date data;
 date dataHora;
+date dataHora1;
+date dataHora2;
 string TipoPessoa;
 
 //===============================================//
@@ -121,7 +123,8 @@ function date formatDate(string format) {
     if ((format == null) or (trim(format) == "")) {
         return null;
     } else {
-        data = str2date(format, "${DATE_PATTERN}", "${DATE_LOCALE}");
+        if(isDate(format, "${DATE_PATTERN}", "${DATE_LOCALE}") == true)
+        	data = str2date(format, "${DATE_PATTERN}", "${DATE_LOCALE}");
         if ((data < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
             return null;
         } else {
@@ -140,8 +143,8 @@ function date formatDatetime(string format) {
         return null;
     } else
     {
-        if(isDate(format, concat("${DATETIME_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}") == true)
-            dataHora = str2date(format, concat("${DATETIME_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}");
+        if(isDate(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}") == true)
+            dataHora = str2date(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}");
             if ((dataHora < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
                 return null;
             } else {
@@ -155,24 +158,15 @@ function date formatDatetime(string format) {
 }
 
 //Função para calcular a diferença entre duas datas.
-    //valor1 - Valor da primeira data em String.
-    //valor2 - Valor da segunda data em String.
-function double diffDate(string valor1, string valor2) {
-    if (((valor1 == null) or (trim(valor1) == "")) or ((valor2 == null) or (trim(valor2) == ""))) {
+    //dataHora1 - Valor da primeira data em data.
+    //dataHora2 - Valor da segunda data em data.
+function double diffDate(date dataHora1, date dataHora2)
+{
+    if (dataHora1 == null or dataHora2 == null or dataHora1 < GOODDATA_MINDATE or dataHora1 > GOODDATA_MAXDATE or dataHora2 < GOODDATA_MINDATE or dataHora2 > GOODDATA_MAXDATE)
         return 0.0;
-    } else {
-        if(isDate(valor1, "yyyyMMdd HH:mm:ss") == false or isDate(valor2, "yyyyMMdd HH:mm:ss") == false)
-            return 0.0;
-        else {
-            date data1 = str2date(valor1, "yyyyMMdd HH:mm:ss", "${DATE_LOCALE}");
-            date data2 = str2date(valor2, "yyyyMMdd HH:mm:ss", "${DATE_LOCALE}");
-            
-            if (((data1 < GOODDATA_MINDATE) || (data1 > GOODDATA_MAXDATE)) or ((data2 < GOODDATA_MINDATE) || (data2 > GOODDATA_MAXDATE))) {
-                return 0.0;
-            } else {
-                return decimal2double(dateDiff(data1,data2,minute));
-            }
-        }
+    else
+    {
+        return abs(decimal2double(dateDiff(dataHora2, dataHora1, minute)));
     }
 }
 
