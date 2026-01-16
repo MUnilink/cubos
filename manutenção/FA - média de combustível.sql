@@ -121,14 +121,20 @@ from
                                     and TQN2.TQN_DTABAS+TQN2.TQN_HRABAS < TQN.TQN_DTABAS+TQN.TQN_HRABAS
                                 order by TQN2.TQN_DTABAS desc) as ULT_COMPLETO,
 
-                            (select TOP 1 TQN2.TQN_DTABAS+TQN2.TQN_HRABAS
-                                from TQN010 TQN2
-                                where TQN2.TQN_PLACA = TQN.TQN_PLACA
-                                    and TQN2.TQN_YTIPO = 'P'
-                                    and TQN2.TQN_CODCOM = TQN.TQN_CODCOM
-                                    and TQN2.D_E_L_E_T_= ' '
-                                    and TQN2.TQN_DTABAS+TQN2.TQN_HRABAS < TQN.TQN_DTABAS+TQN.TQN_HRABAS
-                                order by TQN2.TQN_DTABAS) as ULT_PARC
+                            isnull
+                            (
+                                (
+                                    select TOP 1 TQN2.TQN_DTABAS+TQN2.TQN_HRABAS
+                                    from TQN010 TQN2
+                                    where TQN2.TQN_PLACA = TQN.TQN_PLACA
+                                        and TQN2.TQN_YTIPO = 'P'
+                                        and TQN2.TQN_CODCOM = TQN.TQN_CODCOM
+                                        and TQN2.D_E_L_E_T_= ' '
+                                        and TQN2.TQN_DTABAS+TQN2.TQN_HRABAS < TQN.TQN_DTABAS+TQN.TQN_HRABAS
+                                    order by TQN2.TQN_DTABAS
+                                )
+                                , '2000010100:00'
+                            ) as ULT_PARC
                         from TQN010 TQN
                         where TQN.D_E_L_E_T_ = ' '
                     ) A
