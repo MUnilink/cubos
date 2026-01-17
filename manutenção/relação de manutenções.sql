@@ -78,41 +78,43 @@ from STF010 STF (nolock)
         and STF.TF_SERVICO = ST5.T5_SERVICO
         and STF.TF_SEQRELA = ST5.T5_SEQRELA
     
-    left join STH010 STH (nolock)
-        on STH.D_E_L_E_T_ = ''
-        and STH.TH_CODBEM = STF.TF_CODBEM
-        and STH.TH_SERVICO = STF.TF_SERVICO
-        and STH.TH_SEQRELA = STF.TF_SEQRELA
+        left join STH010 STH (nolock)
+            on STH.D_E_L_E_T_ = ''
+            and STH.TH_CODBEM = ST5.T5_CODBEM
+            and STH.TH_TAREFA = ST5.T5_TAREFA
+            and STH.TH_SERVICO = ST5.T5_SERVICO
+            and STH.TH_SEQRELA = ST5.T5_SEQRELA
 
-        left join TT9010 TAR_ETAPA (nolock)
-            on TAR_ETAPA.D_E_L_E_T_ = ''
-            and TAR_ETAPA.TT9_TAREFA = STH.TH_TAREFA
-        left join TPA010 TPA (nolock)
-            on TPA.D_E_L_E_T_ = ''
-            and TPA.TPA_ETAPA = STH.TH_ETAPA
+            left join TT9010 TAR_ETAPA (nolock)
+                on TAR_ETAPA.D_E_L_E_T_ = ''
+                and TAR_ETAPA.TT9_TAREFA = STH.TH_TAREFA
+            left join TPA010 TPA (nolock)
+                on TPA.D_E_L_E_T_ = ''
+                and TPA.TPA_ETAPA = STH.TH_ETAPA
 
-    left join STG010 STG (nolock)
-        on STG.D_E_L_E_T_ = ''
-        and STG.TG_CODBEM = STF.TF_CODBEM
-        and STG.TG_SERVICO = STF.TF_SERVICO
-        and STG.TG_SEQRELA = STF.TF_SEQRELA
+        left join STG010 STG (nolock)
+            on STG.D_E_L_E_T_ = ''
+            and STG.TG_CODBEM = ST5.T5_CODBEM
+            and STG.TG_TAREFA = ST5.T5_TAREFA
+            and STG.TG_SERVICO = ST5.T5_SERVICO
+            and STG.TG_SEQRELA = ST5.T5_SEQRELA
 
-        left join SA2010 SA2 (nolock)
-            on SA2.D_E_L_E_T_ = ''
-            and SA2.A2_COD = STG.TG_CODIGO
-        left join SB1010 SB1 (nolock)
-            on SB1.D_E_L_E_T_ = ''
-            and SB1.B1_COD = STG.TG_CODIGO
-        left join SH4010 SH4 (nolock)
-            on SH4.D_E_L_E_T_ = ''
-            and SH4.H4_CODIGO = STG.TG_CODIGO
-        left join ST0010 ST0 (nolock)
-            on ST0.D_E_L_E_T_ = ''
-            and ST0.T0_ESPECIA = STG.TG_CODIGO
-        left join ST1010 ST1 (nolock)
-            on ST1.D_E_L_E_T_ = ''
-            and ST1.T1_CODFUNC = STG.TG_CODIGO
-        left join TT9010 TAR_ITEM (nolock)
-            on TAR_ITEM.D_E_L_E_T_ = ''
-            and TAR_ITEM.TT9_TAREFA = STG.TG_TAREFA
+            left join SA2010 SA2 (nolock)
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = STG.TG_CODIGO
+            left join SB1010 SB1 (nolock)
+                on SB1.D_E_L_E_T_ = ''
+                and SB1.B1_COD = STG.TG_CODIGO
+            left join SH4010 SH4 (nolock)
+                on SH4.D_E_L_E_T_ = ''
+                and SH4.H4_CODIGO = STG.TG_CODIGO
+            left join ST0010 ST0 (nolock)
+                on ST0.D_E_L_E_T_ = ''
+                and ST0.T0_ESPECIA = STG.TG_CODIGO
+            left join ST1010 ST1 (nolock)
+                on ST1.D_E_L_E_T_ = ''
+                and ST1.T1_CODFUNC = STG.TG_CODIGO
+            left join TT9010 TAR_ITEM (nolock)
+                on TAR_ITEM.D_E_L_E_T_ = ''
+                and TAR_ITEM.TT9_TAREFA = STG.TG_TAREFA
 where STF.D_E_L_E_T_ = ''
