@@ -64,14 +64,12 @@ select
     coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 first_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC >= STL.TL_DTINICI), ''), nullif(ST9.T9_ITEMCTA, '')) as ATIVIDADE,
 
     case STL.TL_SEQRELA when 0 then 'PREVISTO' else 'REALIZADO' end as APP_INSUMO,
-    case when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
-    else
-        case when SCP.CP_QUJE = 0.0 then 'PENDENTE'
-        else
-            case when SCP.CP_QUANT > SCP.CP_QUJE then 'PARC. ATENDIDA'
-            else 'OUTROS'
-            end
-        end
+    
+    case
+        when SCP.CP_QUANT = SCP.CP_QUJE then 'TOT. ATENDIDA'
+        when SCP.CP_QUANT > SCP.CP_QUJE then 'PARC. ATENDIDA'
+        when cast(SCP.CP_QUJE as numeric(15, 2)) = 0.00 then 'PENDENTE'
+        else 'OUTROS'
     end as APP_PRODUTO,
 
     SCP.CP_NUM as NUM_SA,
@@ -81,20 +79,13 @@ select
     SCP.CP_QUJE as QTD_ATENDIDA,
     trim(SB1.B1_GRUPO) as B1_GRUPO,
 
-    case when STL.TL_TIPOREG = 'P' and STL.TL_DOC = '' then 'NÃO ATENDIDA'
-    else
-        case when STL.TL_TIPOREG = 'P' and STL.TL_DOC != '' then 'ATENDIDA'
-        else
-            case when STL.TL_TIPOREG = 'M' then 'MDO REALIZADA'
-            else
-                case when STL.TL_TIPOREG = 'T' then 'EXTERNO'
-                else
-                    case when STL.TL_TIPOREG = 'E' then 'MDO PREVISTA'
-                    else 'OUTROS'
-                    end
-                end
-            end
-        end
+    case
+        when STL.TL_TIPOREG = 'P' and STL.TL_DOC = '' then 'NÃO ATENDIDA'
+        when STL.TL_TIPOREG = 'P' and STL.TL_DOC != '' then 'ATENDIDA'
+        when STL.TL_TIPOREG = 'M' then 'MDO REALIZADA'
+        when STL.TL_TIPOREG = 'T' then 'EXTERNO'
+        when STL.TL_TIPOREG = 'E' then 'MDO PREVISTA'
+        else 'OUTROS'
     end as ATENDIMENTO,
 
 	case STL.TL_TIPOREG
@@ -117,12 +108,6 @@ select
     concat(trim(SH7.H7_CODIGO), ' - ', trim(SH7.H7_DESCRI)) as TURNO_MDO,
     cast(ST1.T1_DTFIMDI as date) as FIM_DISP,
     trim(ST1.T1_CCUSTO) as CC_FUNC,
-    case
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
-        when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '017' then 180.0
-    else 0.0 end as HORA_PADRAO,
     
     trim(STJ.TJ_TIPO) as COD_CTIPO,
     trim(STE.TE_TIPOMAN) as TE_TIPOMAN,
@@ -155,6 +140,10 @@ select
         when 'C' then upper('Cancelada')
         else 'OUTROS'
     end as SITUACAO_SS,
+
+    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI))/(60.0 *24) else null end as DIAS_SS_OS,
+    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), concat(SCP.CP_DATPRF, ' ', SCP.CP_YHORASA))/(60.0 *24) else null end as DIAS_OS_SA,
+    datediff(minute, concat(SCP.CP_DATPRF, ' ', SCP.CP_YHORASA), concat(SCP.CP_YDATABA, ' ', SCP.CP_YHORABA))/(60.0 *24) as DIAS_SA_BAIXA,
     
     concat(trim(TQB.TQB_CDSERV), ' - ', (select upper(trim(TQ3010.TQ3_NMSERV)) from TQ3010 where TQ3010.D_E_L_E_T_ = '' and TQ3010.TQ3_CDSERV = TQB.TQB_CDSERV)) as SERVICO_SS,
     concat(trim(TQB.TQB_CDEXEC), ' - ', (select upper(trim(TQ4010.TQ4_NMEXEC)) from TQ4010 where TQ4010.D_E_L_E_T_ = '' and TQ4010.TQ4_CDEXEC = TQB.TQB_CDEXEC)) as EXECUTA_SS,
