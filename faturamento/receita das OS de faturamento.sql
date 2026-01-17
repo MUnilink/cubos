@@ -165,6 +165,7 @@ from
             cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as QTD_REAL_ITEM,
             cast(ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_ITEM,
             cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
+            
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
             cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
             cast(ZC2010.ZC2_IMPR1 as numeric(15, 2)) as ZC2_IMPR1,
@@ -177,6 +178,7 @@ from
                 on ZC1010.D_E_L_E_T_ = ''
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
+                and SUBSTRING(ZC1.ZC1_DTINI, 1, 6) <= left(ZC2.ZC2_DATA, 6) AND (SUBSTRING(ZC1.ZC1_DTFIM, 1, 6) >= left(ZC2.ZC2_DATA, 6) OR ZC1.ZC1_DTFIM = ' ')
         where
                 ZC2010.ZC2_COMPET > 20231231
             and ZC2010.D_E_L_E_T_ = ''
