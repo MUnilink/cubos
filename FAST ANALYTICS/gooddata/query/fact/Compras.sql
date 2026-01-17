@@ -18,33 +18,8 @@ SELECT
         else 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_COM.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_COM.Y1_COD, ' ')), ' '), '|')
     end as ID_NEGOCIADOR,
     
-    (
-        select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
-        from SCR010 SCR
-            inner join SAK010
-                on SAK010.D_E_L_E_T_ = ''
-                and SAK010.AK_COD = SCR.CR_LIBAPRO
-        where
-                SCR.D_E_L_E_T_ = ''
-            and SCR.CR_FILIAL = SC7.C7_FILIAL
-            and SCR.CR_NUM = SC7.C7_NUM
-            and SCR.CR_STATUS < 6
-            and SCR.CR_NIVEL =
-            (
-                select max(SCR010.CR_NIVEL)
-                from SCR010 (nolock)
-                where
-                        SCR010.D_E_L_E_T_ = ''
-                    and SCR010.CR_TIPO = 'PC'
-                    and SCR010.CR_FILIAL = SCR.CR_FILIAL
-                    and SCR010.CR_TIPO = SCR.CR_TIPO
-                    and SCR010.CR_NUM = SCR.CR_NUM
-                group by
-                    SCR010.CR_FILIAL,
-                    SCR010.CR_TIPO,
-                    SCR010.CR_NUM
-            )
-    ) as BK_APROVADOR,
+    COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|') as BK_APROVADOR,
+    trim(CRPC.CR_NIVEL) as NIVEL,
     
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     case
@@ -87,31 +62,7 @@ SELECT
                 SCR010.CR_NUM
         )
     ) as DATAAPROV_SC, /* data aprovação SC */
-    (
-        select max(coalesce(SCR.CR_DATALIB, ''))
-        from SCR010 SCR
-        where
-            SCR.D_E_L_E_T_ = ''
-        and nullif(SCR.CR_LIBAPRO, '') is not null
-        and SCR.CR_STATUS < 6
-        and SCR.CR_TIPO = 'PC'
-        and SCR.CR_NUM = SC7.C7_NUM
-        and SCR.CR_NIVEL =
-        (
-            select max(SCR010.CR_NIVEL)
-            from SCR010 (nolock)
-            where
-                    SCR010.D_E_L_E_T_ = ''
-                and SCR010.CR_TIPO = 'PC'
-                and SCR010.CR_FILIAL = SCR.CR_FILIAL
-                and SCR010.CR_TIPO = SCR.CR_TIPO
-                and SCR010.CR_NUM = SCR.CR_NUM
-            group by
-                SCR010.CR_FILIAL,
-                SCR010.CR_TIPO,
-                SCR010.CR_NUM
-        )
-    ) as DATAAPROV_PC, /* data aprovação PC */
+    convert(datetime, concat(CRPC.CR_DATALIB, ' ', CRPC.CR_YHRLIB), 113) as DATAAPROV_PC, /* data aprovação PC */
     
     1 as QORDCP, /* qtd de SCs */
     SC7.C7_QUANT as QTD_SOLICITADA,
@@ -192,6 +143,16 @@ FROM SC7010 SC7
     left join SM2010 SM2
         on SM2.D_E_L_E_T_ = ' '
         and SM2.M2_DATA = SC7.C7_EMISSAO
+    
+    left join SCR010 CRPC
+        on CRPC.D_E_L_E_T_ = ''
+        and CRPC.CR_TIPO = 'PC'
+        and CRPC.CR_FILIAL = SC7.C7_FILIAL
+        and CRPC.CR_NUM = SC7.C7_NUM
+        
+        inner join SAK010
+            on SAK010.D_E_L_E_T_ = ''
+            and SAK010.AK_COD = CRPC.CR_LIBAPRO
 WHERE
         SC7.C7_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     AND SC7.D_E_L_E_T_ = ' '
