@@ -161,16 +161,16 @@ from
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_COD) as INSUMO,
-            cast(ZC2010.ZC2_QTDPRV as numeric(15, 2)) as QTD_PREV_ITEM,
-            cast(ZC2010.ZC2_QTDREA as numeric(15, 2)) as QTD_REAL_ITEM,
-            cast(ZC2010.ZC2_VLUPRV as numeric(15, 2)) as VAL_PREV_ITEM,
-            cast(ZC2010.ZC2_VLUREA as numeric(15, 2)) as VAL_REAL_ITEM,
+            cast(ZC2010.ZC2_QTDPRV as numeric(15, 5)) as QTD_PREV_ITEM,
+            cast(ZC2010.ZC2_QTDREA as numeric(15, 5)) as QTD_REAL_ITEM,
+            cast(ZC2010.ZC2_VLUPRV as numeric(15, 5)) as VAL_PREV_ITEM,
+            cast(ZC2010.ZC2_VLUREA as numeric(15, 5)) as VAL_REAL_ITEM,
             
             ZC2010.ZC2_QTDREC as QTD_RECURSO,
-            cast(ZC2010.ZC2_TOTAL as numeric(15, 2)) as QTDxVALORUNI,
-            cast(ZC2010.ZC2_IMPR1 as numeric(15, 2)) as ZC2_IMPR1,
-            cast(ZC2010.ZC2_IMPR2 as numeric(15, 2)) as ZC2_IMPR2,
-            cast(ZC2010.ZC2_IMPR3 as numeric(15, 2)) as ZC2_IMPR3,
+            cast(ZC2010.ZC2_TOTAL as numeric(15, 5)) as QTDxVALORUNI,
+            cast(ZC2010.ZC2_IMPR1 as numeric(15, 5)) as ZC2_IMPR1,
+            cast(ZC2010.ZC2_IMPR2 as numeric(15, 5)) as ZC2_IMPR2,
+            cast(ZC2010.ZC2_IMPR3 as numeric(15, 5)) as ZC2_IMPR3,
             trim(upper(ZC2010.ZC2_NMUSU)) as USUARIO
         
         from ZC2010 (nolock)
@@ -178,7 +178,7 @@ from
                 on ZC1010.D_E_L_E_T_ = ''
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
-                and SUBSTRING(ZC1.ZC1_DTINI, 1, 6) <= left(ZC2.ZC2_DATA, 6) AND (SUBSTRING(ZC1.ZC1_DTFIM, 1, 6) >= left(ZC2.ZC2_DATA, 6) OR ZC1.ZC1_DTFIM = ' ')
+                /*and SUBSTRING(ZC1010.ZC1_DTINI, 1, 6) <= left(ZC2010.ZC2_DATA, 6) AND (SUBSTRING(ZC1010.ZC1_DTFIM, 1, 6) >= left(ZC2010.ZC2_DATA, 6) OR ZC1010.ZC1_DTFIM = ' ')*/
         where
                 ZC2010.ZC2_COMPET > 20231231
             and ZC2010.D_E_L_E_T_ = ''
@@ -236,7 +236,7 @@ from
                         and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
                         and ZG1010.D_E_L_E_T_ = ''
                     )
-                    as numeric(15, 2)
+                    as numeric(15, 5)
                 ) as PERC_RATEIO
             from ZG1010 ZG1 (nolock)
             where ZG1.D_E_L_E_T_ = ''
@@ -247,3 +247,5 @@ from
             and RAT_IMPR.ATIVIDADE = ZC2.ATIVIDADE_OS
             and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
             and RAT_IMPR.INSUMO = ZC2.INSUMO
+
+where ZC2.PERIODO > '202406'
