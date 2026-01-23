@@ -10,6 +10,7 @@ from
         SD2.D2_FILIAL as FILIAL,
         coalesce
         (
+            ZC1.ZC1_NUM,
             DUD.DUD_VIAGEM,
             VGA2.DUD_VIAGEM,
             (
@@ -54,6 +55,23 @@ from
             left join SBM010 SBM (nolock)
                 on SBM.D_E_L_E_T_ = ''
                 and SBM.BM_GRUPO = SB1.B1_GRUPO
+        
+        left join SC6010 SC6 (nolock)
+            on SC6.D_E_L_E_T_ = ''
+            and SC6.C6_FILIAL = SD2.D2_FILIAL
+            and SC6.C6_NUM = SD2.D2_PEDIDO
+            and SC6.C6_ITEM = SD2.D2_ITEMPV
+            
+            left join ZC2010 ZC2 (nolock)
+                on ZC2.D_E_L_E_T_ = ''
+                and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+                and ZC2.ZC2_NUM = SC6.C6_YOS
+                and ZC2.ZC2_ITEM = SC6.C6_YITOS
+
+                left join ZC1010 ZC1 (nolock)
+                    on ZC1.D_E_L_E_T_ = ''
+                    and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+                    and ZC1.ZC1_NUM = ZC2.ZC2_NUM
         
         left join SF4010 SF4 (nolock)
             on SF4.D_E_L_E_T_ = ''
