@@ -149,5 +149,5 @@ from SCR010 SCR (nolock)
                 and BMCP.BM_GRUPO = B1CP.B1_GRUPO
                 and BMCP.D_E_L_E_T_ = ' '
 
-where SCR.CR_DATALIB like '2026%' and
+where SCR.CR_DATALIB > '20250731' and
         SCR.D_E_L_E_T_ = ' '
