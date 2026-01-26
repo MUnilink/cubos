@@ -10,15 +10,21 @@ select
 	trim(ST9.T9_ANOFAB) as ANOFABRIC,
 	trim(ST9.T9_RENAVAM) as RENAVAM,
 	case ST9.T9_PROPRIE when 1 then 'SIM' when '2' then 'NAO' else 'OUTROS' end as PROPRIO,
-	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as SITUACAO,
-	cast(ST9.T9_DTCOMPR as date) as DTCOMPR,
-	ST9.T9_STATUS,
-    trim(TQY.TQY_DESTAT) as STATUS,
-	substring(TPN.TPN_DTINIC, 1, 6) as PERIODO_MOV,
+	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as BEM_ATIVO,
+	concat(trim(ST9.T9_STATUS), ' - ', trim(TQY.TQY_DESTAT)) as STATUS_BEM,
+	cast(ST9.T9_DTCOMPR as date) as DT_COMPRA,
+	cast(ST9.T9_DTULTAC as date) as DT_ULTCONT,
+	cast(ST9.T9_DTBAIXA as date) as DT_BAIXA,
+	
+	left(TPN.TPN_DTINIC, 6) as PERIODO_MOV,
+	lag(trim(TPN.TPN_CCUSTO), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as CC_ANT,
+	trim(TPN.TPN_CCUSTO) as CC_MOV,
+	lag(trim(TPN.TPN_XITEMC), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as AT_ANT,
+	trim(TPN.TPN_XITEMC) as AT_MOV,
 
 	trim(SN1.N1_GRUPO) as GRUPO_ATF,
-	trim(SN1.N1_CBASE) as ATIVO,
-	trim(SN1.N1_DESCRIC) as DESC_ATIVO,
+	trim(SN1.N1_CBASE) as ATIVOFIXO,
+	trim(SN1.N1_DESCRIC) as DESC_ATIVOFIXO,
 	trim(SN3.N3_CCUSTO) as CC_ATF,
 	trim(SN3.N3_SUBCTA) as ATIVIDADE_ATF,
 	(select trim(CTT010.CTT_DESC01) from CTT010 where CTT010.D_E_L_E_T_ = '' and CTT010.CTT_CUSTO = SN3.N3_CCUSTO) as DESC_CC_ATF,
@@ -47,10 +53,7 @@ select
 	case
 		when dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC))) > lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) then dateadd(day, 1, eomonth(dateadd(month, -1, TPN.TPN_DTINIC)))
 		else lag(convert(datetime, concat(TPN.TPN_DTINIC, ' ', TPN.TPN_HRINIC), 113), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC)
-	end as DT_INIMOV,
-
-	lag(trim(TPN.TPN_CCUSTO), 1, null) over(partition by TPN.TPN_CODBEM order by TPN.TPN_DTINIC, TPN.TPN_HRINIC) as CC_ANT,
-	trim(TPN.TPN_CCUSTO) as CC
+	end as DT_INIMOV
 
 from TPN010 TPN (nolock)
 	inner join ST9010 ST9 (nolock)
