@@ -4,25 +4,7 @@ select distinct
     
     case
         when nullif(ZC1.ZC1_CODSA1, '') is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLIOPP.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLIOPP.A1_COD, ' '))+RTRIM(COALESCE(CLIOPP.A1_LOJA, ' ')), ' '), '|')
-        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then
-        (
-            select max('P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA1010.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA1010.A1_COD, ' '))+RTRIM(COALESCE(SA1010.A1_LOJA, ' ')), ' '), '|'))
-            from DUD010 (nolock)
-                inner join DT6010 (nolock)
-                    on DT6010.D_E_L_E_T_ = ''
-                    and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
-                    and DT6010.DT6_DOC = DUD010.DUD_DOC
-                    and DT6010.DT6_SERIE = DUD010.DUD_SERIE
-                    
-                    left join SA1010 (nolock)
-                        on SA1010.D_E_L_E_T_ = ''
-                        and SA1010.A1_COD = DT6010.DT6_CLIDEV
-                        and SA1010.A1_LOJA = DT6010.DT6_LOJDEV
-            where
-                    DUD010.D_E_L_E_T_ = ''
-                and DUD010.DUD_FILORI = DUD.DUD_FILORI
-                and DUD010.DUD_VIAGEM = DUD.DUD_VIAGEM
-        )
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLITMS.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLITMS.A1_COD, ' '))+RTRIM(COALESCE(CLITMS.A1_LOJA, ' ')), ' '), '|')
         else null
     end as BK_CLIENTE,
     
@@ -126,6 +108,7 @@ select distinct
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
     trim(ZE2.ZE2_ORIGEM) as ORIGEM
 
+
 from ZE3010 ZE3 (nolock)
     inner join ZE2010 ZE2 (nolock)
         on ZE2.D_E_L_E_T_ = ''
@@ -134,10 +117,6 @@ from ZE3010 ZE3 (nolock)
         on ZC1.D_E_L_E_T_ = ''
         and concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM) = ZE3.ZE3_NUM
         and trim(ZC1.ZC1_NUM) != ''
-    left join DUD010 DUD
-        on DUD.D_E_L_E_T_ = ''
-        and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
-        and trim(DUD.DUD_VIAGEM) != ''
         
         left join SA1010 CLIOPP
             on CLIOPP.D_E_L_E_T_ = ''
@@ -159,7 +138,23 @@ from ZE3010 ZE3 (nolock)
         left join SB1010 SB1
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = ZC1.ZC1_MERCAD
+    
+    left join DUD010 DUD
+        on DUD.D_E_L_E_T_ = ''
+        and concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) = trim(ZE3.ZE3_NUM)
+        and trim(DUD.DUD_VIAGEM) != ''
 
+        left join DT6010 DT6
+            on DT6.D_E_L_E_T_ = ''
+            and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+            and DT6.DT6_DOC = DUD.DUD_DOC
+            and DT6.DT6_SERIE = DUD.DUD_SERIE
+            
+            left join SA1010 CLITMS
+                on CLITMS.D_E_L_E_T_ = ''
+                and CLITMS.A1_COD = DT6.DT6_CLIDEV
+                and CLITMS.A1_LOJA = DT6.DT6_LOJDEV
+    
     left join CTT010
         on CTT010.D_E_L_E_T_ = ''
         and CTT010.CTT_CUSTO = ZE3.ZE3_ORIGEM
