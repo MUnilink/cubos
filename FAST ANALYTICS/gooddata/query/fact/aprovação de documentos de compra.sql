@@ -3,10 +3,11 @@ SELECT
     concat('SF1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NF,
     concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
     concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACAO,
-    case when SD1.D1_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SD1.D1_FILIAL as char (6)) end as BK_FILIAL,
-    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_COD, ' ')), ' '), '|') AS BK_ITEM,
+    concat(trim(SCP.CP_FILIAL), trim(SCP.CP_NUM)) as ID_SOLICITAARM,
+    case when SC7.C7_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(SC7.C7_FILIAL as char (6)) end as BK_FILIAL,
+    'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_PRODUTO, ' ')), ' '), '|') AS BK_ITEM,
     'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SBM.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
-    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_FORNECE, ' '))+RTRIM(COALESCE(SD1.D1_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
+    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_FORNECE, ' '))+RTRIM(COALESCE(SC7.C7_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(GRPFOR.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_FORNECEDOR,
     'P |01|SA4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA4.A4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SF1.F1_TRANSP, ' ')), ' '), '|') AS BK_TRANSPORTADORA,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(FAMAT.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(SB1.B1_TIPO, ' ')), ' '), '|') AS BK_FAMILIA_MATERIAL,
@@ -16,7 +17,7 @@ SELECT
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CFOP.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_CF, ' ')), ' '), '|') AS BK_CFOP,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_CC, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     'P |01|SF4010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SF4.F4_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_TES, ' ')), ' '), '|') AS BK_TES,
-    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD1.D1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
+    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAH.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAH.AH_UNIMED, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_ITEMCTA, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
     
@@ -30,29 +31,26 @@ SELECT
         when (SC7.C7_QUJE >= SC7.C7_QUANT) then 'P |'+ COALESCE(NULLIF(RTRIM(COALESCE('I', ' ')), ' '), '|')
     else 'P |'+'|' end as BK_SITUACAO_COMPRA,
 
-    trim(concat(SCP.CP_DATPRF, ' ', SCP.CP_YHORASA)) as DATA_SAPRF,
-    trim(concat(SCP.CP_EMISSAO, ' ', SCP.CP_YHORASA)) as DATA_SAEMI,
-    trim(concat(SCP.CP_YDATAPR, ' ', SCP.CP_YHORAPR)) as DATA_SAPRERE,
-    trim(concat(SCP.CP_YDATABA, ' ', SCP.CP_YHORABA)) as DATA_SABAIXA,
-    
-    trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC)) as DATA_SC,
-    trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC)) as DATA_EMIPC,
+    (select ('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|')) from SAK010 where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = CRSA.CR_LIBAPRO) as ID_APROVSA,
+    (select ('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|')) from SAK010 where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = CRSC.CR_LIBAPRO) as ID_APROVSC,
+    (select ('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|')) from SAK010 where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = CRPC.CR_LIBAPRO) as ID_APROVPC,
+
+    trim(concat(SCP.CP_DATPRF, ' ', max(SCP.CP_YHORASA) over(partition by SCP.CP_FILIAL, SCP.CP_NUM order by SCP.CP_FILIAL, SCP.CP_NUM))) as DATA_SAPRF,
+    trim(concat(SCP.CP_EMISSAO, ' ', max(SCP.CP_YHORASA) over(partition by SCP.CP_FILIAL, SCP.CP_NUM order by SCP.CP_FILIAL, SCP.CP_NUM))) as DATA_SAEMI,
+    trim(concat(SCP.CP_YDATAPR, ' ', max(SCP.CP_YHORAPR) over(partition by SCP.CP_FILIAL, SCP.CP_NUM order by SCP.CP_FILIAL, SCP.CP_NUM))) as DATA_SAPRERE,
+    trim(concat(SCP.CP_YDATABA, ' ', max(SCP.CP_YHORABA) over(partition by SCP.CP_FILIAL, SCP.CP_NUM order by SCP.CP_FILIAL, SCP.CP_NUM))) as DATA_SABAIXA,
+    trim(concat(SC1.C1_EMISSAO, ' ', max(isnull(nullif(SC1.C1_YHORASC, ''), '00:00:00')) over(partition by SC1.C1_FILIAL, SC1.C1_NUM order by SC1.C1_FILIAL, SC1.C1_NUM))) as DATA_SC,
+    trim(concat(SC7.C7_EMISSAO, ' ', max(isnull(nullif(SC7.C7_YHORAPC, ''), '00:00:00')) over(partition by SC7.C7_FILIAL, SC7.C7_NUM order by SC7.C7_FILIAL, SC7.C7_NUM))) as DATA_EMIPC,
     trim(concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF)) as DATA_DIGNF,
     SC7.C7_DATPRF as DATA_PRVPC,
 
-    trim(CRPC.CR_APROV) as APRPC_ITEM_APROVA,
-    trim(CRPC.CR_GRUPO) as APRPC_GRUPO_APROV,
-    trim(CRPC.CR_ITGRP) as APRPC_ITEM_GRUPO,
     trim(CRPC.CR_NIVEL) as APRPC_NIVEL,
     convert(datetime, concat(CRPC.CR_DATALIB, ' ', CRPC.CR_YHRLIB), 113) as APRPC_DATAHORALIB,
-    cast(CRPC.CR_DATALIB as date) as APRPC_DATALIB,
-    (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = CRPC.CR_USERLIB) as APRPC_APROVADOPOR,
     cast(CRPC.CR_VALLIB as numeric(15, 2)) as APRPC_VALORLIB,
     cast(CRPC.CR_TOTAL as numeric(15, 2)) as APRPC_VALORDOC,
 
-    concat
+    coalesce
     (
-        trim(CRPC.CR_STATUS), ' - ',
         case CRPC.CR_STATUS
             when 1 then 'PENDENTE'
             when 2 then 'PENDENTE'
@@ -61,35 +59,18 @@ SELECT
             when 5 then 'LIBERADA'
             when 6 then 'REJEITADA'
             when 7 then 'REJEITADA'
-            else 'OUTROS'
-        end
+            end,
+        'N/A'
     ) as STATUS_APRPC,
 
     (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SC1.C1_USER) as SOLICITANTE_SC,
-    trim(CRSC.CR_APROV) as APRSC_ITEM_APROVA,
-    trim(CRSC.CR_GRUPO) as APRSC_GRUPO_APROV,
-    trim(CRSC.CR_ITGRP) as APRSC_ITEM_GRUPO,
     trim(CRSC.CR_NIVEL) as APRSC_NIVEL,
     convert(datetime, concat(CRSC.CR_DATALIB, ' ', CRSC.CR_YHRLIB), 113) as APRSC_DATAHORALIB,
-    cast(CRSC.CR_DATALIB as date) as APRSC_DATALIB,
-    (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = CRSC.CR_USERLIB) as APRSC_APROVADOPOR,
     cast(CRSC.CR_VALLIB as numeric(15, 2)) as APRSC_VALORLIB,
     cast(CRSC.CR_TOTAL as numeric(15, 2)) as APRSC_VALORDOC,
 
-    (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_USER) as SOLICITANTE_SA,
-    trim(CRSA.CR_APROV) as APRSA_ITEM_APROVA,
-    trim(CRSA.CR_GRUPO) as APRSA_GRUPO_APROV,
-    trim(CRSA.CR_ITGRP) as APRSA_ITEM_GRUPO,
-    trim(CRSA.CR_NIVEL) as APRSA_NIVEL,
-    convert(datetime, concat(CRSA.CR_DATALIB, ' ', CRSA.CR_YHRLIB), 113) as APRSA_DATAHORALIB,
-    cast(CRSA.CR_DATALIB as date) as APRSA_DATALIB,
-    (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = CRSA.CR_USERLIB) as APRSA_APROVADOPOR,
-    cast(CRSA.CR_VALLIB as numeric(15, 2)) as APRSA_VALORLIB,
-    cast(CRSA.CR_TOTAL as numeric(15, 2)) as APRSA_VALORDOC,
-    
-    concat
+    coalesce
     (
-        trim(CRSC.CR_STATUS), ' - ',
         case CRSC.CR_STATUS
             when 1 then 'PENDENTE'
             when 2 then 'PENDENTE'
@@ -98,12 +79,18 @@ SELECT
             when 5 then 'LIBERADA'
             when 6 then 'REJEITADA'
             when 7 then 'REJEITADA'
-            else 'OUTROS'
-        end
+            end,
+        'N/A'
     ) as STATUS_APRSC,
-    concat
+
+    (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_USER) as SOLICITANTE_SA,
+    trim(CRSA.CR_NIVEL) as APRSA_NIVEL,
+    convert(datetime, concat(CRSA.CR_DATALIB, ' ', CRSA.CR_YHRLIB), 113) as APRSA_DATAHORALIB,
+    cast(CRSA.CR_VALLIB as numeric(15, 2)) as APRSA_VALORLIB,
+    cast(CRSA.CR_TOTAL as numeric(15, 2)) as APRSA_VALORDOC,
+
+    coalesce
     (
-        trim(CRSA.CR_STATUS), ' - ',
         case CRSA.CR_STATUS
             when 1 then 'PENDENTE'
             when 2 then 'PENDENTE'
@@ -112,8 +99,8 @@ SELECT
             when 5 then 'LIBERADA'
             when 6 then 'REJEITADA'
             when 7 then 'REJEITADA'
-            else 'OUTROS'
-        end
+            end,
+        'N/A'
     ) as STATUS_APRSA
 
 FROM SC7010 SC7
@@ -215,6 +202,7 @@ FROM SC7010 SC7
     left join SCR010 CRPC
         on CRPC.D_E_L_E_T_ = ''
         and CRPC.CR_TIPO = 'PC'
+        and CRPC.CR_STATUS in (3, 4, 6)
         and CRPC.CR_FILIAL = SC7.C7_FILIAL
         and CRPC.CR_NUM = SC7.C7_NUM
     full join SC1010 SC1
@@ -227,6 +215,7 @@ FROM SC7010 SC7
         left join SCR010 CRSC
             on CRSC.D_E_L_E_T_ = ''
             and CRSC.CR_TIPO = 'SC'
+            and CRSC.CR_STATUS in (3, 4, 6)
             and CRSC.CR_FILIAL = SC1.C1_FILIAL
             and CRSC.CR_NUM = SC1.C1_NUM
         full join SCP010 SCP
@@ -239,8 +228,9 @@ FROM SC7010 SC7
             left join SCR010 CRSA
                 on CRSA.D_E_L_E_T_ = ''
                 and CRSA.CR_TIPO = 'SA'
+                and CRSA.CR_STATUS in (3, 4, 6)
                 and CRSA.CR_FILIAL = SCP.CP_FILIAL
                 and CRSA.CR_NUM = SCP.CP_NUM
 where
-        SC7.C7_EMISSAO BETWEEN '20251001' and '20260131'
+        SC7.C7_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
     and SC7.D_E_L_E_T_ = ' '
