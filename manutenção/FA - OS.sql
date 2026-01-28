@@ -45,7 +45,7 @@ select
 	case STL.TL_TIPOREG
 		when 'M' then 'MÃO-DE-OBRA'
 		when 'E' then 'ESPECIALIDADE'
-		when 'P' then case STL.TL_ORIGNFE when 'SD1' then 'PEÇAS DIRETAS' else 'PEÇAS' end
+		when 'P' then case when SB1.B1_GRUPO = '2201' then 'TERCEIROS' when STL.TL_ORIGNFE = 'SD1' then 'PEÇAS DIRETAS' else 'PEÇAS' end
 		when 'T' then 'TERCEIROS'
 		else 'OUTROS'
 	end as TIPO_CUSTO,
