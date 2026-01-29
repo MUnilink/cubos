@@ -191,7 +191,7 @@ from
                 when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501'
                 then '310101001'
             else null end
-        = '310101002' /* NACIONAL */
+        = '310101002' /* EXPORTAÇÃO */
         and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 ) RECEITA_TMS
 group by
