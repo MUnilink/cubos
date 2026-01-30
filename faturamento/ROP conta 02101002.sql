@@ -23,7 +23,7 @@
 union
     select
         RECEITA_TMS.FILIAL,
-        RECEITA_TMS.NUM,
+        RECEITA_TMS.VIAGEM as NUM,
         RECEITA_TMS.CC,
         RECEITA_TMS.ITEM,
         sum(RECEITA_TMS.TOTAL) as TOTAL
@@ -49,7 +49,7 @@ union
                         and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
                         and SD2.D2_LOJA = SC5010.C5_LOJACLI
                 )
-            ) as NUM,
+            ) as VIAGEM,
             SD2.D2_CCUSTO as CC,
             SD2.D2_ITEMCC as ITEM,
             case when SF2.F2_ESPECIE = 'RPS' then sum(cast(coalesce(SD2.D2_VALISS, 0) as decimal(14, 2))) else 0.00 end as TOTAL /* se RPS, então valor do ISS; se não, valor nulo */
@@ -122,4 +122,5 @@ union
             SD2.D2_CLIENTE,
             SD2.D2_LOJA
     ) RECEITA_TMS
-    group by RECEITA_TMS.FILIAL, RECEITA_TMS.NUM, RECEITA_TMS.CC, RECEITA_TMS.ITEM
+    where RECEITA_TMS.VIAGEM is not null
+    group by RECEITA_TMS.FILIAL, RECEITA_TMS.VIAGEM, RECEITA_TMS.CC, RECEITA_TMS.ITEM
