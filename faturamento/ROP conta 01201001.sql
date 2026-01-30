@@ -52,7 +52,7 @@
         and SD2.D2_SERIE not in ('003', '100')
         and SD2.D2_CCUSTO = '304'
         and SD2.D2_ITEMCC in ('32', '35')
-
+        and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_CC, SC6.C6_ITEMCTA
 union
     select
@@ -67,7 +67,6 @@ union
             SD2.D2_FILIAL as FILIAL,
             coalesce
             (
-                ZC1.ZC1_NUM,
                 DUD.DUD_VIAGEM,
                 VGA2.DUD_VIAGEM,
                 (
@@ -112,23 +111,6 @@ union
                 left join SBM010 SBM (nolock)
                     on SBM.D_E_L_E_T_ = ''
                     and SBM.BM_GRUPO = SB1.B1_GRUPO
-            
-            left join SC6010 SC6 (nolock)
-                on SC6.D_E_L_E_T_ = ''
-                and SC6.C6_FILIAL = SD2.D2_FILIAL
-                and SC6.C6_NUM = SD2.D2_PEDIDO
-                and SC6.C6_ITEM = SD2.D2_ITEMPV
-                
-                left join ZC2010 ZC2 (nolock)
-                    on ZC2.D_E_L_E_T_ = ''
-                    and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
-                    and ZC2.ZC2_NUM = SC6.C6_YOS
-                    and ZC2.ZC2_ITEM = SC6.C6_YITOS
-
-                    left join ZC1010 ZC1 (nolock)
-                        on ZC1.D_E_L_E_T_ = ''
-                        and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
-                        and ZC1.ZC1_NUM = ZC2.ZC2_NUM
             
             left join SF4010 SF4 (nolock)
                 on SF4.D_E_L_E_T_ = ''
@@ -239,20 +221,17 @@ union
                     then trim(SB1.B1_YCTREC2)
                     
                     /* outros */
-                    when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516')
-                    then '310101002'
-                    when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510'
-                    then '310101001'
-                    when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558'
-                    then '310101001'
-                    when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501'
-                    then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then '310101002'
+                    when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501' then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '504' then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '503' then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '6933' and SD2.D2_TES = '503' then '310101001'
+                    when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '522' then '310101002'
+                    when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '525' then '310101002'
                 else null end
             = '310101001' /* NACIONAL */
             and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     ) RECEITA_TMS
-    group by
-        RECEITA_TMS.FILIAL,
-        RECEITA_TMS.CC,
-        RECEITA_TMS.ITEM,
-        RECEITA_TMS.VIAGEM
+    group by RECEITA_TMS.FILIAL, RECEITA_TMS.CC, RECEITA_TMS.ITEM, RECEITA_TMS.VIAGEM

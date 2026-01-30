@@ -182,20 +182,18 @@ from
                 then trim(SB1.B1_YCTREC2)
                 
                 /* outros */
-                when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516')
-                then '310101002'
-                when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510'
-                then '310101001'
-                when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558'
-                then '310101001'
-                when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501'
-                then '310101001'
+                when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then '310101002'
+                when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
+                when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
+                when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501' then '310101001'
+                when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '504' then '310101001'
+                when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '503' then '310101001'
+                when trim(CFOP.X5_CHAVE) = '6933' and SD2.D2_TES = '503' then '310101001'
+                when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '522' then '310101002'
+                when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '525' then '310101002'
             else null end
         = '310101002' /* EXPORTAÇÃO */
         and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 ) RECEITA_TMS
-group by
-    RECEITA_TMS.FILIAL,
-    RECEITA_TMS.CC,
-    RECEITA_TMS.ITEM,
-    RECEITA_TMS.VIAGEM
+where RECEITA_TMS.VIAGEM is not null
+group by RECEITA_TMS.FILIAL, RECEITA_TMS.CC, RECEITA_TMS.ITEM, RECEITA_TMS.VIAGEM
