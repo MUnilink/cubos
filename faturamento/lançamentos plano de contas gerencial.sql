@@ -14,7 +14,6 @@ select distinct
     trim(ZC1.ZC1_NUM) as NUM_OS,
     trim(DUD.DUD_VIAGEM) as NUM_VG,
     
-    DT6.DT6_DOC as DOC_VIAGEM,
     case DUD.DUD_STATUS
         when '1' then upper('Em Aberto')
         when '2' then upper('Em Transito')
@@ -27,7 +26,6 @@ select distinct
     DUD.VGA_NORMAL as TIPO_VIAGEM,
     DUD.DUA_NUMVTR as VIAGEM_SUB,
     
-    COMP.D2_DOC as DOCOMP_VGA,
     case VGA2.DUD_STATUS
         when '1' then upper('Em Aberto')
         when '2' then upper('Em Transito')
@@ -36,9 +34,6 @@ select distinct
         when '9' then upper('Cancelado')
         else 'N/A'
     end as STATUS_DOCOMPVGA,
-
-    SC5010.C5_NUM as RPS_PEDIDO,
-    RPS.D2_DOC as RPS_DOC,
 
     left
     (
@@ -127,37 +122,6 @@ from ZE3010 ZE3 (nolock)
                 DUD010.D_E_L_E_T_ = ''
             and DUD010.DUD_SERIE != 'COL'
     ) DUD on nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) = trim(ZE3.ZE3_NUM)
-        
-        left join DT6010 DT6 (nolock)
-            on DT6.D_E_L_E_T_ = ''
-            and DT6.DT6_FILDOC = DUD.DUD_FILDOC
-            and DT6.DT6_DOC = DUD.DUD_DOC
-            and DT6.DT6_SERIE = DUD.DUD_SERIE
-            
-            left join SD2010 COMP (nolock)
-                on COMP.D_E_L_E_T_ = ''
-                and COMP.D2_NFORI = DT6.DT6_DOC
-                and COMP.D2_SERIORI = DT6.DT6_SERIE
-                and COMP.D2_CLIENTE = DT6.DT6_CLIDEV
-                and COMP.D2_LOJA = DT6.DT6_LOJDEV
-
-                left join DUD010 VGA2 (nolock)
-                    on VGA2.D_E_L_E_T_ = ''
-                    and VGA2.DUD_FILDOC = COMP.D2_FILIAL
-                    and VGA2.DUD_DOC = COMP.D2_DOC
-                    and VGA2.DUD_SERIE = COMP.D2_SERIE
-
-        left join SC5010 (nolock)
-            on SC5010.D_E_L_E_T_ = ''
-            and trim(SC5010.C5_YVIAGEM) = DUD.DUD_VIAGEM
-
-            left join SD2010 RPS (nolock)
-                on RPS.D_E_L_E_T_ = ''
-                and RPS.D2_FILIAL = SC5010.C5_FILIAL
-                and RPS.D2_DOC = SC5010.C5_NOTA
-                and RPS.D2_SERIE = SC5010.C5_SERIE
-                and RPS.D2_CLIENTE = SC5010.C5_CLIENTE
-                and RPS.D2_LOJA = SC5010.C5_LOJACLI
     
     left join CTT010 (nolock)
         on CTT010.D_E_L_E_T_ = ''
