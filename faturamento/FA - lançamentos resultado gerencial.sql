@@ -45,16 +45,6 @@ select distinct
     as DT_FIMOS,
 
     case
-        when exists
-        (
-            select 1
-            from CTS010
-            where
-                    CTS010.D_E_L_E_T_ = ''
-                and trim(CTS010.CTS_CODPLA) in ('997', '998', '999')
-                and ZE3.ZE3_ORIGEM between CTS010.CTS_CTTINI and CTS010.CTS_CTTFIM
-                and ZE3.ZE3_ITORIG between CTS010.CTS_CTDINI and CTS010.CTS_CTDFIM
-        ) and (left(ZE2.ZE2_COD, 2) like '[1-9]%' or left(ZE2.ZE2_COD, 2) = '09') then null
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
@@ -62,6 +52,12 @@ select distinct
     else 0.0 end as VALOR,
     
     /* para validação no RM */
+    case
+        when ZE2.ZE2_ORIGEM in ('Q', 'T') and coalesce(nullif(concat(trim(ZC1.ZC1_NUM), trim(DUD.DUD_VIAGEM)), ''), nullif(trim(ZE2.ZE2_CONTA), ''), 'ERRO?') = 'ERRO?' then 'ERRO'
+        when ZE2.ZE2_ORIGEM in ('E', 'F') and cast(ZE2.ZE2_COD as int) < 9 and coalesce(nullif(concat(trim(ZC1.ZC1_NUM), trim(DUD.DUD_VIAGEM)), ''), nullif(trim(ZE2.ZE2_CONTA), ''), 'ERRO?') = 'ERRO?' then 'ERRO'
+        else 'VERIFICAR'
+    end as OSVGACONTA,
+    
     trim(ZE3.ZE3_NUM) as OS_VGA,
     trim(ZC1.ZC1_FILIAL) as FILIAL_OS,
     trim(ZC1.ZC1_NUM) as NUM_OS,
@@ -162,5 +158,5 @@ from ZE3010 ZE3 (nolock)
         on CTD010.D_E_L_E_T_ = ''
         and CTD010.CTD_ITEM = ZE3.ZE3_ITORIG
 where
-        ZE3.ZE3_COMPET=:PERIODO
+        ZE3.ZE3_COMPET > 202407
     and ZE3.D_E_L_E_T_ = ''
