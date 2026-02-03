@@ -87,7 +87,7 @@ union
             ) as VIAGEM,
             SD2.D2_CCUSTO as CC,
             SD2.D2_ITEMCC as ITEM,
-            SD2.D2_DOC as PEDIDO,
+            SD2.D2_DOC as DOC,
             cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VALOR
 
         from SD2010 SD2 (nolock)
@@ -233,4 +233,5 @@ union
             = '310101001' /* NACIONAL */
             and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
     ) RECEITA_TMS
+    where RECEITA_TMS.VIAGEM is not null
     group by RECEITA_TMS.FILIAL, RECEITA_TMS.CC, RECEITA_TMS.ITEM, RECEITA_TMS.VIAGEM
