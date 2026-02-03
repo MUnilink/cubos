@@ -26,15 +26,6 @@ select distinct
     DUD.VGA_NORMAL as TIPO_VIAGEM,
     DUD.DUA_NUMVTR as VIAGEM_SUB,
     
-    case VGA2.DUD_STATUS
-        when '1' then upper('Em Aberto')
-        when '2' then upper('Em Transito')
-        when '3' then upper('Carregado')
-        when '4' then upper('Encerrado')
-        when '9' then upper('Cancelado')
-        else 'N/A'
-    end as STATUS_DOCOMPVGA,
-
     left
     (
         case
@@ -86,7 +77,13 @@ select distinct
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
-    else 0.0 end as VALOR
+    else 0.0 end as VALOR,
+
+    case
+        when ZE2.ZE2_ORIGEM in ('Q', 'T') and coalesce(nullif(concat(trim(ZC1.ZC1_NUM), trim(DUD.DUD_VIAGEM)), ''), nullif(trim(ZE2.ZE2_CONTA), ''), 'ERRO?') = 'ERRO?' then 'ERRO'
+        when ZE2.ZE2_ORIGEM in ('E', 'F') and cast(ZE2.ZE2_COD as int) < 9 and coalesce(nullif(concat(trim(ZC1.ZC1_NUM), trim(DUD.DUD_VIAGEM)), ''), nullif(trim(ZE2.ZE2_CONTA), ''), 'ERRO?') = 'ERRO?' then 'ERRO'
+        else 'VERIFICAR'
+    end as OSVGACONTA
 
 from ZE3010 ZE3 (nolock)
     inner join ZE2010 ZE2 (nolock)
