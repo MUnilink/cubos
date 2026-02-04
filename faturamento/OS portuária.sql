@@ -237,6 +237,6 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
-        (ZC2.ZC2_COMPET > '20241231' or ZC2.ZC2_COMPET = '')
+        (ZC2.ZC2_DATA > '20231231' or ZC2.ZC2_DATA = '')
     and cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
     and ZC2.D_E_L_E_T_ = ''
