@@ -173,14 +173,14 @@ union
             and
                 case
                     /* LP 610-001 */
+                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES in ('522', '525') and trim(SBM.BM_GRUPO) = '2101'
+                    then '310101002'
+                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES like '50[3-4]' and trim(SBM.BM_GRUPO) = '2101'
+                    then '310101001'
                     when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
                     then trim(SB1.B1_YCTREC4)
                     when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
                     then trim(SB1.B1_YCTREC5)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES like '50[3-4]'
-                    then '310101001'
-                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and (SD2.D2_TES = '522' or SD2.D2_TES = '525')
-                    then '310101002'
                     when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
                     then trim(SB1.B1_YCTREC3)
                     
