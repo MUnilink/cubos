@@ -33,6 +33,7 @@ SELECT
     trim(SF4.F4_TEXTO) as DESC_TES,
     trim(SD2.D2_CF) as CFOP,
     trim(CFOP.X5_DESCRI) as DESC_CFOP,
+    trim(SF4.F4_CSTCOF) as 'Sit.Trib. COFINS',
     
     trim(SA1.A1_TIPO) as TIPO_CLIENTE,
     SF2.F2_CLIENTE as NUM_CLI,
@@ -55,6 +56,10 @@ SELECT
         then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
         then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES like '50[3-4]'
+        then '310101001'
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and (SD2.D2_TES = '522' or SD2.D2_TES = '525')
+        then '310101002'
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
         then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
         
@@ -99,14 +104,10 @@ SELECT
         then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
         
         /* outros */
-        when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516')
-        then '310101002'
-        when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510'
-        then '310101001'
-        when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558'
-        then '310101001'
-        when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501'
-        then '310101001'
+        when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then '310101002'
+        when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
+        when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
+        when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501' then '310101001'
     else null end as LP_CRE,
 
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
