@@ -133,11 +133,34 @@ from
         and SD2.D2_SERIE not in ('003', '100')
         and
             case
+                when SB1.B1_COD like '2101000[3-4]' and trim(CFOP.X5_CHAVE) like '[5-6]933' and SD2.D2_TES like '50[3-4]' then '310101001'
+                when SB1.B1_COD = '21010003' and (trim(CFOP.X5_CHAVE) like '[5-6]933' or trim(CFOP.X5_CHAVE) = '7949') and SD2.D2_TES in ('522', '525') then '310101002'
+                when SB1.B1_COD = '21010001' and SD2.D2_TES in ('501', '502', '506', '507', '510', '519', '520', '524', '526', '534', '535', '536', '554', '558') and
+                (
+                    trim(CFOP.X5_CHAVE) like '[5-6]363' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]932' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]351' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]352' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]353' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]355' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]357' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]359' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]360'
+                ) then '310101001'
+                when SB1.B1_COD = '21010001' and SD2.D2_TES in ('509', '514', '516', '517', '518', '539') and
+                (
+                    trim(CFOP.X5_CHAVE) like '[5-6]363' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]932' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]351' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]352' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]353' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]355' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]357' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]359' or
+                    trim(CFOP.X5_CHAVE) like '[5-6]360'
+                ) then '310101002'
+                
                 /* LP 610-001 */
-                when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES in ('522', '525') and trim(SBM.BM_GRUPO) = '2101'
-                then '310101002'
-                when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES like '50[3-4]' and trim(SBM.BM_GRUPO) = '2101'
-                then '310101001'
                 when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
                 then trim(SB1.B1_YCTREC4)
                 when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
@@ -156,9 +179,9 @@ from
                 then trim(SB1.B1_YCTREC1)
                 
                 /* LP 610-010 */
-                when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES = '520'
+                when trim(CFOP.X5_CHAVE) like '[5-6]360' and SD2.D2_TES = '520'
                 then trim(SB1.B1_YCTREC1)
-                when trim(CFOP.X5_CHAVE) = '5360' and SD2.D2_TES != '520'
+                when trim(CFOP.X5_CHAVE) like '[5-6]360' and SD2.D2_TES != '520'
                 then trim(SB1.B1_YCTREC2)
                 
                 /* LP 610-020 */
