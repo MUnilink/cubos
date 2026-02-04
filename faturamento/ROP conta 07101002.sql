@@ -24,7 +24,7 @@
     ) ZC2
         inner join
         (
-            select
+            select distinct
                 G1.ZG1_FILORI,
                 G1.ZG1_COMPET,
                 G1.ZG1_CODIGO,
@@ -67,7 +67,7 @@ union
     from ZE1010 ZE1
         inner join
         (
-            select
+            select distinct
                 G1.ZG1_FILORI,
                 G1.ZG1_COMPET,
                 G1.ZG1_CODIGO,
