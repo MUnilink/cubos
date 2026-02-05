@@ -198,60 +198,6 @@ union
                         trim(CFOP.X5_CHAVE) like '[5-6]359' or
                         trim(CFOP.X5_CHAVE) like '[5-6]360'
                     ) then '310101002'
-                    
-                    /* LP 610-001 */
-                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
-                    then trim(SB1.B1_YCTREC4)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
-                    then trim(SB1.B1_YCTREC5)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
-                    then trim(SB1.B1_YCTREC3)
-                    
-                    /* LP 610-040 */
-                    when trim(CFOP.X5_CHAVE) = 5359
-                    then trim(SB1.B1_YCTREC1)
-                    
-                    /* LP 610-600 */
-                    when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES = '509'
-                    then trim(SB1.B1_YCTREC2)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]932' and SD2.D2_TES != '509'
-                    then trim(SB1.B1_YCTREC1)
-                    
-                    /* LP 610-010 */
-                    when trim(CFOP.X5_CHAVE) like '[5-6]360' and SD2.D2_TES = '520'
-                    then trim(SB1.B1_YCTREC1)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]360' and SD2.D2_TES != '520'
-                    then trim(SB1.B1_YCTREC2)
-                    
-                    /* LP 610-020 */
-                    when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and SD2.D2_TES in ('507', '539', '501', '534')
-                    then trim(SB1.B1_YCTREC1)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]35[2-3]' and (SD2.D2_TES != '507' and SD2.D2_TES != '539') and SD2.D2_TES not in ('506', '534', '535', '536', '537')
-                    then trim(SB1.B1_YCTREC2)
-                    
-                    /* LP 610-030 */
-                    when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES in ('506', '534', '535', '536', '537')
-                    then trim(SB1.B1_YCTREC1)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537')
-                    then trim(SB1.B1_YCTREC2)
-                    
-                    /* LP 610-050 */
-                    when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES = '522'
-                    then trim(SB1.B1_YCTREC5)
-                    when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES != '522'
-                    then trim(SB1.B1_YCTREC4)
-                    
-                    /* LP 610-015 */
-                    when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520'
-                    then trim(SB1.B1_YCTREC1)
-                    when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES != '520' and SD2.D2_TES != '558'
-                    then trim(SB1.B1_YCTREC2)
-                    
-                    /* outros */
-                    when trim(CFOP.X5_CHAVE) = '5357' and SD2.D2_TES in ('509', '516') then '310101002'
-                    when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
-                    when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
-                    when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501' then '310101001'
                 else null end
             = '310101001' /* NACIONAL */
             and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
