@@ -42,14 +42,6 @@ select
     
     case STJ.TJ_SERVICO when 'PNEMOV' then 'PNEUS' when 'CONSEP' then 'PNEUS' when 'REFORP' then 'PNEUS' when 'PNEROD' then 'PNEUS' else 'MNT' end as TIPO_SERV,
     
-    case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), 113) else null end as DTH_INIMNT,
-    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then convert(datetime, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), 113) else null end as DTH_INIPAR,
-	case when isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM), 113) else null end as DTH_FIMMNT,
-    case when isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then convert(datetime, concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM), 113) else null end as DTH_FIMPAR,
-
-    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 and STL.TL_SEQRELA = 1 then cast(datediff(minute, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_PAR,
-    case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 and STL.TL_SEQRELA = 1 then cast(datediff(minute, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_MNT,
-    
     left(STL.TL_DTFIM, 6) as PERIODO_APP,
     cast(STL.TL_DTFIM as date) as DATA_APP,
     case when isdate(concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI)) = 1 then convert(datetime, concat(STL.TL_DTINICI, ' ', STL.TL_HOINICI), 120) else null end as DTHINI_APP,
@@ -127,27 +119,7 @@ select
     trim(STL.TL_DOC) as NFE_NUM,
     trim(STL.TL_ITEM) as NFE_ITEM,
     trim(SD1.D1_PEDIDO) as PC_NUM,
-    trim(SD1.D1_ITEMPC) as PC_ITEM,
-
-    TQB.TQB_SOLICI as SS,
-    convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INISS,
-    convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCSS,
-    
-    case TQB.TQB_SOLUCA
-        when 'A' then upper('Aguardando Analise')
-        when 'D' then upper('Distribuida')
-        when 'E' then upper('Encerrada')
-        when 'C' then upper('Cancelada')
-        else 'OUTROS'
-    end as SITUACAO_SS,
-
-    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI))/(60.0 *24) else null end as DIAS_SS_OS,
-    case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), concat(SCP.CP_DATPRF, ' ', SCP.CP_YHORASA))/(60.0 *24) else null end as DIAS_OS_SA,
-    datediff(minute, concat(SCP.CP_DATPRF, ' ', SCP.CP_YHORASA), concat(SCP.CP_YDATABA, ' ', SCP.CP_YHORABA))/(60.0 *24) as DIAS_SA_BAIXA,
-    
-    concat(trim(TQB.TQB_CDSERV), ' - ', (select upper(trim(TQ3010.TQ3_NMSERV)) from TQ3010 where TQ3010.D_E_L_E_T_ = '' and TQ3010.TQ3_CDSERV = TQB.TQB_CDSERV)) as SERVICO_SS,
-    concat(trim(TQB.TQB_CDEXEC), ' - ', (select upper(trim(TQ4010.TQ4_NMEXEC)) from TQ4010 where TQ4010.D_E_L_E_T_ = '' and TQ4010.TQ4_CDEXEC = TQB.TQB_CDEXEC)) as EXECUTA_SS,
-    upper(TQB.TQB_USUARI) as USR_SS
+    trim(SD1.D1_ITEMPC) as PC_ITEM
 
 from STL010 STL (nolock)
     inner join STJ010 STJ (nolock)
@@ -171,11 +143,7 @@ from STL010 STL (nolock)
                 inner join ST7010 ST7 (nolock)
                     on ST7.D_E_L_E_T_ = ''
                     and ST7.T7_FABRICA = TQR.TQR_FABRIC
-        
-        left join TQB010 TQB (nolock)
-            on TQB.D_E_L_E_T_ = ''
-            and TQB.TQB_FILIAL = STJ.TJ_FILIAL
-            and TQB.TQB_ORDEM = STJ.TJ_ORDEM
+
         left join STI010 STI (nolock)
             on STI.D_E_L_E_T_ = ''
             and STI.TI_FILIAL = STJ.TJ_FILIAL

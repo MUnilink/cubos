@@ -1,8 +1,9 @@
 select
     TQB.TQB_SOLICI as SS,
     left(TQB.TQB_DTABER, 6) PERIODO,
-    convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INISS,
-    convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCSS,
+    convert(datetime, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), 113) as DT_INICISS,
+    convert(datetime, concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH), 113) as DT_ENCERSS,
+	convert(datetime, concat(TQB.TQB_DTCANC, ' ', TQB.TQB_HRCANC), 113) as DT_CANCESS,
     case when TQB.TQB_DTFECH != '' then cast(datediff(minute, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), concat(TQB.TQB_DTFECH, ' ', TQB.TQB_HOFECH))/60.0 as numeric(15, 2)) else 0.0 end as DURACAO_SS,
     
     case TQB.TQB_SOLUCA
