@@ -15,7 +15,7 @@ select
 	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
 	trim(ZD3.TQN_YITMCT) as TQN_YITMCT
 from
-    (
+(
         select *, case when KMRD > 0 and QTD_LITROS > 0 then ROUND(KMRD/QTD_LITROS, 2) else 0 end as KML
         from
             (
@@ -99,20 +99,28 @@ from
                                     and TQN2.TQN_DTABAS+TQN2.TQN_HRABAS < TQN.TQN_DTABAS+TQN.TQN_HRABAS
                                 order by TQN2.TQN_DTABAS desc) as ULT_COMPLETO,
 
-                            (select TOP 1 TQN2.TQN_DTABAS+TQN2.TQN_HRABAS
-                                from TQN010 TQN2
-                                where TQN2.TQN_PLACA = TQN.TQN_PLACA
-                                    and TQN2.TQN_YTIPO = 'P'
-                                    and TQN2.TQN_CODCOM = TQN.TQN_CODCOM
-                                    and TQN2.D_E_L_E_T_= ' '
-                                    and TQN2.TQN_DTABAS+TQN2.TQN_HRABAS < TQN.TQN_DTABAS+TQN.TQN_HRABAS
-                                order by TQN2.TQN_DTABAS) as ULT_PARC
+                            isnull
+                            (
+                                (
+                                    select TOP 1 TQN2.TQN_DTABAS+TQN2.TQN_HRABAS
+                                    from TQN010 TQN2
+                                    where TQN2.TQN_PLACA = TQN.TQN_PLACA
+                                        and TQN2.TQN_YTIPO = 'P'
+                                        and TQN2.TQN_CODCOM = TQN.TQN_CODCOM
+                                        and TQN2.D_E_L_E_T_= ' '
+                                        and TQN2.TQN_DTABAS+TQN2.TQN_HRABAS < TQN.TQN_DTABAS+TQN.TQN_HRABAS
+                                    order by TQN2.TQN_DTABAS
+                                )
+                                , '2000010100:00'
+                            ) as ULT_PARC
                         from TQN010 TQN
                         where TQN.D_E_L_E_T_ = ' '
                     ) A
                 ) B
             ) C
+        where left(DATA_HORA, 8) > '20201231'
     ) ZD3
+
 	left join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = ZD3.TQN_FROTA
