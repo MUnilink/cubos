@@ -17,16 +17,19 @@ select
     DEV.A1_LOJA as CLI_LOJA,
     DEV.A1_CGC as CLI_CNPJ,
     trim(DEV.A1_NOME) as CLIENTE,
+    trim(DEV.A1_EMAIL) as CLI_EMAIL,
 
     ARM.A1_COD as ARM_CODIGO,
     ARM.A1_LOJA as ARM_LOJA,
     ARM.A1_CGC as ARM_CNPJ,
-    trim(DEV.A1_NOME) as ARMADORA,
+    trim(ARM.A1_NOME) as ARMADORA,
+    trim(ARM.A1_EMAIL) as ARM_EMAIL,
 
     DES.A2_COD as DESP_CODIGO,
     DES.A2_LOJA as DESP_LOJA,
     DES.A2_CGC as DESP_CNPJ,
     trim(DES.A2_NOME) as DESPACHANTE,
+    trim(DES.A2_EMAIL) as DES_EMAIL,
     
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
     concat(trim(ZC1.ZC1_TABPRC), ' - ', (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC)) as TABELA_PRECO,
