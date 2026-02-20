@@ -7,8 +7,8 @@ SELECT
     SF2.F2_DOC as NUMERO_DA_NOTA_FISCAL,
     SD2.D2_PEDIDO as NUMERO_PEDIDO_VENDA,
     SD2.D2_ITEM as NUMERO_ITEM,
-    case when trim(SF2.F2_EMISSAO) = ' ' then ' ' else SF2.F2_EMISSAO end as DATA_DE_EMISSAO,
-    case when trim(SF2.F2_EMINFE) = ' ' then ' ' else SF2.F2_EMINFE end as DATA_SAIDA_NF,
+    trim(SF2.F2_EMISSAO) as DATA_DE_EMISSAO,
+    trim(SF2.F2_EMINFE) as DATA_SAIDA_NF,
     SD2.D2_TIPO as TIPO_DE_NOTA_FISCAL,
     SD2.D2_ORIGLAN as ORIGEM_DO_LANCAMENTO,
     
@@ -29,7 +29,6 @@ SELECT
     
     concat(trim(SC5.C5_FILIAL), trim(SC5.C5_NUM)) as BK_PEDIDODEVENDA,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as BK_OSPORTUARIA,
-
     coalesce
     (
         concat(DUD.DUD_FILORI, DUD.DUD_VIAGEM), /* viagem normal */
@@ -49,6 +48,40 @@ SELECT
                 and SD2.D2_LOJA = SC5010.C5_LOJACLI
         )
     ) as ID_VIAGEMTMS,
+
+    case
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS != '3') then null
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS = '3') then
+        (
+            select DTW010.DTW_DATREA
+            from DTW010 (nolock)
+            where 
+                    DTW010.D_E_L_E_T_ = ''
+                and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+                and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                and DTW010.DTW_ATIVID = 50
+        )
+        when ZC1.ZC1_STATUS = 1 then null
+        when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
+        else ZC1.ZC1_DTENCE end
+    as DT_FIMOS,
+
+    case
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS != '3') then null
+        when exists (select * from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM and DTQ010.DTQ_STATUS = '3') then
+        (
+            select DTW010.DTW_DATREA
+            from DTW010 (nolock)
+            where 
+                    DTW010.D_E_L_E_T_ = ''
+                and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
+                and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                and DTW010.DTW_ATIVID = 49
+        )
+        else ZC1.ZC1_EMISSA end
+    as DT_INIOS,
     
     coalesce(SD2.D2_VALBRUT, 0.0) as VL_FATURAMENTO_TOTAL,
     coalesce(SD2.D2_VALICM, 0.0) as VL_ICMS_FATURAMENTO,
