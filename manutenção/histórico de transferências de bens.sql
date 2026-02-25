@@ -9,6 +9,26 @@ select
 	trim(ST9.T9_ANOMOD) as ANOMODELO,
 	trim(ST9.T9_ANOFAB) as ANOFABRIC,
 	trim(ST9.T9_RENAVAM) as RENAVAM,
+	
+	trim(ST9.T9_TEMCONT) as TIPO_CONT,
+	case when trim(ST9.T9_CODFAMI) = 'VP' and trim(ST9.T9_TEMCONT) = 'S' then 'CM' else ST9.T9_ESTRUTU end as EST_ATRELADO,
+	ST9.T9_MOVIBEM as BEM_MOVIMENTADO,
+	
+	(
+		select
+			(
+				select STZ010.TZ_BEMPAI
+				from STZ010
+				where
+						((concat(STP.TP_DTLEITU, STP.TP_HORA) = concat(STZ010.TZ_DATAMOV, STZ010.TZ_HORAENT)) or (concat(STP.TP_DTLEITU, STP.TP_HORA) = concat(STZ010.TZ_DATASAI, STZ010.TZ_HORASAI)))
+					and STP.TP_CODBEM = STZ010.TZ_CODBEM
+					and STZ010.D_E_L_E_T_ = ''
+					and STP.D_E_L_E_T_ = ''
+			) as CM,*
+		from STP010 STP (nolock)
+		where STP.TP_CODBEM = ST9.T9_CODBEM
+	)
+
 	case ST9.T9_PROPRIE when 1 then 'SIM' when '2' then 'NAO' else 'OUTROS' end as PROPRIO,
 	case ST9.T9_SITBEM when 'A' then 'ATIVO' when 'I' then 'INATIVO' else 'OUTROS' end as BEM_ATIVO,
 	concat(trim(ST9.T9_STATUS), ' - ', trim(TQY.TQY_DESTAT)) as STATUS_BEM,
