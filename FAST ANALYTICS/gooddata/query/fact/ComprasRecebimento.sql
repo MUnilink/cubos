@@ -68,7 +68,7 @@ SELECT
     SC7.C7_DATPRF as DATA_PRVPC,
 
     (
-        select max(coalesce(SCR.CR_DATALIB, ''))
+        select max(coalesce(concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), ''))
         from SCR010 SCR
         where
             SCR.D_E_L_E_T_ = ''
@@ -93,7 +93,7 @@ SELECT
         )
     ) as DATAAPROV_SC, /* data aprovação SC */
     (
-        select max(coalesce(SCR.CR_DATALIB, ''))
+        select max(coalesce(concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), ''))
         from SCR010 SCR
         where
             SCR.D_E_L_E_T_ = ''
