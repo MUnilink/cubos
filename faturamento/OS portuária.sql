@@ -6,6 +6,7 @@ select
     ZC2.ZC2_ITEM as ITEM,
     trim(ZC1.ZC1_ATIVD) as ATIVIDADE_OS,
     trim(ZC1.ZC1_CC) as CC_OS,
+    (select upper(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_= '' and SB1010.B1_COD = ZC1.ZC1_MERCAD) as MERCADORIA,
     
     ZC1.ZC1_PORTO as PORTO,
     (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
@@ -241,6 +242,6 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
-        (ZC2.ZC2_DATA > '20231231' or ZC2.ZC2_DATA = '')
-    and cast(ZC2.ZC2_TIPO as int) in (1, 2, 3, 5, 11)
+        (ZC2.ZC2_DATA > '20241231' or ZC2.ZC2_DATA = '')
+    and ZC2.ZC2_TIPO in ('1', '2', '3', '5', '11')
     and ZC2.D_E_L_E_T_ = ''
