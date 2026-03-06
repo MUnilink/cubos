@@ -3,7 +3,7 @@ select
 
     RAT_IMPR.PERC_RATEIO,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.QTDxVALORUNI else 0.0 end as VALOR_IMPR,
-    case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO else ZC2.TIPO end as ID_TIPO,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO_RAT else ZC2.TIPO end as ID_TIPO,
     case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTD_REAL_ITEM end as HORAS_PROD,
     case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTDxVALORUNI end as VALOR_PROD,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR1 else 0.0 end as HIMP_AFAMNT,
@@ -25,12 +25,12 @@ select
         when ZC2.TIPO = 12 then 'SEGURO EQUIPAMENTO'
         when ZC2.TIPO = 13 then 'PNEUS'
         when ZC2.TIPO = 14 then 'PROVISÕES'
-        when ZC2.TIPO = 15 and RAT_IMPR.TIPO = 2 then 'FOLHA'
-        when ZC2.TIPO = 15 and RAT_IMPR.TIPO = 14 then 'PROVISÕES'
-        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 3 then 'MANUTENÇÃO'
-        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 6 then 'DEPRECIAÇÃO'
-        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 9 then 'DOCUMENTAÇÃO'
-        when ZC2.TIPO = 16 and RAT_IMPR.TIPO = 12 then 'SEGURO EQUIPAMENTO'
+        when ZC2.TIPO = 15 and RAT_IMPR.TIPO_RAT = 2 then 'FOLHA'
+        when ZC2.TIPO = 15 and RAT_IMPR.TIPO_RAT = 14 then 'PROVISÕES'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 3 then 'MANUTENÇÃO'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 6 then 'DEPRECIAÇÃO'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 9 then 'DOCUMENTAÇÃO'
+        when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 12 then 'SEGURO EQUIPAMENTO'
         else 'OUTROS'
     end as TIPO_INSUMO,
     
@@ -100,20 +100,8 @@ from
             ZC2010.ZC2_FILORI as FILORI,
             ZC2010.ZC2_ITEM as ITEM,
             left(ZC1010.ZC1_NUM, 4) as ANO_OS,
-            left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
-            cast(ZC1010.ZC1_EMISSA as date) as DATA_OS,
-            left(ZC2010.ZC2_COMPET, 6) as PERIODO,
             trim(ZC1010.ZC1_ATIVD) as ATIVIDADE_OS,
-            
-            case
-                when trim(ZC1010.ZC1_CC) = '' then
-                    case
-                        when trim(ZC1010.ZC1_ATIVD) in (11, 35) then '304'
-                        when trim(ZC1010.ZC1_ATIVD) = '32' and ZC1010.ZC1_MERCAD not in ('34010011', '') then '304'
-                        else '305'
-                    end
-                else trim(ZC1010.ZC1_CC)
-            end as CC_OS,
+            trim(ZC1010.ZC1_CC) as CC_OS,
 
             case ZC1010.ZC1_STATUS
                 when 1 then 'ABERTA'
@@ -148,6 +136,13 @@ from
                 end, 113
             ) as DTFIM_OS,
 
+            left(ZC1010.ZC1_DTINI, 6) as PERIODO_INIOS,
+            left(ZC1010.ZC1_DTFIM, 6) as PERIODO_FIMOS,
+            left(ZC1010.ZC1_EMISSA, 6) as PERIODO_EMIOS,
+            cast(ZC1010.ZC1_EMISSA as date) as DATA_EMIOS,
+            left(ZC1010.ZC1_DTENCE, 6) as PERIODO_ENCOS,
+            cast(ZC1010.ZC1_DTENCE as date) as DATA_ENCOS,
+
             ZC1010.ZC1_CODSA1,
             ZC1010.ZC1_LOJSA1,
             ZC1010.ZC1_ARMADO,
@@ -155,9 +150,15 @@ from
             ZC1010.ZC1_DESPA,
             ZC1010.ZC1_LJDESP,
             
+            left(ZC2010.ZC2_COMPET, 6) as PERIODO,
             cast(ZC2010.ZC2_DATA as date) as DATA_ITEM,
-            cast(ZC2010.ZC2_DTINI as date) as DATA_INIAPONT,
-            cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAPONT,
+            left(ZC2010.ZC2_DATA, 6) as PERIODO_ITEM,
+            cast(ZC2010.ZC2_DTINI as date) as DATA_INIAP,
+            left(ZC2010.ZC2_DTINI, 6) as PERIODO_INIAP,
+            cast(ZC2010.ZC2_DTFIM as date) as DATA_FIMAP,
+            left(ZC2010.ZC2_DTFIM, 6) as PERIODO_FIMAP,
+
+            case when SUBSTRING(ZC1010.ZC1_DTINI, 1, 6) <= left(ZC2010.ZC2_DATA, 6) AND (SUBSTRING(ZC1010.ZC1_DTENCE, 1, 6) >= left(ZC2010.ZC2_DATA, 6) OR ZC1010.ZC1_DTENCE = ' ') then 'DATA ITEM E OS OK' else 'ERRO DATA ITEM E OS' end as STATUS_DATA,
             
             cast(ZC2010.ZC2_TIPO as int) as TIPO,
             trim(ZC2010.ZC2_COD) as INSUMO,
@@ -178,7 +179,6 @@ from
                 on ZC1010.D_E_L_E_T_ = ''
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
-                /*and SUBSTRING(ZC1010.ZC1_DTINI, 1, 6) <= left(ZC2010.ZC2_DATA, 6) AND (SUBSTRING(ZC1010.ZC1_DTFIM, 1, 6) >= left(ZC2010.ZC2_DATA, 6) OR ZC1010.ZC1_DTFIM = ' ')*/
         where
                 ZC2010.ZC2_COMPET > 20231231
             and ZC2010.D_E_L_E_T_ = ''
@@ -221,7 +221,7 @@ from
                 trim(ZG1.ZG1_ITEMCT) as ATIVIDADE,
                 ZG1.ZG1_COMPET as COMPETENCIA,
                 trim(ZG1.ZG1_CODIGO) as INSUMO,
-                ZG1.ZG1_TIPO as TIPO,
+                ZG1.ZG1_TIPO as TIPO_RAT,
                 cast(
                     ZG1.ZG1_VLIMPR/
                     (
@@ -241,11 +241,11 @@ from
             from ZG1010 ZG1 (nolock)
             where ZG1.D_E_L_E_T_ = ''
         ) RAT_IMPR
-            on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZC2.TIPO
+            on case when RAT_IMPR.TIPO_RAT in (2, 14) then 15 when RAT_IMPR.TIPO_RAT in (3, 6, 9, 12) then 16 else null end = ZC2.TIPO
             and RAT_IMPR.FILIAL = left(ZC2.FILIAL, 4)
             and RAT_IMPR.CC = ZC2.CC_OS
             and RAT_IMPR.ATIVIDADE = ZC2.ATIVIDADE_OS
             and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
             and RAT_IMPR.INSUMO = ZC2.INSUMO
 
-where ZC2.PERIODO > '202406'
+where ZC2.PERIODO > '202412'
