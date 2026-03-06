@@ -42,7 +42,6 @@ select distinct
                     and DTW010.DTW_ATIVID = 50
             )
             when ZC1.ZC1_STATUS = 1 then null
-            when ZC1.ZC1_DTENCE = '' then ZC1.ZC1_DTFIM
             else ZC1.ZC1_DTENCE end
     ,6) as PERIODO_FIMOS,
     
