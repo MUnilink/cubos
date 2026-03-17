@@ -1,42 +1,29 @@
 select
     trim(SRA.RA_FILIAL) as FILIAL,
-	trim(SRA.RA_MAT) as MATRICULA,
+    trim(SRA.RA_MAT) as MATRICULA,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
-	trim(SRA.RA_NOMECMP) as NOME,
-	trim(SRJ.RJ_DESC) as FUNCAO,
+    trim(SRA.RA_NOMECMP) as NOME,
+    trim(SRJ.RJ_DESC) as FUNCAO,
     trim(SQ3.Q3_DESCSUM) as CARGO,
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	trim(SRA.RA_ESTADO) as UF,
-	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+    trim(SRA.RA_ESTADO) as UF,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
     cast(SRA.RA_NASC as date) as NASCIMENTO,
     SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-	trim(CTT.CTT_CUSTO) as CC,
-	trim(CTT.CTT_DESC01) as CCUSTO,
-	trim(CTD.CTD_ITEM) as AT,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
+    trim(CTT.CTT_CUSTO) as CC,
+    trim(CTT.CTT_DESC01) as CCUSTO,
+    trim(CTD.CTD_ITEM) as AT,
+    trim(CTD.CTD_DESC01) as ATIVIDADE,
     trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-	trim(SRJ.RJ_CODCBO) as CBO,
-	trim(SRA.RA_SEXO) as SEXO,
-	trim(SRA.RA_CIC) as CPF,
+    trim(SRJ.RJ_CODCBO) as CBO,
+    trim(SRA.RA_SEXO) as SEXO,
+    trim(SRA.RA_CIC) as CPF,
     trim(SRA.RA_PIS) as PIS,
     trim(SRA.RA_NUMCP) as CTPS,
     trim(SRA.RA_CATFUNC) as COD_TRAB,
     concat(trim(SRA.RA_CATFUNC), ' - ', (select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_CATFUNC and SX5010.X5_TABELA = '28')) as DESC_TRAB,
-
-    case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
-    
-    SRV.RV_COD as VERBA,
-    coalesce(nullif(trim(SRV.RV_DESCDET), ''), trim(SRV.RV_DESC)) as DESC_VERBA,
-
-    case trim(SRV.RV_TIPOCOD)
-        when '1' then 'PROVENTO'
-        when '2' then 'DESCONTO'
-        when '3' then 'BASE PROVENTO'
-        when '4' then 'BASE DESCONTO'
-        else '-'
-    end as TIPO_VERBA,
 
     cast(SRR.RR_DATAPAG as date) as DT_PAGAMENT,
     cast(SRG.RG_DTAVISO as date) as DT_AVISOPRE,
@@ -46,7 +33,7 @@ select
     cast(SRG.RG_DTPROAV as date) as DT_PROJAVIS,
     
     trim(SRG.RG_TIPORES) as COD_RESCISAO,
-    (select trim(substring(RCC010.RCC_CONTEU, 2, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRG.RG_TIPORES)) as DESC_RESCISAO,
+    (select trim(substring(RCC010.RCC_CONTEU, 3, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRG.RG_TIPORES)) as DESC_RESCISAO,
     trim(RCE.RCE_DESCRI) as SINDICATO,
     trim(SRG.RG_OBS) as OBS,
     
@@ -58,12 +45,26 @@ select
     SRG.RG_DFERAVI as DIAS_FER_AVIS,
     
     SRA.RA_SALARIO as SALARIO,
-    case when SRV.RV_TIPOCOD = '2' and SRV.RV_PD != '490' then SRR.RR_VALOR*-1 else SRR.RR_VALOR end as VALOR,
-    case when SRV.RV_PD = '490' then SRR.RR_VALOR else 0.0 end as VALOR_LIQ,
-    concat(trim(SRR.RR_ROTEIR), ' - ', (select trim(SRY010.RY_DESC) from SRY010 where SRY010.D_E_L_E_T_ = '' and SRY010.RY_CALCULO = SRR.RR_ROTEIR)) as ROTEIRO,
+    case when SRV.RV_COD = '490' then SRR.RR_VALOR end as VALOR_LIQ,
+    case when SRV.RV_TIPOCOD = '1' then SRR.RR_VALOR end as VALOR_PROV,
+    case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then SRR.RR_VALOR end as VALOR_DESC,
+    case when SRV.RV_TIPOCOD = '3' then SRR.RR_VALOR end as VALOR_BASEPROV,
+    case when SRV.RV_TIPOCOD = '4' then SRR.RR_VALOR end as VALOR_BASEDESC,
+    
+    case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_DESC) end as DESC_PROV,
+    case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_DESC) end as DESC_DESC,
+    case when SRV.RV_TIPOCOD = '3' then trim(SRV.RV_DESC) end as DESC_BASEPROV,
+    case when SRV.RV_TIPOCOD = '4' then trim(SRV.RV_DESC) end as DESC_BASEDESC,
+
+    case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_COD) end as COD_PROV,
+    case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_COD) end as COD_DESC,
+    case when SRV.RV_TIPOCOD = '3' then trim(SRV.RV_COD) end as COD_BASEPROV,
+    case when SRV.RV_TIPOCOD = '4' then trim(SRV.RV_COD) end as COD_BASEDESC,
+    
     SRR.RR_HORAS as HORAS,
     SRR.RR_PERIODO as PERIODO,
-    SRR.RR_SEQ as SEQ
+    SRR.RR_SEQ as SEQ,
+    case SRV.RV_COD when '490' then 'ZZZZ' else concat(SRV.RV_TIPOCOD, SRV.RV_COD) end as ID_VERBA
     
 from SRR010 SRR (nolock)
     left join SRG010 SRG (nolock)
@@ -102,4 +103,8 @@ from SRR010 SRR (nolock)
         on SRV.D_E_L_E_T_ = ''
         and substring(SRR.RR_FILIAL, 1, 4) = SRV.RV_FILIAL
         and SRR.RR_PD = SRV.RV_COD
-where SRR.D_E_L_E_T_ = ''
+where
+        SRR.D_E_L_E_T_ = ''
+    and SRR.RR_ROTEIR = 'RES'
+    and SRR.RR_MAT =:FILTROPARAMETRO
+order by ID_VERBA
