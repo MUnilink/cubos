@@ -32,6 +32,7 @@ date data;
 date dataHora;
 date dataHora1;
 date dataHora2;
+date hora;
 string TipoPessoa;
 
 //===============================================//
@@ -145,28 +146,43 @@ function date formatDatetime(string format) {
     {
         if(isDate(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}") == true)
             dataHora = str2date(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}");
-            if ((dataHora < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
-                return null;
+        if ((dataHora < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
+            return null;
+        } else {
+            if ((GOODDATA_DEMO_MODE == "S") and (GOODDATA_DEMO_DATE <> null)) {
+                return dateAdd(dataHora, dateDiff(today(), GOODDATA_DEMO_DATE, day), day);
             } else {
-                if ((GOODDATA_DEMO_MODE == "S") and (GOODDATA_DEMO_DATE <> null)) {
-                    return dateAdd(dataHora, dateDiff(today(), GOODDATA_DEMO_DATE, day), day);
-                } else {
-                    return dataHora;
-                }
+                return dataHora;
             }
+        }
+    }
+}
+
+// Função de tratamento de campos tipo datetime.
+function string formatTime(string format) {
+    if (format == null) {
+        return null;
+    } else
+    {
+        if(isDate(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}") == false)
+            return null;
+        else
+        {
+            return date2str(extractTime(str2date(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}")), 'HH:mm:ss');
+        }
     }
 }
 
 //Função para calcular a diferença entre duas datas.
-    //dataHora1 - Valor da primeira data em data.
-    //dataHora2 - Valor da segunda data em data.
-function double diffDate(date dataHora1, date dataHora2)
+    //dataHora1 - Valor da menor data em data.
+    //dataHora2 - Valor da maior data em data.
+function double diffDate(date dataHora2, date dataHora1)
 {
     if (dataHora1 == null or dataHora2 == null or dataHora1 < GOODDATA_MINDATE or dataHora1 > GOODDATA_MAXDATE or dataHora2 < GOODDATA_MINDATE or dataHora2 > GOODDATA_MAXDATE)
         return 0.0;
     else
     {
-        return abs(decimal2double(dateDiff(dataHora2, dataHora1, minute)));
+        return decimal2double(dateDiff(dataHora2, dataHora1, minute));
     }
 }
 
