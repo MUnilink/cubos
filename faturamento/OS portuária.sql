@@ -1,5 +1,9 @@
 select
-    case when SUBSTRING(ZC1.ZC1_DTINI, 1, 6) <= left(ZC2.ZC2_DATA, 6) AND (SUBSTRING(ZC1.ZC1_DTFIM, 1, 6) >= left(ZC2.ZC2_DATA, 6) OR ZC1.ZC1_DTFIM = ' ') then 'apontamento durante OS aberta' else 'apontamento fora das datas OS' end as APONT_COMPET, /* se ini OS antes do apontamento e fim OS pós apontamento ou fim OS vazio */
+    case
+        when (ZC1.ZC1_DTINI <= ZC2.ZC2_DATA AND (ZC1.ZC1_DTFIM >= ZC2.ZC2_DATA OR ZC1.ZC1_DTFIM = ' ')) and (ZC1.ZC1_EMISSA <= ZC2.ZC2_DATA and (ZC1.ZC1_DTENCE >= ZC2.ZC2_DATA OR ZC1.ZC1_DTENCE = ' ')) then 'OK, item dentro das datas da OS' /* se ini OS antes do apontamento e fim OS pós apontamento ou fim OS vazio */ 
+        else 'ERRO, apontamento incluído fora das datas OS'
+    end as APONT_COMPET,
+    
     ZC1.ZC1_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM_OS,
     cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
@@ -174,6 +178,8 @@ select
     
     case
         when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'não se aplica'
+        when (select count(ZC2010.ZC2_ITEM) from ZC2010 where ZC2010.D_E_L_E_T_ = '' and ZC2.ZC2_FILIAL = ZC2010.ZC2_FILIAL and ZC2.ZC2_NUM = ZC2010.ZC2_NUM and ZC2.ZC2_ITEM = ZC2010.ZC2_ITEM) > 1 then 'item duplicado na OS'
+        when ZC2.ZC2_QTDREC = 0 then 'qtd recurso não pode ser nula'
         when isdate(ZC2.ZC2_DTINI) = 0 or nullif(ZC2.ZC2_DTINI, '') is null or isdate(nullif(ZC2.ZC2_HRINI, '')) = 0 or nullif(ZC2.ZC2_HRINI, '') is null then 'data ou hora ini ausente'
         when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(nullif(ZC2.ZC2_HRFIM, '')) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.999 then 'mais que 13 h apontadas'
