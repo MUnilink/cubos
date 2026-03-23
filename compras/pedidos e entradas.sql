@@ -14,7 +14,7 @@ select
 	trim(SC1.C1_NUM) as SC,
 	trim(SC1.C1_ITEM) as ITEM_SC,
 	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
-	cast(SC1.C1_EMISSAO as date) as DATA_SC,
+	convert(datetime, concat(SC1.C1_EMISSAO, ' ', isnull(nullif(SC1.C1_YHORASC, ''), '00:00:00')), 113) as DATA_SC,
 	left(SC1.C1_EMISSAO, 6) as PERIODO_SC,
 	left(SC1.C1_OP, 6) as OS,
 	
@@ -30,7 +30,7 @@ select
 	end as SITAPR_SC,
 
 	(
-		select top 1 cast(SCR010.CR_DATALIB as date)
+		select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
 		from SCR010
 		where
 				SCR010.D_E_L_E_T_ = ''
@@ -40,10 +40,10 @@ select
 			and SCR010.CR_NUM = SC1.C1_NUM
 	) as DATAAPROV_SC,
 	
-	datediff(day,
+	datediff(minute,
 		SC1.C1_EMISSAO,
 		(
-			select top 1 cast(SCR010.CR_DATALIB as date)
+			select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
@@ -52,7 +52,7 @@ select
 				and SCR010.CR_FILIAL = SC1.C1_FILIAL
 				and SCR010.CR_NUM = SC1.C1_NUM
 		)
-	) as DIASAPROV_SC,
+	)/(60*24.0) as DIASAPROV_SC,
 
 	SC8.C8_NUM as COTACAO,
     SC8.C8_ITEM as ITEM_COTA,
@@ -61,9 +61,9 @@ select
 	SC8.C8_TOTAL as VALOR_COTADO,
 	cast(SC8.C8_EMISSAO as date) as DATA_COTACAO,
 	
-	datediff(day,
+	datediff(minute,
 		(
-			select top 1 cast(SCR010.CR_DATALIB as date)
+			select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
@@ -72,8 +72,8 @@ select
 				and SCR010.CR_FILIAL = SC1.C1_FILIAL
 				and SCR010.CR_NUM = SC1.C1_NUM
 		),
-		SC7.C7_EMISSAO
-	) as DIASAPROV_SC_CO,
+		concat(SC7.C7_EMISSAO, ' ', isnull(nullif(SC7.C7_YHORAPC, ''), '00:00:00'))
+	)/(60*24.0) as DIASAPROV_SC_CO,
 
 	trim(SC7.C7_NUM) as PEDIDO,
 	trim(SC7.C7_ITEM) as ITEM_PC,
@@ -85,7 +85,7 @@ select
 	trim(replace(replace(SC7.C7_OBS, char(10), ''), char(13), '')) as OBS_PC,
 	trim(replace(replace(SC7.C7_OBSM, char(10), ''), char(13), '')) as MEMO_PC,
 
-	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
+	convert(datetime, concat(SC7.C7_EMISSAO, ' ', isnull(nullif(SC7.C7_YHORAPC, ''), '00:00:00')), 113) as DATA_PEDIDO,
 	left(SC7.C7_EMISSAO, 6) as PERIODO_PC,
 	(select trim(upper(SY1010.Y1_NOME)) from SY1010 where SY1010.Y1_COD = SC7.C7_COMPRA) as SOLICITANTE_PC,
 	trim(upper(SY1.Y1_NOME)) as DIGITACAO_PC,
@@ -98,7 +98,7 @@ select
 	end as APROVACAO_PC,
 
 	(
-		select top 1 cast(SCR010.CR_DATALIB as date)
+		select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
 		from SCR010
 		where
 				SCR010.D_E_L_E_T_ = ''
@@ -108,8 +108,8 @@ select
 			and SCR010.CR_NUM = SC7.C7_NUM
 	) as DATAAPROV_PC,
 	
-	datediff(day,
-		SC7.C7_EMISSAO,
+	datediff(minute,
+		concat(SC7.C7_EMISSAO, ' ', isnull(nullif(SC7.C7_YHORAPC, ''), '00:00:00')),
 		(
 			select top 1 convert(date, SCR010.CR_DATALIB, 103)
 			from SCR010
@@ -119,7 +119,7 @@ select
 				and SCR010.CR_TIPO = 'PC'
 				and SCR010.CR_FILIAL = SC7.C7_FILIAL
 				and SCR010.CR_NUM = SC7.C7_NUM)
-	) as DIASAPROV_PC,
+	)/(60*24.0) as DIASAPROV_PC,
 
 	(
 		select cast(max(SCR010.CR_NIVEL) as int)
@@ -209,9 +209,9 @@ select
 	case when exists (select * from SD2010 where SD2010.D_E_L_E_T_ = '' and SD2010.D2_TIPO = 'D' and SD2010.D2_NFORI = SD1.D1_DOC and SD2010.D2_SERIORI = SD1.D1_SERIE and SD2010.D2_ITEMORI = SD1.D1_ITEM and SD2010.D2_CLIENTE = SD1.D1_FORNECE and SD2010.D2_LOJA = SD1.D1_LOJA)
 		then 'R' else SD1.D1_TIPO end as NF_TIPO,
 	
-	datediff(day,
+	datediff(minute,
 		(
-			select top 1 cast(SCR010.CR_DATALIB as date)
+			select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
@@ -221,7 +221,9 @@ select
 				and SCR010.CR_NUM = SC7.C7_NUM
 		),
 		SD1.D1_DTDIGIT
-	) as DIASAPROV_PC_NF,
+	)/(60*24.0) as DIASAPROV_PC_NF,
+
+	datediff(minute, convert(datetime, concat(SC1.C1_EMISSAO, ' ', isnull(nullif(SC1.C1_YHORASC, ''), '00:00:00')), 113), SD1.D1_DTDIGIT)/(60*24.0) as LEADTIME_COMPRAS,
 	
 	trim(SD1.D1_CC) as NF_CC,
 	trim(SD1.D1_ITEMCTA) as NF_AT,
@@ -321,4 +323,6 @@ from SC7010 SC7 (nolock)
 			and SE2.E2_LOJA = SD1.D1_LOJA
 			and SE2.D_E_L_E_T_ = ''
 
-where SC7.D_E_L_E_T_ = ''
+where
+		SC7.D_E_L_E_T_ = ''
+	and SC7.C7_EMISSAO >=:PEDIDOS_DESDE
