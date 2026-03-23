@@ -46,25 +46,25 @@ select
     
     SRA.RA_SALARIO as SALARIO,
     case when SRV.RV_COD = '490' then SRR.RR_VALOR end as VALOR_LIQ,
+    (select SRS010.RS_VALDEP from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRR.RR_FILIAL and SRS010.RS_MAT = SRR.RR_MAT and SRR.RR_PD = '990') as VL_FGTSSALDODEPOSITO,
+    (select SRS010.RS_SALATU from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRR.RR_FILIAL and SRS010.RS_MAT = SRR.RR_MAT and SRR.RR_PD = '990') as VL_FGTSSALDOATUAL,
     case when SRV.RV_TIPOCOD = '1' then SRR.RR_VALOR end as VALOR_PROV,
     case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then SRR.RR_VALOR end as VALOR_DESC,
-    case when SRV.RV_TIPOCOD = '3' then SRR.RR_VALOR end as VALOR_BASEPROV,
-    case when SRV.RV_TIPOCOD = '4' then SRR.RR_VALOR end as VALOR_BASEDESC,
-    
     case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_DESC) end as DESC_PROV,
     case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_DESC) end as DESC_DESC,
-    case when SRV.RV_TIPOCOD = '3' then trim(SRV.RV_DESC) end as DESC_BASEPROV,
-    case when SRV.RV_TIPOCOD = '4' then trim(SRV.RV_DESC) end as DESC_BASEDESC,
-
     case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_COD) end as COD_PROV,
     case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_COD) end as COD_DESC,
-    case when SRV.RV_TIPOCOD = '3' then trim(SRV.RV_COD) end as COD_BASEPROV,
-    case when SRV.RV_TIPOCOD = '4' then trim(SRV.RV_COD) end as COD_BASEDESC,
-    
-    SRR.RR_HORAS as HORAS,
-    SRR.RR_PERIODO as PERIODO,
-    SRR.RR_SEQ as SEQ,
-    case SRV.RV_COD when '490' then 'ZZZZ' else concat(SRV.RV_TIPOCOD, SRV.RV_COD) end as ID_VERBA
+
+    case when SRV.RV_COD in ('747') then SRR.RR_VALOR end as VL_BASEFGTSRESCISAO,
+    case when SRV.RV_COD in ('775') then SRR.RR_VALOR end as VL_BASEFGTS13RESCISAO,
+    case when SRV.RV_COD in ('759') then SRR.RR_VALOR end as VL_FGTSQUITACAO,
+    case when SRV.RV_COD in ('761') then SRR.RR_VALOR end as VL_FGTS13,
+    case when SRV.RV_COD in ('858') then SRR.RR_VALOR end as VL_AVISO,
+    case when SRV.RV_COD in ('760') then SRR.RR_VALOR end as VL_MULTA,
+    case when SRV.RV_COD in ('759', '761') then SRR.RR_VALOR end as VL_SALDORESC,
+    case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L') then SRR.RR_VALOR end as VL_ECONSIGNADO,
+    case when SRV.RV_COD in ('759', '761', '760') then SRR.RR_VALOR end as VL_APAGAR,
+    SRR.RR_PERIODO as PERIODO
     
 from SRR010 SRR (nolock)
     left join SRG010 SRG (nolock)
@@ -107,4 +107,3 @@ where
         SRR.D_E_L_E_T_ = ''
     and SRR.RR_ROTEIR = 'RES'
     and SRR.RR_MAT =:FILTROPARAMETRO
-order by ID_VERBA
