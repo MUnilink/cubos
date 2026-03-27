@@ -29,6 +29,7 @@ select
 	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
 	case SRA.RA_YPARENT when 1 then 'S' when 2 then 'N' else 'outros' end as PAIMAE,
 	(select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_ESTCIVI and SX5010.X5_TABELA = '33') as ESTADO_CIVIL,
+	trim(RCE.RCE_DESCRI) as SINDICATO,
 	
 	cast(SRA.RA_NASC as date) as NASCIMENTO,
 	trim(SRA.RA_ENDEREC) as ENDERECO,
@@ -47,6 +48,7 @@ select
 	trim(SRA.RA_RGUF) as RG_UFEXP,
 	trim(SRA.RA_RGORG) as RG_ORGEXP,
 	trim(SRA.RA_PIS) as PIS_TITULAR,
+	trim(SRA.RA_NUMCP) as CTPS,
 	trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
 	trim(SRA.RA_DDDFONE) as TELEFONE_DDD,
 	trim(SRA.RA_TELEFON) as TELEFONE_NUM,
@@ -56,15 +58,17 @@ select
 	month(SRA.RA_NASC) as mes_ANIVERSARIO,
 	day(SRA.RA_NASC) as dia_ANIVERSARIO,
 
+	concat(trim(SRA.RA_CATFUNC), ' - ', (select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_CATFUNC and SX5010.X5_TABELA = '28')) as CAT_FUNC,
 	case SRA.RA_TPCONTR
 		when 1 then upper('Indeterminado')
 		when 2 then upper('Determinado')
 		when 3 then upper('Intermitente')
 		else 'outros'
 	end as TIPO_CONTRATO,
-
+	
 	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
 	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE,
+	case when SRA.RA_ADTPOSE like '%T' then 0.015*SRA.RA_SALARIO else 0.0 end as ADIC_TEMPO,
 	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
 
 	case SRA.RA_TPDEFFI 
@@ -132,4 +136,8 @@ from SRA010 SRA (nolock)
 		on SQB.D_E_L_E_T_ = ''
 		and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 		and SQB.QB_DEPTO = SRA.RA_DEPTO
+	left join RCE010 RCE (nolock)
+		on RCE.D_E_L_E_T_ = ''
+		and RCE.RCE_CODIGO = SRA.RA_SINDICA
+		and RCE.RCE_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
 where SRA.D_E_L_E_T_ = ''
