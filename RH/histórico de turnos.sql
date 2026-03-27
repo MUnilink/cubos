@@ -18,13 +18,17 @@ select
     trim(SRA.RA_SEXO) as SEXO,
     trim(SRA.RA_CIC) as CPF,
 
-    concat(trim(SPF.PF_TURNODE), ' - ', (select trim(SR6010.R6_DESC) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF.PF_TURNODE)) as TURNO_ORI,
+    trim(SPF.PF_TURNODE) as TURNO_ORI_COD,
+    (select trim(SR6010.R6_DESC) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF.PF_TURNODE) as TURNO_ORI,
     trim(SPF.PF_SEQUEDE) as SEQ_ORI,
-    concat(SPF.PF_REGRADE, ' - ', (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRADE)) as REGRA_ORI,
+    trim(SPF.PF_REGRADE) as REGRA_ORI_COD,
+    (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRADE) as REGRA_ORI,
     
-    concat(trim(SPF.PF_TURNOPA), ' - ', (select trim(SR6010.R6_DESC) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF.PF_TURNOPA)) as TURNO_DES,
+    trim(SPF.PF_TURNOPA) as TURNO_DES_COD,
+    (select trim(SR6010.R6_DESC) from SR6010 (nolock) where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF.PF_TURNOPA) as TURNO_DES,
     trim(SPF.PF_SEQUEPA) as SEQ_DES,
-    concat(SPF.PF_REGRAPA, ' - ', (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRAPA)) as REGRA_DES,
+    trim(SPF.PF_REGRAPA) as REGRA_DES_COD,
+    (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRAPA) as REGRA_DES,
     
     cast(SPF.PF_DATA as date) as DATA,
     left(SPF.PF_DATA, 6) as PERIODO
