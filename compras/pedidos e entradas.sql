@@ -30,7 +30,7 @@ select
 	end as SITAPR_SC,
 
 	(
-		select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
+		select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
 		from SCR010
 		where
 				SCR010.D_E_L_E_T_ = ''
@@ -43,7 +43,7 @@ select
 	datediff(minute,
 		SC1.C1_EMISSAO,
 		(
-			select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
+			select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
@@ -63,7 +63,7 @@ select
 	
 	datediff(minute,
 		(
-			select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
+			select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
@@ -98,7 +98,7 @@ select
 	end as APROVACAO_PC,
 
 	(
-		select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
+		select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
 		from SCR010
 		where
 				SCR010.D_E_L_E_T_ = ''
@@ -211,7 +211,7 @@ select
 	
 	datediff(minute,
 		(
-			select top 1 convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113)
+			select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
