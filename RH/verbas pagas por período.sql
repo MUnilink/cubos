@@ -31,10 +31,7 @@
 		case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
-		case SRV.RV_COD
-			when '183' then 'VALOR A RECEBER'
-			when '999' then 'VALOR A RECEBER'
-		else trim(SRV.RV_DESCDET) end as DESC_VERBA2,
+		trim(SRV.RV_DESCDET) as DESC_VERBA2,
 
 		case trim(SRV.RV_TIPOCOD)
 			when '1' then 'PROVENTO'
@@ -43,6 +40,9 @@
 			when '4' then 'BASE DESCONTO'
 			else '-'
 		end as TIPO_VERBA,
+
+		trim(RCN.RCN_CODIGO) as IDVERBA,
+    	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
 		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 else SRC.RC_VALOR end as VALOR,
 		SRC.RC_HORAS as HORAS,
@@ -54,13 +54,18 @@
 		null as IR,
 		null as FGTS,
 
-		case when lag(SRC.RC_MAT, 1, 0) over (partition by SRC.RC_FILIAL, SRC.RC_PERIODO, SRC.RC_MAT order by SRC.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
+		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
 	from SRC010 SRC (nolock)
 		inner join SRV010 SRV (nolock)
 			on SRV.D_E_L_E_T_ = ''
 			and substring(SRC.RC_FILIAL, 1, 4) = SRV.RV_FILIAL
 			and SRC.RC_PD = SRV.RV_COD
+
+			left join RCN010 RCN (nolock)
+				on RCN.D_E_L_E_T_ = ''
+				and RCN.RCN_CODIGO = SRV.RV_CODFOL
+		
 		inner join SRA010 SRA (nolock)
 			on SRA.D_E_L_E_T_ = ''
 			and SRA.RA_FILIAL = SRC.RC_FILIAL
@@ -118,10 +123,7 @@ union
 		case when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
 		
 		trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
-		case SRV.RV_COD
-			when '183' then 'VALOR A RECEBER'
-			when '999' then 'VALOR A RECEBER'
-		else trim(SRV.RV_DESCDET) end as DESC_VERBA2,
+		trim(SRV.RV_DESCDET) as DESC_VERBA2,
 
 		case trim(SRV.RV_TIPOCOD)
 			when '1' then 'PROVENTO'
@@ -130,6 +132,9 @@ union
 			when '4' then 'BASE DESCONTO'
 			else '-'
 		end as TIPO_VERBA,
+
+		trim(RCN.RCN_CODIGO) as IDVERBA,
+    	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
 		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
 		SRD.RD_HORAS as HORAS,
@@ -141,13 +146,18 @@ union
 		SRD.RD_IR as IR,
 		SRD.RD_FGTS as FGTS,
 
-		case when lag(SRD.RD_MAT, 1, 0) over (partition by SRD.RD_FILIAL, SRD.RD_PERIODO, SRD.RD_MAT order by SRD.R_E_C_N_O_) = 0 then 1 else 0 end as contador_func
+		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
 	from SRD010 SRD (nolock)
 		inner join SRV010 SRV (nolock)
 			on SRV.D_E_L_E_T_ = ''
 			and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
 			and SRD.RD_PD = SRV.RV_COD
+				
+			left join RCN010 RCN (nolock)
+				on RCN.D_E_L_E_T_ = ''
+				and RCN.RCN_CODIGO = SRV.RV_CODFOL
+		
 		inner join SRA010 SRA (nolock)
 			on SRA.D_E_L_E_T_ = ''
 			and SRA.RA_FILIAL = SRD.RD_FILIAL
@@ -172,5 +182,5 @@ union
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
-			datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 7
+			SRD.RD_DATARQ
 		and SRD.D_E_L_E_T_ = ''
