@@ -18,16 +18,20 @@
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
-        SPH.PH_PD as EVENTO,
         case SP9.P9_TIPOCOD
             when '1' then 'PROVENTO'
 			when '2' then 'DESCONTO'
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
         else 'OUTROS' end as TIPO_EVENTO,
+        null as IDVERBA,
+        null as IDVERBA_NOME,
         
-        concat(SPH.PH_PD, ' - ', trim(SP9.P9_DESC)) as DESC_EVENTO,
-        concat(trim(SPH.PH_ABONO), ' - ', (select trim(SP6010.P6_DESC) from SP6010 where SP6010.D_E_L_E_T_ = '' and SP6010.P6_CODIGO = SPH.PH_ABONO)) as DESC_MOTIVO,
+        (select top 1 last_value(trim(SR6010.R6_DESC)) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPH.PH_FILIAL and SPF010.PF_MAT = SPH.PH_MAT and SPF010.PF_DATA <= SPH.PH_DATA) as TURNO_DES,
+        trim(SPH.PH_PD) as COD_EVENTO,
+        trim(SP9.P9_DESC) as DESC_EVENTO,
+        trim(SPH.PH_ABONO) as COD_MOTIVO,
+        (select trim(SP6010.P6_DESC) from SP6010 where SP6010.D_E_L_E_T_ = '' and SP6010.P6_CODIGO = SPH.PH_ABONO) as DESC_MOTIVO,
         cast(SPH.PH_QUANTC as numeric(15, 2)) as QTD_EVENTO,
         cast(SPH.PH_QTABONO as numeric(15, 2)) as QTD_ABONO,
         cast(SPH.PH_DATA as date) as DATA,
@@ -65,7 +69,7 @@
                 on CTD.D_E_L_E_T_ = ''
                 and CTD.CTD_ITEM = SRA.RA_ITEM  
     where
-            datediff(month, SPH.PH_DATA, getdate()) < 7
+            datediff(month, SPH.PH_DATA, getdate()) < 4
         and SPH.D_E_L_E_T_ = ''
 union
     select
@@ -88,16 +92,20 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
-        SPC.PC_PD as EVENTO,
         case SP9.P9_TIPOCOD
             when '1' then 'PROVENTO'
 			when '2' then 'DESCONTO'
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
         else 'OUTROS' end as TIPO_EVENTO,
+        null as IDVERBA,
+        null as IDVERBA_NOME,
         
-        concat(SPC.PC_PD, ' - ', trim(SP9.P9_DESC)) as DESC_EVENTO,
-        concat(trim(SPC.PC_ABONO), ' - ', (select trim(SP6010.P6_DESC) from SP6010 where SP6010.D_E_L_E_T_ = '' and SP6010.P6_CODIGO = SPC.PC_ABONO)) as DESC_MOTIVO,
+        (select top 1 last_value(trim(SR6010.R6_DESC)) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPC.PC_FILIAL and SPF010.PF_MAT = SPC.PC_MAT and SPF010.PF_DATA <= SPC.PC_DATA) as TURNO_DES,
+        trim(SPC.PC_PD) as COD_EVENTO,
+        trim(SP9.P9_DESC) as DESC_EVENTO,
+        trim(SPC.PC_ABONO) as COD_MOTIVO,
+        (select trim(SP6010.P6_DESC) from SP6010 where SP6010.D_E_L_E_T_ = '' and SP6010.P6_CODIGO = SPC.PC_ABONO) as DESC_MOTIVO,
         cast(SPC.PC_QUANTC as numeric(15, 2)) as QTD_EVENTO,
         cast(SPC.PC_QTABONO as numeric(15, 2)) as QTD_ABONO,
         cast(SPC.PC_DATA as date) as DATA,
@@ -156,15 +164,19 @@ union
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
 
-        SRD.RD_PD as EVENTO,
         case SRV.RV_TIPOCOD
             when '1' then 'PROVENTO'
 			when '2' then 'DESCONTO'
 			when '3' then 'BASE PROVENTO'
 			when '4' then 'BASE DESCONTO'
         else 'OUTROS' end as TIPO_EVENTO,
+        trim(RCN.RCN_CODIGO) as IDVERBA,
+        trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
         
-        concat(SRD.RD_PD, ' - ', coalesce(nullif(trim(SRV.RV_DESCDET), ''), trim(SRV.RV_DESC))) as DESC_EVENTO,
+        (select top 1 last_value(trim(SR6010.R6_DESC)) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SRD.RD_FILIAL and SPF010.PF_MAT = SRD.RD_MAT and PF_DATA <= concat(SRD.RD_DATARQ, '01')) as TURNO_DES,
+        trim(SRD.RD_PD) as COD_EVENTO,
+        coalesce(nullif(trim(SRV.RV_DESCDET), ''), trim(SRV.RV_DESC)) as DESC_EVENTO,
+        null as COD_MOTIVO,
         null as DESC_MOTIVO,
         null as QTD_EVENTO,
         null as QTD_ABONO,
@@ -184,6 +196,10 @@ union
                 or SRV.RV_COD in (select SP9010.P9_CODFOL from SP9010 where SP9010.D_E_L_E_T_ = '')
                 or SRV.RV_COD in (select RCM010.RCM_PD from RCM010 where RCM010.D_E_L_E_T_ = '')
             )
+
+            left join RCN010 RCN (nolock)
+				on RCN.D_E_L_E_T_ = ''
+				and RCN.RCN_CODIGO = SRV.RV_CODFOL
 
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
@@ -210,5 +226,5 @@ union
                 on CTD.D_E_L_E_T_ = ''
                 and CTD.CTD_ITEM = SRA.RA_ITEM
     where
-            datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 7
+            datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 4
         and SRD.D_E_L_E_T_ = ''
