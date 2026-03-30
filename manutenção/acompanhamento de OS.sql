@@ -63,41 +63,22 @@ select
     concat(trim(TQB.TQB_CDEXEC), ' - ', (select upper(trim(TQ4010.TQ4_NMEXEC)) from TQ4010 where TQ4010.D_E_L_E_T_ = '' and TQ4010.TQ4_CDEXEC = TQB.TQB_CDEXEC)) as EXECUTA_SS,
     upper(TQB.TQB_USUARI) as USR_SS,
 	
-	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then cast(datediff(minute, case when STJ.TJ_DTPRINI < concat(left(STJ.TJ_DTPRINI, 6), '01') then concat(left(STJ.TJ_DTPRINI, 6), '01') else concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI) end, case when STJ.TJ_DTPRINI > eomonth(STJ.TJ_DTPRINI) then eomonth(STJ.TJ_DTPRINI) else concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM) end) as numeric(15, 2))/60.0 else 0.0 end as TEMPO_PAR,
-	case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then cast(datediff(minute, case when STJ.TJ_DTMRINI < concat(left(STJ.TJ_DTMRINI, 6), '01') then concat(left(STJ.TJ_DTMRINI, 6), '01') else concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI) end, case when STJ.TJ_DTMRINI > eomonth(STJ.TJ_DTMRINI) then eomonth(STJ.TJ_DTMRINI) else concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM) end) as numeric(15, 2))/60.0 else 0.0 end as TEMPO_MNT,
+	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then cast(datediff(minute, STJ.TJ_DTPRINI, STJ.TJ_DTPRFIM) as numeric(15, 2))/60.0 else 0.0 end as TEMPO_PAR,
+	case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then cast(datediff(minute, STJ.TJ_DTMRINI, STJ.TJ_DTMRFIM) as numeric(15, 2))/60.0 else 0.0 end as TEMPO_MNT,
 	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI))/60.0 else null end as TEMPO_SS_OS,
-	
-	case when STJ.TJ_DTPRINI < concat(left(STJ.TJ_DTPRINI, 6), '01') then concat(left(STJ.TJ_DTPRINI, 6), '01') else concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI) end as TEMPOPAR_MES,
-	case when STJ.TJ_DTPRINI > eomonth(STJ.TJ_DTPRINI) then eomonth(STJ.TJ_DTPRINI) else concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM) end as FIM_OSMES,
-	case when STJ.TJ_DTMRINI < concat(left(STJ.TJ_DTMRINI, 6), '01') then concat(left(STJ.TJ_DTMRINI, 6), '01') else concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI) end as INI_OSMES,
-	case when STJ.TJ_DTMRINI > eomonth(STJ.TJ_DTMRINI) then eomonth(STJ.TJ_DTMRINI) else concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM) end as FIM_OSMES,
-
-	/*
-	case when
-		isnull
-		(
-			(
-				select max(cast(STL010.TL_SEQRELA as int))
-				from STL010
-				where 
-						STL010.D_E_L_E_T_ = ''
-					and STL010.TL_ORDEM = STJ.TJ_ORDEM
-					and STL010.TL_PLANO = STJ.TJ_PLANO
-					and STL010.TL_FILIAL = STJ.TJ_FILIAL
-			),
-			0) = 0
-		then 'PREVISTOS' else 'REALIZADOS' end as CONTEM_ITENS,
-	
 	(
 		select
-			case
-				when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
-				when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
-				when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
-				when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
-				when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.00 then 'PRÉ-NOTA' /* LARANJA */
-				when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
-			else 'OUTROS' end
+			case when exists(SC7.C7_NUM) then
+				case
+					when trim(SC7.C7_RESIDUO) = 'S' then 'ELIMINADO' /* CINZA */
+					when trim(SC7.C7_CONAPRO) = 'B' and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'BLOQUEADO' /* AZUL */
+					when cast(SC7.C7_QUJE as numeric(15, 2)) >= cast(SC7.C7_QUANT as numeric(15, 2)) then 'RECEBIDO' /* VERMELHO */
+					when cast(SC7.C7_QUJE as numeric(15, 2)) != 0.00 and (cast(SC7.C7_QUJE as numeric(15, 2)) < cast(SC7.C7_QUANT as numeric(15, 2))) then 'REC. PARCIAL' /* AMARELO */
+					when cast(SC7.C7_QTDACLA as numeric(15, 2)) > 0.00 then 'PRÉ-NOTA' /* LARANJA */
+					when cast(SC7.C7_TIPO as int) = 1 and SC7.C7_RESIDUO = '' then 'APROVADO' /* VERDE */
+				else 'OUTROS' end
+			else 'SEM PEDIDO DE COMPRA'
+			end
 		from STL010 (nolock)
 			left join SD1010 (nolock)
 				on SD1010.D_E_L_E_T_ = ''
@@ -114,13 +95,14 @@ select
 					and SC7.C7_FILIAL = SD1.D1_FILIAL
 					and SC7.C7_NUM = SD1.D1_PEDIDO
 					and SC7.C7_ITEM = SD1.D1_ITEMPC
-		where on STL010.TL_ORIGNFE = 'SD1'
-		on STJ.D_E_L_E_T_ = ''
-		and STJ.TJ_ORDEM = STL.TL_ORDEM
-		and STJ.TJ_PLANO = STL.TL_PLANO
-		and STJ.TJ_FILIAL = STL.TL_FILIAL
+		where
+			on STL010.TL_ORIGNFE = 'SD1'
+			on STJ.D_E_L_E_T_ = ''
+			and STJ.TJ_ORDEM = STL.TL_ORDEM
+			and STJ.TJ_PLANO = STL.TL_PLANO
+			and STJ.TJ_FILIAL = STL.TL_FILIAL
 
-	) as STATUS_COMPRA,*/
+	) as STATUS_COMPRA,
 
 	1 as qtd
 from STJ010 STJ (nolock)
