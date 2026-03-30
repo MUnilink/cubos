@@ -63,10 +63,16 @@ select
     concat(trim(TQB.TQB_CDEXEC), ' - ', (select upper(trim(TQ4010.TQ4_NMEXEC)) from TQ4010 where TQ4010.D_E_L_E_T_ = '' and TQ4010.TQ4_CDEXEC = TQB.TQB_CDEXEC)) as EXECUTA_SS,
     upper(TQB.TQB_USUARI) as USR_SS,
 	
-	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then cast(datediff(minute, concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI), concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_PAR,
-    case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then cast(datediff(minute, concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI), concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM))/60.0 as numeric(15, 2)) else 0.0 end as TEMPO_MNT,
-	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI))/(60.0 *24) else null end as DIAS_SS_OS,
+	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 and isdate(concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM)) = 1 then cast(datediff(minute, case when STJ.TJ_DTPRINI < concat(left(STJ.TJ_DTPRINI, 6), '01') then concat(left(STJ.TJ_DTPRINI, 6), '01') else concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI) end, case when STJ.TJ_DTPRINI > eomonth(STJ.TJ_DTPRINI) then eomonth(STJ.TJ_DTPRINI) else concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM) end) as numeric(15, 2))/60.0 else 0.0 end as TEMPO_PAR,
+	case when isdate(concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI)) = 1 and isdate(concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM)) = 1 then cast(datediff(minute, case when STJ.TJ_DTMRINI < concat(left(STJ.TJ_DTMRINI, 6), '01') then concat(left(STJ.TJ_DTMRINI, 6), '01') else concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI) end, case when STJ.TJ_DTMRINI > eomonth(STJ.TJ_DTMRINI) then eomonth(STJ.TJ_DTMRINI) else concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM) end) as numeric(15, 2))/60.0 else 0.0 end as TEMPO_MNT,
+	case when isdate(concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI)) = 1 then datediff(minute, concat(TQB.TQB_DTABER, ' ', TQB.TQB_HOABER), concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI))/60.0 else null end as TEMPO_SS_OS,
 	
+	case when STJ.TJ_DTPRINI < concat(left(STJ.TJ_DTPRINI, 6), '01') then concat(left(STJ.TJ_DTPRINI, 6), '01') else concat(STJ.TJ_DTPRINI, ' ', STJ.TJ_HOPRINI) end as TEMPOPAR_MES,
+	case when STJ.TJ_DTPRINI > eomonth(STJ.TJ_DTPRINI) then eomonth(STJ.TJ_DTPRINI) else concat(STJ.TJ_DTPRFIM, ' ', STJ.TJ_HOPRFIM) end as FIM_OSMES,
+	case when STJ.TJ_DTMRINI < concat(left(STJ.TJ_DTMRINI, 6), '01') then concat(left(STJ.TJ_DTMRINI, 6), '01') else concat(STJ.TJ_DTMRINI, ' ', STJ.TJ_HOMRINI) end as INI_OSMES,
+	case when STJ.TJ_DTMRINI > eomonth(STJ.TJ_DTMRINI) then eomonth(STJ.TJ_DTMRINI) else concat(STJ.TJ_DTMRFIM, ' ', STJ.TJ_HOMRFIM) end as FIM_OSMES,
+
+	/*
 	case when
 		isnull
 		(
@@ -114,7 +120,8 @@ select
 		and STJ.TJ_PLANO = STL.TL_PLANO
 		and STJ.TJ_FILIAL = STL.TL_FILIAL
 
-	) as STATUS_COMPRA,
+	) as STATUS_COMPRA,*/
+
 	1 as qtd
 from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
