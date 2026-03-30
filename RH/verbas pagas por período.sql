@@ -44,7 +44,7 @@
 		trim(RCN.RCN_CODIGO) as IDVERBA,
     	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
-		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 else SRC.RC_VALOR end as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 when RCN.RCN_CODIGO in ('0045') then 0.0 else SRC.RC_VALOR end as VALOR,
 		SRC.RC_HORAS as HORAS,
 		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
@@ -136,7 +136,7 @@ union
 		trim(RCN.RCN_CODIGO) as IDVERBA,
     	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
-		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 when RCN.RCN_CODIGO in ('0045') then 0.0 else SRD.RD_VALOR end as VALOR,
 		SRD.RD_HORAS as HORAS,
 		null as HORAS_PADRAO,
 
@@ -182,5 +182,5 @@ union
 			on CTD.D_E_L_E_T_ = ''
 			and CTD.CTD_ITEM = SRD.RD_ITEM
 	where
-			SRD.RD_DATARQ
+			SRD.RD_DATARQ >=:PERIODO_INI
 		and SRD.D_E_L_E_T_ = ''
