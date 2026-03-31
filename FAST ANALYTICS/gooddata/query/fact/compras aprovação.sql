@@ -6,7 +6,7 @@ SELECT
     case when coalesce(SCP.CP_FILIAL, SC1.C1_FILIAL, SC7.C7_FILIAL) is null then 'P |01||' else 'P |01|01'+ CAST(coalesce(SCP.CP_FILIAL, SC1.C1_FILIAL, SC7.C7_FILIAL) as char (6)) end as BK_FILIAL,
     'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1CP.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(B1CP.B1_COD, B1C1.B1_COD, B1C7.B1_COD, ' ')), ' '), '|') AS BK_ITEM,
     'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(BMCP.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(BMCP.BM_GRUPO, BMC1.BM_GRUPO, BMC7.BM_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
-    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC7.C7_FORNECE, ' '))+RTRIM(COALESCE(SC7.C7_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
+    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') AS BK_FORNECEDOR,
     'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_DIG.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_DIG.Y1_COD, ' ')), ' '), '|') AS BK_COMPRADOR,
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTTCP.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTTCP.CTT_CUSTO, CTTC1.CTT_CUSTO, CTTC7.CTT_CUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
@@ -16,6 +16,10 @@ SELECT
         then 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_DIG.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_DIG.Y1_COD, ' ')), ' '), '|')
         else 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_COM.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_COM.Y1_COD, ' ')), ' '), '|')
     end as ID_NEGOCIADOR,
+    
+    cast(SCR.CR_EMISSAO as date) as DATA_DOC,
+    cast(SCR.CR_DATALIB as date) as DATA_LIB,
+    convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
     
     trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC)) as DATA_SC,
     trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC)) as DATA_EMIPC,
@@ -30,12 +34,10 @@ SELECT
 
     (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = coalesce(SCP.CP_USER, SC1.C1_USER)) as SOLICITANTE,
     trim(SCR.CR_APROV) as ITEM_APROVA,
-    trim(SCR.CR_GRUPO) as GRUPO_APROV,
+    trim(SCR.CR_GRUPO) as GRUPO_APROV, 
     trim(SCR.CR_ITGRP) as ITEM_GRUPO,
     trim(SCR.CR_NIVEL) as NIVEL,
-    convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
-    cast(SCR.CR_DATALIB as date) as DATA_LIB,
-    (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
+    (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVANTE,
 
     cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
     cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_DOC,
@@ -148,7 +150,6 @@ from SCR010 SCR (nolock)
                 on BMCP.BM_FILIAL = B1CP.B1_FILIAL
                 and BMCP.BM_GRUPO = B1CP.B1_GRUPO
                 and BMCP.D_E_L_E_T_ = ' '
-
 where
         SCR.D_E_L_E_T_ = ' '
-    and SCR.CR_DATALIB > '20250731'
+    and SCR.CR_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
