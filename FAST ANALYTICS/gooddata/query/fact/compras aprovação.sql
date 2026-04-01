@@ -11,47 +11,38 @@ SELECT
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTTCP.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTTCP.CTT_CUSTO, CTTC1.CTT_CUSTO, CTTC7.CTT_CUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
     case when SA2.A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_EST, ' '))+RTRIM(COALESCE(SA2.A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
     'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTDCP.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(CTDCP.CTD_ITEM, CTDC1.CTD_ITEM, CTDC7.CTD_ITEM, ' ')), ' '), '|') AS BK_ITEM_CONTABIL,
+    'P |01|SAH010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1CP.AH_FILIAL, ' '))+'|'+RTRIM(COALESCE(B1CP.B1_UM, B1C1.B1_UM, B1C7.B1_UM, ' ')), ' '), '|') AS BK_UNIDADE_DE_MEDIDA,
     
     case when Y1_COM.Y1_COD is null or Y1_COM.Y1_COD = ''
         then 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_DIG.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_DIG.Y1_COD, ' ')), ' '), '|')
         else 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_COM.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_COM.Y1_COD, ' ')), ' '), '|')
-    end as ID_NEGOCIADOR,
+    end as ID_NEGOCIANTE,
     
     cast(SCR.CR_EMISSAO as date) as DATA_DOC,
     cast(SCR.CR_DATALIB as date) as DATA_LIB,
     convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
     
-    trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC)) as DATA_SC,
-    trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC)) as DATA_EMIPC,
-    SC7.C7_DATPRF as DATA_PRVPC,
-    SD1.D1_EMISSAO as DATA_EMINF,
-    trim(concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF)) as DATA_DIGNF, /* data */
-    coalesce(concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), '') as DATAAPROV_SC, /* data aprovação SC */
-    coalesce(concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), '') as DATAAPROV_PC, /* data aprovação PC */
+    trim(concat(SCP.CP_EMISSAO, ' ', SCP.CP_YH)) as DT_SA,
+    trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC)) as DT_SC,
+    trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC)) as DT_EMIPC,
+    SC7.C7_DATPRF as DT_PRVPC,
+    SD1.D1_EMISSAO as DT_EMINF,
+    trim(concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF)) as DT_DIGNF,
 
+    SCR.CR_TIPO as DOC_TIPO,
     SCR.CR_FILIAL as DOC_FILIAL,
     SCR.CR_NUM as DOC_NUM,
 
     (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = coalesce(SCP.CP_USER, SC1.C1_USER)) as SOLICITANTE,
     trim(SCR.CR_APROV) as ITEM_APROVA,
-    trim(SCR.CR_GRUPO) as GRUPO_APROV, 
+    trim(SCR.CR_GRUPO) as GRUPO_APROV,
     trim(SCR.CR_ITGRP) as ITEM_GRUPO,
     trim(SCR.CR_NIVEL) as NIVEL,
     (select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVANTE,
 
     cast(SCR.CR_VALLIB as numeric(15, 2)) as VALOR_LIB,
     cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_DOC,
-    concat(trim(SCR.CR_STATUS), ' - ',
-    case SCR.CR_STATUS
-        when 1 then 'PENDENTE'
-        when 2 then 'PENDENTE'
-        when 3 then 'LIBERADA'
-        when 4 then 'BLOQUEADA'
-        when 5 then 'LIBERADA'
-        when 6 then 'REJEITADA'
-        when 7 then 'REJEITADA'
-        else 'OUTROS'
-    end) as STATUS_APROV
+    trim(SCR.CR_STATUS) as COD_APROV
 
 from SCR010 SCR (nolock)
     left join SC7010 SC7
