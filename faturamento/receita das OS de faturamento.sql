@@ -31,6 +31,8 @@ select
         when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 6 then 'DEPRECIAÇÃO'
         when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 9 then 'DOCUMENTAÇÃO'
         when ZC2.TIPO = 16 and RAT_IMPR.TIPO_RAT = 12 then 'SEGURO EQUIPAMENTO'
+        when ZC2.TIPO = 20 then 'IMPR COMB'
+        when ZC2.TIPO = 21 then 'IMPR PNEU'
         else 'OUTROS'
     end as TIPO_INSUMO,
     
@@ -248,4 +250,4 @@ from
             and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
             and RAT_IMPR.INSUMO = ZC2.INSUMO
 
-where ZC2.PERIODO > '202412'
+where ZC2.PERIODO > '202409'

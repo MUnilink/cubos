@@ -60,6 +60,8 @@ select distinct
         when ZE1.ZE1_TIPO = 17 then 'DIÁRIA'
         when ZE1.ZE1_TIPO = 18 then 'SEGURO AVARIA'
         when ZE1.ZE1_TIPO = 19 then 'SEGURO ROUBO'
+        when ZE1.ZE1_TIPO = 20 then 'IMPR COMB'
+        when ZE1.ZE1_TIPO = 21 then 'IMPR PNEU'
         when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 2 then 'FOLHA'
         when ZE1.ZE1_TIPO = 15 and RAT_IMPR.TIPO = 14 then 'PROVISÕES'
         when ZE1.ZE1_TIPO = 16 and RAT_IMPR.TIPO = 3 then 'MANUTENÇÃO'
@@ -118,4 +120,4 @@ from ZE1010 ZE1 (nolock)
         and RAT_IMPR.INSUMO = ZE1.ZE1_COD
 where
         ZE1.D_E_L_E_T_ = ''
-    and left(ZE1.ZE1_COMPET,6)=:PERIODO
+    and ZE1.ZE1_COMPET > '20240731'
