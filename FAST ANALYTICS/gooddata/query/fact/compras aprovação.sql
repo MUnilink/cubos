@@ -152,4 +152,5 @@ from SCR010 SCR (nolock)
                 and BMCP.D_E_L_E_T_ = ' '
 where
         SCR.D_E_L_E_T_ = ' '
+    and SCR.CR_STATUS in ('03', '06')
     and SCR.CR_EMISSAO BETWEEN <<START_DATE>> AND <<FINAL_DATE>>
