@@ -12,7 +12,7 @@ SELECT 'P |R' AS BK_APROV_COMPRA,
 UNION
     select distinct
         trim(SCR010.CR_STATUS) as BK_APROV_COMPRA,
-        trim(SCR010.CR_STATUS) as COD_APROV,
+        trim(SCR010.CR_STATUS) as CODIGO_APROVCOMPRA,
         case SCR010.CR_STATUS
             when '01' then 'PENDENTE NIVEL'
             when '02' then 'PENDENTE'
