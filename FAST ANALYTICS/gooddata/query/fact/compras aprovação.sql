@@ -65,6 +65,13 @@ from SCR010 SCR (nolock)
             AND SA2.A2_COD = SC7.C7_FORNECE
             AND SA2.A2_LOJA = SC7.C7_LOJA
             AND SA2.D_E_L_E_T_ = ' '
+
+            LEFT JOIN SX5010 GRPFOR
+                ON GRPFOR.X5_FILIAL = '      '
+                AND GRPFOR.X5_TABELA = 'Y7'
+                AND GRPFOR.X5_CHAVE = SA2.A2_GRUPO
+                AND GRPFOR.D_E_L_E_T_ = ' '
+        
         left join SY1010 Y1_DIG
             on Y1_DIG.Y1_FILIAL = left(SC7.C7_FILIAL, 2)
             and Y1_DIG.Y1_USER = SC7.C7_USER
