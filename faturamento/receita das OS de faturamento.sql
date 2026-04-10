@@ -2,10 +2,10 @@ select
     ZC2.*,
 
     RAT_IMPR.PERC_RATEIO,
-    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.QTDxVALORUNI else 0.0 end as VALOR_IMPR,
+    case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.QTDxVALORUNI when ZC2.TIPO in (20, 21) then ZC2.QTDxVALORUNI else 0.0 end as VALOR_IMPR,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.TIPO_RAT else ZC2.TIPO end as ID_TIPO,
-    case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTD_REAL_ITEM end as HORAS_PROD,
-    case when ZC2.TIPO in (15, 16) then 0.0 else ZC2.QTDxVALORUNI end as VALOR_PROD,
+    case when ZC2.TIPO in (15, 16) or ZC2.TIPO in (20, 21) then 0.0 else ZC2.QTD_REAL_ITEM end as HORAS_PROD,
+    case when ZC2.TIPO in (15, 16) or ZC2.TIPO in (20, 21) then 0.0 else ZC2.QTDxVALORUNI end as VALOR_PROD,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR1 else 0.0 end as HIMP_AFAMNT,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR2 else 0.0 end as HIMP_FER,
     case when ZC2.TIPO in (15, 16) then RAT_IMPR.PERC_RATEIO * ZC2.ZC2_IMPR3 else 0.0 end as HIMP_PON,
