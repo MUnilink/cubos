@@ -41,7 +41,7 @@ SELECT
 
     (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = coalesce(SCP.CP_USER, SC1.C1_USER)) as SOLICITANTE,
     trim(SCR.CR_USERLIB) as APROVOU_USR,
-    trim(SCR.CR_LIBAPRO) as APROVOU_COD,
+    'P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|') as APROVOU_COD,
     trim(SCR.CR_USER) as USR_APROV,
     trim(SCR.CR_APROV) as COD_APROV,
     trim(SCR.CR_NIVEL) as NIVEL,
@@ -53,7 +53,10 @@ SELECT
     cast(SCR.CR_TOTAL as numeric(15, 2)) as VALOR_DOC,
     trim(SCR.CR_STATUS) as STATUS_APROV
 
-from SCR010 SCR (nolock)
+from SCR010 SCR
+    left join SAK010 SAK
+        on SAK010.D_E_L_E_T_ = ''
+        and SAK010.AK_COD = SCR.CR_LIBAPRO
     left join SC7010 SC7
         on SCR.D_E_L_E_T_ = ''
         and SCR.CR_TIPO = 'PC'
