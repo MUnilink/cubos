@@ -22,6 +22,7 @@
 		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
 		trim(SRJ.RJ_FUNCAO) as FUNCAO,
 		trim(SRJ.RJ_DESC) as DESC_FUNCAO,
+		concat(trim(SRA.RA_CATEFD), ' - ', substring((select max(upper(trim(RCC010.RCC_CONTEU))) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S049' and left(RCC010.RCC_CONTEU, 3) = SRA.RA_CATEFD), 6, 250)) as CAT_ESOCIAL,
 
 		trim(SRC.RC_PERIODO) as PERIODO,
 		trim(SRC.RC_PD) as VERBA,
@@ -114,6 +115,7 @@ union
 		trim(SQ3.Q3_DESCSUM) as DESC_CARGO,
 		trim(SRJ.RJ_FUNCAO) as FUNCAO,
 		trim(SRJ.RJ_DESC) as DESC_FUNCAO,
+		concat(trim(SRA.RA_CATEFD), ' - ', substring((select max(upper(trim(RCC010.RCC_CONTEU))) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S049' and left(RCC010.RCC_CONTEU, 3) = SRA.RA_CATEFD), 6, 250)) as CAT_ESOCIAL,
 
 		trim(SRD.RD_PERIODO) as PERIODO,
 		trim(SRD.RD_PD) as VERBA,
