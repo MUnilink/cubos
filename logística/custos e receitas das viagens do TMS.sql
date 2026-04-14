@@ -35,6 +35,7 @@ select distinct
     case when ZE1.ZE1_TIPO in (15, 16) then cast(RAT_IMPR.PERC_RATEIO * ZE1.ZE1_TOTAL as numeric(15 ,2)) when ZE1.ZE1_TIPO in (20, 21) then cast(ZE1.ZE1_TOTAL as numeric(15, 2)) else 0.00 end as VALOR_IMPR,
     case when ZE1.ZE1_TIPO in (15, 16) then RAT_IMPR.TIPO else ZE1.ZE1_TIPO end as ID_TIPO,
     case when ZE1.ZE1_TIPO in (15, 16) or ZE1.ZE1_TIPO in (20, 21) then 0.0 else cast(ZE1.ZE1_TOTAL as numeric(15, 2)) end as VALOR_PROD,
+    cast(RAT_IMPR.PERC_RATEIO as numeric(15, 4)) as PERC_RATEIO,
     cast(ZE1.ZE1_IMPR1 as numeric(15, 2)) as HIMP_AFAMNT,
     cast(ZE1.ZE1_IMPR2 as numeric(15, 2)) as HIMP_FER,
     cast(ZE1.ZE1_IMPR3 as numeric(15, 2)) as HIMP_PON,
