@@ -25,11 +25,18 @@ select
 
     OS.ID_RECURSO,
     OS.INSUMO,
-    OS.ITEM,
     OS.DT_INIOS,
     OS.DT_FIMOS,
     OS.DATA_APP,
+    OS.DATA_EMIOS,
+    OS.DT_INIOS,
+    OS.DT_FIMOS,
+    OS.DATA_ENCOS,
+    OS.INSUMO,
+    OS.DATA_APP,
+    OS.DATA_ITEM,
     OS.COMPETENCIA,
+
     OS.BK_UNIDADE_DE_MEDIDA,
     OS.ATIVIDADE_OS,
     OS.CC_OS,
@@ -52,11 +59,17 @@ select
     case when OS.ID_TIPO_ITEM in (15, 16) then cast(sum(RAT_IMPR.PERC_RATEIO * OS.VALOR_TOTAL) as numeric (15, 2)) else 0.0 end as VL_IMPR,
 
     /* RM */
+    OS.PERIODO_OS,
+    OS.PERIODO_INIOS,
+    OS.PERIODO_FIMOS,
+    OS.PERIODO_ENCOS,
+    OS.PERIODO_COMPETENCIA,
+    OS.PERIODO_APP,
+    OS.PERIODO_ITEM,
     OS.OS,
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,
-    OS.DT_ENCOS,
     RAT_IMPR.TIPO,
     sum(RAT_IMPR.PERC_RATEIO) as PROPIMPR,
 
@@ -84,15 +97,19 @@ from
             case when cast(ZC2010.ZC2_TIPO as int) = 1 then 'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SB1010.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC2010.ZC2_COD, ' ')), ' '), '|') else null end as COD_SB1,
             case when cast(ZC2010.ZC2_TIPO as int) in (3, 6, 9, 12, 16, 10, 13) then (select concat(trim(ST9010.T9_FILIAL), trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2010.ZC2_COD) and cast(ZC2010.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 16)) else null end as COD_DA3,
             case when cast(ZC2010.ZC2_TIPO as int) in (2, 14, 15) then (select concat(trim(SQ3010.Q3_FILIAL), trim(SQ3010.Q3_CARGO)) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and trim(SQ3010.Q3_CARGO) = trim(ZC2010.ZC2_COD) and cast(ZC2010.ZC2_TIPO as int) in (2, 14, 15)) else null end as COD_SRJ,
+            'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1010.ZC1_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
+            'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(ZC1010.ZC1_ATIVD, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
+            ZC1010.ZC1_CC as CC_OS,
+            ZC1010.ZC1_ATIVD as ATIVIDADE_OS,
 
+            ZC1010.ZC1_EMISSA as DATA_EMIOS,
+            ZC1010.ZC1_DTINI as DT_INIOS,
+            ZC1010.ZC1_DTFIM as DT_FIMOS,
+            ZC1010.ZC1_DTENCE as DATA_ENCOS,
             trim(ZC2010.ZC2_COD) as INSUMO,
-            trim(ZC2010.ZC2_ITEM) as ITEM,
-            cast(ZC1010.ZC1_EMISSA as date) as DT_INIOS,
-            cast(ZC1010.ZC1_DTENCE as date) as DT_ENCOS,
-            cast(ZC1010.ZC1_DTFIM as date) as DATA_APP,
-            cast(ZC2010.ZC2_DATA as date) as DATA_APP,
-            cast(case when ZC1010.ZC1_STATUS = 1 then null when ZC1010.ZC1_DTENCE = '' then ZC1010.ZC1_DTFIM else ZC1010.ZC1_DTENCE end as date) as DT_FIMOS,
-            concat(left(isnull(nullif(ZC2010.ZC2_COMPET, ''), ZC1010.ZC1_DTFIM), 6), '01') as COMPETENCIA,
+            ZC2010.ZC2_DTFIM as DATA_APP,
+            ZC2010.ZC2_DATA as DATA_ITEM,
+            concat(left(ZC2010.ZC2_COMPET, 6), '01') as COMPETENCIA,
             
             ZC2010.ZC2_QTDPRV as QTD_PREV,
             ZC2010.ZC2_QTDREA as QTD_REAL,
@@ -111,11 +128,17 @@ from
             ZC2010.ZC2_IMPR1 as HIMP1,
             ZC2010.ZC2_IMPR2 as HIMP2,
             ZC2010.ZC2_IMPR3 as HIMP3,
-
-            'P |01|CTD010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTD010.CTD_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_ITEMCTA, ' ')), ' '), '|') as BK_ITEM_CONTABIL,
-            'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT010.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SC6010.C6_CC, ' ')), ' '), '|') as BK_CENTRO_DE_CUSTO,
-
+            
             /* RM */
+            
+            left(ZC1010.ZC1_EMISSA, 6) as PERIODO_OS,
+            left(ZC1010.ZC1_DTINI, 6) as PERIODO_INIOS,
+            left(ZC1010.ZC1_DTFIM, 6) as PERIODO_FIMOS,
+            left(ZC1010.ZC1_DTENCE, 6) as PERIODO_ENCOS,
+            left(ZC2010.ZC2_COMPET, 6) as PERIODO_COMPETENCIA,
+            left(ZC2010.ZC2_DTFIM, 6) as PERIODO_APP,
+            left(ZC2010.ZC2_DATA, 6) as PERIODO_ITEM,
+            
             substring(ZC2010.ZC2_NUM, 6, 10) as OS,
             case ZC1010.ZC1_TIPOP
                 when 1 then upper('Cabotagem')
@@ -178,7 +201,7 @@ from
                 and CTD010.D_E_L_E_T_ = ''
             left join CTT010
                 on CTT010.D_E_L_E_T_ = ''
-                and CTT010.CTT_FILIAL = substring(SC6010.C6_FILIAL, 1, 4)
+                and CTT010.CTT_FILIAL = substring(ZC1010.ZC1_FILIAL, 1, 4)
                 and CTT010.CTT_CUSTO = ZC1010.ZC1_CC
         
         where ZC2010.D_E_L_E_T_ = ''
@@ -209,15 +232,18 @@ from
             where
                     SC6010.D_E_L_E_T_ = ''
         ) PV on concat(PV.FILIAL, PV.OS) = OS.ID_OSPORTUARIA
-        
+
         left join
         (
             select
                 ZG1.ZG1_FILORI as FILIAL,
-                ZG1.ZG1_COMPET as COMPETENCIA,
+                concat(ZG1.ZG1_COMPET, '01') as COMPETENCIA,
                 trim(ZG1.ZG1_CODIGO) as INSUMO,
                 ZG1.ZG1_TIPO as TIPO,
-                cast(
+                ZG1.ZG1_CC as CC,
+                ZG1.ZG1_ITEMCT as AT,
+                cast
+                (
                     ZG1.ZG1_VLIMPR/
                     (
                         select sum(ZG1010.ZG1_VLIMPR)
@@ -227,6 +253,8 @@ from
                         and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
                         and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
                         and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                        and ZG1010.ZG1_CC = ZG1.ZG1_CC
+                        and ZG1010.ZG1_ITEMCT = ZG1.ZG1_ITEMCT
                         and ZG1010.D_E_L_E_T_ = ''
                     )
                     as numeric(15, 2)
@@ -236,10 +264,19 @@ from
         ) RAT_IMPR
             on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = OS.ID_TIPO_ITEM
             and RAT_IMPR.FILIAL = OS.FILIAL
-            and RAT_IMPR.COMPETENCIA = left(OS.COMPETENCIA, 6)
+            and RAT_IMPR.COMPETENCIA = OS.COMPETENCIA
             and RAT_IMPR.INSUMO = OS.INSUMO
+            and RAT_IMPR.CC = OS.CC_OS
+            and RAT_IMPR.AT = OS.ATIVIDADE_OS
 
-where OS.DT_INIOS =:PERIODO_OS
+where
+    OS.PERIODO_OS =:PERIODO_OS or
+    OS.PERIODO_INIOS =:PERIODO_INIOS or
+    OS.PERIODO_FIMOS =:PERIODO_FIMOS or
+    OS.PERIODO_ENCOS =:PERIODO_ENCOS or
+    OS.PERIODO_COMPETENCIA =:PERIODO_COMPETENCIA or
+    OS.PERIODO_APP =:PERIODO_APP or
+    OS.PERIODO_ITEM =:PERIODO_ITEM
 group by
     OS.BK_FILIAL,
     OS.BK_CLIENTE,
@@ -250,8 +287,8 @@ group by
     PV.ID_NFS,
     OS.BK_NAT_FINANCEIRA,
     OS.BK_CONDICAO_DE_PAGAMENTO,
-    PV.BK_ITEM_CONTABIL,
-    PV.BK_CENTRO_DE_CUSTO,
+    OS.BK_ITEM_CONTABIL,
+    OS.BK_CENTRO_DE_CUSTO,
     OS.ID_TABELA_PRECO,
     OS.ID_TIPO_ITEM,
     OS.COD_SB1,
@@ -265,15 +302,26 @@ group by
     OS.COMPETENCIA,
     OS.BK_UNIDADE_DE_MEDIDA,
     OS.USUARIO,
-    OS.DT_ENCOS,
-    OS.ITEM,
+    OS.DATA_EMIOS,
+    OS.DT_INIOS,
+    OS.DT_FIMOS,
+    OS.DATA_ENCOS,
+    OS.INSUMO,
     OS.DATA_APP,
+    OS.DATA_ITEM,
     RAT_IMPR.TIPO,
     OS.ID_RECURSO,
     OS.ATIVIDADE_OS,
     OS.CC_OS,
 
     /* RM */
+    OS.PERIODO_OS,
+    OS.PERIODO_INIOS,
+    OS.PERIODO_FIMOS,
+    OS.PERIODO_ENCOS,
+    OS.PERIODO_COMPETENCIA,
+    OS.PERIODO_APP,
+    OS.PERIODO_ITEM,
     OS.TIPO_OP,
     OS.STATUS_FATURAMENTO,
     OS.STATUS_OS,
