@@ -3,6 +3,7 @@ SELECT
     concat('SD1', trim(SD1.D1_FILIAL), trim(SD1.D1_FORNECE), trim(SD1.D1_LOJA), trim(SD1.D1_DOC), trim(SD1.D1_SERIE)) as ID_NF,
     concat(trim(SC7.C7_FILIAL), trim(SC7.C7_NUM)) as ID_PEDIDO,
     concat(trim(SC1.C1_FILIAL), trim(SC1.C1_NUM)) as ID_SOLICITACAO,
+    concat(trim(SCP.CP_FILIAL), trim(SCP.CP_NUM)) as ID_SOLICITAARM,
     case when coalesce(SCP.CP_FILIAL, SC1.C1_FILIAL, SC7.C7_FILIAL) is null then 'P |01||' else 'P |01|01'+ CAST(coalesce(SCP.CP_FILIAL, SC1.C1_FILIAL, SC7.C7_FILIAL) as char (6)) end as BK_FILIAL,
     'P |01|SB1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(B1CP.B1_FILIAL, ' '))+'|'+RTRIM(COALESCE(B1CP.B1_COD, B1C1.B1_COD, B1C7.B1_COD, ' ')), ' '), '|') AS BK_ITEM,
     'P |01|SBM010|'+ COALESCE(NULLIF(RTRIM(COALESCE(BMCP.BM_FILIAL, ' '))+'|'+RTRIM(COALESCE(BMCP.BM_GRUPO, BMC1.BM_GRUPO, BMC7.BM_GRUPO, ' ')), ' '), '|') AS BK_GRUPO_ESTOQUE,
@@ -20,7 +21,11 @@ SELECT
     end as ID_NEGOCIANTE,
     
     cast(SCR.CR_EMISSAO as date) as DATA_DOC,
-    cast(SCR.CR_DATALIB as date) as DATA_LIB,
+    case SCR.CR_TIPO
+        when 'SA' then trim(concat(SCP.CP_EMISSAO, ' ', SCP.CP_YHORASA))
+        when 'SC' then trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC))
+        when 'PC' then trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC))
+    else SCR.CR_EMISSAO end as DATAHORA_DOC,
     convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
     
     case
