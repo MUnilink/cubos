@@ -1,4 +1,4 @@
-select distinct
+select
     ZE1.ZE1_NUM as VIAGEM,
     left(ZE4.ZE4_DATAFI, 6) as PERIODO_VGA,
     case when isdate(concat(ZE4.ZE4_DATAIN, ' ', replace(ZE4.ZE4_HORAIN, ',', ':'))) = 1 then convert(datetime, concat(ZE4.ZE4_DATAIN, ' ', replace(ZE4.ZE4_HORAIN, ',', ':')), 113) else cast(ZE4.ZE4_DATAIN as date) end as DATA_INI,
@@ -72,6 +72,27 @@ select distinct
         else 'OUTROS'
     end as TIPO_ITEM,
 
+    (
+        select sum(ZE1010.ZE1_TOTAL)
+        from ZE1010
+        where
+                ZE1010.ZE1_FILIAL = ZE1.ZE1_FILIAL
+            and ZE1010.ZE1_COMPET = ZE1.ZE1_COMPET
+            and ZE1010.ZE1_TIPO = '1'
+            and ZE1010.D_E_L_E_T_ = ''
+    ) as REC_COMPET,
+
+    (
+        select sum(ZE1010.ZE1_TOTAL)
+        from ZE1010
+        where
+                ZE1010.ZE1_FILIAL = ZE1.ZE1_FILIAL
+            and ZE1010.ZE1_COMPET = ZE1.ZE1_COMPET
+            and ZE1010.ZE1_NUM = ZE1.ZE1_NUM
+            and ZE1010.ZE1_TIPO = '1'
+            and ZE1010.D_E_L_E_T_ = ''
+    ) as REC_VIAGEM,
+
     case
         when ZE1.ZE1_TIPO in (1, 4, 5, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO in (1, 4, 5, 11))
         when ZE1.ZE1_TIPO in (2, 14, 15) then (select trim(DA4010.DA4_COD) from DA4010 (nolock) where DA4010.D_E_L_E_T_ = '' and DA4010.DA4_COD = trim(ZE1.ZE1_COD) and ZE1.ZE1_TIPO in (2, 14, 15))
@@ -104,11 +125,11 @@ from ZE1010 ZE1 (nolock)
                     select sum(ZG1010.ZG1_VLIMPR)
                     from ZG1010
                     where
-                        ZG1010.ZG1_VLIMPR != 0
-                    and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
-                    and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
-                    and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
-                    and ZG1010.D_E_L_E_T_ = ''
+                            ZG1010.ZG1_VLIMPR != 0
+                        and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
+                        and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                        and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
+                        and ZG1010.D_E_L_E_T_ = ''
                 )
                 as numeric(15, 2)
             ) as PERC_RATEIO
