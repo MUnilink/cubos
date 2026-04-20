@@ -1,88 +1,108 @@
 select
     trim(SRA.RA_FILIAL) as FILIAL,
-	trim(SRA.RA_MAT) as MATRICULA,
-	trim(SRA.RA_NOME) as NOME,
-	trim(SRJ.RJ_DESC) as FUNCAO,
+    trim(SRA.RA_MAT) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+    trim(SRA.RA_NOMECMP) as NOME,
+    trim(SRJ.RJ_DESC) as FUNCAO,
+    trim(SQ3.Q3_DESCSUM) as CARGO,
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	trim(SRA.RA_ESTADO) as UF,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    trim(SRA.RA_ESTADO) as UF,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+    cast(SRA.RA_NASC as date) as NASCIMENTO,
+    SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
-	trim(CTT.CTT_CUSTO) as CC,
-	trim(CTT.CTT_DESC01) as CCUSTO,
-	trim(CTD.CTD_ITEM) as AT,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
+    trim(CTT.CTT_CUSTO) as CC,
+    trim(CTT.CTT_DESC01) as CCUSTO,
+    trim(CTD.CTD_ITEM) as AT,
+    trim(CTD.CTD_DESC01) as ATIVIDADE,
     trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+    trim(SRJ.RJ_CODCBO) as CBO,
+    trim(SRA.RA_SEXO) as SEXO,
+    trim(SRA.RA_CIC) as CPF,
+    trim(SRA.RA_PIS) as PIS,
+    trim(SRA.RA_NUMCP) as CTPS,
+    trim(SRA.RA_CATFUNC) as COD_TRAB,
+    concat(trim(SRA.RA_CATFUNC), ' - ', (select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_CATFUNC and SX5010.X5_TABELA = '28')) as DESC_TRAB,
 
-	trim(SRJ.RJ_CODCBO) as CBO,
-	trim(SRA.RA_SEXO) as SEXO,
-	trim(SRA.RA_CIC) as CPF,
-
-    SRR.RR_PERIODO,
-    SRR.RR_PD,
-
-    trim(isnull(SRV.RV_DESC, '-')) as DESC_VERBA1,
-    case SRV.RV_COD
-        when '183' then 'VALOR A RECEBER'
-        when '999' then 'VALOR A RECEBER'
-        when '490' then 'VALOR A RECEBER'
-    else trim(SRV.RV_DESCDET) end as DESC_VERBA2,
-
-    case trim(SRV.RV_TIPOCOD)
-        when '1' then 'PROVENTO'
-        when '2' then 'DESCONTO'
-        when '3' then 'BASE PROVENTO'
-        when '4' then 'BASE DESCONTO'
-        else 'OUTROS'
-    end as RV_TIPOCOD,
-
-    convert(date, SRG.RG_DTAVISO, 103) as DT_AVISOPRE,
-    convert(date, SRG.RG_DATAHOM, 103) as DT_HOMOLOGA,
-    convert(date, SRG.RG_DATADEM, 103) as DT_DEMISSAO,
-    convert(date, SRG.RG_DTGERAR, 103) as DT_GERACAOF,
-    convert(date, SRG.RG_DTPROAV, 103) as DT_PROJAVIS,
+    cast(SRR.RR_DATAPAG as date) as DT_PAGAMENT,
+    cast(SRG.RG_DTAVISO as date) as DT_AVISOPRE,
+    cast(SRG.RG_DATAHOM as date) as DT_HOMOLOGA,
+    cast(SRG.RG_DATADEM as date) as DT_DEMISSAO,
+    cast(SRG.RG_DTGERAR as date) as DT_GERACAOF,
+    cast(SRG.RG_DTPROAV as date) as DT_PROJAVIS,
     
-    SRG.RG_DAVCUM as DIAS_AVISO_CUMPRIDO,
-    SRG.RG_DAVIND as DIAS_AVISO_INDENIZADO,
-    SRG.RG_DAVISO as DIAS_AVISO,
-    SRG.RG_DFERPRO as DIAS_FER_PROPOR,
-    SRG.RG_DFERVEN as DIAS_FER_VENCID,
-    SRG.RG_DFERAVI as DIAS_FER_AVISO,
+    trim(SRG.RG_TIPORES) as COD_RESCISAO,
+    (select trim(substring(RCC010.RCC_CONTEU, 3, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRG.RG_TIPORES)) as DESC_RESCISAO,
+    trim(RCE.RCE_DESCRI) as SINDICATO,
+    trim(SRG.RG_OBS) as OBS,
     
-    SRG.RG_TIPORES,
-    SRG.RG_OBS,
-    SRR.RR_VALOR
+    SRG.RG_DAVCUM as DIAS_REC_CUMPRIDO,
+    SRG.RG_DAVIND as DIAS_REC_INDENIZADO,
+    SRG.RG_DAVISO as DIAS_REC,
+    SRG.RG_DFERPRO as DIAS_FER_PROP,
+    SRG.RG_DFERVEN as DIAS_FER_VENC,
+    SRG.RG_DFERAVI as DIAS_FER_AVIS,
+    
+    SRA.RA_SALARIO as SALARIO,
+    case when SRV.RV_COD = '490' then SRR.RR_VALOR end as VALOR_LIQ,
+    (select SRS010.RS_VALDEP from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRG.RG_FILIAL and SRS010.RS_MAT = SRG.RG_MAT and SRR.RR_PD = '990' and right(SRG.RG_DTAVISO, 2) < 10) as VL_FGTSSALDODEPOSITO,
+    (select SRS010.RS_SALATU from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRG.RG_FILIAL and SRS010.RS_MAT = SRG.RG_MAT and SRR.RR_PD = '990') as VL_FGTSSALDOATUAL,
+    case when SRV.RV_TIPOCOD = '1' then SRR.RR_VALOR end as VALOR_PROV,
+    case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then SRR.RR_VALOR end as VALOR_DESC,
+    case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_DESC) end as DESC_PROV,
+    case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_DESC) end as DESC_DESC,
+    case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_COD) end as COD_PROV,
+    case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_COD) end as COD_DESC,
 
-from SRG010 SRG (nolock)
+    case when SRV.RV_COD in ('747') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_BASEFGTSRESCISAO,
+    case when SRV.RV_COD in ('775') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_BASEFGTS13RESCISAO,
+    case when SRV.RV_COD in ('759') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_FGTSQUITACAO,
+    case when SRV.RV_COD in ('761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_FGTS13,
+    case when SRV.RV_COD in ('858') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_AVISO,
+    case when SRV.RV_COD in ('760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_MULTA,
+    case when SRV.RV_COD in ('759', '761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
+    case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
+    case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR,
+    SRR.RR_PERIODO as PERIODO
+from SRR010 SRR (nolock)
+    left join SRG010 SRG (nolock)
+        on SRG.D_E_L_E_T_ = ''
+        and SRG.RG_FILIAL = SRR.RR_FILIAL
+        and SRG.RG_MAT = SRR.RR_MAT
     inner join SRA010 SRA (nolock)
         on SRA.D_E_L_E_T_ = ''
-        and SRA.RA_FILIAL = SRG.RG_FILIAL
-        and SRA.RA_MAT = SRG.RG_MAT
+        and SRA.RA_FILIAL = SRR.RR_FILIAL
+        and SRA.RA_MAT = SRR.RR_MAT
 
-        inner join SQB010 SQB (nolock)
+        left join RCE010 RCE (nolock)
+            on RCE.D_E_L_E_T_ = ''
+            and RCE.RCE_CODIGO = SRA.RA_SINDICA
+            and RCE.RCE_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+        left join SQB010 SQB (nolock)
             on SQB.D_E_L_E_T_ = ''
             and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SQB.QB_DEPTO = SRA.RA_DEPTO
-        inner join SRJ010 SRJ (nolock)
+        left join SRJ010 SRJ (nolock)
             on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
-    
-    inner join SRR010 SRR (nolock)
-        on SRR.D_E_L_E_T_ = ''
-        and SRR.RR_FILIAL = SRG.RG_FILIAL
-        and SRR.RR_MAT = SRG.RG_MAT
-        and SRR.RR_ROTEIR = 'RES'
 
-        inner join CTT010 CTT (nolock)
+            left join SQ3010 SQ3 (nolock)
+                on SQ3.D_E_L_E_T_ = ''
+                and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+
+        left join CTT010 CTT (nolock)
             on CTT.D_E_L_E_T_ = ''
             and CTT.CTT_CUSTO = SRR.RR_CC
-        inner join CTD010 CTD (nolock)
+        left join CTD010 CTD (nolock)
             on CTD.D_E_L_E_T_ = ''
-    	    and CTD.CTD_ITEM = SRR.RR_ITEM
-        inner join SRV010 SRV (nolock)
-			on SRV.D_E_L_E_T_ = ''
-			and SRV.RV_FILIAL = substring(SRR.RR_FILIAL, 1, 4)
-			and SRV.RV_COD = SRR.RR_PD
-where SRG.D_E_L_E_T_ = ''
+            and CTD.CTD_ITEM = SRR.RR_ITEM
+    left join SRV010 SRV (nolock)
+        on SRV.D_E_L_E_T_ = ''
+        and substring(SRR.RR_FILIAL, 1, 4) = SRV.RV_FILIAL
+        and SRR.RR_PD = SRV.RV_COD
+where
+        SRR.D_E_L_E_T_ = ''
+    and SRR.RR_ROTEIR = 'RES'
+    and SRR.RR_MAT =:FILTROPARAMETRO

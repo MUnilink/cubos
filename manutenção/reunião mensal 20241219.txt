@@ -1,0 +1,19 @@
+reunião mensal
+
+slides 3 e 4 Naara inicia apresentação de indicadores SSMA, cita que para acidentes sem perda de tempo trouxe à luz a necessidade de reavaliar o uso de EPI óculos de proteção, e que outro desses acidentes há necessidade de intervenção da CIPP, por defeito no piso;
+slide 5 Wellington ressalta operação de contêiner cheio em todo o trajeto (ida e volta de Marabá) com influência no aumento do consumo em novembro, em relação a outubro, apesar da maior distância percorrida;
+slide 6 Leandro cita a influência do preço do combustível no CPK, e Wellington cita a operação de rodotrens no porto com contêineres cheios;
+slide 7 Wellington cita também a operação de rodotrens com contêineres cheios. Cezar lembra o peso elevado nesse tipo de transporte e as diferenças nessa operação dentro do porto e até o terminal de contêiner;
+slide 8 Leandro lembra que o contador dos guindastes é o total de novembro e outubro, este último contendo abastecimentos externos parciais;
+slide 9 separação das Hyster com eletroímã, ao que Wellington entende ter sido necessário remover dos custos em geral 
+slide 10 Lucas explica que preventivas com rolamentos impactaram no valor de manutenção, além do valor do reparo da extensiva 13006. Lucas cita também a baixa disponibilidade da logística em disponibilizar os veículos para preventiva.
+slide 11 Leandro fala que os custos estão dentro da meta, com destaque para o CM1026, reparo da caixa de marcha. Marcus cita que a chegada de dez novos veículos deverá reduzir os custos de manutenção dos veículos portuários;
+slide 12 Lucas explica que não se tem atigido a meta dos custos rodotrens, destacando reparo de reboques na oficina interna e em externas. Marcus questiona a quantidade de rodotrens, ao que Manoel adiciona que não é trivial, devido à rotatividade dos veículos nas operações de rodotrem;
+slide 13 Leandro destaca a troca de cabos de aço, explicado por Leandro e Wellington ao Marcus após este questionar, porém os custos dos cabos estão dentro do esperado;
+slide 14 Marcus questiona a gestão dos custos do Bardella 03, e sugere um encontro de contas para conciliação, e Leandro diz que existe a verificação na entrega e no recebimento do guindaste por ambas as empresas;
+slide 15 o Lucas explica as recentes manutenções no Grove. Marcus solicita que se aproveite o tempo para consertar tudo o que se encontrar defeituoso no guindaste móvel.
+slide 16 Leandro cita a aplicação dos garfos da KAL08 como fator determinante para o não atingimento da meta de custo de máquinas pesadas, e cita a alta dinamicidade das preventivas das máquinas alugadas à APM, pelo extenso tempo de uso;
+slide 17 Custódio diz que foi atingida a meta de CPK pneus rodoviários, com 12 pneus sucateados.
+slide 18 Custódio diz que foi atingida a meta de CPK pneus portuários Hugo diz que a carreta 16008 seria o origem do problema do aumento na perda de pneus, devido a ser necessário ajuste no sistema de molas da carreta;
+slide 19 Custódio diz que foi atingida a meta de CPH pneus de máquinas pesadas, porém há destaque para o ajuste pendente dos pneus com erro de contador na implantação do sistema Protheus. Marcus questiona também o cálculo do CPK de pneus, a quem é explicado que se calcula apenas no sucateamento do pneu, e Marcus replica que seria interessante acompanhar se de fato as previsões estão coerentes com os dados reais coletados;
+slide 20 Leandro questiona ao Ernesto os dados obtidos do autotrac, e Wellington explica que, apesar da reunião com o pessoal da autotrac no dia 12/12, não é possível creditar 100% de confiança nas informações, especialmente nos dados obtidos das máquinas, enquanto veículos têm monitoramento mais preciso.

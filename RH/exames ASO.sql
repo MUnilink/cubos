@@ -5,8 +5,10 @@ select
 
     trim(SRA.RA_FILIAL) as FILIAL,
     trim(SRA.RA_MAT) as MATRICULA,
-    trim(SRA.RA_NOME) as NOME,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+    trim(SRA.RA_NOMECMP) as NOME,
     trim(SRJ.RJ_DESC) as FUNCAO,
+	trim(SQ3.Q3_DESCSUM) as CARGO,
     convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
     case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
@@ -57,6 +59,11 @@ from TM5010 TM5 (nolock)
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                 and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                left join SQ3010 SQ3 (nolock)
+                    on SQ3.D_E_L_E_T_ = ''
+                    and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+   
             inner join CTT010 CTT (nolock)
                 on CTT.D_E_L_E_T_ = ''
                 and CTT.CTT_CUSTO = SRA.RA_CC

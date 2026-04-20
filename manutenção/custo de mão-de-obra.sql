@@ -7,6 +7,7 @@ select
 	trim(STL010.TL_TAREFA) as COD_TAREFA,
 	trim(STL010.TL_CODIGO) as COD_PRODUTO_SERVIÇO,
 	trim(SRA010.RA_MAT) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	trim(SRA010.RA_NOME) as FUNCIONARIO,
 	isnull(trim(ST0010.T0_NOME), '-') as T0_NOME,
 	isnull(trim(ST1010.T1_NOME), '-') as T1_NOME,

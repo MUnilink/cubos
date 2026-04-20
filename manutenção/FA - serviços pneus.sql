@@ -39,10 +39,11 @@ from STJ010 STJ (nolock)
             on TR7.D_E_L_E_T_ = ''
             and TR7.TR7_FILIAL = TR8.TR8_FILIAL
             and TR7.TR7_LOTE = TR8.TR8_LOTE
-		left join TR4010 TR4 (nolock)
-			on TR4.D_E_L_E_T_ = ''
-			and TR4.TR4_ORDEM = TR8.TR8_ORDEM
-
+	
+	left join TR4010 TR4 (nolock)
+		on TR4.D_E_L_E_T_ = ''
+		and TR4.TR4_CODBEM = STJ.TJ_CODBEM
+		and TR4.TR4_ORDEM = STJ.TJ_ORDEM
 	inner join TQS010 TQS (nolock)
 		on TQS.D_E_L_E_T_ = ''
 		and TQS.TQS_CODBEM = STJ.TJ_CODBEM

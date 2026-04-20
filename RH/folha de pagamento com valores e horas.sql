@@ -1,0 +1,362 @@
+select
+	trim(SRA.RA_FILIAL) as FILIAL,
+	    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+	trim(SRA.RA_MAT) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+	trim(SRA.RA_NOMECMP) as NOME,
+	trim(SRA.RA_MUNICIP) as MUNICIPIO,
+	trim(SRA.RA_ESTADO) as UF,
+	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+	SRA.RA_SITFOLH as SITUACAO,
+	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
+	trim(SRD.RD_CC) as CC,
+	trim(SRD.RD_ITEM) as ITCT,
+	trim(SQB.QB_DEPTO) as DEPTO,
+	trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+	trim(SRA.RA_SEXO) as SEXO,
+	trim(SRA.RA_CIC) as CPF,
+	trim(SRD.RD_PERIODO) as PERIODO,
+	trim(SRD.RD_ROTEIR) as ROTEIRO,
+
+	case when SRD.RD_PD = '990' then 'REF' when SRV.RV_YCPOR = 'S' and SRV.RV_YCTMS = 'S' then 'AMBOS' when SRV.RV_YCPOR = 'S' then 'OPP' when SRV.RV_YCTMS = 'S' then 'TMS' else 'OUTRAS' end as VERBA_CUSTO,
+	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
+	
+	cast(SRD.RD_HORAS as numeric(15, 2)) as HORAS_VERBA,
+	cast(SRA.RA_HRSMES as numeric(15, 2)) as HORAS_MES,
+	cast(SRA.RA_HRSEMAN as numeric(15, 2)) as HORAS_SEM,
+	SRA.RA_SALARIO as SALARIO,
+	SRD.RD_DATARQ as DATARQ,
+	SRD.RD_STATUS as STATUS_LANC,
+	trim(SRD.RD_PD) as VERBA,
+	trim(SRD.RD_SEQ) as SEQ,
+	isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
+
+	case trim(SRV.RV_TIPOCOD)
+		when '1' then 'PROVENTO'
+		when '2' then 'DESCONTO'
+		when '3' then 'BASE PROVENTO'
+		when '4' then 'BASE DESCONTO'
+		else '-'
+	end as TIPO_VERBA,
+	
+	(
+		select concat(trim(SQ3010.Q3_CARGO), ' - ', trim(SQ3010.Q3_DESCSUM))
+		from SQ3010
+		where
+				SQ3010.D_E_L_E_T_ = ''
+			and SQ3010.Q3_CARGO =
+			(
+				select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			)
+	) as CARGO_FOLHA,
+	(
+		select concat(trim(SRJ010.RJ_FUNCAO), ' - ', trim(SRJ010.RJ_DESC))
+		from SRJ010
+		where
+				SRJ010.D_E_L_E_T_ = ''
+			and SRJ010.RJ_FUNCAO =
+			(
+				select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			)
+	) as FUNCAO_FOLHA,
+	(
+		select concat(trim(SQ3010.Q3_CARGO), ' - ', trim(SQ3010.Q3_DESCSUM))
+		from SQ3010
+		where
+				SQ3010.D_E_L_E_T_ = ''
+			and SQ3010.Q3_CARGO =
+			(
+				select top 1 last_value(SR7010.R7_CARGO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+			)
+	) as CARGO_ANT,
+
+	(
+		select concat(trim(SRJ010.RJ_FUNCAO), ' - ', trim(SRJ010.RJ_DESC))
+		from SRJ010
+		where
+				SRJ010.D_E_L_E_T_ = ''
+			and SRJ010.RJ_FUNCAO =
+			(
+				select top 1 last_value(SR7010.R7_FUNCAO) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+			)
+	) as FUNCAO_ANT,
+
+    1 + datediff(day, concat(SRD.RD_DATARQ, '01'), eomonth(concat(SRD.RD_DATARQ, '01'))) as DIAS_PERIODO,
+	cast(concat(SRD.RD_DATARQ, '01') as date) as INI_PERIODO,
+	eomonth(concat(SRD.RD_DATARQ, '01')) as FIM_PERIODO,
+
+	cast(case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end as date) as INI_FOLHA,
+	cast(case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end as date) as FIM_FOLHA,
+
+    (
+        select cast(max(SR7010.R7_DATA) as date)
+        from SR7010
+        where
+                SR7010.D_E_L_E_T_ = ''
+            and SR7010.R7_FILIAL = SRD.RD_FILIAL
+            and SR7010.R7_MAT = SRD.RD_MAT
+            and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			and
+				(
+					select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+				)
+				!= /* retorna se, e somente se, a função inicial difere da função final */
+				(
+					select top 1 last_value(trim(SR7010.R7_FUNCAO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				)
+    ) as MUD_FUNCAO,
+    
+	(
+        select cast(max(SR7010.R7_DATA) as date)
+        from SR7010
+        where
+                SR7010.D_E_L_E_T_ = ''
+            and SR7010.R7_FILIAL = SRD.RD_FILIAL
+            and SR7010.R7_MAT = SRD.RD_MAT
+            and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			and
+				(
+					select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= concat(SRD.RD_DATARQ, '01')
+				)
+				!= /* retorna se, e somente se, o cargo inicial difere do cargo final */
+				(
+					select top 1 last_value(trim(SR7010.R7_CARGO)) over (partition by SR7010.R7_FILIAL, SR7010.R7_MAT order by SR7010.R7_FILIAL, SR7010.R7_MAT, SR7010.R7_SEQ)
+					from SR7010
+					where
+							SR7010.D_E_L_E_T_ = ''
+						and SR7010.R7_FILIAL = SRD.RD_FILIAL
+						and SR7010.R7_MAT = SRD.RD_MAT
+						and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+				)
+    ) as MUD_CARGO,
+    
+	datediff
+	(
+		day,
+		case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, e se demitido antes do fim do período, demissão, senão, fim do período*/
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
+	) as DIAS_ANT,
+	
+	SRA.RA_HRSMES *
+	datediff
+	(
+		day,
+		case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, início do período*/
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end)) as HORAS_ANT,
+	
+	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
+	(
+		datediff
+		(
+			day,
+			case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end,
+			case when
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			) >= concat(SRD.RD_DATARQ, '01') then
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			)
+			else case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end end
+		)
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when nullif(SRA.RA_DEMISSA, '') <= eomonth(concat(SRD.RD_DATARQ, '01')) then SRA.RA_DEMISSA else eomonth(concat(SRD.RD_DATARQ, '01')) end)) as VALOR_ANT,
+
+	datediff
+	(
+		day,
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) >= concat(SRD.RD_DATARQ, '01') then /* se a última mudança ocorreu dentro do período da folha, data da mudança; senão, se admitido após o início do período, admissão, senão, início do período */
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
+		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
+	) as DIAS_PFOLHA,
+
+	SRA.RA_HRSMES * datediff
+	(
+		day,
+		case when
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		) >= concat(SRD.RD_DATARQ, '01') then /* idem */
+		(
+			select max(SR7010.R7_DATA)
+			from SR7010
+			where
+					SR7010.D_E_L_E_T_ = ''
+				and SR7010.R7_FILIAL = SRD.RD_FILIAL
+				and SR7010.R7_MAT = SRD.RD_MAT
+				and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+		)
+		else case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
+		case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end)) as HORAS_PFOLHA,
+	
+	case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end *
+	(
+		datediff
+		(
+			day,
+			case when
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			) >= concat(SRD.RD_DATARQ, '01') then /* idem */
+			(
+				select max(SR7010.R7_DATA)
+				from SR7010
+				where
+						SR7010.D_E_L_E_T_ = ''
+					and SR7010.R7_FILIAL = SRD.RD_FILIAL
+					and SR7010.R7_MAT = SRD.RD_MAT
+					and SR7010.R7_DATA <= eomonth(concat(SRD.RD_DATARQ, '01'))
+			)
+			else case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end end,
+			case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end
+		)
+	) /(1 + datediff(day, case when SRA.RA_ADMISSA >= concat(SRD.RD_DATARQ, '01') then SRA.RA_ADMISSA else concat(SRD.RD_DATARQ, '01') end, case when left(SRA.RA_DEMISSA, 6) = SRD.RD_DATARQ then SRA.RA_DEMISSA else dateadd(day, 1, eomonth(concat(SRD.RD_DATARQ, '01'))) end)) as VALOR_PFOLHA
+
+from SRD010 SRD (nolock)
+	inner join SRV010 SRV (nolock)
+		on SRV.D_E_L_E_T_ = ''
+		and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
+		and SRD.RD_PD = SRV.RV_COD
+	inner join SRA010 SRA (nolock)
+		on SRA.D_E_L_E_T_ = ''
+		and SRA.RA_FILIAL = SRD.RD_FILIAL
+		and SRA.RA_MAT = SRD.RD_MAT
+	
+		left join SQB010 SQB (nolock)
+			on SQB.D_E_L_E_T_ = ''
+			and SQB.QB_DEPTO = isnull(SRD.RD_DEPTO, SRA.RA_DEPTO)
+		left join SRJ010 SRJ (nolock)
+			on SRJ.D_E_L_E_T_ = ''
+			and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
+			and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+			
+			left join SQ3010 SQ3 (nolock)
+				on SQ3.D_E_L_E_T_ = ''
+				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+where
+		SRD.RD_PERIODO =:PERIODO_FOLHA
+	and SRD.D_E_L_E_T_ = ''

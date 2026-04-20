@@ -2,6 +2,7 @@ select
     trim(FOLHA_ABERTA.FILIAL) as FILIAL,
     trim(FOLHA_ABERTA.DATA_ADMISSAO) as DATA_ADMISSAO,
     trim(FOLHA_ABERTA.MATRICULA) as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
     trim(FOLHA_ABERTA.NOME) as NOME,
     trim(FOLHA_ABERTA.CENTRO_DE_CUSTO) as CENTRO_DE_CUSTO,
     trim(FOLHA_ABERTA.SITUACAO_FOLHA) as SITUACAO_FOLHA,
@@ -9,6 +10,7 @@ select
     trim(FOLHA_ABERTA.ATIVIDADE) as ATIVIDADE,
     trim(FOLHA_ABERTA.PERIODO_ANO) as PERIODO_ANO,
     trim(FOLHA_ABERTA.PERIODO_MES) as PERIODO_MES,
+    trim(FOLHA_ABERTA.RD_ROTEIR) as ROTEIRO,
 
     sum(isnull(FOLHA_ABERTA.TOTAL_VT, 0.0)) as 'VT',
     sum(isnull(FOLHA_ABERTA.Vale_Alimentação_Total, 0.0)) as 'Vale Alimentação',
@@ -24,7 +26,9 @@ select
     sum(isnull(FOLHA_ABERTA.PTS_premio_tempo_serviço, 0.0)) as 'PTS (premio tempo serviço)',
     sum(isnull(FOLHA_ABERTA.Férias_Qtde_de_dias_comprados, 0.0)) as 'Férias Qtde de dias comprados',
     sum(isnull(FOLHA_ABERTA.Pgto_de_férias_compradas, 0.0)) as 'Pgto de férias compradas',
-    sum(isnull(FOLHA_ABERTA.Dobras_DomingosFeriados, 0.0)) as 'Dobras Domingos/ Feriados',
+    sum(isnull(FOLHA_ABERTA.Dobras_DomingosFeriados_provento, 0.0) - isnull(FOLHA_ABERTA.Dobras_DomingosFeriados_desconto, 0.0)) as 'Dobras Domingos/ Feriados',
+    sum(isnull(FOLHA_ABERTA.Dobras_DomingosFeriados_provento, 0.0)) as 'Dobras totais do período',
+    sum(isnull(FOLHA_ABERTA.Dobras_DomingosFeriados_desconto, 0.0)) as 'Dobras (desconto)',
     sum(isnull(FOLHA_ABERTA.Hora_Extra_Eventual_mês, 0.0)) as 'Hora Extra Eventual (mês)',
     sum(isnull(FOLHA_ABERTA.Adicional_Noturno_FIXO, 0.0)) as 'Adicional Noturno',
     sum(isnull(FOLHA_ABERTA.Pericul_FIXA, 0.0)) as 'Periculosidade // Adic. Risco',
@@ -38,7 +42,7 @@ select
     sum(isnull(FOLHA_ABERTA.Pgto_2a_Q_créd_em_folha, 0.0)) as 'Pgto 2ª Q (créd. em folha)',
     sum(isnull(FOLHA_ABERTA.BV_Financ, 0.0)) as '(-) BV Financ.',
     sum(isnull(FOLHA_ABERTA.Santander_Financ, 0.0)) as '(-) Santander Financ.',
-    sum(isnull(FOLHA_ABERTA.Biorc_Financ, 0.0)) as '(-) Biorc Financ.',
+    sum(isnull(FOLHA_ABERTA.BioRD_Financ, 0.0)) as '(-) Biorc Financ.',
     sum(isnull(FOLHA_ABERTA.Dia_do_Motorista, 0.0)) as 'Dia do Motorista',
     sum(isnull(FOLHA_ABERTA.Arredond_4, 0.0)) as 'Arredond. férias',
     sum(isnull(FOLHA_ABERTA.Arredond_3, 0.0)) as 'Arredond. adiantamento',
@@ -59,20 +63,28 @@ select
     sum(isnull(FOLHA_ABERTA.Desconto_VA, 0.0)) as 'Desconto VA',
     sum(isnull(FOLHA_ABERTA.Descontos_autorizados, 0.0)) as 'Descontos Autorizados (Funcionários)',
     sum(isnull(FOLHA_ABERTA.DescontoVT, 0.0)) as 'Desconto Vale Transporte',
+    
     sum(isnull(FOLHA_ABERTA.Primeira_13, 0.0)) as 'Primeira Parcela 13° - Proventos',
     sum(isnull(FOLHA_ABERTA.Primeira_13, 0.0) - isnull(FOLHA_ABERTA.Primeira_13_valor_alimenticia, 0.0)) as 'Primeira Parcela 13° - Valor a pagar',
     max(isnull(FOLHA_ABERTA.Primeira_13_avos, 0.0)) as 'Primeira Parcela 13° - Avos',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_insalubridade, 0.0)) as 'Primeira Parcela 13° - Insalubridade',
     sum(isnull(FOLHA_ABERTA.Primeira_13_media_periculosidade, 0.0)) as 'Primeira Parcela 13° - Ad. risco/Periculosidade',
-    sum(isnull(FOLHA_ABERTA.Primeira_13_media_outros, 0.0)) as 'Primeira Parcela 13° - Outros valores',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_media_outros, 0.0)) as 'Primeira Parcela 13° - total média em horas',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_ATS, 0.0)) as 'Primeira Parcela 13° - Ad. tempo serviço',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_maternidade, 0.0)) as 'Primeira Parcela 13° - sal. maternidade',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_alimenticia, 0.0)) as 'Primeira Parcela 13° - pensão alimentícia',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_valor_FGTS, 0.0)) as 'Primeira Parcela 13° - base FGTS',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_valor_baseFGTS, 0.0)) as 'Primeira Parcela 13° - valor FGTS',
     sum(isnull(FOLHA_ABERTA.Primeira_13_valor_totaismedia, 0.0)) as 'Primeira Parcela 13° - totais média',
+    sum(isnull(FOLHA_ABERTA.Primeira_13_valor_liquido_bas, 0.0)) as 'Primeira Parcela 13° - líquido a receber',
+    
     sum(isnull(FOLHA_ABERTA.Segunda_13_provento, 0.0) - isnull(FOLHA_ABERTA.Segunda_13_desconto, 0.0)) as 'Segunda Parcela 13° - Valor a pagar',
     max(isnull(FOLHA_ABERTA.Segunda_13_avos, 0.0)) as 'Segunda Parcela 13° - Avos',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_insalubridade, 0.0)) as 'Segunda Parcela 13° - Insalubridade',
+    sum(isnull(FOLHA_ABERTA.Segunda_13_valor_arredondamento, 0.0)) as 'Segunda Parcela 13° - Arredondamento',
     sum(isnull(FOLHA_ABERTA.Segunda_13_media_periculosidade, 0.0)) as 'Segunda Parcela 13° - Ad. risco/Periculosidade',
+    sum(isnull(FOLHA_ABERTA.Segunda_13_media_horas, 0.0)) as 'Segunda Parcela 13° - média horas',
+    sum(isnull(FOLHA_ABERTA.Segunda_13_media_valor, 0.0)) as 'Segunda Parcela 13° - média valor',
     sum(isnull(FOLHA_ABERTA.Segunda_13_media_outros, 0.0)) as 'Segunda Parcela 13° - Outros valores',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_ATS, 0.0)) as 'Segunda Parcela 13° - Ad. tempo serviço',
     sum(isnull(FOLHA_ABERTA.Segunda_13_valor_maternidade, 0.0)) as 'Segunda Parcela 13° - sal. maternidade',
@@ -106,13 +118,15 @@ from
 
         SRA010.RA_FILIAL AS FILIAL,
         SRA010.RA_ADMISSA DATA_ADMISSAO,
-        SRA010.RA_MAT AS MATRICULA,
+        SRA010.RA_MAT as MATRICULA,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         SRA010.RA_NOME as NOME,
         
         substring(FOLHA.RD_PERIODO, 1, 4) as PERIODO_ANO,
         substring(FOLHA.RD_PERIODO, 5, 2) as PERIODO_MES,
         cast(FOLHA.RD_DTREF as date) as DATA_REFERENCIA,
         FOLHA.RD_PERIODO as PERIODO,
+        FOLHA.RD_ROTEIR,
 
         FOLHA.RD_PD,
         CTD010.CTD_DESC01 as ATIVIDADE,
@@ -127,37 +141,44 @@ from
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('796', '560', '563', '719', '749', '056', '570', '574', '575', '576', '577', '711', '738', '057', '008', '132', '133', '113', '029', '111', '112', '113', '344', '030', '041', '039', '096', '097', '215', '356', '054', '113', '407', '001', '2112', '999')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Custo_pessoal,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('796') /* custo do func. incluso no custo total com pessoal, que é apenas da empresa */
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as TOTAL_VT,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('560', '563', '719') /* 410 apenas func */
@@ -165,89 +186,88 @@ from
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Vale_Alimentação_Total,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('749')  /* 562 apenas func */
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Cesta_Básica,
         (
             select max(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('056', '570', '574', '575', '576', '577', '711')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Plano_Odontológico_Empresa,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('738')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Hapvida_Empresa,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('057')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
-        ) as Diárias_Motoristas,/*
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Diárias_Motoristas,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                    and SRD010.RD_PD = SRV010.RV_COD
-            where
-                    SRD010.RD_PD in ('0')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
-                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
-                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
-                and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD
-                and SRD010.RD_SEQ = FOLHA.RD_SEQ
-        ) as Custo_Total_com_Pessoal,*/
-        (
-            select sum(SRD010.RD_VALOR)
-            from SRD010 (nolock)
-                inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD not in ('450')
@@ -257,6 +277,7 @@ from
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Total_de_Proventos,
         (
             select max(SRA010.RA_SALARIO)
@@ -270,382 +291,512 @@ from
             select sum(SRD010.RD_HORAS)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('020', '025')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Dias_Trabalhados,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('020', '025')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Salário_Base_Pro_ratamês,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('008')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as PTS_premio_tempo_serviço,
         (
             select sum(SRD010.RD_HORAS)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('132', '152')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Férias_Qtde_de_dias_comprados,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('132', '133')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pgto_de_férias_compradas,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('113')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('113', '451', '452')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Dobras_DomingosFeriados_provento,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('623')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Dobras_DomingosFeriados_desconto,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('113', '451', '452')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) -
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('623')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Dobras_DomingosFeriados,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('029', '111', '112', '113', '344')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Hora_Extra_Eventual_mês,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('030', '041')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('030', '041', '371', '372')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Adicional_Noturno_FIXO,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('039', '096', '097', '215', '356')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('039', '096', '097', '215', '356', '013')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pericul_FIXA,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('054')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Sal_Família,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('001')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pgto_1a_Q_créd_em_folha_PROVENTO,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('450')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pgto_1a_Q_créd_em_folha_DESCONTO,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('461')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Arredond_1,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('091')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Arredond_2,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pgto_1a_Q_espécie,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('183')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Saldo_Folha_Pgto_1a_Q,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('999')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pgto_2a_Q_créd_em_folha,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('567')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as BV_Financ,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('474')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Santander_Financ,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('566')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
-        ) as Biorc_Financ,
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as BioRD_Financ,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('113')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO and substring(SRD010.RD_PERIODO, 5, 6) = '07'
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Dia_do_Motorista,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('147')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Arredond_3,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('140')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Arredond_4,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pgto_2a_Q_espécie,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('999')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Saldo_Folha_Pgto_2a_Q,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     cast(SRD010.RD_PD as int) != 450
@@ -655,584 +806,812 @@ from
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Total_Descontos,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('401')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as INSS,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('402')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as INSS_ferias,
         (
             select max(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('569', '570', '574', '575', '576', '577')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Plano_Odontológico_funcionario,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('565', '571')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Hapvida_funcionario,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('420', '421', '422')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as ImpRenda,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('421')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as ImpRendaAdd,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('530', '535', '414')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Pens_Alim,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('407')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
+                and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Mensal_Sind_Patronal,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('980')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
-                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_PD = FOLHA.RD_PD
+            
+            and SRD010.RD_SEQ = FOLHA.RD_SEQ
+            and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Cont_Sindical_Funcionário,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('622')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
-                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_PD = FOLHA.RD_PD
+            
+            and SRD010.RD_SEQ = FOLHA.RD_SEQ
+            and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as ContAssist,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('440')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
-                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_PD = FOLHA.RD_PD
+            
+            and SRD010.RD_SEQ = FOLHA.RD_SEQ
+            and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Faltas_DSR,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('440', '445')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
-                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_PD = FOLHA.RD_PD
+            
+            and SRD010.RD_SEQ = FOLHA.RD_SEQ
+            and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Atrasos_Suspensão_Faltas_em_Horas,
         (   
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('410')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Desconto_VA,
         (            
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('597')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Descontos_autorizados,
         (            
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('561')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as DescontoVT,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770', '772')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13,
         (
             select avg(SRD010.RD_HORAS)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('009', '010', '011', '017', '167', '202', '290', '304', '768', '769', '770')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_avos,
-                (
+        (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('167')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_valor_insalubridade,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('009')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('009', '772')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_media_periculosidade,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('010')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_media_outros,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('011')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_valor_ATS,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('202')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_valor_maternidade,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('414', '533')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('373', '414', '533')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_valor_alimenticia,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('768', '769', '770')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('746')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Primeira_13_valor_baseFGTS,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('756')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Primeira_13_valor_FGTS,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('009', '010', '768', '769', '770')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Primeira_13_valor_totaismedia,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('300', '013', '015', '203', '204', '205', '206', '247', '304', '306', '307')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('182')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Primeira_13_valor_liquido_bas,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('300', '013', '015', '203', '204', '205', '206', '247', '304', '306', '307')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_provento,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('510', '403', '407', '423', '530', '535')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('510', '403', '407', '423', '530', '535', '373', '374')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_desconto,
         (
             select avg(SRD010.RD_HORAS)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('300')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_avos,
-                (
+        (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('015')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_insalubridade,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in (304)
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Segunda_13_valor_arredondamento,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('013')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_media_periculosidade,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('306')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Segunda_13_media_horas,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('307')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Segunda_13_media_valor,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('2112')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_media_outros,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('247')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_ATS,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('203', '206')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_maternidade,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_totaismedia,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('403')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_INSS,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('423')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_IR,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
-                    SRD010.RD_PD in ('530', '535')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                    SRD010.RD_PD in ('530', '535', '373', '374')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Segunda_13_valor_pensao_alim,
         (
             select sum(SRD010.RD_VALOR)
             from SRD010 (nolock)
                 inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
                     and SRD010.RD_PD = SRV010.RV_COD
             where
                     SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
-                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
-                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
-                and SRD010.RD_MAT = FOLHA.RD_MAT
-                and SRD010.RD_PD = FOLHA.RD_PD            
-                and SRD010.RD_SEQ = FOLHA.RD_SEQ
-        ) as Observações_da_Folha_de_Adiantamento_1a_QUINZENA,
-        (
-            select sum(SRD010.RD_VALOR)
-            from SRD010 (nolock)
-                inner join SRV010 (nolock)
-                    on substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
-                    and SRD010.RD_PD = SRV010.RV_COD
-            where
-                    SRD010.RD_PD in ('2112')
-                and SRD010.D_E_L_E_T_ = '' and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
                 and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
                 and SRD010.RD_MAT = FOLHA.RD_MAT
                 and SRD010.RD_PD = FOLHA.RD_PD
                 and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
+        ) as Observações_da_Folha_de_Adiantamento_1a_QUINZENA,
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010 (nolock)
+                inner join SRV010 (nolock)
+                    on SRV010.D_E_L_E_T_ = ''
+                    and substring(SRD010.RD_FILIAL, 1, 4) = SRV010.RV_FILIAL
+                    and SRD010.RD_PD = SRV010.RV_COD
+            where
+                    SRD010.RD_PD in ('2112')
+                and SRV010.RV_TIPOCOD in ('1', '2', '3', '4')
+                and SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_PERIODO = FOLHA.RD_PERIODO
+                and SRD010.RD_FILIAL = FOLHA.RD_FILIAL
+                and SRD010.RD_MAT = FOLHA.RD_MAT
+                and SRD010.RD_PD = FOLHA.RD_PD
+                and SRD010.RD_SEQ = FOLHA.RD_SEQ
+                and SRD010.RD_ROTEIR = FOLHA.RD_ROTEIR
         ) as Observações_da_Folha_de_Enc_Mensal_2a_QUINZENA
 
     from SRA010 (nolock)
-        inner join SRD010 as FOLHA (nolock)
+        inner join SRD010 FOLHA (nolock)
             on FOLHA.D_E_L_E_T_ = ''
             and SRA010.RA_FILIAL = FOLHA.RD_FILIAL
             and SRA010.RA_MAT = FOLHA.RD_MAT
             and trim(FOLHA.RD_MAT) not in ('003264', '003263')
+            and datediff(month, concat(FOLHA.RD_DATARQ, '01'), getdate()) < 7
 
             inner join CTT010 (nolock)
                 on CTT010.D_E_L_E_T_ = ''
@@ -1259,4 +1638,5 @@ group by
     FOLHA_ABERTA.DESC_FUNCAO,
     FOLHA_ABERTA.ATIVIDADE,
     FOLHA_ABERTA.PERIODO_ANO,
-    FOLHA_ABERTA.PERIODO_MES
+    FOLHA_ABERTA.PERIODO_MES,
+    FOLHA_ABERTA.RD_ROTEIR

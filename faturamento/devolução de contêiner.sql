@@ -18,16 +18,26 @@ select
     case ZC2.ZC2_TIPO
         when 1 then 'RECEITA'
         when 2 then 'FUNÇÃO'
-        when 3 then 'EQUIPAMENTO'
+        when 3 then 'MANUTENÇÃO'
         when 6 then 'APROPRIAÇÃO DE CUSTO'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
-        when 6 then 'FECHADA'
+        when 2 then 'SOLICITADO CANCELAMENTO'
+        when 3 then 'CANCELADA'
+        when 5 then 'CORTESIA'
+        when 6 then 'ENCERRADA'
         else 'OUTROS'
     end as STATUS_OS,
+
+    case ZC1.ZC1_STATU2
+        when 1 then 'PENDENTE'
+        when 2 then 'PARCIAL'
+        when 3 then 'FINALIZADO'
+        else 'OUTROS'
+    end as STATUS_PEDIDO,
     
     ZC2.ZC2_QTDPRV as QTD_PREV,
     ZC2.ZC2_QTDREA as QTD_REAL,

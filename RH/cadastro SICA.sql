@@ -1,5 +1,5 @@
 select
-	trim(SRA.RA_NOME) as 'NOME',
+	trim(SRA.RA_NOMECMP) as 'NOME',
 	trim(SRA.RA_CIC) as 'CPF',
 	trim(SRA.RA_EMAIL) as 'E-MAIL',
 	trim(SRJ.RJ_DESC) as 'Função CBO',

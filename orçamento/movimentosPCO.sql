@@ -13,7 +13,7 @@ select
     AKD.AKD_ITEM as ITEM_LANCAMENTO,
     AKD.AKD_SEQ as SEQ,
     
-    convert(date, AKD.AKD_DATA, 103) as DATA_LANCAMENTO,
+    cast(AKD.AKD_DATA as date) as DATA_LANCAMENTO,
     
     AKD.AKD_CLASSE as CC,
     AKD.AKD_OPER as ATIV,
@@ -28,7 +28,7 @@ select
     AKD.AKD_TPSALD as TIPO_LANCAMENTO,
     AKD.AKD_LOTE as LOTE_LANCAMENTO,
     
-    case when AKD.AKD_CHAVE like 'SD2%' then concat(substring(AKD.AKD_CHAVE, 1, 9), substring(AKD.AKD_HIST, 10, 19))
+    case when AKD.AKD_CHAVE like 'SD2%' then concat(left(AKD.AKD_CHAVE, 9), substring(AKD.AKD_HIST, 10, 19))
     else
         case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 4, 19)
         else AKD.AKD_CHAVE
@@ -37,14 +37,11 @@ select
 
     case when AKD.AKD_TPSALD = 'RE' then AKD.AKD_VALOR1 else 0.0 end as VALOR_REALIZADO,
     
-    case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 2 then AKD.AKD_VALOR1*-1
-    else
-        case when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 1 then AKD.AKD_VALOR1
-        else
-            case when AKD.AKD_TPSALD = 'RE' then 0.0
-            else 0.0
-            end
-        end
+    case
+        when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 2 then AKD.AKD_VALOR1*-1
+        when AKD.AKD_TPSALD = 'EM' and AKD.AKD_TIPO = 1 then AKD.AKD_VALOR1
+        when AKD.AKD_TPSALD = 'RE' then 0.0
+        else 0.0
     end as VALOR_EMPENHADO,
     
     case when AKD.AKD_TIPO = 1 and AKD.AKD_TPSALD = '0R' then AKD.AKD_VALOR1 else 0.0 end as VALOR_ORCADO,
@@ -61,15 +58,11 @@ from AK2010 AK2 (nolock)
         and AKD.AKD_CO = AK2.AK2_CO
         and AKD.AKD_CLASSE = AK2.AK2_CLASSE
         and AKD.AKD_OPER = AK2.AK2_OPER
-        and substring(AKD.AKD_DATA, 1, 6) = substring(AK2.AK2_PERIOD, 1, 6)
+        and left(AKD.AKD_DATA, 6) = left(AK2.AK2_PERIOD, 6)
 
         inner join AK8010 AK8 (nolock)
             on AK8.D_E_L_E_T_ = ''
             and AK8.AK8_CODIGO = AKD.AKD_PROCES
-
-        inner join SC7010 SC7 (nolock)
-            on SC7.D_E_L_E_T_ = ''
-            and SC7.C7_FILIAL + SC7.C7_NUM + SC7.C7_ITEM = case when AKD.AKD_CHAVE like 'SC7%' then substring(AKD.AKD_CHAVE, 4, 19)
 
     inner join AK3010 AK3 (nolock)
         on AK3.D_E_L_E_T_ = ''
@@ -80,4 +73,5 @@ from AK2010 AK2 (nolock)
         inner join AK1010 AK1 (nolock)
             on AK1.D_E_L_E_T_ = ''
             and AK1.AK1_CODIGO = AK3.AK3_ORCAME
+
 where AK2.D_E_L_E_T_ = ''

@@ -1,0 +1,21 @@
+reunião de indicadores
+
+Wellington expõe as alterações dos indicadores, como alterações de metas, inclusão de indicadores e transferência para as reuniões quinzenais.
+Naara cita a pendência de padronização das siglas SSMA. Logo depois, explica os indicadores SSMA coletados em janeiro 2024. Eduardo cita o reconhecimento ocorrido no dia 15/02 no Pecém.
+Wellington comenta os indicadores de combustível, transporte rodoviário, operação de rodotrens e operação portuária, lembrando a separação das atividades de transporte. Solicita alteração do nome para que seja igual ao nome da planilha.
+No custo de combustível de guindastes há o questionamento do valor elevado dos abastecimento, algo explicado pela utilização por quase todo o mês de abastecimento externo, com valor de diesel mais alto que o custo de abastecimento pelas melosas.
+Já no abastecimento de máquinas pesadas, não se observa o aumento expressivo do custo.
+Na exposição dos indicadores de consumo do Bardella, é esclarecido que o horímetro desse guindaste está inconsistente, já que não houve atualização do registro do horímetro por ao menos dois meses, assim inviabilizando a análise de horímetro e a relação de custos por hora.
+Eduardo cita a utilização de uma terceira unidade do BARDELLA, realizada numa operação até a semana do dia 16/02. Wellington revela que não foi definida a divisão dos custos de operação do guindaste, que provisoriamente ficará com a TECER (fevereiro) e com UNILINK em março. Sugestão de criar um cadastro para vincular os futuros custos desse novo Bardella.
+Retirar o MUNCK01 da lista de custo de manutenção de guindaste.
+Para o horímetro do Bardella, Wellington cita que deveria ter havido uma observação do fato de que não houve registro ao longo de ao menos dois meses.
+Ernesto expõe os indicadores de pneus, explicando as diferenças de pneus rodoviários e portuários, e que pneus de máquinas pesadas não são sucateados com frequência, e não são facilmente reformados, diferente de pneus de cavalos mecânicos e semirreboques.
+Tempo de motor ligado: após várias discussões, ficou convencionado que é esperada uma quantidade de horas para cada tipo de equipamento, um número que deve ser comparado com o total de horas rodadas contabilizadas pelo abastecimento no mês.
+
+
+Reunião quinzenal matriz ref. janeiro 2024, no dia 16/02/2024
+pendências 1 e 3 - Rodrigo cita a dificuldade de vender as peças, e Messias e Wellington reforçam que não há destino visível, por falta de interessados em adquirir as peças antigas de Scania e de empilhadeiras do Pecém. Wellington sugere separar as peças sem utilização para destinar. Rodrigo diz que procura aplicar sempre que possível as peças dos Volvo restantes.
+pendência 2 - continua sem solução à vista, possivelmente com customização para solucionar, porém pendente aprovação pelo Silvio de banco de horas de consultoria.
+pendência 4 - realizada pelo Ernesto.
+Ernesto cita uma solicitação do Gabriel de verificar os retentores na preventiva de 90000 km dos MB, em vez de substitui-los, ao que o Ernesto explica que não é viável, pois a verificação do rolamento atualmente realizada não possibilita manter o retentor, sendo necessário trocá-lo.
+Rodrigo relata a dificuldade de compra de certos itens, que a princípio não deveria existir, como compra de parafusos e de mangueiras relativamente comuns.

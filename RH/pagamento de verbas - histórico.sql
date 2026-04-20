@@ -2,7 +2,7 @@ select
 	trim(isnull(SRD.RD_FILIAL, '-')) as RD_FILIAL,
 	trim(isnull(SRD.RD_PERIODO, '-')) as RD_PERIODO,
 	trim(isnull(SRD.RD_MAT, '-')) as RD_MAT,
-	trim(isnull(SRA.RA_NOME, '-')) as RA_NOME,
+	trim(isnull(SRA.RA_NOMECMP, '-')) as RA_NOME,
 	trim(isnull(SRD.RD_PD, '-')) as RD_PD,
 	trim(isnull(SRV.RV_DESC, '-')) as RV_DESC,
 	
@@ -61,7 +61,7 @@ group by
 	SRV.RV_DESCDET,
 	SRV.RV_TIPOCOD,
 	SRD.RD_MAT,
-	SRA.RA_NOME,
+	SRA.RA_NOMECMP,
 	SRJ.RJ_DESC,
 	CTT.CTT_DESC01,
 	CTD.CTD_DESC01,

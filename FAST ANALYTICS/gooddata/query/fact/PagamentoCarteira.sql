@@ -1,0 +1,45 @@
+select
+    'P |01|01' as BK_EMPRESA,
+    case when E2_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(E2_FILIAL as CHAR (6)) end as BK_FILIAL,
+    case when E2_FILORIG is null then 'P |01||' else 'P |01|01'+ CAST(E2_FILORIG as CHAR (6)) end as BK_FILIAL_ORIGEM,
+    'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(TIPO.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(E2_TIPO, ' ')), ' '), '|') as BK_ESPEC_DOC,
+    'P |01|SA6010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A6_FILIAL, ' '))+'|'+RTRIM(COALESCE(E2_BCOPAG, ' '))+RTRIM(COALESCE(A6_AGENCIA, ' '))+RTRIM(COALESCE(A6_NUMCON, ' ')), ' '), '|') as BK_BCO,
+    'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(E2_CCUSTO, ' ')), ' '), '|') as BK_CENTRO_CUSTO,
+    'P |01|SED010|'+ COALESCE(NULLIF(RTRIM(COALESCE(ED_FILIAL, ' '))+'|'+RTRIM(COALESCE(E2_NATUREZ, ' ')), ' '), '|') as BK_NAT_FINANCEIRA,
+    'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(E2_FORNECE, ' '))+RTRIM(COALESCE(E2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
+    'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(GRU.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(A2_GRUPO, ' ')), ' '), '|') as BK_GRUPO_FORNECEDOR,<<EXTRACTION_DATE>> as DATA_DA_EXTRACAO,
+    case when A2_COD_MUN = ' ' then 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A2_EST, ' ')), ' '), '|') else 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(A2_EST, ' '))+RTRIM(COALESCE(A2_COD_MUN, ' ')), ' '), '|') end as BK_REGIAO,
+    SE2.E2_EMISSAO as DATA_DE_EMISSAO,
+    SE2.E2_VENCREA as VENCIMENTO_REAL,
+    SE2.E2_PREFIXO as PREFIXO_TITULO,
+    SE2.E2_NUM as NUMERO_TITULO,
+    SE2.E2_PARCELA as NUMERO_DA_PARCELA,
+    SE2.E2_NUMBOR as NUMERO_DO_BORDERO,
+    SE2.E2_SALDO as SALDO
+from SE2010 SE2
+    left join SX5010 TIPO on TIPO.X5_FILIAL = '      '
+        and TIPO.X5_TABELA = '05'
+        and TIPO.X5_CHAVE = E2_TIPO
+        and TIPO.D_E_L_E_T_ = ' '
+    left join SA6010 SA6 on SA6.A6_FILIAL = SUBSTRING(E2_FILIAL, 1, 2)
+        and SA6.A6_COD = SE2.E2_BCOPAG
+        and SA6.A6_AGENCIA = SE2.E2_FORAGE
+        and SA6.A6_NUMCON = SE2.E2_FORCTA
+        and SA6.D_E_L_E_T_ = ' '
+    left join CTT010 CTT on CTT.CTT_FILIAL = SUBSTRING(E2_FILIAL, 1, 4)
+        and CTT.CTT_CUSTO = SE2.E2_CCUSTO
+        and CTT.D_E_L_E_T_ = ' '
+    left join SED010 SED on SED.ED_FILIAL = '      '
+        and SED.ED_CODIGO = SE2.E2_NATUREZ
+        and SED.D_E_L_E_T_ = ' '
+    left join SA2010 SA2 on SA2.A2_FILIAL = '      '
+        and SA2.A2_COD = SE2.E2_FORNECE
+        and SA2.A2_LOJA = SE2.E2_LOJA
+        and SA2.D_E_L_E_T_ = ' '
+    left join SX5010 GRU on GRU.X5_FILIAL = '      '
+        and GRU.X5_TABELA = 'Y7'
+        and GRU.X5_CHAVE = A2_GRUPO
+        and GRU.D_E_L_E_T_ = ' '
+where
+        SE2.E2_SALDO > 0
+    and SE2.D_E_L_E_T_ = ' '

@@ -1,7 +1,8 @@
 select
     trim(SRA.RA_FILIAL) as FILIAL,
 	trim(SRA.RA_MAT) as MATRICULA,
-	trim(SRA.RA_NOME) as NOME,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+	trim(SRA.RA_NOMECMP) as NOME,
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
@@ -35,7 +36,7 @@ select
     end as TIPO_VERBA,
 
     case RHS.RHS_ORIGEM
-        when 1 then SRA.RA_NOME
+        when 1 then SRA.RA_NOMECMP
         when 2 then DEP.RB_NOME
         when 3 then AGG.RB_NOME
         else null

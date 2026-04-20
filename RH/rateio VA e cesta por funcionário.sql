@@ -1,7 +1,8 @@
     select /* benefícios atual */
         trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
@@ -57,7 +58,7 @@
     group by
         SRA.RA_FILIAL,
         SRA.RA_MAT,
-        SRA.RA_NOME,
+        SRA.RA_NOMECMP,
         SRJ.RJ_DESC,
         SRA.RA_MUNICIP,
         SRA.RA_ESTADO,
@@ -80,7 +81,8 @@ union
     select /* outros benefícios atual */
         trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-        trim(SRA.RA_NOME) as NOME,
+    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
@@ -130,7 +132,7 @@ union
     group by
         SRA.RA_FILIAL,
         SRA.RA_MAT,
-        SRA.RA_NOME,
+        SRA.RA_NOMECMP,
         SRJ.RJ_DESC,
         SRA.RA_MUNICIP,
         SRA.RA_ESTADO,

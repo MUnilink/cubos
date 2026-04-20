@@ -7,8 +7,10 @@
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
@@ -46,27 +48,19 @@
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-
         datediff(year, SRA.RA_NASC, RHP.RHP_DTOCOR) as IDADE,
-
         RHP.RHP_COMPPG as PERIODO,
 
-        case when RHP.RHP_PD in (87, 565, 571) then 'HAPVIDA'
-        else
-            case when RHP.RHP_PD in (88) then 'UNIMED'
-            else
-                case when RHP.RHP_PD in (428, 429) then 'REDE SAUDE'
-                else
-                    case when RHP.RHP_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
-                    else
-                        case when RHP.RHP_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
-                        end
-                    end
-                end
-            end
+        case
+            when RHP.RHP_PD in ('428', '429') then 'REDE SAUDE'
+            when RHP.RHP_CODFOR = 2 and RHP.RHP_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHP.RHP_CODFOR = 1 and RHP.RHP_PD in ('088', '626', '627') then 'UNIMED'
+            when RHP.RHP_CODFOR = 4 and RHP.RHP_PD in ('087', '565', '571') then 'UNIMED'
+            when RHP.RHP_CODFOR = 2 and RHP.RHP_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'DENTAL MASTER'
+            when RHP.RHP_CODFOR = 4 and RHP.RHP_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'SUL-AMERICA'
+            when RHP.RHP_CODFOR = 2 and RHP.RHP_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHP.RHP_CODFOR in (1, 4) and RHP.RHP_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -105,6 +99,13 @@
             when 3 then datediff(year, RHM.RHM_DTNASC, RHP.RHP_DTOCOR)
             else null
         end as IDADE_USUARIO,
+
+        case RHP.RHP_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
 
         case when RHP.RHP_ORIGEM = 1 then RHP.RHP_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHP.RHP_ORIGEM != 1 then RHP.RHP_VLRFUN else 0.0 end as VALOR_DEPAGG,
@@ -167,6 +168,11 @@
                     on SRJ.D_E_L_E_T_ = ''
                     and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                     and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                    left join SQ3010 SQ3 (nolock)
+                        on SQ3.D_E_L_E_T_ = ''
+                        and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+
                 inner join CTT010 CTT (nolock)
                     on CTT.D_E_L_E_T_ = ''
                     and CTT.CTT_CUSTO = SRA.RA_CC
@@ -197,7 +203,7 @@
             and RHM.RHM_CODFOR = RHP.RHP_CODFOR
     where
             RHP.D_E_L_E_T_ = ''
-        and year(RHP.RHP_DTOCOR) > 2021
+        and RHP.RHP_DTOCOR > '20241231'
 union
     select /* COPARTICIPAÇÃO */
         trim(SRA.RA_FILIAL) as FILIAL,
@@ -208,8 +214,10 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
@@ -247,27 +255,19 @@ union
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-        
         datediff(year, SRA.RA_NASC, RHO.RHO_DTOCOR) as IDADE,
-
         RHO.RHO_COMPPG as PERIODO,
 
-        case when RHO.RHO_PD in (87, 565, 571) then 'HAPVIDA'
-        else
-            case when RHO.RHO_PD in (88) then 'UNIMED'
-            else
-                case when RHO.RHO_PD in (428, 429) then 'REDE SAUDE'
-                else
-                    case when RHO.RHO_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
-                    else
-                        case when RHO.RHO_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
-                        end
-                    end
-                end
-            end
+        case
+            when RHO.RHO_PD in ('428', '429') then 'REDE SAUDE'
+            when RHO.RHO_CODFOR = 2 and RHO.RHO_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHO.RHO_CODFOR = 1 and RHO.RHO_PD in ('088', '626', '627') then 'UNIMED'
+            when RHO.RHO_CODFOR = 4 and RHO.RHO_PD in ('087', '565', '571') then 'UNIMED'
+            when RHO.RHO_CODFOR = 2 and RHO.RHO_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'DENTAL MASTER'
+            when RHO.RHO_CODFOR = 4 and RHO.RHO_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'SUL-AMERICA'
+            when RHO.RHO_CODFOR = 2 and RHO.RHO_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHO.RHO_CODFOR in (1, 4) and RHO.RHO_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -306,6 +306,13 @@ union
             when 3 then datediff(year, RHM.RHM_DTNASC, RHO.RHO_DTOCOR)
             else null
         end as IDADE_USUARIO,
+
+        case RHO.RHO_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
 
         case when RHO.RHO_ORIGEM = 1 then RHO.RHO_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHO.RHO_ORIGEM != 1 then RHO.RHO_VLRFUN else 0.0 end as VALOR_DEPAGG,
@@ -368,6 +375,11 @@ union
                     on SRJ.D_E_L_E_T_ = ''
                     and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                     and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                    left join SQ3010 SQ3 (nolock)
+                        on SQ3.D_E_L_E_T_ = ''
+                        and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+
                 inner join CTT010 CTT (nolock)
                     on CTT.D_E_L_E_T_ = ''
                     and CTT.CTT_CUSTO = SRA.RA_CC
@@ -408,8 +420,10 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
@@ -447,27 +461,19 @@ union
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-
         datediff(year, SRA.RA_NASC, RHR.RHR_DATA) as IDADE,
-        
         RHR.RHR_COMPPG as PERIODO,
 
-        case when RHR.RHR_PD in (87, 565, 571) then 'HAPVIDA'
-        else
-            case when RHR.RHR_PD in (88) then 'UNIMED'
-            else
-                case when RHR.RHR_PD in (428, 429) then 'REDE SAUDE'
-                else
-                    case when RHR.RHR_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 'ODONTO'
-                    else
-                        case when RHR.RHR_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
-                        end
-                    end
-                end
-            end
+        case
+            when RHR.RHR_PD in ('428', '429') then 'REDE SAUDE'
+            when RHR.RHR_CODFOR = 2 and RHR.RHR_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHR.RHR_CODFOR = 1 and RHR.RHR_PD in ('088', '626', '627') then 'UNIMED'
+            when RHR.RHR_CODFOR = 4 and RHR.RHR_PD in ('087', '565', '571') then 'UNIMED'
+            when RHR.RHR_CODFOR = 2 and RHR.RHR_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'DENTAL MASTER'
+            when RHR.RHR_CODFOR = 4 and RHR.RHR_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then 'SUL-AMERICA'
+            when RHR.RHR_CODFOR = 2 and RHR.RHR_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHR.RHR_CODFOR in (1, 4) and RHR.RHR_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -506,6 +512,13 @@ union
             when 3 then datediff(year, RHM.RHM_DTNASC, RHR.RHR_DATA)
             else null
         end as IDADE_USUARIO,
+
+        case RHR.RHR_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
 
         case when RHR.RHR_ORIGEM = 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHR.RHR_ORIGEM != 1 then RHR.RHR_VLRFUN else 0.0 end as VALOR_DEPAGG,
@@ -568,6 +581,11 @@ union
                     on SRJ.D_E_L_E_T_ = ''
                     and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                     and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                    left join SQ3010 SQ3 (nolock)
+                        on SQ3.D_E_L_E_T_ = ''
+                        and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+
                 inner join CTT010 CTT (nolock)
                     on CTT.D_E_L_E_T_ = ''
                     and CTT.CTT_CUSTO = SRA.RA_CC
@@ -607,8 +625,10 @@ union
         end as NOME_FILIAL,
 
         trim(SRA.RA_MAT) as MATRICULA,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	    trim(SRA.RA_ESTADO) as UF,
         convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
@@ -646,27 +666,19 @@ union
         trim(SRA.RA_LOGRTP) as TIPO_LOGRA,
 
         coalesce(concat((nullif(trim(SRA.RA_DDDCELU), '')), (nullif(trim(SRA.RA_NUMCELU), ''))), concat((nullif(trim(SRA.RA_DDDFONE), '')), (nullif(trim(SRA.RA_TELEFON), ''))), '') as CELULAR,
-
         trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
-        
         datediff(year, SRA.RA_NASC, RHS.RHS_DATA) as IDADE,
-
-        RHS.RHS_COMPPG as PERIODO,        
-
-        case when RHS.RHS_PD in (87, 565, 571) then 'HAPVIDA'
-        else
-            case when RHS.RHS_PD in (88) then 'UNIMED'
-            else
-                case when RHS.RHS_PD in (428, 429) then 'REDE SAUDE'
-                else
-                    case when (RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'ODONTO'
-                    else
-                        case when RHS.RHS_PD in (624, 625) then 'COPARTICIPACAO'
-                        else 'OUTROS'
-                        end
-                    end
-                end
-            end
+        RHS.RHS_COMPPG as PERIODO,
+        
+        case
+            when RHS.RHS_PD in ('428', '429') then 'REDE SAUDE'
+            when RHS.RHS_CODFOR = 2 and RHS.RHS_PD in ('087', '565', '571') then 'HAPVIDA'
+            when RHS.RHS_CODFOR = 1 and RHS.RHS_PD in ('088', '626', '627') then 'UNIMED'
+            when RHS.RHS_CODFOR = 4 and RHS.RHS_PD in ('087', '565', '571') then 'UNIMED'
+            when RHS.RHS_CODFOR = 2 and (RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'DENTAL MASTER'
+            when RHS.RHS_CODFOR = 4 and (RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') or RHS.RHS_PD = BASE_ODONTO.RD_PD) then 'SUL-AMERICA'
+            when RHS.RHS_CODFOR = 2 and RHS.RHS_PD in ('624', '625') then 'HAPVIDA - COPARTICIPACAO'
+            when RHS.RHS_CODFOR in (1, 4) and RHS.RHS_PD in ('624', '625') then 'UNIMED - COPARTICIPACAO'
         end as TIPO_VERBA,
 
         trim(isnull(SRV.RV_DESC, '-')) as NOMEVERBA,
@@ -705,6 +717,13 @@ union
             when 3 then datediff(year, RHM.RHM_DTNASC, RHS.RHS_DATA)
             else null
         end as IDADE_USUARIO,
+
+        case RHS.RHS_ORIGEM
+            when 1 then SRA.RA_CIC
+            when 2 then DEP.RB_CIC
+            when 3 then RHM.RHM_CPF
+            else null
+        end as CPF_USUARIO,
 
         case when RHS.RHS_ORIGEM = 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_FUNC,
         case when RHS.RHS_ORIGEM != 1 then RHS.RHS_VLRFUN else 0.0 end as VALOR_DEPAGG,
@@ -749,7 +768,7 @@ union
             and BASE_ODONTO.RD_FILIAL = RHS.RHS_FILIAL
             and BASE_ODONTO.RD_MAT = RHS.RHS_MAT
             and BASE_ODONTO.RD_PERIODO = substring(RHS.RHS_DATA, 1, 6)
-            and BASE_ODONTO.RD_PD = case when RHS.RHS_PD in (569, 570, 574, 575, 576, 577, 711, 78) then 711 else null end
+            and BASE_ODONTO.RD_PD = case when RHS.RHS_PD in ('569', '570', '574', '575', '576', '577', '711', '078') then '711' else null end
         inner join SRV010 SRV (nolock)
             on SRV.D_E_L_E_T_ = ''
             and SRV.RV_COD = RHS.RHS_PD
@@ -773,6 +792,11 @@ union
                     on SRJ.D_E_L_E_T_ = ''
                     and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                     and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                    left join SQ3010 SQ3 (nolock)
+                        on SQ3.D_E_L_E_T_ = ''
+                        and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+
                 inner join CTT010 CTT (nolock)
                     on CTT.D_E_L_E_T_ = ''
                     and CTT.CTT_CUSTO = SRA.RA_CC
@@ -803,4 +827,4 @@ union
             and RHM.RHM_CODFOR = RHS.RHS_CODFOR
     where
             RHS.D_E_L_E_T_ = ''
-        and year(RHS.RHS_DATA) > 2021
+        and RHS.RHS_DATA > '20241231'

@@ -1,0 +1,33 @@
+- reunião Pecém
+problemas de apresentação;
+Gustavo começa a apresentação, em face da ausência do Thyago e do atraso do Anderson;
+Ernesto explica para o Gustavo atualizar as pendências;
+Continua pendente a entrega por terceiro das cabines. Wellington explica que parte será feito pela oficina e o restante pelo fornecedor. Gustavo diz que o pessoal de oficina já está trabalhando na parte interna dos aguardos, aguardando parte do material.
+Gustavo diz que o Rhayan lhe informou que até o dia 15 haveria uma atualização do assunto;
+Anderson explica que uma solução provisória solucionou o problema, mas criada a pendência para solução do guardacorpo lateral da cabine;
+Wellington relata conversa com Eduardo e Iza (Royal) no dia 03/04 referente ao novo espaço da manutenção, na qual se falou do início do canteiro de obras previsto para 06/04 e com previsão de entrega em 90 dias, pendentes alguns detalhes a ver com Marcus;
+Anderson relata degraus desgastados do Bardella, e Wellington fala de conversa com o Manoel Jr sobre a negociação com o fornecedor para realização do serviço. Wellington diz que usará o mesmo material da escada do TEREX;
+Sobre o sistema anti-incêndio do Konecranes o Wellington diz que já houve a negociação com fornecedor RDM, e que está pendente o planejamento e execução do serviço de fato;
+Anderson cita a inspeção do cabo de aço do Bardella, após visita de técnico ocorrida na semana. Cita algumas particularidades observadas pelo técnico externo;
+Ernesto fala de projetos futuros sobre digitalização das OS, de implantação das SS de equipamentos e prediais;
+Eduardo sugere acompanhar indicadores referentes às certificações ISO recém-adquiridas, e Wellington diz que isso já está sendo tratado pelos responsáveis pela qualidade;
+Anderson comenta os indicadores, o não atendimento das preventivas e baixa disponibilidade de máquinas;
+Ernesto comenta os indicadores MTTR e MTBF, que são muito influenciados pelas OS fechadas ou não, e Wellington comenta que os números são difíceis de interpretar, mas que também são indicadores em acompanhamento inicial;
+Anderson observa que menor disponibilidade de máquinas tem impacto maior que a de cavalos mecânicos, já que as primeiras são mais utilizadas pelo operacional;
+Wellington observa o baixo indicador de MDO, mas observa também que é um indicador em criação. Anderson questiona o Gustavo como acontecem os apontamentos, e este explica que a grande demanda (devida à recente redução de pessoal) dificulta o acompanhamento em tempo real do apontamento. Wellington diz que os totens estão previstos para instalação e para a posterior utilização pelo pessoal da oficina no apontamento de MDO;
+Gustavo comenta o FCA no detalhe de quais frotas impactaram na disponibilidade, com quais veículos e quais os problemas observados em março e em meses anteriores;
+Sobre os CMs 5001 e 5002 Wellington diz que não se deve realizar aplicação de peças num veículo após remoção doutro veículo semelhante, exceto com autorização do Wellington ou do Anderson;
+
+- reunião Matriz
+Ernesto comenta a reunião devido ao problema na garganta do Lucas;
+Lucas diz que não foi retomado, e Wellington explica ao Anderson que é, em resumo, a padronização dos documentos referentes às atividades da manutenção na medida do possível;
+Ernesto diz que está previsto testar a inclusão dos recibos de serviços de pneus em viagem, por meio de fatura no módulo fiscal;
+Lucas diz que está previsto e que o material está disponível, mas o fornecedor está pendente de disponibilidade;
+Lucas diz que os tanques passaram por limpeza e dos reservatórios, e diz também que a VM09 não tem dreno, como nos tanques fixos. Wellington, porém, lembra que por ser um tanque móvel, não é recomendado que seja instalado na SR12000;
+Lucas informa que os totens devem chegar no dia 05/04 e que avaliará como será feita a instalação definitiva na oficina matriz;
+Ernesto diz que continua pendente o cadastro dos tanques, pois precisa de algumas informações para esse processo e para posterior criação do plano de preventivas dos tanques de diesel;
+Lucas informa que foi adequeda a área de lavagem, com coberta e outros;
+Ernesto explica que não seria viável a automatização do cadastro de funcionários da manutenção com o setor pessoal, e Manoel explicou que de fato não se justifica a necessidade de automatizar algo pontual e que é conhecido pelo administrativo da manutenção;
+Ernesto diz que iniciou a revisão de cadastros duplicados de produtos;
+Ernesto diz que analisou com o Lucas as alterações necessárias nos planos de preventiva de certos modelos;
+Ernesto cita treinamento dos motoristas nos veículos com tecnologias mais avançadas;
