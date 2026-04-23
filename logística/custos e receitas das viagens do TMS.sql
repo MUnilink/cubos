@@ -137,7 +137,10 @@ from ZE1010 ZE1 (nolock)
                 ) as numeric(15, 2)
             ) as PERC_RATEIO
         from ZG1010 ZG1 (nolock)
-        where ZG1.D_E_L_E_T_ = ''
+        where
+                ZG1.D_E_L_E_T_ = ''
+            and ZG1.ZG1_CC = '304'
+            and ZG1.ZG1_ITEMCT = '11'
     ) RAT_IMPR
         on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZE1.ZE1_TIPO
         and RAT_IMPR.FILIAL = left(ZE1.ZE1_FILIAL, 4)
