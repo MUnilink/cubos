@@ -275,6 +275,17 @@ select
 	SE2.E2_PARCELA as PARCELA,
 	SE2.E2_VALOR as VALOR_TITULO,
 
+	case
+		when SB1.B1_GRUPO like '51%' then 'DESPESAS'
+		when SB1.B1_GRUPO like '4%' then 'ATIVO FIXO'
+		when SB1.B1_GRUPO like '3%' then 'PRODUTOS TMS'
+		when SB1.B1_GRUPO like '2%' then 'SERVIÇOS'
+		when SB1.B1_GRUPO like '12%' then 'MATERIAL DE CONSUMO'
+		when SB1.B1_GRUPO like '1110%' then 'COMBUSTÍVEL'
+		when SB1.B1_GRUPO like '1130%' then 'PNEUS'
+		when SB1.B1_GRUPO like '1%' then 'PEÇAS E ACESSÓRIOS'
+	else 'OUTROS' end as CLASSIFICACAO,
+
 	case when trim(SC7.C7_YOS) = '2024/0' then right(left(replace(replace(SC7.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7.C7_YOS end as OS_PORT,
 	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT
 

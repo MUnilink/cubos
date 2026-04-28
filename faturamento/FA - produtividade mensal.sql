@@ -19,7 +19,7 @@ select
     concat(ZG1.ZG1_COMPET, '01') as COMPETENCIA,
     
     case
-        when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '305' and ZG1.ZG1_ITEMCT != '32' then isnull((select max(SRJ010.RJ_YHRPADR) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO), 0.0)
+        when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '305' and ZG1.ZG1_ITEMCT != '32' then (select max(SRJ010.RJ_YHRPADR) from SRJ010 where SRJ010.D_E_L_E_T_ = '' and SRJ010.RJ_CARGO = ZG1.ZG1_CODIGO)
         when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '305' and ZG1.ZG1_ITEMCT = '32' then '220'
         when ZG1.ZG1_TABELA = 'SQ3' and ZG1.ZG1_CC = '304' then '220'
         else ZG1.ZG1_HRPAD
@@ -54,6 +54,8 @@ select
         when 14 then 'PROVISÕES'
         when 15 then 'TIPO RH IMPROD'
         when 16 then 'TIPO MNT IMPROD'
+        when 20 then 'IMPR COMB'
+        when 21 then 'IMPR PNEU'
         else 'OUTROS'
     end as TIPO_INSUMO,
 
@@ -87,8 +89,4 @@ from ZG1010 ZG1 (nolock)
         and CTD.CTD_ITEM = ZG1.ZG1_ITEMCT
 where
         ZG1.D_E_L_E_T_ = ''
-    and
-        case
-            when ZG1.ZG1_TABELA = 'ST9' then (select trim(ST9010.T9_CODFAMI) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = ZG1.ZG1_CODIGO and ZG1.ZG1_TIPO in (3, 6, 9, 12))
-            else 'SQ3'
-        end in ('SQ3', 'VP', 'MP', 'GD', 'GD AUX', 'ML', 'VM')
+    and ZG1.ZG1_COMPET > 202509

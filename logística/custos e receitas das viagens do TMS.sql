@@ -36,6 +36,7 @@ select
     case when ZE1.ZE1_TIPO in (15, 16) then RAT_IMPR.TIPO else ZE1.ZE1_TIPO end as ID_TIPO,
     case when ZE1.ZE1_TIPO in (15, 16) or ZE1.ZE1_TIPO in (20, 21) then 0.0 else cast(ZE1.ZE1_TOTAL as numeric(15, 2)) end as VALOR_PROD,
     cast(RAT_IMPR.PERC_RATEIO as numeric(15, 4)) as PERC_RATEIO,
+    
     cast(ZE1.ZE1_IMPR1 as numeric(15, 2)) as HIMP_AFAMNT,
     cast(ZE1.ZE1_IMPR2 as numeric(15, 2)) as HIMP_FER,
     cast(ZE1.ZE1_IMPR3 as numeric(15, 2)) as HIMP_PON,
@@ -119,7 +120,8 @@ from ZE1010 ZE1 (nolock)
             ZG1.ZG1_CODIGO as INSUMO,
             ZG1.ZG1_TIPO as TIPO,
             ZG1.ZG1_VLIMPR as VLIMP_TOT,
-            cast(
+            cast
+            (
                 ZG1.ZG1_VLIMPR/
                 (
                     select sum(ZG1010.ZG1_VLIMPR)
@@ -128,13 +130,17 @@ from ZE1010 ZE1 (nolock)
                             ZG1010.ZG1_VLIMPR != 0
                         and ZG1010.ZG1_FILORI = ZG1.ZG1_FILORI
                         and ZG1010.ZG1_COMPET = ZG1.ZG1_COMPET
+                        and ZG1010.ZG1_CC = ZG1.ZG1_CC
+                        and ZG1010.ZG1_ITEMCT = ZG1.ZG1_ITEMCT
                         and ZG1010.ZG1_CODIGO = ZG1.ZG1_CODIGO
                         and ZG1010.D_E_L_E_T_ = ''
-                )
-                as numeric(15, 2)
+                ) as numeric(15, 2)
             ) as PERC_RATEIO
         from ZG1010 ZG1 (nolock)
-        where ZG1.D_E_L_E_T_ = ''
+        where
+                ZG1.D_E_L_E_T_ = ''
+            and ZG1.ZG1_CC = '304'
+            and ZG1.ZG1_ITEMCT = '11'
     ) RAT_IMPR
         on case when RAT_IMPR.TIPO in (2, 14) then 15 when RAT_IMPR.TIPO in (3, 6, 9, 12) then 16 else null end = ZE1.ZE1_TIPO
         and RAT_IMPR.FILIAL = left(ZE1.ZE1_FILIAL, 4)
