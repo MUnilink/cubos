@@ -15,7 +15,7 @@ select
 	(select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
 	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
 	trim(SRA.RA_BHFOL) as BANCO_FOLHA,
-	trim(SRA.RA_HRSMES) as HORAS_MES,
+	SRA.RA_HRSMES as HORAS_MES,
 	
 	concat(trim(CTT.CTT_CUSTO), ' - ', trim(CTT.CTT_DESC01)) as CCUSTO,
 	concat(trim(CTD.CTD_ITEM), ' - ', trim(CTD.CTD_DESC01)) as ATIVIDADE,
