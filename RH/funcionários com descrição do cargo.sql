@@ -13,6 +13,9 @@ select
 	trim(SQ3.Q3_CARGO) as COD_CARGO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
 	(select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
+	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
+	trim(SRA.RA_BHFOL) as BANCO_FOLHA,
+	trim(SRA.RA_HRSMES) as HORAS_MES,
 	
 	concat(trim(CTT.CTT_CUSTO), ' - ', trim(CTT.CTT_DESC01)) as CCUSTO,
 	concat(trim(CTD.CTD_ITEM), ' - ', trim(CTD.CTD_DESC01)) as ATIVIDADE,
@@ -26,7 +29,6 @@ select
 	left(SRA.RA_DTFIMCT, 6) as PERIODO_FIMCTR,
 	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	trim(SRA.RA_SITFOLH) as SITUACAO,
-	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
 	case SRA.RA_YPARENT when 1 then 'S' when 2 then 'N' else 'outros' end as PAIMAE,
 	(select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_ESTCIVI and SX5010.X5_TABELA = '33') as ESTADO_CIVIL,
 	trim(RCE.RCE_DESCRI) as SINDICATO,
