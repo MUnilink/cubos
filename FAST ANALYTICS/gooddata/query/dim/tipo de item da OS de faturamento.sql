@@ -22,7 +22,7 @@
             when 21 then 'IMPR PNEU'
             else 'OUTROS'
         end as TIPO_INSUMO,
-        case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 20, 21) then 'EQUIPAMENTO' when cast(ZC2.ZC2_TIPO as int) in (2, 14, 17) then 'PESSOAL' else 'OUTROS' end as ENTIDADE
+        case when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 20, 21) then 'EQUIPAMENTO' when cast(ZC2.ZC2_TIPO as int) in (2, 14) then 'PESSOAL' else 'OUTROS' end as ENTIDADE
     from ZC2010 ZC2
     where ZC2.D_E_L_E_T_ = ''
 union
@@ -50,7 +50,7 @@ union
             when 21 then 'IMPR PNEU'
             else 'OUTROS'
         end as TIPO_INSUMO,
-        case when cast(ZE1.ZE1_TIPO as int) in (3, 6, 9, 10, 12, 13, 20, 21) then 'EQUIPAMENTO' when cast(ZE1.ZE1_TIPO as int) in (2, 14, 17) then 'PESSOAL' else 'OUTROS' end as ENTIDADE
+        case when cast(ZE1.ZE1_TIPO as int) in (3, 6, 9, 10, 12, 13, 17, 18, 20, 21) then 'EQUIPAMENTO' when cast(ZE1.ZE1_TIPO as int) in (2, 14, 17) then 'PESSOAL' else 'OUTROS' end as ENTIDADE
     from ZE1010 ZE1
     where ZE1.D_E_L_E_T_ = ''
 union select null, null, null
