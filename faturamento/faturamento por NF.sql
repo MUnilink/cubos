@@ -1,12 +1,15 @@
-SELECT
+select
     SD2.D2_FILIAL as BK_FILIAL,
     SF2.F2_SERIE AS SERIE_DA_NOTA_FISCAL,
     SF2.F2_DOC AS NUMERO_DA_NOTA_FISCAL,
     SD2.D2_ITEM as ITEM_NF,
     trim(SD2.D2_CCUSTO) as CC_NF,
+    (select trim(CTT010.CTT_DESC01) from CTT010 where CTT010.D_E_L_E_T_ = '' and CTT010.CTT_CUSTO = SD2.D2_CCUSTO) as CC_NOME,
     trim(SD2.D2_ITEMCC) as ATIVIDADE_NF,
+    (select trim(CTD010.CTD_DESC01) from CTD010 where CTD010.D_E_L_E_T_ = '' and CTD010.CTD_ITEM = SD2.D2_ITEMCC) as ATIVIDADE_NOME,
     SD2.D2_TIPO AS TIPO_NF,
-    SD2.D2_ORIGLAN AS ORIGEM_NF,
+    trim(SD2.D2_ORIGLAN) AS ORIGEM_LAN,
+    trim(SD2.D2_NFORI) AS ORIGEM_NF,
     
     cast(SF2.F2_EMISSAO as date) as DATA_NF,
     left(SF2.F2_EMISSAO, 6) as PERIODO_NF,
@@ -108,7 +111,7 @@ SELECT
         when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
         when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
         when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501' then '310101001'
-    else null end as LP_CRE,
+    else null end as CONTA_CONTABIL,
 
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
     cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
