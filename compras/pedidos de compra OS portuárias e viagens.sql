@@ -7,8 +7,6 @@ select
 	(select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO) as NOMEGRUPO,
 	concat(trim(SB1.B1_GRUPO), ' - ', (select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO)) as GRUPO_PROD,
 	trim(SB1.B1_UM) as UN,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
-	trim(CTT.CTT_DESC01) as CCUSTO,
 	trim(SC7.C7_ITEMCTA) as AT,
 	trim(SC7.C7_CC) as CC,
 	trim(SC1.C1_NUM) as SC,
@@ -16,7 +14,6 @@ select
 	trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE_SC,
 	convert(datetime, concat(SC1.C1_EMISSAO, ' ', isnull(nullif(SC1.C1_YHORASC, ''), '00:00:00')), 113) as DATA_SC,
 	left(SC1.C1_EMISSAO, 6) as PERIODO_SC,
-	left(SC1.C1_OP, 6) as OS,
 	
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
@@ -104,11 +101,13 @@ select
     cast(SD1.D1_VALINS as numeric(14, 2)) as VL_NFENT_INSS,
 	cast(SD1.D1_SEGURO as numeric(14, 2)) as VL_NFENT_SEGURO,
 
+	ZC1.ZC1_FILIAL as FILIAL_OS,
+	cast(substring(ZC1.ZC1_NUM, 6, 10) as int) as OS,
 	ZC2.ZC2_NUM as NUM_OS,
 	ZC1.ZC1_CC as CC_OS,
 	ZC1.ZC1_ATIVD as ATIVIDADE_OS,
-	cast(ZC2.ZC2_DATA as date) as DATA_ITEM,
-	left(ZC2.ZC2_DATA, 6) as PERIODO_ITEM,
+	cast(ZC2.ZC2_DATA as date) as DATA_ITEMOS,
+	left(ZC2.ZC2_DATA, 6) as PERIODO_ITEMOS,
 	left(ZC2.ZC2_COMPET, 6) as COMPET_OS,
 	cast(coalesce(ZC2.ZC2_TOTAL, 0) as decimal (14, 2)) as VALOR_TAXA
 
@@ -118,9 +117,10 @@ from SC7010 SC7 (nolock)
 		and SC1.C1_FILIAL = SC7.C7_FILIAL
 		and SC1.C1_NUM = SC7.C7_NUMSC
 		and SC1.C1_ITEM = SC7.C7_ITEMSC
-	left join SB1010 SB1 (nolock)
+	inner join SB1010 SB1 (nolock)
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SC7.C7_PRODUTO
+		and SB1.B1_GRUPO = '2301'
 	inner join SA2010 SA2 (nolock)
 		on SA2.D_E_L_E_T_ = ''
 		and SA2.A2_COD = SC7.C7_FORNECE
@@ -130,17 +130,12 @@ from SC7010 SC7 (nolock)
 		and SE4.E4_CODIGO = SC7.C7_COND
 	left join SY1010 SY1 (nolock)
 		on SY1.Y1_USER = SC7.C7_USER
-	left join CTT010 CTT (nolock)
-		on CTT.D_E_L_E_T_ = ''
-		and CTT.CTT_CUSTO = SC7.C7_CC
-	left join CTD010 CTD (nolock)
-		on CTD.D_E_L_E_T_ = ''
-		and CTD.CTD_ITEM = SC7.C7_ITEMCTA
 	left join SD1010 SD1 (nolock)
 		on SD1.D_E_L_E_T_ = ''
 		and SD1.D1_FILIAL = SC7.C7_FILIAL
 		and SD1.D1_PEDIDO = SC7.C7_NUM
 		and SD1.D1_ITEMPC = SC7.C7_ITEM
+	
 	left join ZC2010 ZC2 (nolock)
 		on ZC2.D_E_L_E_T_ = ''
 		and ZC2.ZC2_FILIAL = SC7.C7_FILIAL
@@ -153,3 +148,4 @@ from SC7010 SC7 (nolock)
             and ZC1.ZC1_NUM = ZC2.ZC2_NUM
 where
 		SC7.D_E_L_E_T_ = ''
+	and SC7.C7_CC in ('304', '305')
