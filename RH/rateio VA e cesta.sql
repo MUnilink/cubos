@@ -24,6 +24,7 @@
         
         case SR0.R0_TPBEN when 1 then 'TRANSPORTE' when 2 then 'ALIMENTAÇÃO' else null end as BENEFICIO,
 
+        SRA.RA_YVTRPEC as VT_PECUNIA,
         SR0.R0_TPBEN as TIPO_BENEFICIO,
         SR0.R0_CODIGO as COD_BENEFICIO,
         isnull(RFO.RFO_DESCR, SRN.RN_DESC) as DESC_BENEFICIO,
