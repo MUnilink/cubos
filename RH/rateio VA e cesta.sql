@@ -1,7 +1,7 @@
     select /* benefícios atual */
         trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
@@ -87,13 +87,11 @@
             and SRN.RN_FILIAL = substring(SR0.R0_FILIAL, 1, 4)
             and SRN.RN_COD = SR0.R0_CODIGO
     where SR0.D_E_L_E_T_ = ''
-
 union
-
     select /* outros benefícios atual */
         trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
@@ -116,6 +114,7 @@ union
 
         case RIQ.RIQ_TPBENE when 81 then 'CESTA' when 84 then 'CESTA' else null end as BENEFICIO,
 
+        SRA.RA_YVTRPEC as VT_PECUNIA,
         RIS.RIS_TPBENE as TIPO_BENEFICIO,
         RIS.RIS_COD as COD_BENEFICIO,
         RIS.RIS_DESC as DESC_BENEFICIO,
@@ -174,13 +173,11 @@ union
             and RIS.RIS_TPBENE = RIQ.RIQ_TPBENE
             and RIS.RIS_COD = RIQ.RIQ_COD
     where RIQ.D_E_L_E_T_ = ''
-
 union
-
     select /* benefícios histórico */
         trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
-    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
         trim(SRA.RA_MUNICIP) as MUNICIPIO,
@@ -203,6 +200,7 @@ union
         
         case RG2.RG2_TPBEN when 1 then 'TRANSPORTE' when 2 then 'ALIMENTAÇÃO' else null end as BENEFICIO,
 
+        SRA.RA_YVTRPEC as VT_PECUNIA,
         RG2.RG2_TPBEN as TIPO_BENEFICIO,
         RG2.RG2_CODIGO as COD_BENEFICIO,
         isnull(RFO.RFO_DESCR, SRN.RN_DESC) as DESC_BENEFICIO,
