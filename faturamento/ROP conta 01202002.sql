@@ -90,9 +90,8 @@ from
                     DUD010.DUD_DOC,
                     DUD010.DUD_SERIE,
                     DUD010.DUD_STATUS,
-                    DUA010.DUA_CODOCO, /* and DUA010.DUA_CODOCO != 'E004' */
                     DUA010.DUA_FILVTR,
-                    DUA010.DUA_NUMVTR, /* and DUA010.DUA_NUMVTR = '' */
+                    DUA010.DUA_NUMVTR,
                     case when DUA010.DUA_CODOCO = 'E004' and concat(DUA010.DUA_FILVTR, DUA010.DUA_NUMVTR) != '' then 'SOC' else 'NOR' end as VGA_NORMAL
                 from DUD010
                     left join DUA010
