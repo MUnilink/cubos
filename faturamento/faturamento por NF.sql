@@ -54,15 +54,38 @@ select
     cast(SC6.C6_VALOR as numeric(15, 2)) as VALOR_PEDIDO,
 
     case
+        when SB1.B1_COD like '2101000[3-4]' and trim(CFOP.X5_CHAVE) like '[5-6]933' and SD2.D2_TES like '50[3-4]' then '310101001'
+        when SB1.B1_COD = '21010003' and (trim(CFOP.X5_CHAVE) like '[5-6]933' or trim(CFOP.X5_CHAVE) = '7949') and SD2.D2_TES in ('522', '525') then '310101002'
+        when SB1.B1_COD = '21010001' and SD2.D2_TES in ('501', '502', '506', '507', '510', '519', '520', '524', '526', '534', '535', '536', '554', '558') and
+        (
+            trim(CFOP.X5_CHAVE) like '[5-6]363' or
+            trim(CFOP.X5_CHAVE) like '[5-6]932' or
+            trim(CFOP.X5_CHAVE) like '[5-6]351' or
+            trim(CFOP.X5_CHAVE) like '[5-6]352' or
+            trim(CFOP.X5_CHAVE) like '[5-6]353' or
+            trim(CFOP.X5_CHAVE) like '[5-6]355' or
+            trim(CFOP.X5_CHAVE) like '[5-6]357' or
+            trim(CFOP.X5_CHAVE) like '[5-6]359' or
+            trim(CFOP.X5_CHAVE) like '[5-6]360'
+        ) then '310101001'
+        when SB1.B1_COD = '21010001' and SD2.D2_TES in ('509', '514', '516', '517', '518', '539') and
+        (
+            trim(CFOP.X5_CHAVE) like '[5-6]363' or
+            trim(CFOP.X5_CHAVE) like '[5-6]932' or
+            trim(CFOP.X5_CHAVE) like '[5-6]351' or
+            trim(CFOP.X5_CHAVE) like '[5-6]352' or
+            trim(CFOP.X5_CHAVE) like '[5-6]353' or
+            trim(CFOP.X5_CHAVE) like '[5-6]355' or
+            trim(CFOP.X5_CHAVE) like '[5-6]357' or
+            trim(CFOP.X5_CHAVE) like '[5-6]359' or
+            trim(CFOP.X5_CHAVE) like '[5-6]360'
+        ) then '310101002'
+        
         /* LP 610-001 */
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
         then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
         then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES like '50[3-4]'
-        then '310101001'
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and (SD2.D2_TES = '522' or SD2.D2_TES = '525')
-        then '310101002'
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
         then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
         
