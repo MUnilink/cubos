@@ -49,7 +49,47 @@ select distinct
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
-    else 0.0 end as VALOR
+    else 0.0 end as VALOR,
+
+    case
+        when nullif(ZC1.ZC1_CODSA1, '') is not null then
+        isnull
+        (
+            (
+                select count(*)
+                from ZC1010
+                    inner join SA1010
+                        on SA1010.D_E_L_E_T_ = ''
+                        and SA1010.A1_COD = ZC1010.ZC1_CODSA1
+                        and SA1010.A1_LOJA = ZC1010.ZC1_LOJSA1
+                where
+                        ZC1010.D_E_L_E_T_ = ''
+                    and concat(ZC1010.ZC1_FILIAL, ZC1010.ZC1_NUM) = concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM)
+            ), 1
+        )
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then
+        isnull
+        (
+            (
+                select count(*)
+                from DUD010
+                    left join DT6010
+                        on DT6010.D_E_L_E_T_ = ''
+                        and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
+                        and DT6010.DT6_DOC = DUD010.DUD_DOC
+                        and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+                        
+                        left join SA1010
+                            on SA1010.D_E_L_E_T_ = ''
+                            and SA1010.A1_COD = DT6010.DT6_CLIDEV
+                            and SA1010.A1_LOJA = DT6010.DT6_LOJDEV
+                where
+                        DUD.D_E_L_E_T_ = ''
+                    and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM))
+           ), 1
+        )
+        else 0
+    end as qtd_CLIENTE
 
 from ZE3010 ZE3 (nolock)
     inner join ZE2010 ZE2 (nolock)
