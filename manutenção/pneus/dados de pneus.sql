@@ -10,17 +10,6 @@ select
 	ST9.T9_STATUS as STATUS,
     trim(TQY.TQY_DESTAT) as DESC_STATUS,
     ST9.T9_CONTACU as CONT_ACUM,
-	(
-		select trim(ST7010.T7_NOME)
-		from TQR010
-			inner join ST7010
-				on ST7010.D_E_L_E_T_ = ''
-				and ST7010.T7_FABRICA = TQR010.TQR_FABRIC
-		where
-				TQR010.D_E_L_E_T_ = ''
-			and TQR010.TQR_TIPMOD = ST9.T9_TIPMOD
-	) as FABRICANTE,
-
 	ST9.T9_VALCPA as T9_VALCPA,
 	cast(ST9.T9_DTCOMPR as date) as DATA_COMPRA,
 	ST9.T9_FORNECE,
@@ -34,7 +23,8 @@ select
 	TQX.TQX_SULCOO as SULCO_ORI,
 	TQX.TQX_KMESPO as CONTADOR_ESP,
 	TQX.TQX_XTBAND as BANDA_CUSTO,
-	trim(ST7.T7_NOME) as BANDA_TIPO,
+	trim(ST7.T7_NOME) as FABRICANTE,
+	TQS.TQS_BANDAA as BANDA_ATUAL,
 
 	TQS.TQS_KMOR,
 	TQS.TQS_KMR1,
@@ -57,25 +47,23 @@ from TQS010 TQS (nolock)
 		left join SA2010 SA2
 			on SA2.D_E_L_E_T_ = ''
 			and SA2.A2_COD + SA2.A2_LOJA = ST9.T9_FORNECE + ST9.T9_LOJA
-	
+		
+		left join TQR010 TQR
+			on TQR.D_E_L_E_T_ = ''
+			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+
+			left join ST7010 ST7
+				on ST7.D_E_L_E_T_ = ''
+				and ST7.T7_FABRICA = TQR.TQR_FABRIC
+			left join TQX010 TQX
+				on TQX.D_E_L_E_T_ = ''
+				and TQX.TQX_TIPMOD = TQR.TQR_TIPMOD
+			
 	left join TQT010 TQT
 		on TQT.D_E_L_E_T_ = ''
 		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-	
-		left join TQX010 TQX
-			on TQX.D_E_L_E_T_ = ''
-			and TQX.TQX_MEDIDA = TQT.TQT_MEDIDA
-
-			left join TQR010 TQR
-				on TQR.D_E_L_E_T_ = ''
-				and TQR.TQR_TIPMOD = TQX.TQX_TIPMOD
-			
-				left join ST7010 ST7
-					on ST7.D_E_L_E_T_ = ''
-					and ST7.T7_FABRICA = TQR.TQR_FABRIC
 		
 		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
 			and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
-where
-		TQS.D_E_L_E_T_ = ''
+where TQS.D_E_L_E_T_ = ''
