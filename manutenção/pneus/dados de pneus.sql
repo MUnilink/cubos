@@ -5,6 +5,7 @@ select
 	ST9.T9_ITEMCTA as ATIVIDADE,
     ST9.T9_LOCPAD as ARMAZEM,
 	ST9.T9_SITBEM as SITUACAO,
+	ST9.T9_ESTRUTU as APLICADO,
 	TQS.TQS_MEDIDA,
     trim(TQT.TQT_DESMED) as MEDIDA,
 	ST9.T9_STATUS as STATUS,
@@ -16,15 +17,11 @@ select
 	trim(SA2.A2_NOME) as RAZAO_SOCIAL,
     trim(SA2.A2_NREDUZ) as NOME_FANTASIA,
 
-	ST9.T9_CCUSTO as CCUSTO,
-	ST9.T9_ITEMCTA as ATIVIDADE,
-	ST9.T9_ESTRUTU as APLICADO,
-
-	TQX.TQX_SULCOO as SULCO_ORI,
-	TQX.TQX_KMESPO as CONTADOR_ESP,
-	TQX.TQX_XTBAND as BANDA_CUSTO,
 	trim(ST7.T7_NOME) as FABRICANTE,
 	TQS.TQS_BANDAA as BANDA_ATUAL,
+	(select TQX010.TQX_SULCOO from TQX010 where TQX010.D_E_L_E_T_ = '' and TQX010.TQX_TIPMOD = TQR.TQR_TIPMOD and TQX010.TQX_MEDIDA = TQT.TQT_MEDIDA) as SULCO_ORI,
+	(select TQX010.TQX_KMESPO from TQX010 where TQX010.D_E_L_E_T_ = '' and TQX010.TQX_TIPMOD = TQR.TQR_TIPMOD and TQX010.TQX_MEDIDA = TQT.TQT_MEDIDA) as CONTADOR_ESP,
+	(select TQX010.TQX_XTBAND from TQX010 where TQX010.D_E_L_E_T_ = '' and TQX010.TQX_TIPMOD = TQR.TQR_TIPMOD and TQX010.TQX_MEDIDA = TQT.TQT_MEDIDA) as BANDA_CUSTO,
 
 	TQS.TQS_KMOR,
 	TQS.TQS_KMR1,
@@ -55,9 +52,6 @@ from TQS010 TQS (nolock)
 			left join ST7010 ST7
 				on ST7.D_E_L_E_T_ = ''
 				and ST7.T7_FABRICA = TQR.TQR_FABRIC
-			left join TQX010 TQX
-				on TQX.D_E_L_E_T_ = ''
-				and TQX.TQX_TIPMOD = TQR.TQR_TIPMOD
 			
 	left join TQT010 TQT
 		on TQT.D_E_L_E_T_ = ''
@@ -66,4 +60,23 @@ from TQS010 TQS (nolock)
 		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
 			and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
+	
+	inner join TR8010 TR8 (nolock)
+        on TR8.D_E_L_E_T_ = ''
+        and TR8.TR8_CODBEM = TQS.TQS_CODBEM
+
+        inner join TR7010 TR7 (nolock)
+            on TR7.D_E_L_E_T_ = ''
+            and TR7.TR7_FILIAL = TR8.TR8_FILIAL
+            and TR7.TR7_LOTE = TR8.TR8_LOTE
+
+            inner join SA2010 SA2 (nolock)
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = TR7.TR7_FORNEC
+                and SA2.A2_LOJA = TR7.TR7_LOJA
+        
+        left join STJ010 STJ (nolock)
+            on STJ.TJ_FILIAL = TR8.TR8_FILIAL
+            and STJ.TJ_ORDEM = TR8.TR8_ORDEM
+            and STJ.TJ_PLANO = TR8.TR8_PLANO
 where TQS.D_E_L_E_T_ = ''
