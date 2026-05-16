@@ -56,7 +56,7 @@ select distinct
         isnull
         (
             (
-                select count(*)
+                select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
                 from ZC1010
                     inner join SA1010
                         on SA1010.D_E_L_E_T_ = ''
@@ -71,7 +71,7 @@ select distinct
         isnull
         (
             (
-                select count(*)
+                select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
                 from DUD010
                     left join DT6010
                         on DT6010.D_E_L_E_T_ = ''

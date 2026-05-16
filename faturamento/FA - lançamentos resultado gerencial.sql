@@ -7,6 +7,46 @@ select distinct
         when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then 'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CLITMS.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CLITMS.A1_COD, ' '))+RTRIM(COALESCE(CLITMS.A1_LOJA, ' ')), ' '), '|')
         else null
     end as BK_CLIENTE,
+
+    case
+        when nullif(ZC1.ZC1_CODSA1, '') is not null then
+        isnull
+        (
+            (
+                select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
+                from ZC1010
+                    inner join SA1010
+                        on SA1010.D_E_L_E_T_ = ''
+                        and SA1010.A1_COD = ZC1010.ZC1_CODSA1
+                        and SA1010.A1_LOJA = ZC1010.ZC1_LOJSA1
+                where
+                        ZC1010.D_E_L_E_T_ = ''
+                    and concat(ZC1010.ZC1_FILIAL, ZC1010.ZC1_NUM) = concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM)
+            ), 1
+        )
+        when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then
+        isnull
+        (
+            (
+                select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
+                from DUD010
+                    left join DT6010
+                        on DT6010.D_E_L_E_T_ = ''
+                        and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
+                        and DT6010.DT6_DOC = DUD010.DUD_DOC
+                        and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+                        
+                        left join SA1010
+                            on SA1010.D_E_L_E_T_ = ''
+                            and SA1010.A1_COD = DT6010.DT6_CLIDEV
+                            and SA1010.A1_LOJA = DT6010.DT6_LOJDEV
+                where
+                        DUD.D_E_L_E_T_ = ''
+                    and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM))
+           ), 1
+        )
+        else 0
+    end as qtd_CLIENTE,
     
     'P |01|SA2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SA2.A2_FILIAL, ' '))+'|'+RTRIM(COALESCE(SA2.A2_COD, ' '))+RTRIM(COALESCE(SA2.A2_LOJA, ' ')), ' '), '|') as BK_FORNECEDOR,
     concat(trim(ZC1.ZC1_FILIAL), trim(ZC1.ZC1_NUM)) as ID_OSPORTUARIA,
@@ -52,12 +92,6 @@ select distinct
     else 0.0 end as VALOR,
     
     /* para validação no RM */
-    case
-        when ZE2.ZE2_ORIGEM in ('Q', 'T') and coalesce(nullif(concat(trim(ZC1.ZC1_NUM), trim(DUD.DUD_VIAGEM)), ''), nullif(trim(ZE2.ZE2_CONTA), ''), 'ERRO?') = 'ERRO?' then 'ERRO'
-        when ZE2.ZE2_ORIGEM in ('E', 'F') and cast(ZE2.ZE2_COD as int) < 9 and coalesce(nullif(concat(trim(ZC1.ZC1_NUM), trim(DUD.DUD_VIAGEM)), ''), nullif(trim(ZE2.ZE2_CONTA), ''), 'ERRO?') = 'ERRO?' then 'ERRO'
-        else 'VERIFICAR'
-    end as OSVGACONTA,
-    
     trim(ZE3.ZE3_NUM) as OS_VGA,
     trim(ZC1.ZC1_FILIAL) as FILIAL_OS,
     trim(ZC1.ZC1_NUM) as NUM_OS,
@@ -103,7 +137,6 @@ select distinct
     upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc'))) as DESCRICAO,
     concat(trim(ZE2.ZE2_COD), ' ', upper(trim(translate(lower(replace(ZE2.ZE2_DESC, ',', ' ')), 'áéíóúãõç', 'aeiouaoc')))) as CODDESC,
     trim(ZE2.ZE2_ORIGEM) as ORIGEM
-
 
 from ZE3010 ZE3 (nolock)
     inner join ZE2010 ZE2 (nolock)
