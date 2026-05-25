@@ -67,6 +67,8 @@ SELECT
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
+
+    /* RM */
     DF1.*
 
 FROM DT6010 DT6
@@ -210,6 +212,8 @@ FROM DT6010 DT6
                 DTC010.DTC_FILDOC,
                 DTC010.DTC_DOC,
                 DTC010.DTC_SERIE,
+                /* RM */ DTC010.DTC_NUMNFC,
+                /* RM */ DTC010.DTC_SERNFC,
                 concat(DF1010.DF1_DATPRC, DF1010.DF1_HORPRC) as PREV_COL,
                 concat(DF1010.DF1_DATPRE, DF1010.DF1_HORPRE) as PREV_ENT,
                 coalesce

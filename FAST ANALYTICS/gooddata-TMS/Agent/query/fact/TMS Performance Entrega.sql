@@ -203,7 +203,7 @@ FROM DT6010 DT6
 
         left join
         (
-            select
+            select distinct
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
                 DF1010.DF1_YOSCLI,
