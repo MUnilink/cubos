@@ -10,41 +10,36 @@ select distinct
 
     case
         when nullif(ZC1.ZC1_CODSA1, '') is not null then
-        isnull
         (
-            (
-                select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
-                from ZC1010
-                    inner join SA1010
-                        on SA1010.D_E_L_E_T_ = ''
-                        and SA1010.A1_COD = ZC1010.ZC1_CODSA1
-                        and SA1010.A1_LOJA = ZC1010.ZC1_LOJSA1
-                where
-                        ZC1010.D_E_L_E_T_ = ''
-                    and concat(ZC1010.ZC1_FILIAL, ZC1010.ZC1_NUM) = concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM)
-            ), 1
+            select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
+            from ZC1010
+                inner join SA1010
+                    on SA1010.D_E_L_E_T_ = ''
+                    and SA1010.A1_COD = ZC1010.ZC1_CODSA1
+                    and SA1010.A1_LOJA = ZC1010.ZC1_LOJSA1
+            where
+                    ZC1010.D_E_L_E_T_ = ''
+                and concat(ZC1010.ZC1_FILIAL, ZC1010.ZC1_NUM) = concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM)
         )
         when nullif(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), trim(DUD.DUD_FILORI)) is not null then
-        isnull
         (
-            (
-                select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
-                from DUD010
-                    left join DT6010
-                        on DT6010.D_E_L_E_T_ = ''
-                        and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
-                        and DT6010.DT6_DOC = DUD010.DUD_DOC
-                        and DT6010.DT6_SERIE = DUD010.DUD_SERIE
-                        
-                        left join SA1010
-                            on SA1010.D_E_L_E_T_ = ''
-                            and SA1010.A1_COD = DT6010.DT6_CLIDEV
-                            and SA1010.A1_LOJA = DT6010.DT6_LOJDEV
-                where
-                        DUD.D_E_L_E_T_ = ''
-                    and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM))
-           ), 1
+            select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
+            from DUD010
+                left join DT6010
+                    on DT6010.D_E_L_E_T_ = ''
+                    and DT6010.DT6_FILDOC = DUD010.DUD_FILDOC
+                    and DT6010.DT6_DOC = DUD010.DUD_DOC
+                    and DT6010.DT6_SERIE = DUD010.DUD_SERIE
+                    
+                    left join SA1010
+                        on SA1010.D_E_L_E_T_ = ''
+                        and SA1010.A1_COD = DT6010.DT6_CLIDEV
+                        and SA1010.A1_LOJA = DT6010.DT6_LOJDEV
+            where
+                    DUD.D_E_L_E_T_ = ''
+                and concat(trim(DUD010.DUD_FILORI), trim(DUD010.DUD_VIAGEM)) = concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM))
         )
+        when ZE2.ZE2_COD like '09%' or ZE2.ZE2_COD like '[1-9]%' then 1
         else 0
     end as qtd_CLIENTE,
     
@@ -191,5 +186,5 @@ from ZE3010 ZE3 (nolock)
         on CTD010.D_E_L_E_T_ = ''
         and CTD010.CTD_ITEM = ZE3.ZE3_ITORIG
 where
-        ZE3.ZE3_COMPET > 202407
+        ZE3.ZE3_COMPET LIKE '20251%'
     and ZE3.D_E_L_E_T_ = ''
