@@ -12,6 +12,10 @@ select
 	upper(trim(ST9.T9_NOME)) as DESC_EQUIPAMENTO,
 	trim(STJ.TJ_CCUSTO) as CC,
 	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 first_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC >= STJ.TJ_DTORIGI), ''), nullif(ST9.T9_ITEMCTA, '')) as ATIVIDADE,
+	trim(STI.TI_PLANO) as NUM_PLANO,
+	trim(STI.TI_DESCRIC) as DESC_PLANO,
+	cast(STI.TI_DATAINI as date) as DT_INI_PLANO,
+	cast(STI.TI_DATAFIM as date) as DT_FIM_PLANO,
 
 	cast(STJ.TJ_CUSTMDO as numeric(15, 2)) as 'custo Total Mao de Obra',
 	cast(STJ.TJ_CUSTMAT as numeric(15, 2)) as 'custo Materiais de Troca',
