@@ -147,6 +147,5 @@ from STJ010 STJ
 				and SA2.A2_COD = SD1.D1_FORNECE
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
-		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STL.D_E_L_E_T_ = ''
+		STL.D_E_L_E_T_ = ''
+	and (STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>> or STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>)

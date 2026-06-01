@@ -1,6 +1,6 @@
 select
 	convert(datetime, getdate(), 113) as ULTIMA_CARGA,
-	cast(trim(STL.TL_SEQRELA) as int) as TL_SEQRELA,
+	cast(trim(STL.TL_SEQRELA) as int) as ITEM_OS,
 	cast(STL.TL_QUANTID as numeric(15, 2)) as TL_QUANTID,
 
 	cast
@@ -32,12 +32,11 @@ select
 		when isdate(STL.TL_DTFIM) = 1 then convert(datetime, concat(STL.TL_DTFIM, ' ', '00:00:00'), 120)
 	else convert(datetime, concat(STJ.TJ_DTPRFIM , ' ', '00:00:00'), 120) end as DTFIM_APP,
 	
-	cast(STJ.TJ_DTORIGI as date) as DATA_INIOS,
-	cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
+	STJ.TJ_DTORIGI as DATA_INIOS,
+	STJ.TJ_DTPRFIM as DATA_FIMOS,
 	STJ.TJ_TERMINO as OS_ENCERRADA,
 	STJ.TJ_SITUACA as SITUACAO,
 	STJ.TJ_POSCONT,
-	case when left(ST9.T9_DTCOMPR, 6) = left(STL.TL_DTINICI, 6) then ST9.T9_VALCPA else 0.0 end as T9_VALCPA,
 	(select max(ST6010.T6_YHRPADR) from ST6010 where ST6010.D_E_L_E_T_ = '' and ST6010.T6_CODFAMI = ST9.T9_CODFAMI) as HORA_PADRAO,
 	trim(STL.TL_CODIGO) as INSUMO,
 	trim(STL.TL_LOCAL) as ARMAZEM,
@@ -58,6 +57,7 @@ select
 		else 'OUTROS'
 	end as DESC_INSUMO,
 
+	trim(STJ.TJ_TIPO) as CARAC_TIPO,
 	trim(STJ.TJ_ORDEM) as TJ_ORDEM,
 	trim(STL.TL_TAREFA) as T5_TAREFA,
 	trim(STJ.TJ_CODBEM) as TJ_CODBEM,
@@ -71,12 +71,10 @@ select
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
-	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 first_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC >= STL.TL_DTINICI), ''), nullif(ST9.T9_ITEMCTA, '')) as ATIVIDADE,
+	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 last_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI), '')) as ATIVIDADE,
 	trim(SD1.D1_PEDIDO) as PEDCOMPRA,
-	null as B1_UPRC,
-	null as T1_SALARIO,
-
-    case
+	
+	case
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '302' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '001' then 220.0
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '015' then 220.0
         when STL.TL_TIPOREG = 'M' and ST1.T1_CCUSTO = '303' and ST1.T1_DTFIMDI <= STL.TL_DTFIM and SH7.H7_CODIGO = '016' then 180.0
@@ -156,11 +154,7 @@ select
 
 	STL.TL_DOC as DOC,
 	STL.TL_SDOC as SERIE,
-	STL.TL_ORIGNFE as TIPO_DOC,
-	SD3.D3_TM as TM,
-	SD3.D3_CF as CF,
-	SD3.D3_DOC as DOC,
-	SD3.D3_CUSTO1 as CUSTO_MOV
+	STL.TL_ORIGNFE as TIPO_DOC
 
 from STJ010 STJ (nolock)
 	inner join ST9010 ST9 (nolock)
@@ -185,11 +179,6 @@ from STJ010 STJ (nolock)
 			and SCP.CP_FILIAL = STL.TL_FILIAL
 			and SCP.CP_NUM = STL.TL_NUMSA
 			and SCP.CP_ITEM = STL.TL_ITEMSA
-
-			left join SD3010 SD3 (nolock)
-				on SD3.D3_FILIAL = SCP.CP_FILIAL
-				and SD3.D3_NUMSA = SCP.CP_NUM
-				and SD3.D3_ITEM = SCP.CP_ITEM
 
 		left join TT9010 TT9 (nolock)
 			on TT9.D_E_L_E_T_ = ''
@@ -252,5 +241,5 @@ from STJ010 STJ (nolock)
 				and SA2.A2_COD = SD1.D1_FORNECE
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
-		STJ.TJ_DTORIGI between '20201231' and '20261231'
+		STJ.TJ_DTORIGI between '20201231' and '20281231'
 	and STL.D_E_L_E_T_ = ''
