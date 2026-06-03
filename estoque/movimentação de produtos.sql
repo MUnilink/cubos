@@ -7,8 +7,8 @@ select
     
     substring(SD3.D3_EMISSAO, 1, 6) as PERIODO,
     cast(SD3.D3_EMISSAO as date) as EMISSAO,
-    case when right(SD3.D3_OP, 5) != 'OS001' then left(SD3.D3_OP, 6) else null end as OP,
-    case when right(SD3.D3_OP, 5) = 'OS001' then left(SD3.D3_OP, 6) else null end as OS_MNT,
+    case when substring(SD3.D3_OP, 7, 2) != 'OS' then left(SD3.D3_OP, 6) else null end as OP,
+    case when substring(SD3.D3_OP, 7, 2) = 'OS' then left(SD3.D3_OP, 6) else null end as OS_MNT,
     SD3.D3_YOS as OS_PORT,
     SD3.D3_NUMSA as SA,
     SD3.D3_FILIAL as FILIAL,
