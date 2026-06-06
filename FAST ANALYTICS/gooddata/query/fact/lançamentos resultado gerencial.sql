@@ -52,8 +52,7 @@ select distinct
     else 0.0 end as VALOR,
 
     case
-        when nullif(ZE2.ZE2_TABELA, '') is not null then 1
-        when ZE2.ZE2_COD like '09%' or ZE2.ZE2_COD like '[1-9]%' then 1
+        when coalesce(concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)), concat(ZC1.ZC1_FILIAL, ZC1.ZC1_NUM), '') = '' then 1
         when nullif(ZC1.ZC1_CODSA1, '') is not null then
         (
             select count(distinct concat(SA1010.A1_COD, SA1010.A1_LOJA))
