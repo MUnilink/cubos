@@ -31,7 +31,7 @@ select
     (select trim(SPA010.PA_DESC) from SPA010 (nolock) where SPA010.D_E_L_E_T_ = '' and SPA010.PA_CODIGO = SPF.PF_REGRAPA) as REGRA_DES,
     
     cast(SPF.PF_DATA as date) as DATA,
-    left(SPF.PF_DATA, 6) as PERIODO
+    coalesce(((select cast(SPO010.PO_DATAFIM as date) from SPO010 where SPO010.D_E_L_E_T_ = '' and SPO010.PO_FILIAL = SPF.PF_FILIAL and SPF.PF_DATA between SPO010.PO_DATAINI and SPO010.PO_DATAFIM)), (dateadd(month, 1, (select max(SPO010.PO_DATAFIM) from SPO010 where SPO010.D_E_L_E_T_ = '' and SPO010.PO_FILIAL = SPF.PF_FILIAL)))) as PERIODO
 
 from SPF010 SPF (nolock)
     inner join SRA010 SRA (nolock)
