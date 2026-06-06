@@ -54,6 +54,7 @@
 		null as INSS,
 		null as IR,
 		null as FGTS,
+		case when trim(SRA.RA_SITFOLH) = 'D' then (select concat(trim(SRG010.RG_TIPORES), ' - ', trim(substring(RCC010.RCC_CONTEU, 3, 30))) from RCC010 inner join SRG010 on SRG010.D_E_L_E_T_ = '' and left(RCC010.RCC_CONTEU, 2) = trim(SRG010.RG_TIPORES) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and SRG010.RG_FILIAL = SRA.RA_FILIAL and SRG010.RG_MAT = SRA.RA_MAT) end as TIPO_RESCISAO,
 
 		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
@@ -147,6 +148,7 @@ union
 		SRD.RD_INSS as INSS,
 		SRD.RD_IR as IR,
 		SRD.RD_FGTS as FGTS,
+		case when trim(SRA.RA_SITFOLH) = 'D' then (select concat(trim(SRG010.RG_TIPORES), ' - ', trim(substring(RCC010.RCC_CONTEU, 3, 30))) from RCC010 inner join SRG010 on SRG010.D_E_L_E_T_ = '' and left(RCC010.RCC_CONTEU, 2) = trim(SRG010.RG_TIPORES) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and SRG010.RG_FILIAL = SRA.RA_FILIAL and SRG010.RG_MAT = SRA.RA_MAT) end as TIPO_RESCISAO,
 
 		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
