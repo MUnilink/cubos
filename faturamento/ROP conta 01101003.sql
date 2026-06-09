@@ -52,8 +52,11 @@ where
     and SD2.D2_SERIE not in ('003', '100')
     and
         case
+            /* LP 610-050 */
+            when trim(CFOP.X5_CHAVE) in ('6933', '7949') and SD2.D2_TES = '522' then trim(SB1.B1_YCTREC5)
+            when trim(CFOP.X5_CHAVE) in ('6933', '7949') and SD2.D2_TES != '522' then trim(SB1.B1_YCTREC4)            
             /* LP 610-001 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' then trim(SB1.B1_YCTREC4)
+            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
             when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
             when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
             /* LP 610-040 */

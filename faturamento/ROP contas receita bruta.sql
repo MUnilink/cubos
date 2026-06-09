@@ -64,6 +64,12 @@ select
             trim(CFOP.X5_CHAVE) like '[5-6]359' or
             trim(CFOP.X5_CHAVE) like '[5-6]360'
         ) then '310101002'
+
+        /* LP 610-050 */
+        when trim(CFOP.X5_CHAVE) in ('6933', '7949') and SD2.D2_TES = '522'
+        then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) in ('6933', '7949') and SD2.D2_TES != '522'
+        then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         
         /* LP 610-001 */
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
@@ -100,12 +106,6 @@ select
         then concat(trim(SB1.B1_YCTREC1), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC1))
         when trim(CFOP.X5_CHAVE) like '[5-6]35[1-2]' and SD2.D2_TES not in ('506', '534', '535', '536', '537')
         then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
-        
-        /* LP 610-050 */
-        when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES = '522'
-        then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES != '522'
-        then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         
         /* LP 610-015 */
         when trim(CFOP.X5_CHAVE) like '[5-6]355' and SD2.D2_TES = '520'
@@ -216,5 +216,5 @@ where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
-    and SD2.D2_DOC in (64650, 62239, 62327, 62229, 62275, 62276, 62258)
-/*in ('016843', '016878', '016879', '019168', '016848', '016949', '016835')*/
+/* and SD2.D2_DOC in (64650, 62239, 62327, 62229, 62275, 62276, 62258) */
+/*in ('016843', '016878', '016879', '019168', '016848', '016949', '016835') */
