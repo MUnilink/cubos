@@ -27,6 +27,8 @@ select
 	SC1.C1_QUJE as QTD_SC_ATENDIDA,
 	abs(SC1.C1_QUANT - SC1.C1_QUJE) as QTD_SC_PENDENTE,
 	case SC1.C1_RESIDUO when 'S' then 'ELIMINADA' else '' end as SC_ELIM,
+	cast(SC1.C1_PRECO as numeric(15, 2)) as PRECO_SC,
+	cast(SC1.C1_TOTAL as numeric(15, 2)) as VALOR_SC,
 
 	case SC1.C1_APROV
 		when 'B' then 'PENDENTE'
@@ -121,8 +123,8 @@ select
 	SC7.C7_QUANT as QTD_PC_PEDIDA,
 	SC7.C7_QUJE as QTD_PC_ATENDIDA,
 	abs(SC7.C7_QUANT - SC7.C7_QUJE) as QTD_PC_PENDENTE,
-	SC7.C7_PRECO as PRECO,
-	SC7.C7_TOTAL as TOTAL,
+	SC7.C7_PRECO as PRECO_PC,
+	SC7.C7_TOTAL as VALOR_PC,
 	case SC7.C7_RESIDUO when 'S' then 'ELIMINADA' else '' end as PC_ELIM,
 
 	case
@@ -221,6 +223,8 @@ from SC1010 SC1 (nolock)
 	left join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''
 		and STJ.TJ_FILIAL = SC1.C1_FILIAL
-		and STJ.TJ_ORDEM = concat(left(SC1.C1_OP, 8), 'OS')
+		and STJ.TJ_ORDEM + 'OS' + '001' = SC1.C1_OP
 where 
 		SC1.D_E_L_E_T_ = ''
+	and SC1.C1_DATPRF >:SOLICITACAO_PREVISTA
+	
