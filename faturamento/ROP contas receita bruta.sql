@@ -1,11 +1,15 @@
 select
     cast(sd2.d2_emissao as date) as d2_emissao,
+    left(sd2.d2_emissao, 6) AS PERIODO_NF,
     SD2.D2_FILIAL as FILIAL,
     SD2.D2_CCUSTO as CC,
     SD2.D2_ITEMCC as ITEMCC,
     SD2.D2_DOC as DOC,
     SD2.D2_TES as TES,
     SD2.D2_CF as CFOP,
+    SF4.F4_CSTCOF,
+    SB1.B1_COD as PRODUTO,
+    SB1.B1_GRUPO as GRUPO_PROD,
 
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
     left(ZC1.ZC1_EMISSA, 6) as PERIODO_OS,
@@ -64,20 +68,22 @@ select
             trim(CFOP.X5_CHAVE) like '[5-6]359' or
             trim(CFOP.X5_CHAVE) like '[5-6]360'
         ) then '310101002'
+        
+        /* LP 610-001 */
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES != '522'
+        then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
+        then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
+        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
+        then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
 
         /* LP 610-050 */
         when trim(CFOP.X5_CHAVE) in ('6933', '7949') and SD2.D2_TES = '522'
         then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
         when trim(CFOP.X5_CHAVE) in ('6933', '7949') and SD2.D2_TES != '522'
         then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
-        
-        /* LP 610-001 */
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
+        when trim(CFOP.X5_CHAVE) = '5933' and SD2.D2_TES = '522'
         then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
-        then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
-        then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
         
         /* LP 610-040 */
         when trim(CFOP.X5_CHAVE) = 5359
@@ -216,5 +222,6 @@ where
         SD2.D_E_L_E_T_ = ' '
     and SD2.D2_TIPO not in ('B', 'D')
     and SD2.D2_SERIE not in ('003', '100')
+    and sd2.d2_emissao > 20240101
 /* and SD2.D2_DOC in (64650, 62239, 62327, 62229, 62275, 62276, 62258) */
 /*in ('016843', '016878', '016879', '019168', '016848', '016949', '016835') */
