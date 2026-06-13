@@ -5,4 +5,4 @@
         trim(SRA.RA_NOMECMP) as NOME
     from SRA010 SRA
     where SRA.D_E_L_E_T_ = ''
-union select null, null, null
+union select null, null, null, null
