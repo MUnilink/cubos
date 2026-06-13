@@ -62,13 +62,18 @@ SELECT
     VIAGEM.SAI_VIAGEM_REAL,
     VIAGEM.CHE_VIAGEM_REAL,
 
+    DF1.ID_AGENDAMENTO,
     VIAGEM.ID_VIAGEM,
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
-    DF1.DF1_YOSCLI
+    DF1.DF1_YOSCLI,
+    
+    row_number() over(partition by DF1.ID_AGENDAMENTO order by DF1.ID_AGENDAMENTO) as qtd_age,
+    row_number() over(partition by VIAGEM.ID_VIAGEM order by VIAGEM.ID_VIAGEM) as qtd_vga,
+    row_number() over(partition by DT6.DT6_FILDOC, DT6.DT6_DOC, DT6.DT6_SERIE order by DT6.DT6_FILDOC, DT6.DT6_DOC, DT6.DT6_SERIE) as qtd_doc
 
 FROM DT6010 DT6
     LEFT JOIN SA1010 REM
@@ -205,6 +210,7 @@ FROM DT6010 DT6
         left join
         (
             select distinct
+                concat(trim(DF0010.DF0_FILIAL), trim(DF0010.DF0_NUMAGE)) as ID_AGENDAMENTO,
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
                 DF1010.DF1_YOSCLI,
@@ -222,6 +228,10 @@ FROM DT6010 DT6
                     on DTC010.D_E_L_E_T_ = ''
                     and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
+                inner join DF0010
+                    on DF0010.D_E_L_E_T_ = ''
+                    and DF0010.DF0_FILIAL = DF1010.DF1_FILIAL
+                    and DF0010.DF0_NUMAGE = DF1010.DF1_NUMAGE
             where DF1010.D_E_L_E_T_ = ''
         ) DF1
             on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
