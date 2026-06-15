@@ -26,8 +26,10 @@
         else 'OUTROS' end as TIPO_EVENTO,
         null as IDVERBA,
         null as IDVERBA_NOME,
-        
-        (select top 1 last_value(trim(SR6010.R6_DESC)) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPH.PH_FILIAL and SPF010.PF_MAT = SPH.PH_MAT and SPF010.PF_DATA <= SPH.PH_DATA) as TURNO_DES,
+        (select top 1 last_value(trim(SPF010.PF_TURNOPA)) over(order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPH.PH_FILIAL and SPF010.PF_MAT = SPH.PH_MAT and SPF010.PF_DATA <= SPH.PH_DATA) as TURNO_DES,
+        trim(SRA.RA_TNOTRAB) as TURNO_COD,
+        (select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
+        trim(SRA.RA_SEQTURN) as TURNO_SEQ,       
         trim(SPH.PH_PD) as COD_EVENTO,
         trim(SP9.P9_DESC) as DESC_EVENTO,
         trim(SPH.PH_ABONO) as COD_MOTIVO,
@@ -67,9 +69,9 @@
                 and CTT.CTT_CUSTO = SRA.RA_CC
             inner join CTD010 CTD (nolock)
                 on CTD.D_E_L_E_T_ = ''
-                and CTD.CTD_ITEM = SRA.RA_ITEM  
+                and CTD.CTD_ITEM = SRA.RA_ITEM
     where
-            datediff(month, SPH.PH_DATA, getdate()) < 4
+            SPH.PH_DATA >=:DATA_INI_HISTORICO
         and SPH.D_E_L_E_T_ = ''
 union
     select /* eventos atual */
@@ -100,8 +102,10 @@ union
         else 'OUTROS' end as TIPO_EVENTO,
         null as IDVERBA,
         null as IDVERBA_NOME,
-        
-        (select top 1 last_value(trim(SR6010.R6_DESC)) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPC.PC_FILIAL and SPF010.PF_MAT = SPC.PC_MAT and SPF010.PF_DATA <= SPC.PC_DATA) as TURNO_DES,
+        (select top 1 last_value(trim(SPF010.PF_TURNOPA)) over(order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPC.PC_FILIAL and SPF010.PF_MAT = SPC.PC_MAT and SPF010.PF_DATA <= SPC.PC_DATA) as TURNO_DES,
+        trim(SRA.RA_TNOTRAB) as TURNO_COD,
+        (select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
+        trim(SRA.RA_SEQTURN) as TURNO_SEQ,       
         trim(SPC.PC_PD) as COD_EVENTO,
         trim(SP9.P9_DESC) as DESC_EVENTO,
         trim(SPC.PC_ABONO) as COD_MOTIVO,
