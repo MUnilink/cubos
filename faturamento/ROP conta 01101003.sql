@@ -1,9 +1,9 @@
 select
     SD2.D2_FILIAL as FILIAL,
     ZC1.ZC1_NUM as NUM,
-    SC6.C6_CC as CC,
-    coalesce(nullif(SC6.C6_ITEMCTA, ''), nullif(ZC1.ZC1_ATIVD, '')) as ITEM,
-    sum(cast(coalesce(SC6.C6_VALOR, 0) as decimal(14, 2))) as TOTAL
+    coalesce(nullif(ZC1.ZC1_CC, ''), nullif(SC6.C6_CC, '')) as CC,
+    coalesce(nullif(ZC1.ZC1_ATIVD, ''), nullif(SC6.C6_ITEMCTA, '')) as ITEM,
+    sum(cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2))) as TOTAL
 
 from SD2010 SD2
     inner join SF2010 SF2 (nolock)
@@ -53,7 +53,7 @@ where
     and
         case
             /* LP 610-001 */
-            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES != '522'
+            when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08' and SD2.D2_TES != '522' then trim(SB1.B1_YCTREC4)
             when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511' then trim(SB1.B1_YCTREC5)
             when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511' then trim(SB1.B1_YCTREC3)
             /* LP 610-050 */
@@ -84,4 +84,4 @@ where
     = '310102003'
     and left(SD2.D2_EMISSAO, 6) = '"+cCompt+"' and SD2.D2_FILIAL between '"+cFilIni+"' and '"+cFilFim+"'
 
-group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_CC, SC6.C6_NUM, SC6.C6_ITEMCTA, ZC1.ZC1_ATIVD
+group by SD2.D2_FILIAL, ZC1.ZC1_NUM, SC6.C6_NUM, ZC1.ZC1_CC, SC6.C6_CC, ZC1.ZC1_ATIVD, SC6.C6_ITEMCTA
