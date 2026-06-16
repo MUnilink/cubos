@@ -63,8 +63,26 @@ select
     case when SRV.RV_COD in ('760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_MULTA,
     case when SRV.RV_COD in ('759', '761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
     case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
-    case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR,
+    
+    case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then isnull(SRR.RR_VALOR, 0) end +
+    isnull
+    (
+        (
+            select sum(SRD010.RD_VALOR)
+            from SRD010
+            where
+                    SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_FILIAL = SRR.RR_FILIAL
+                and SRD010.RD_MAT = SRR.RR_MAT
+                and SRD010.RD_PD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L')
+                and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
+                and right(SRG.RG_DTAVISO, 2) < 10
+                and SRR.RR_PD = '220'
+        ), 0
+    ) as VL_APAGAR,
+    
     SRR.RR_PERIODO as PERIODO
+
 from SRR010 SRR (nolock)
     left join SRG010 SRG (nolock)
         on SRG.D_E_L_E_T_ = ''
