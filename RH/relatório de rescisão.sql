@@ -88,6 +88,7 @@ from SRR010 SRR (nolock)
         on SRG.D_E_L_E_T_ = ''
         and SRG.RG_FILIAL = SRR.RR_FILIAL
         and SRG.RG_MAT = SRR.RR_MAT
+        and SRG.RG_DTGERAR = SRR.RR_DATA
     inner join SRA010 SRA (nolock)
         on SRA.D_E_L_E_T_ = ''
         and SRA.RA_FILIAL = SRR.RR_FILIAL
@@ -123,4 +124,5 @@ from SRR010 SRR (nolock)
 where
         SRR.D_E_L_E_T_ = ''
     and SRR.RR_ROTEIR = 'RES'
-    and SRR.RR_MAT =:FILTROPARAMETRO
+    and SRG.RG_MAT =:MATRICULA
+    and SRG.RG_RESCDIS =:TIPO_RESCISAO
