@@ -125,4 +125,4 @@ where
         SRR.D_E_L_E_T_ = ''
     and SRR.RR_ROTEIR = 'RES'
     and SRG.RG_MAT =:MATRICULA
-    and SRG.RG_RESCDIS =:TIPO_RESCISAO
+    and case SRG.RG_RESCDIS when 0 then 'N' else 'C' end =:TIPO_RESCISAO
