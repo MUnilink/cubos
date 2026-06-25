@@ -85,6 +85,8 @@ select
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
 	*/
 
+	case when STL.TL_TIPOREG = 'P' and (STL.TL_LOCAL like '[0-1]%' or STL.TL_LOCAL = '20') then concat(trim(SB1.B1_YCTCUST), ' ',(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTCUST)) end as CONTA_PROD,
+	
 	ST9.T9_NOME,
 	case
 		when trim(STL.TL_CODIGO) in ('11380003', '11380004', '11380005') and STL.TL_LOCAL = '80' then ADESIVO_CUSTO.B9_CM
