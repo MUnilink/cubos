@@ -85,7 +85,10 @@ select
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
 	*/
 
-	case when STL.TL_TIPOREG = 'P' and (STL.TL_LOCAL like '[0-1]%' or STL.TL_LOCAL = '20') then concat(trim(SB1.B1_YCTCUST), ' ',(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTCUST)) end as CONTA_PROD,
+	case
+		when STL.TL_TIPOREG = 'P' and (STL.TL_LOCAL like '[0-1]%' or STL.TL_LOCAL = '20') then concat(trim(SB1.B1_YCTCUST), ' ',(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTCUST))
+		when STL.TL_TIPOREG = 'T' then concat(trim(SB1.B1_YCTCUST), ' ',(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SA2.A2_CONTA))
+	end as CCONTABIL,
 	
 	ST9.T9_NOME,
 	case
