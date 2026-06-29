@@ -208,12 +208,12 @@ select
         )
     ) as VIAGEM_TMS,
 
-    case DUD.DUD_STATUS
-        when 1 then upper('Em Aberto')
-        when 2 then upper('Em Transito')
-        when 3 then upper('Carregado')
-        when 4 then upper('Encerrado')
-        when 9 then upper('Cancelado')
+    case
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 1 then upper('Em Aberto')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 2 then upper('Em Transito')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 3 then upper('Carregado')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 4 then upper('Encerrado')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 9 then upper('Cancelado')
         else 'Outros'
     end as STATUS_CTE,
     
