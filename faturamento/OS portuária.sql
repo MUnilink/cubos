@@ -184,6 +184,7 @@ select
         when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(nullif(ZC2.ZC2_HRFIM, '')) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.999 then 'mais que 13 h apontadas'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM)) < 0.0 then 'data/hora ini maior que data/hora fim'
+        when datediff(day, ZC2.ZC2_DATA, ZC1.ZC1_DTENCE) < 0.0 then 'data do adição do item maior que a data de encerramento'
         else 'item OK'
     end as STATUS_APONT,
 
