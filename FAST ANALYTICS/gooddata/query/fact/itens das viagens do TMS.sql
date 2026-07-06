@@ -9,34 +9,34 @@ select
     'P |01|CTT010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CTT.CTT_FILIAL, ' '))+'|'+RTRIM(COALESCE(SD2.D2_CCUSTO, ' ')), ' '), '|') AS BK_CENTRO_DE_CUSTO,
 
     (
-        select cast(DTW010.DTW_DATREA as date)
+        select top 1 cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 49
+            and DTW010.DTW_ATIVID = '49'
     ) as DATAINI,
     (
-        select cast(DTW010.DTW_DATREA as date)
+        select top 1 cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 50
+            and DTW010.DTW_ATIVID = '50'
     ) as DATAFIM,
     (
-        select cast(DTW010.DTW_DATREA as date)
+        select top 1 cast(DTW010.DTW_DATREA as date)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 50
+            and DTW010.DTW_ATIVID = '50'
     ) as COMPETENCIA,
     
     cast
@@ -67,7 +67,7 @@ select
                     APT.D_E_L_E_T_ = ''
                 and APT.DTW_FILORI = DTR.DTR_FILORI
                 and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
-                and APT.DTW_ATIVID = 50
+                and APT.DTW_ATIVID = '50'
         ) as numeric(15, 2)
     ) as km_fim,
     cast
@@ -98,7 +98,7 @@ select
                     APT.D_E_L_E_T_ = ''
                 and APT.DTW_FILORI = DTR.DTR_FILORI
                 and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
-                and APT.DTW_ATIVID = 49
+                and APT.DTW_ATIVID = '49'
         ) as numeric(15, 2)
     ) as km_ini,
     

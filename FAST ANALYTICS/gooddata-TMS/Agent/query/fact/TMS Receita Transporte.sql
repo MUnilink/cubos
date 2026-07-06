@@ -135,13 +135,13 @@ FROM DT8010 DT8
                     DTQ.DTQ_DATFEC,
                     DTQ.DTQ_DATENC,
                     (
-                        select DTW010.DTW_DATREA
+                        select top 1 DTW010.DTW_DATREA
                         from DTW010 (nolock)
                         where 
                                 DTW010.D_E_L_E_T_ = ''
                             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                            and DTW010.DTW_ATIVID = 50
+                            and DTW010.DTW_ATIVID = '50'
                     ) as DATAFIM,
 
                     concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
