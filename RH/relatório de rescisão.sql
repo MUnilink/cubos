@@ -64,7 +64,21 @@ select
     case when SRV.RV_COD in ('759', '761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
     case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
     
-    case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then isnull(SRR.RR_VALOR, 0) end +
+    isnull(case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end, 0) +
+    isnull
+    (
+        (
+            select sum(SRR010.RR_VALOR)
+            from SRR010
+            where
+                    SRR010.D_E_L_E_T_ = ''
+                and SRR010.RR_FILIAL = SRR.RR_FILIAL
+                and SRR010.RR_MAT = SRR.RR_MAT
+                and SRR010.RR_PD = '968'
+                and SRR.RR_PD = '220'
+        ), 0
+    )
+    +
     isnull
     (
         (
