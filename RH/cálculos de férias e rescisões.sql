@@ -55,7 +55,7 @@ select
     SRG.RG_DFERVEN as DIAS_FER_VENC,
     SRG.RG_DFERAVI as DIAS_FER_AVIS,
     
-    SRR.RR_VALOR as VALOR,
+    case when SRV.RV_TIPOCOD = 2 then SRR.RR_VALOR*-1 else SRR.RR_VALOR end as VALOR,
     concat(trim(SRR.RR_ROTEIR), ' - ', (select trim(SRY010.RY_DESC) from SRY010 where SRY010.D_E_L_E_T_ = '' and SRY010.RY_CALCULO = SRR.RR_ROTEIR)) as ROTEIRO,
     trim(SRR.RR_CODB1T) as SEQ_LANC,
     SRR.RR_HORAS as HORAS,

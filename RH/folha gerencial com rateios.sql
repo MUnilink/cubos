@@ -6,7 +6,7 @@ select
 	trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
 	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-	case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+	SRA.RA_SITFOLH as SITUACAO,
 	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	trim(CTT.CTT_CUSTO) as CC,
 	trim(CTT.CTT_DESC01) as CCUSTO,

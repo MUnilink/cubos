@@ -6,7 +6,7 @@ select
     trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
     cast(SRA.RA_ADMISSA as date) as ADMISSAO,
-    case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+    SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
     trim(CTT.CTT_CUSTO) as CC,
     trim(CTT.CTT_DESC01) as CCUSTO,
