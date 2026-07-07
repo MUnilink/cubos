@@ -29,7 +29,7 @@
         (select top 1 last_value(trim(SPF010.PF_TURNOPA)) over(order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPH.PH_FILIAL and SPF010.PF_MAT = SPH.PH_MAT and SPF010.PF_DATA <= SPH.PH_DATA) as TURNO_DES,
         trim(SRA.RA_TNOTRAB) as TURNO_COD,
         (select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
-        trim(SRA.RA_SEQTURN) as TURNO_SEQ,       
+        trim(SRA.RA_SEQTURN) as TURNO_SEQ,
         trim(SPH.PH_PD) as COD_EVENTO,
         trim(SP9.P9_DESC) as DESC_EVENTO,
         trim(SPH.PH_ABONO) as COD_MOTIVO,
@@ -41,6 +41,7 @@
         cast(floor(SPH.PH_QUANTC) as int) as HORAS,
         cast((SPH.PH_QUANTC - floor(SPH.PH_QUANTC))*60.0 as numeric(15,2)) as MINUTOS,
         cast(SPH.PH_QUANTC - SPH.PH_QTABONO as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        case when round(SPH.PH_QTABONO, 2) = 0.00 then 'N' else 'S' end as TEVE_ABONO,
         'PONTO HIST' as TIPO_PONTO
     from SPH010 SPH (nolock)
         inner join SP9010 SP9 (nolock)
@@ -105,7 +106,7 @@ union
         (select top 1 last_value(trim(SPF010.PF_TURNOPA)) over(order by SPF010.PF_DATA) from SR6010 inner join SPF010 on SPF010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SPF010.PF_TURNOPA where SR6010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = SPC.PC_FILIAL and SPF010.PF_MAT = SPC.PC_MAT and SPF010.PF_DATA <= SPC.PC_DATA) as TURNO_DES,
         trim(SRA.RA_TNOTRAB) as TURNO_COD,
         (select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
-        trim(SRA.RA_SEQTURN) as TURNO_SEQ,       
+        trim(SRA.RA_SEQTURN) as TURNO_SEQ,
         trim(SPC.PC_PD) as COD_EVENTO,
         trim(SP9.P9_DESC) as DESC_EVENTO,
         trim(SPC.PC_ABONO) as COD_MOTIVO,
@@ -113,10 +114,11 @@ union
         cast(SPC.PC_QUANTC as numeric(15, 2)) as QTD_EVENTO,
         cast(SPC.PC_QTABONO as numeric(15, 2)) as QTD_ABONO,
         cast(SPC.PC_DATA as date) as DATA,
-        dateadd(month, 1, (select max(SPO010.PO_DATAFIM) from SPO010 where SPO010.D_E_L_E_T_ = '' and SPO010.PO_FILIAL = SPC.PC_FILIAL)) as PERIODO,
+        case when day(SPC.PC_DATA) > 15 then datefromparts(year(dateadd(day, 15, eomonth(SPC.PC_DATA))), month(dateadd(day, 15, eomonth(SPC.PC_DATA))), 16) else datefromparts(year(SPC.PC_DATA), month(SPC.PC_DATA), 16) end as PERIODO,
         cast(floor(SPC.PC_QUANTC) as int) as HORAS,
         cast((SPC.PC_QUANTC - floor(SPC.PC_QUANTC))*60.0 as numeric(15,2)) as MINUTOS,
         cast(SPC.PC_QUANTC - SPC.PC_QTABONO as numeric(15, 2)) * case SP9.P9_TIPOCOD when 1 then 1 when 2 then -1 else 0 end as QTD,
+        case when round(SPC.PC_QTABONO, 2) = 0.00 then 'N' else 'S' end as TEVE_ABONO,
         'PONTO ATUAL' as TIPO_PONTO
     from SPC010 SPC (nolock)
         inner join SP9010 SP9 (nolock)
