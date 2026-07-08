@@ -95,7 +95,7 @@ FROM DT8010 DT8
             and DUD.DUD_DOC = DT6.DT6_DOC
             and DUD.DUD_SERIE = DT6.DT6_SERIE
 
-            left join
+            left join /* ver modelo para adição de dimensão motorista */
             (
                 select
                     DTQ.DTQ_FILIAL,
@@ -111,7 +111,7 @@ FROM DT8010 DT8
                                 DTW010.D_E_L_E_T_ = ''
                             and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                             and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                            and DTW010.DTW_ATIVID = '050'
+                            and DTW010.DTW_ATIVID = '50'
                     ) as DATAFIM,
 
                     concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,

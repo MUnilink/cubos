@@ -1,9 +1,6 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
-    CASE
-        WHEN DT8_FILIAL IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT8_FILIAL AS CHAR (8))
-    END AS BK_FILIAL,
+    CASE WHEN DT8_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT8_FILIAL AS CHAR (8)) END AS BK_FILIAL,
     VIAGEM.DATAFIM AS DATA_EMISSAO,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -14,60 +11,26 @@ SELECT
     'P |01|DT3010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DT3_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT8_CODPAS, ' ')), ' '), '|') AS BK_COMPONENTE,
     'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_NEGOCIACAO,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERVICO,
-    CASE
-        WHEN DT6_FILORI IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))
-    END AS BK_FILIAL_ORIGEM,
-    CASE
-        WHEN DT6_FILDES IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))
-    END AS BK_FILIAL_DESTINO,
-    CASE
-        WHEN DT6_FILDOC IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))
-    END AS BK_FILIAL_DOCTO,
+    CASE WHEN DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
+    CASE WHEN DT6_FILDES IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8)) END AS BK_FILIAL_DESTINO,
+    CASE WHEN DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,
-    DT8_FILDOC AS FILDOC,
+    DT8.DT8_FILDOC AS FILDOC,
     'CTRC' + DT8.DT8_DOC as ID_DOCUMENTO,
-    DT8_CODPRO AS PRODUTO,
-    CASE
-        WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|')
-        ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|')
-    END AS BK_REGIAO_REM,
-    CASE
-        WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|')
-        ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|')
-    END AS BK_REGIAO_DES,
-    CASE
-        WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|')
-        ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|')
-    END AS BK_REGIAO_DEV,
-    CASE
-        WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|')
-        ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|')
-    END AS BK_REGIAO_CDRCAL,
-    CASE
-        WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')
-        ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')
-    END AS BK_REGIAO_CDRORI,
-    CASE
-        WHEN DT6_FILORI IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))
-    END AS BK_FILIAL_ORIGEM,
-    CAST(COALESCE(DT8_VALPAS, 0) AS DECIMAL(14, 2)) AS VALOR_COMPONENTE,
-    CAST(COALESCE(DT8_VALIMP, 0) AS DECIMAL(14, 2)) AS VALOR_IMPOSTO,
-    CAST(COALESCE(DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL,
+    DT8.DT8_CODPRO AS PRODUTO,
+    CASE WHEN REM.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_EST, ' '))+RTRIM(COALESCE(REM.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_REM,
+    CASE WHEN DES.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_EST, ' '))+RTRIM(COALESCE(DES.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DES,
+    CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
+    CASE WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|') END AS BK_REGIAO_CDRCAL,
+    CASE WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|') END AS BK_REGIAO_CDRORI,
+    CASE WHEN DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
+    CAST(COALESCE(DT8.DT8_VALPAS, 0) AS DECIMAL(14, 2)) AS VALOR_COMPONENTE,
+    CAST(COALESCE(DT8.DT8_VALIMP, 0) AS DECIMAL(14, 2)) AS VALOR_IMPOSTO,
+    CAST(COALESCE(DT8.DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL,
     1 as INSTANCIA,
-    DT6_DATEMI as DATA_DOC,
+    DT6.DT6_DATEMI as DATA_DOC,
 
-    SD2.D2_DOC as COMP_DOC,
-    SD2.D2_SERIE as COMP_SERIE,
-    SD2.D2_TOTAL as COMP_TOTAL,
-    SD2.D2_VALIPI as COMP_VALIPI,
-    SD2.D2_VALICM as COMP_VALICM,
-    convert(date, SD2.D2_EMISSAO, 103) as COMP_EMISSAO,
-    
     VIAGEM.ID_VIAGEM,
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
@@ -126,62 +89,65 @@ FROM DT8010 DT8
             AND SX5.X5_CHAVE = DT6.DT6_SERVIC
             AND SX5.D_E_L_E_T_ = ' '
 
-        left join
-        (
-            select
-                (select DTQ010.DTQ_DATGER from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATGER,
-                (select DTQ010.DTQ_DATFEC from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATFEC,
-                (select DTQ010.DTQ_DATENC from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILORI = DUD.DUD_FILORI and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM) as DTQ_DATENC,
-                DUD.DUD_FILORI,
-                DUD.DUD_FILDOC,
-                DUD.DUD_DOC,
-                DUD.DUD_SERIE,
-                DUD.DUD_VIAGEM,
-                (
-                    select DTW010.DTW_DATREA
-                    from DTW010 (nolock)
-                    where 
-                            DTW010.D_E_L_E_T_ = ''
-                        and DTW010.DTW_FILORI = DUD.DUD_FILORI
-                        and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-                        and DTW010.DTW_ATIVID = 50
-                ) as DATAFIM,
+        inner join DUD010 DUD
+            on DUD.D_E_L_E_T_ = ''
+            and DUD.DUD_FILDOC = DT6.DT6_FILDOC
+            and DUD.DUD_DOC = DT6.DT6_DOC
+            and DUD.DUD_SERIE = DT6.DT6_SERIE
 
-                concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) as ID_VIAGEM,
-                trim(DA4010.DA4_COD) as ID_MOTORISTA,
-                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
-                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
-                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-                (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-            from DUD010 DUD (nolock)
-                left join DTR010 DTR (nolock)
-                    on DTR.D_E_L_E_T_ = ''
-                    and DTR.DTR_FILORI = DUD.DUD_FILORI
-                    and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
-                    
-                    left join DUP010 (nolock)
-                        on DUP010.D_E_L_E_T_ = ''
-                        and DUP010.DUP_FILORI = DTR.DTR_FILORI
-                        and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
-                        and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
-                        and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
+            left join /* ver modelo para adição de dimensão motorista */
+            (
+                select
+                    DTQ.DTQ_FILIAL,
+                    DTQ.DTQ_FILORI,
+                    DTQ.DTQ_VIAGEM,
+                    DTQ.DTQ_DATGER,
+                    DTQ.DTQ_DATFEC,
+                    DTQ.DTQ_DATENC,
+                    (
+                        select top 1 DTW010.DTW_DATREA
+                        from DTW010 (nolock)
+                        where 
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
+                            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
+                            and DTW010.DTW_ATIVID = '050'
+                    ) as DATAFIM,
 
-                        left join DA4010 (nolock)
-                            on DA4010.D_E_L_E_T_ = ''
-                            and DA4010.DA4_COD = DUP010.DUP_CODMOT
-            where DUD.D_E_L_E_T_ = ''
-        ) VIAGEM
-            on VIAGEM.DUD_FILORI = DT6.DT6_FILORI
-            and VIAGEM.DUD_FILDOC = DT6.DT6_FILDOC
-            and VIAGEM.DUD_DOC = DT6.DT6_DOC
-            and VIAGEM.DUD_SERIE = DT6.DT6_SERIE
+                    concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
+                    trim(DA4010.DA4_COD) as ID_MOTORISTA,
+                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
+                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
+                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
+                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
+                from DTQ010 DTQ (nolock)
+                    left join DTR010 DTR (nolock)
+                        on DTR.D_E_L_E_T_ = ''
+                        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
+                        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                        
+                        left join DUP010 (nolock)
+                            on DUP010.D_E_L_E_T_ = ''
+                            and DUP010.DUP_FILORI = DTR.DTR_FILORI
+                            and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
+                            and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
+                            and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-        left join SD2010 SD2 (nolock)
+                            left join DA4010 (nolock)
+                                on DA4010.D_E_L_E_T_ = ''
+                                and DA4010.DA4_COD = DUP010.DUP_CODMOT
+                where DTQ.D_E_L_E_T_ = ''
+            ) VIAGEM
+                on substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
+                and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
+                and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
+
+        INNER JOIN SD2010 SD2
             on SD2.D_E_L_E_T_ = ''
             and SD2.D2_NFORI = DT6.DT6_DOC
             and SD2.D2_SERIORI = DT6.DT6_SERIE
             and SD2.D2_CLIENTE = DT6.DT6_CLIDEV
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
-where
+WHERE
         DT8.D_E_L_E_T_ = ' '
     and VIAGEM.DATAFIM > 20211231
