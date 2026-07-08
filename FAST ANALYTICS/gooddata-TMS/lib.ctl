@@ -29,6 +29,10 @@ date ETL_MAXDATE = dateAdd(str2date("01/" + THIS_MONTH + "/" + THIS_YEAR, "dd/MM
 //            DEFINIÇÃO DE VARIÁVEIS             //
 //===============================================//
 date data;
+date dataHora;
+date dataHora1;
+date dataHora2;
+date hora;
 string TipoPessoa;
 
 //===============================================//
@@ -124,6 +128,26 @@ function string formatString(string format, string demoValue) {
     }
 }
 
+// Função de tratamento de campos tipo datetime.
+function date formatDatetime(string format) {
+    if ((format == null) or (trim(format) == "")) {
+        return null;
+    } else
+    {
+        if(isDate(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}") == true)
+            dataHora = str2date(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}");
+        if ((dataHora < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
+            return null;
+        } else {
+            if ((GOODDATA_DEMO_MODE == "S") and (GOODDATA_DEMO_DATE <> null)) {
+                return dateAdd(dataHora, dateDiff(today(), GOODDATA_DEMO_DATE, day), day);
+            } else {
+                return dataHora;
+            }
+        }
+    }
+}
+
 // Função de tratamento de campos tipo date.
 function date formatDate(string format) {
     if ((format == null) or (trim(format) == "")) {
@@ -141,8 +165,6 @@ function date formatDate(string format) {
         }
     }
 }
-
-
 
 //Função para calcular a diferença entre duas datas.
     //valor1 - Valor da primeira data em String.
