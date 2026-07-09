@@ -11,6 +11,7 @@ select
 	ST9.T9_TIPMOD as MODELO,
 	trim(TR4.TR4_PAREC) as TR4_PAREC,
 	
+	trim(TR7.TR7_FORNEC) + trim(TR7.TR7_LOJA) as ID_FORNECEDOR,
 	trim(STJ.TJ_CCUSTO) as CCUSTO,
 	case when STJ.TJ_YITMCT is not null and STJ.TJ_YITMCT != '' then trim(STJ.TJ_YITMCT)
 	else
