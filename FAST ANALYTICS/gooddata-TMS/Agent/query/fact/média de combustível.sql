@@ -14,20 +14,8 @@ select
 	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
 	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
 	trim(ZD3.TQN_YITMCT) as TQN_YITMCT,
-
-    /* RM */
-    ZD3.TQN_FILIAL as ZD3_FILIAL,
-    ZD3.TQN_PLACA as ZD3_PLACA,
-    ZD3.TQN_FROTA as ZD3_VEICUL,
-    ZD3.TQN_TANQUE as ZD3_TANQUE,
-    ZD3.TQN_CODCOM as ZD3_COMB,
-    ZD3.VALOR_UNIT as ZD3_VLUNI,
-    ZD3.VALOR_TOTAL as ZD3_TOTAL,
-    trim(ST9.T9_CODFAMI) as FAMILIA,
-    convert(datetime, ZD3.DATA_HORA, 113) as DATA,
     ZD3.TQN_YTIPO as TIPO,
-    ZD3.ULT_HODOM_COMP as CONT_ANT,
-    left(ZD3.DATA_HORA, 6) as PERIODO
+    ZD3.ULT_HODOM_COMP as CONT_ANT
 from
     (
         select *, case when KMRD > 0 and QTD_LITROS > 0 then ROUND(KMRD/QTD_LITROS, 2) else 0 end as KML
