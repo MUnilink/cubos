@@ -1,9 +1,6 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
-    CASE
-        WHEN DT6_FILIAL IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8))
-    END AS BK_FILIAL,
+    CASE WHEN DT6_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILIAL AS CHAR (8)) END AS BK_FILIAL,
     VIAGEM.CHE_CLIDEV_REAL AS DATA_EMISSAO,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
@@ -12,18 +9,9 @@ SELECT
     'P |01|DUY010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDES.DUY_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CDRDES, ' ')), ' '), '|') AS BK_CDRDES,
     'P |01|DDB010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DDB_FILIAL, ' '))+'|'+RTRIM(COALESCE(DDB_CODNEG, ' ')), ' '), '|') AS BK_CODNEG,
     'P |01|SX5010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SX5.X5_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_SERVIC, ' ')), ' '), '|') AS BK_SERNEG,
-    CASE
-        WHEN DT6_FILORI IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8))
-    END AS BK_FILIAL_ORIGEM,
-    CASE
-        WHEN DT6_FILDES IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8))
-    END AS BK_FILIAL_DESTINO,
-    CASE
-        WHEN DT6_FILDOC IS NULL THEN 'P |01||'
-        ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8))
-    END AS BK_FILIAL_DOCTO,
+    CASE WHEN DT6_FILORI IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILORI AS CHAR (8)) END AS BK_FILIAL_ORIGEM,
+    CASE WHEN DT6_FILDES IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILDES AS CHAR (8)) END AS BK_FILIAL_DESTINO,
+    CASE WHEN DT6_FILDOC IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT6_FILDOC AS CHAR (8)) END AS BK_FILIAL_DOCTO,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_DOCTMS, ' ')), ' '), '|') AS BK_DOCTMS,
     'P |'+ COALESCE(NULLIF(RTRIM(COALESCE(DT6_TIPTRA, ' ')), ' '), '|') AS BK_TIPTRA,
     
@@ -54,8 +42,8 @@ SELECT
         WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|')
         ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|')
     END AS BK_REGIAO_CDRORI,
+    
     1 AS INSTANCIA,
-
     DT6.DT6_DATEMI as DATA_DOC,
     VIAGEM.CHE_CLIDEV_REAL,
     VIAGEM.SAI_CLIDEV_REAL,
@@ -68,6 +56,7 @@ SELECT
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
+    VIAGEM.km_fim - VIAGEM.km_ini as km_vga,
 
     row_number() over(partition by DF1.ID_AGENDAMENTO order by DF1.ID_AGENDAMENTO) as qtd_age,
     row_number() over(partition by VIAGEM.ID_VIAGEM order by VIAGEM.ID_VIAGEM) as qtd_vga,
@@ -79,6 +68,72 @@ SELECT
 FROM
     (
         select
+            cast
+            (
+                (
+                    select
+                        coalesce
+                        (
+                            (
+                                select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                                from ZB1010 (nolock)
+                                where
+                                        ZB1010.D_E_L_E_T_ = ''
+                                    and ZB1010.ZB1_STATUS = 'OK'
+                                    and
+                                        dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                                        =
+                                        datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                                    and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                                    and ZB1010.ZB1_MACRON = 7
+                                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                            ),
+                            nullif(APT.DTW_YHODFI, ''),
+                            (select DTQ010.DTQ_KMVGE from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILIAL = DTR.DTR_FILIAL and DTQ010.DTQ_FILORI = DTR.DTR_FILORI and DTQ010.DTQ_VIAGEM = DTR.DTR_VIAGEM)
+                        )
+                    from DTW010 APT (nolock)
+                    where
+                            APT.D_E_L_E_T_ = ''
+                        and APT.DTW_FILORI = DTR.DTR_FILORI
+                        and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                        and APT.DTW_ATIVID = 50
+                ) as numeric(15, 2)
+            ) as km_fim,
+            cast
+            (
+                (
+                    select
+                        coalesce
+                        (
+                            (
+                                select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                                from ZB1010 (nolock)
+                                where
+                                        ZB1010.D_E_L_E_T_ = ''
+                                    and ZB1010.ZB1_STATUS = 'OK'
+                                    and
+                                        dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                                        =
+                                        datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                                    and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                                    and ZB1010.ZB1_MACRON = 1
+                                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                            ),
+                            nullif(APT.DTW_YHODIN, ''),
+                            0
+                        )
+                    from DTW010 APT (nolock)
+                    where
+                            APT.D_E_L_E_T_ = ''
+                        and APT.DTW_FILORI = DTR.DTR_FILORI
+                        and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                        and APT.DTW_ATIVID = 49
+                ) as numeric(15, 2)
+            ) as km_ini,
+            
+            DA8010.DA8_COD as COD_ROTA,
+            DA8010.DA8_DESC as NOME_ROTA,
+            DA8010.DA8_DESC as km_ROTA,
             DA4010.DA4_COD,
             DTR.DTR_CODVEI,
             DTR.DTR_CODRB1,
@@ -148,6 +203,7 @@ FROM
         from DUD010 DUD
             left join DTR010 DTR
                 on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILIAL = DUD.DUD_FILIAL
                 and DTR.DTR_FILORI = DUD.DUD_FILORI
                 and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
                 
@@ -161,7 +217,16 @@ FROM
                     left join DA4010
                         on DA4010.D_E_L_E_T_ = ''
                         and DA4010.DA4_COD = DUP010.DUP_CODMOT
-
+            
+            left join DTQ010
+                on DTQ010.D_E_L_E_T_ = ''
+                and DTQ010.DTQ_FILIAL = DUD.DUD_FILIAL
+                and DTQ010.DTQ_FILORI = DUD.DUD_FILORI
+                and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM
+                
+                left join DA8010
+                    on DA8010.D_E_L_E_T_ = ''
+                    and DA8010.DA8_COD = DTQ010.DTQ_ROTA
         where DUD.D_E_L_E_T_ = ''
     ) VIAGEM
         left join
