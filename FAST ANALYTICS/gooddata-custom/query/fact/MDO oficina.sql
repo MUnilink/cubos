@@ -47,7 +47,7 @@ select distinct
         (select avg(SR6010.R6_HRNORMA) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB),
         case when SH7.H7_CODIGO in ('001', '015') then 220.0 else 180.0 end,
         0.0
-    ) as HORAS_PRO,
+    ) as HORAS_PRO
 
 from ST1010 ST1 (nolock)
     left join SH7010 SH7 (nolock)
