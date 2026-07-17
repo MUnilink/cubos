@@ -1,14 +1,15 @@
 select
-    SB9.B9_FILIAL as FILIAL,
-    SB9.B9_LOCAL as ARMAZEM,
+    trim(SB9.B9_FILIAL) as FILIAL,
+    trim(SB9.B9_LOCAL) as ARMAZEM,
+    trim(NNR.NNR_DESCRI) as DESC_ARM,
     left(SB9.B9_DATA, 6) as PERIODO,
     trim(SB1.B1_COD) as PRODUTO,
     trim(SB1.B1_DESC) as NOMEPRODUTO,
     concat(trim(SB1.B1_GRUPO), ' - ', (select upper(trim(SBM010.BM_DESC)) from SBM010 where SBM010.D_E_L_E_T_ = '' and SBM010.BM_GRUPO = SB1.B1_GRUPO)) as GRUPO,
     trim(SB1.B1_UM) as UN,
-    SB9.B9_QINI as QTD_INI,
-    SB9.B9_VINI1 as VL_INI,
-    SB9.B9_CM1 as CM,
+    cast(SB9.B9_QINI as numeric(15, 2)) as QTD_INI,
+    cast(SB9.B9_VINI1 as numeric(15, 2)) as VL_INI,
+    cast(SB9.B9_CM1 as numeric(15, 2)) as CM,
 
     cast(SD3.D3_EMISSAO as date) as EMISSAO,
     SD3.D3_OP as OP,
@@ -37,6 +38,10 @@ from SB9010 SB9 (nolock)
         and SD3.D3_LOCAL = SB9.B9_LOCAL
         and SD3.D3_COD = SB9.B9_COD
         and left(SD3.D3_EMISSAO, 6) = left(SB9.B9_DATA, 6)
+    left join NNR010 NNR
+        on NNR.D_E_L_E_T_ = ''
+        and NNR.NNR_FILIAL = SB9.B9_FILIAL
+        and NNR.NNR_CODIGO = SB9.B9_LOCAL
 where
         SB9.D_E_L_E_T_ = ''
     and SB9.B9_DATA >=:PERIODO
