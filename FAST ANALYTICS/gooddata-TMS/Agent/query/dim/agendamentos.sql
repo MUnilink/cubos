@@ -1,5 +1,5 @@
 select
-    concat(trim(DF1.DF1_NUMAGE), trim(DF1.DF1_ITEAGE), trim(DF1.DF1_FILDOC), trim(DF1.DF1_DOC), trim(DF1.DF1_SERIE)) as ID_AGENDAMENTO,
+    concat(trim(DF1.DF1_FILIAL), trim(DF1.DF1_NUMAGE), trim(DF1.DF1_ITEAGE), trim(DF1.DF1_FILDOC), trim(DF1.DF1_DOC), trim(DF1.DF1_SERIE)) as ID_AGENDAMENTO,
     DF1.DF1_NUMAGE,
     DF1.DF1_ITEAGE,
     DF1.DF1_YOSCLI,

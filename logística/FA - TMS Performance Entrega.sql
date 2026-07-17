@@ -216,7 +216,7 @@ FROM
         left join
         (
             select
-                concat(trim(DF0010.DF0_FILIAL), trim(DF0010.DF0_NUMAGE)) as ID_AGENDAMENTO,
+                concat(trim(DF1010.DF1_FILIAL), trim(DF1010.DF1_NUMAGE), trim(DF1010.DF1_ITEAGE), trim(DF1010.DF1_FILDOC), trim(DF1010.DF1_DOC), trim(DF1010.DF1_SERIE)) as ID_AGENDAMENTO,
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
                 DF1010.DF1_YOSCLI,
@@ -243,10 +243,6 @@ FROM
                     on DTC010.D_E_L_E_T_ = ''
                     and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
-                inner join DF0010
-                    on DF0010.D_E_L_E_T_ = ''
-                    and DF0010.DF0_FILIAL = DF1010.DF1_FILIAL
-                    and DF0010.DF0_NUMAGE = DF1010.DF1_NUMAGE
             where DF1010.D_E_L_E_T_ = ''
         ) DF1
             on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC

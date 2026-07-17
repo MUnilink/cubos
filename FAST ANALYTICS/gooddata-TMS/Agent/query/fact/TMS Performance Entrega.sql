@@ -63,19 +63,19 @@ FROM DT6010 DT6
         AND DEV.A1_LOJA = DT6.DT6_LOJDEV
         AND DEV.D_E_L_E_T_ = ' '
     LEFT JOIN DUY010 DUYORI
-        ON DUYORI.DUY_FILIAL = DT6_FILIAL
+        ON DUYORI.DUY_FILIAL = DT6.DT6_FILIAL
         AND DUYORI.DUY_GRPVEN = DT6.DT6_CDRORI
         AND DUYORI.D_E_L_E_T_ = ' '
     LEFT JOIN DUY010 DUYDES
-        ON DUYDES.DUY_FILIAL = DT6_FILIAL
+        ON DUYDES.DUY_FILIAL = DT6.DT6_FILIAL
         AND DUYDES.DUY_GRPVEN = DT6.DT6_CDRDES
         AND DUYDES.D_E_L_E_T_ = ' '
     LEFT JOIN DUY010 DUYDEV
-        ON DUYDEV.DUY_FILIAL = DT6_FILIAL
+        ON DUYDEV.DUY_FILIAL = DT6.DT6_FILIAL
         AND DUYDEV.DUY_GRPVEN = DT6.DT6_CDRCAL
         AND DUYDEV.D_E_L_E_T_ = ' '
     LEFT JOIN DDB010 DDB
-        ON DDB.DDB_FILIAL = DT6_FILIAL
+        ON DDB.DDB_FILIAL = DT6.DT6_FILIAL
         AND DDB.DDB_CODNEG = DT6.DT6_CODNEG
         AND DDB.D_E_L_E_T_ = ' '
     INNER JOIN SX5010 SX5
@@ -256,7 +256,7 @@ FROM DT6010 DT6
         left join
         (
             select distinct
-                concat(trim(DF0010.DF0_FILIAL), trim(DF0010.DF0_NUMAGE)) as ID_AGENDAMENTO,
+                concat(trim(DF1010.DF1_FILIAL), trim(DF1010.DF1_NUMAGE), trim(DF1010.DF1_ITEAGE), trim(DF1010.DF1_FILDOC), trim(DF1010.DF1_DOC), trim(DF1010.DF1_SERIE)) as ID_AGENDAMENTO,
                 DF1010.DF1_NUMAGE,
                 DF1010.DF1_ITEAGE,
                 DF1010.DF1_YOSCLI,
@@ -274,10 +274,6 @@ FROM DT6010 DT6
                     on DTC010.D_E_L_E_T_ = ''
                     and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
                     and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
-                inner join DF0010
-                    on DF0010.D_E_L_E_T_ = ''
-                    and DF0010.DF0_FILIAL = DF1010.DF1_FILIAL
-                    and DF0010.DF0_NUMAGE = DF1010.DF1_NUMAGE
             where DF1010.D_E_L_E_T_ = ''
         ) DF1
             on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
