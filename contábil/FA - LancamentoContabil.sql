@@ -22,6 +22,7 @@
     '0.00' AS VALOR_CREDITO,
     '1' AS TIPOLAN,
     
+    CT1.CT1_DESC01 as CONTAC,
     /* RM */
     CT2.CT2_SEQUEN,
     CT2.CT2_MANUAL,
@@ -45,7 +46,12 @@
   WHERE (CT2_DC = '1' OR CT2_DC = '3')
     AND CT2_VALOR <> '0'
     AND CT2.D_E_L_E_T_ = ' '
-    and left(ct2.ct2_data, 6) =:PERIODO
+    and CT2.CT2_HIST like 'V:597%'
+    and
+    (
+      left(CT2.CT2_DATA, 6) =:PERIODO or
+      CT2.CT2_DEBITO =:CONTA
+    )
 UNION
   SELECT
     'P |01|01' AS BK_EMPRESA,
@@ -72,6 +78,7 @@ UNION
     '2' AS TIPOLAN,
     
     /* RM */
+    CT1.CT1_DESC01 as CONTAC,
     CT2.CT2_SEQUEN,
     CT2.CT2_MANUAL,
     CT2.CT2_ORIGEM,
@@ -94,4 +101,9 @@ UNION
   WHERE (CT2_DC = '2' OR CT2_DC = '3')
     AND CT2_VALOR <> '0'
     AND CT2.D_E_L_E_T_ = ' '
-    and left(ct2.ct2_data, 6) =:PERIODO
+    and CT2.CT2_HIST like 'V:597%'
+    and
+    (
+      left(CT2.CT2_DATA, 6) =:PERIODO or
+      CT2.CT2_CREDIT =:CONTA
+    )
