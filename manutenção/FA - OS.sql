@@ -167,7 +167,7 @@ from STJ010 STJ (nolock)
 		and ST9.T9_CODBEM = STJ.TJ_CODBEM
 
 		left join TQR010 TQR (nolock)
-			on 	TQR.D_E_L_E_T_ = ''
+			on TQR.D_E_L_E_T_ = ''
 			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
 
 	inner join ST4010 ST4 (nolock)
