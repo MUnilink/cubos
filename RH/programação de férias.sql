@@ -1,11 +1,14 @@
 select
     trim(SRA.RA_FILIAL) as FILIAL,
-    trim(SRA.RA_MAT) as MATRICULA,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
+    trim(SRA.RA_MAT) as MATRICULA,
     trim(SRA.RA_NOMECMP) as NOME,
     trim(SRJ.RJ_DESC) as FUNCAO,
-	trim(SQ3.Q3_DESCSUM) as CARGO,
+    trim(SQ3.Q3_DESCSUM) as CARGO,
     cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+    cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+    cast(SRA.RA_NASC as date) as NASCIMENTO,
+    cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
     SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
     trim(CTT.CTT_CUSTO) as CC,
@@ -17,7 +20,7 @@ select
     trim(SRJ.RJ_CODCBO) as CBO,
     trim(SRA.RA_SEXO) as SEXO,
     trim(SRA.RA_CIC) as CPF,
-
+    
     SRF.RF_STATUS as STATUS,
     cast(SRF.RF_DATABAS as date) as DTINI_PERAQUIS,
     cast(SRF.RF_DATAFIM as date) as DTFIM_PERAQUIS,

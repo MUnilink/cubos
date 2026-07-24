@@ -5,7 +5,7 @@
         trim(SRA.RA_NOMECMP) as NOME,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
 		case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 		trim(SRA.RA_SITFOLH) as SITUACAO,
         trim(CTT.CTT_CUSTO) as CC,
@@ -45,7 +45,7 @@
 		trim(RCN.RCN_CODIGO) as IDVERBA,
     	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
-		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 when RCN.RCN_CODIGO in ('0045') then 0.0 else SRC.RC_VALOR end as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 else SRC.RC_VALOR end as VALOR,
 		SRC.RC_HORAS as HORAS,
 		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
@@ -99,7 +99,7 @@ union
         trim(SRA.RA_NOMECMP) as NOME,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
 		case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 		trim(SRA.RA_SITFOLH) as SITUACAO,
         trim(CTT.CTT_CUSTO) as CC,
@@ -139,7 +139,7 @@ union
 		trim(RCN.RCN_CODIGO) as IDVERBA,
     	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
-		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 when RCN.RCN_CODIGO in ('0045') then 0.0 else SRD.RD_VALOR end as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
 		SRD.RD_HORAS as HORAS,
 		null as HORAS_PADRAO,
 

@@ -9,7 +9,7 @@ select
     trim(SRA.RA_NOMECMP) as NOME,
     trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
-    convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
     SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 

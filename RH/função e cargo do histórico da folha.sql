@@ -3,7 +3,7 @@ select
 	trim(SRA.RA_MAT) as MATRICULA,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
 	trim(SRA.RA_ESTADO) as UF,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
 	SRA.RA_SITFOLH as SITUACAO,
 	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
