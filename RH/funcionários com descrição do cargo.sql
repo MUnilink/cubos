@@ -70,6 +70,7 @@ select
 		when 3 then upper('Intermitente')
 		else 'outros'
 	end as TIPO_CONTRATO,
+	trim(SRA.RA_CODUNIC) as COD_UNICO,
 	
 	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
 	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE,
