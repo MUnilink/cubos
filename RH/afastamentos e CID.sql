@@ -29,9 +29,9 @@ select
 	trim(SR8.R8_CRMMED) as COD_EMITENTE,
 	trim(SR8.R8_IDEOC) as CLASSE_EMITENTE,
 	
-	cast(SR8.R8_DATA as date) as DATA,
-	cast(SR8.R8_DATAINI as date) as INI_AFASTAMENTO,
-	cast(SR8.R8_DATAFIM as date) as FIM_AFASTAMENTO,
+	cast(SR8.R8_DATA as date) as DATA_ALTER,
+	cast(SR8.R8_DATAINI as date) as DATA_INIAFA,
+	cast(SR8.R8_DATAFIM as date) as DATA_FIMAFA,
 	cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO,
 	left(SR8.R8_PER, 6) as PERIODO
 
@@ -65,4 +65,6 @@ from SR8010 SR8 (nolock)
 				on SQ3.D_E_L_E_T_ = ''
 				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 				
-where SR8.D_E_L_E_T_ = ''
+where
+		SR8.D_E_L_E_T_ = ''
+	and SR8.R8_TIPOAFA != '001'
