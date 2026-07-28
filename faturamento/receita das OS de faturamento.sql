@@ -182,7 +182,7 @@ from
                 and ZC1010.ZC1_FILIAL = ZC2010.ZC2_FILIAL
                 and ZC1010.ZC1_NUM = ZC2010.ZC2_NUM
         where
-                ZC2010.ZC2_COMPET > 20231231
+                ZC2010.ZC2_COMPET > '20250531'
             and ZC2010.D_E_L_E_T_ = ''
     ) ZC2
 
@@ -249,5 +249,3 @@ from
             and RAT_IMPR.ATIVIDADE = ZC2.ATIVIDADE_OS
             and RAT_IMPR.COMPETENCIA = ZC2.PERIODO
             and RAT_IMPR.INSUMO = ZC2.INSUMO
-
-where ZC2.PERIODO > '202409'
