@@ -4,17 +4,15 @@ select
 	(select sum(SD1010.D1_QUANT) from SD1010 where SD1010.D_E_L_E_T_ = '' and SD1010.D1_COD = '11100008' and left(SD1010.D1_DTDIGIT, 6) = left(ZD3.DATA_HORA, 6)) as ZD3_VLUNI,
 	
 	ZD3.HODOM_ATUAL as ZD3_HODOM,
-    ZD3.KMRD as ZD3_KMRD,
-    ZD3.KML as ZD3_KML,
-	ZD3.VALOR_TOTAL as ZD3_TOTAL,
-	cast(ZD3.DATA_HORA as date) as ZD3_DATA,
+    cast(ZD3.KMRD as numeric(15, 2)) as ZD3_KMRD,
+    cast(ZD3.KML as numeric(15, 2)) as ZD3_KML,
+	cast(ZD3.VALOR_TOTAL as numeric(15, 2)) as ZD3_TOTAL,
+	trim(ZD3.DATA_HORA) as ZD3_DATA,
 
-	trim(TQI.TQI_TANQUE) as TQI_TANQUE,
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
 	trim(TQM.TQM_CODCOM) as TQM_CODCOM,
 	trim(ZD3.TQN_CCUSTO) as TQN_CCUSTO,
 	trim(ZD3.TQN_YITMCT) as TQN_YITMCT,
-    ZD3.TQN_YTIPO as TIPO,
     ZD3.ULT_HODOM_COMP as CONT_ANT
 from
     (
@@ -133,3 +131,4 @@ from
 	left join TQM010 TQM
 		on TQM.D_E_L_E_T_ = ''
 		and TQM.TQM_CODCOM = ZD3.TQN_CODCOM
+where ZD3.TQN_YTIPO = 'C'
