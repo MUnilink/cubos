@@ -72,10 +72,15 @@ select
 	end as TIPO_CONTRATO,
 	trim(SRA.RA_CODUNIC) as COD_UNICO,
 	
-	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
-	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE,
-	case when SRA.RA_ADTPOSE like '%T' then 0.015*SRA.RA_SALARIO else 0.0 end as ADIC_TEMPO,
+	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as VL_PERICULOSIDADES,
+	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as VL_INSALUBRIDADE,
+	case when SRA.RA_ADTPOSE like '%T' then 0.015*SRA.RA_SALARIO else 0.0 end as VL_ADIC_TEMPO,
+	cast(SRA.RA_YAJCUST as numeric(15, 2)) as VL_AJCUSTO,
 	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+
+	case SRA.RA_ADCPERI when '1' then 'Não' when '2' then 'Sim' else 'outros' end as PERICULOSIDADES,
+	case SRA.RA_ADCINS when '1' then 'Não' when '2' then 'Insalubridade Mínima' when '3' then 'Insalubridade Média' when '4' then 'Insalubridade Máxima' else 'outros' end as INSALUBRIDADE,
+	SRA.RA_ADTPOSE as ADIC_TEMPO,
 
 	case SRA.RA_TPDEFFI 
 		when '0' then '0 - NENHUMA'
