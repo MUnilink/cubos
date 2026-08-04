@@ -5,36 +5,23 @@ select
 	ST9.T9_ITEMCTA as ATIVIDADE,
     ST9.T9_LOCPAD as ARMAZEM,
 	ST9.T9_SITBEM as SITUACAO,
+	ST9.T9_ESTRUTU as APLICADO,
 	TQS.TQS_MEDIDA,
     trim(TQT.TQT_DESMED) as MEDIDA,
 	ST9.T9_STATUS as STATUS,
     trim(TQY.TQY_DESTAT) as DESC_STATUS,
     ST9.T9_CONTACU as CONT_ACUM,
-	(
-		select trim(ST7010.T7_NOME)
-		from TQR010
-			inner join ST7010
-				on ST7010.D_E_L_E_T_ = ''
-				and ST7010.T7_FABRICA = TQR010.TQR_FABRIC
-		where
-				TQR010.D_E_L_E_T_ = ''
-			and TQR010.TQR_TIPMOD = ST9.T9_TIPMOD
-	) as FABRICANTE,
-
 	ST9.T9_VALCPA as T9_VALCPA,
 	cast(ST9.T9_DTCOMPR as date) as DATA_COMPRA,
 	ST9.T9_FORNECE,
 	trim(SA2.A2_NOME) as RAZAO_SOCIAL,
     trim(SA2.A2_NREDUZ) as NOME_FANTASIA,
 
-	ST9.T9_CCUSTO as CCUSTO,
-	ST9.T9_ITEMCTA as ATIVIDADE,
-	ST9.T9_ESTRUTU as APLICADO,
-
-	TQX.TQX_SULCOO as SULCO_ORI,
-	TQX.TQX_KMESPO as CONTADOR_ESP,
-	TQX.TQX_XTBAND as BANDA_CUSTO,
-	trim(ST7.T7_NOME) as BANDA_TIPO,
+	trim(ST7.T7_NOME) as FABRICANTE,
+	TQS.TQS_BANDAA as BANDA_ATUAL,
+	(select TQX010.TQX_SULCOO from TQX010 where TQX010.D_E_L_E_T_ = '' and TQX010.TQX_TIPMOD = TQR.TQR_TIPMOD and TQX010.TQX_MEDIDA = TQT.TQT_MEDIDA) as SULCO_ORI,
+	(select TQX010.TQX_KMESPO from TQX010 where TQX010.D_E_L_E_T_ = '' and TQX010.TQX_TIPMOD = TQR.TQR_TIPMOD and TQX010.TQX_MEDIDA = TQT.TQT_MEDIDA) as CONTADOR_ESP,
+	(select TQX010.TQX_XTBAND from TQX010 where TQX010.D_E_L_E_T_ = '' and TQX010.TQX_TIPMOD = TQR.TQR_TIPMOD and TQX010.TQX_MEDIDA = TQT.TQT_MEDIDA) as BANDA_CUSTO,
 
 	TQS.TQS_KMOR,
 	TQS.TQS_KMR1,
@@ -57,25 +44,39 @@ from TQS010 TQS (nolock)
 		left join SA2010 SA2
 			on SA2.D_E_L_E_T_ = ''
 			and SA2.A2_COD + SA2.A2_LOJA = ST9.T9_FORNECE + ST9.T9_LOJA
-	
+		
+		left join TQR010 TQR
+			on TQR.D_E_L_E_T_ = ''
+			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+
+			left join ST7010 ST7
+				on ST7.D_E_L_E_T_ = ''
+				and ST7.T7_FABRICA = TQR.TQR_FABRIC
+			
 	left join TQT010 TQT
 		on TQT.D_E_L_E_T_ = ''
 		and TQT.TQT_MEDIDA = TQS.TQS_MEDIDA
-	
-		left join TQX010 TQX
-			on TQX.D_E_L_E_T_ = ''
-			and TQX.TQX_MEDIDA = TQT.TQT_MEDIDA
-
-			left join TQR010 TQR
-				on TQR.D_E_L_E_T_ = ''
-				and TQR.TQR_TIPMOD = TQX.TQX_TIPMOD
-			
-				left join ST7010 ST7
-					on ST7.D_E_L_E_T_ = ''
-					and ST7.T7_FABRICA = TQR.TQR_FABRIC
 		
 		left join SB1010 SB1
 			on SB1.D_E_L_E_T_ = ''
 			and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
-where
-		TQS.D_E_L_E_T_ = ''
+	
+	inner join TR8010 TR8 (nolock)
+        on TR8.D_E_L_E_T_ = ''
+        and TR8.TR8_CODBEM = TQS.TQS_CODBEM
+
+        inner join TR7010 TR7 (nolock)
+            on TR7.D_E_L_E_T_ = ''
+            and TR7.TR7_FILIAL = TR8.TR8_FILIAL
+            and TR7.TR7_LOTE = TR8.TR8_LOTE
+
+            inner join SA2010 SA2 (nolock)
+                on SA2.D_E_L_E_T_ = ''
+                and SA2.A2_COD = TR7.TR7_FORNEC
+                and SA2.A2_LOJA = TR7.TR7_LOJA
+        
+        left join STJ010 STJ (nolock)
+            on STJ.TJ_FILIAL = TR8.TR8_FILIAL
+            and STJ.TJ_ORDEM = TR8.TR8_ORDEM
+            and STJ.TJ_PLANO = TR8.TR8_PLANO
+where TQS.D_E_L_E_T_ = ''

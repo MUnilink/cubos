@@ -287,7 +287,16 @@ select
 	else 'OUTROS' end as CLASSIFICACAO,
 
 	case when trim(SC7.C7_YOS) = '2024/0' then right(left(replace(replace(SC7.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7.C7_YOS end as OS_PORT,
-	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT
+	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT,
+
+	STJ.TJ_ORDEM as OS_MNT,
+	trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+    cast(STJ.TJ_DTPRINI as date) as DATA_INIOS,
+    cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
+	cast(STJ.TJ_DTORIGI as date) as DATA_OS,
+	trim(STJ.TJ_USUAINI) as USR_INI,
+	trim(STJ.TJ_USUAFIM) as USR_FIM,
+	STJ.TJ_TERMINO as OSMNT_ENCERRADA
 
 from SC7010 SC7 (nolock)
 	left join SC8010 SC8 (nolock)
@@ -327,13 +336,16 @@ from SC7010 SC7 (nolock)
 		and SD1.D1_ITEMPC = SC7.C7_ITEM
 		
 		left join SE2010 SE2 (nolock)
-			on trim(SE2.E2_TIPO) = 'PA'
+			on SE2.E2_TIPO = 'PA'
 			and SE2.E2_FILIAL = SD1.D1_FILIAL
 			and SE2.E2_NUM = SD1.D1_DOC
 			and SE2.E2_FORNECE = SD1.D1_FORNECE
 			and SE2.E2_LOJA = SD1.D1_LOJA
 			and SE2.D_E_L_E_T_ = ''
-
+	left join STJ010 STJ (nolock)
+		on STJ.D_E_L_E_T_ = ''
+		and STJ.TJ_FILIAL = SC1.C1_FILIAL
+		and STJ.TJ_ORDEM + 'OS' + '001' = SC7.C7_OP
 where
 		SC7.D_E_L_E_T_ = ''
 	and SC7.C7_EMISSAO >=:PEDIDOS_DESDE

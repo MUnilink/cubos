@@ -58,7 +58,9 @@ select
     SD1.D1_SERIE as SER_SERVICO,
     SD1.D1_TOTAL as VALOR_SERVICO,
     SD1.D1_CUSTO as CUSTO_SERVICO,
-    convert(date, SD1.D1_DTDIGIT, 103) as DT_NFS,
+    trim(SD1.D1_CC) as CC_NF,
+    trim(SD1.D1_ITEMCTA) as AT_NF,
+    cast(SD1.D1_DTDIGIT as date) as DT_NFS,
 
     TR4.TR4_NUMANA,
 	TR4.TR4_ORDEM,
@@ -103,15 +105,15 @@ from TQS010 TQS (nolock)
         left join SC1010 SC1 (nolock)
             on SC1.D_E_L_E_T_ = ''
             and SC1.C1_FILIAL = TR8.TR8_FILIAL
-            and substring(SC1.C1_OP, 1, 6) = TR8.TR8_ORDEM
+            and SC1.C1_OP = TR8.TR8_ORDEM + 'OS' + '001'
         left join SC7010 SC7 (nolock)
             on SC7.D_E_L_E_T_ = ''
             and SC7.C7_FILIAL = TR8.TR8_FILIAL
-            and substring(SC7.C7_OP, 1, 6) = TR8.TR8_ORDEM
+            and SC7.C7_OP = TR8.TR8_ORDEM + 'OS' + '001'
         left join SD1010 SD1 (nolock)
             on SD1.D_E_L_E_T_ = ''
             and SD1.D1_FILIAL = TR8.TR8_FILIAL
-            and substring(SD1.D1_OP, 1, 6) = TR8.TR8_ORDEM
+            and SD1.D1_OP = TR8.TR8_ORDEM + 'OS' + '001'
         left join TR4010 TR4 (nolock)
             on TR4.D_E_L_E_T_ = ''
             and TR4.TR4_CODBEM = TR8.TR8_CODBEM
@@ -126,7 +128,6 @@ from TQS010 TQS (nolock)
 
 		left join SB1010 SB1 (nolock)
 			on SB1.D_E_L_E_T_ = ''
-			and substring(SB1.B1_DESC, 6, len(TQT.TQT_DESMED)) = TQT.TQT_DESMED
-            and SB1.B1_COD != '11300096'
+			and SB1.B1_XMEDIDA = TQT.TQT_MEDIDA
 where
         TQS.D_E_L_E_T_ = ''

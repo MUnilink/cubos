@@ -7,7 +7,7 @@ select
     trim(SQ3.Q3_DESCSUM) as CARGO,
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
 	trim(SRA.RA_ESTADO) as UF,
-	convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 
 	trim(CTT.CTT_CUSTO) as CC,

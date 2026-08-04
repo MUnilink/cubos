@@ -45,6 +45,7 @@ select
 
 	trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
 	
+	case SRA.RA_YPARENT when 1 then 'S' when 2 then 'N' else 'outros' end as PAIMAE,
 	trim(SRA.RA_MAE) as NOME_MAE,
 	trim(SRA.RA_PAI) as NOME_PAI,
 

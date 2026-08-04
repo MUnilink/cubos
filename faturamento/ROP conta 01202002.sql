@@ -90,9 +90,8 @@ from
                     DUD010.DUD_DOC,
                     DUD010.DUD_SERIE,
                     DUD010.DUD_STATUS,
-                    DUA010.DUA_CODOCO, /* and DUA010.DUA_CODOCO != 'E004' */
                     DUA010.DUA_FILVTR,
-                    DUA010.DUA_NUMVTR, /* and DUA010.DUA_NUMVTR = '' */
+                    DUA010.DUA_NUMVTR,
                     case when DUA010.DUA_CODOCO = 'E004' and concat(DUA010.DUA_FILVTR, DUA010.DUA_NUMVTR) != '' then 'SOC' else 'NOR' end as VGA_NORMAL
                 from DUD010
                     left join DUA010
@@ -132,7 +131,7 @@ from
         and SD2.D2_SERIE not in ('003', '100')
         and
             case
-                when SB1.B1_COD like '2101000[3-4]' and trim(CFOP.X5_CHAVE) like '[5-6]933' and SD2.D2_TES like '50[3-4]' then '310101001'
+                when (SB1.B1_COD like '2101000[3-4]' or SB1.B1_COD like '21010006') and trim(CFOP.X5_CHAVE) like '[5-6]933' and SD2.D2_TES like '50[3-4]' then '310101001'
                 when SB1.B1_COD = '21010003' and (trim(CFOP.X5_CHAVE) like '[5-6]933' or trim(CFOP.X5_CHAVE) = '7949') and SD2.D2_TES in ('522', '525') then '310101002'
                 when SB1.B1_COD = '21010001' and SD2.D2_TES in ('501', '502', '506', '507', '510', '519', '520', '524', '526', '534', '535', '536', '554', '558') and
                 (

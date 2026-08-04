@@ -1,4 +1,5 @@
 select
+	trim(TQN.TQN_FILIAL) as FILIAL,
 	trim(TQI.TQI_TANQUE) as TANQUE,
 	trim(TQF.TQF_FILIAL) as FILIAL_POSTO,
 	trim(TQF.TQF_CODIGO) as COD_POSTO,
@@ -43,9 +44,12 @@ from TQN010 TQN (nolock)
 	left join TQI010 TQI (nolock)
 		on TQI.D_E_L_E_T_ = ''
 		and TQI.TQI_FILIAL = TQN.TQN_FILIAL
+		and TQI.TQI_CODPOS = TQN.TQN_POSTO
+		and TQI.TQI_LOJA = TQN.TQN_LOJA
 		and TQI.TQI_TANQUE = TQN.TQN_TANQUE
 	left join TQF010 TQF (nolock)
 		on TQF.D_E_L_E_T_ = ''
+		and TQF.TQF_FILIAL = TQN.TQN_FILIAL
 		and TQF.TQF_CODIGO = TQN.TQN_POSTO
 		and TQF.TQF_LOJA = TQN.TQN_LOJA
 	left join ST9010 ST9 (nolock)

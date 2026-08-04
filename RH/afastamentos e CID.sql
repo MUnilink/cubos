@@ -1,44 +1,37 @@
 select
-	trim(SRA.RA_FILIAL) as FILIAL,
-	trim(SRA.RA_MAT) as MATRICULA,
+    trim(SRA.RA_FILIAL) as FILIAL,
     concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
-	trim(SRA.RA_MAT) as contador,
-	trim(SRA.RA_NOMECMP) as NOME,
-	trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	trim(SRA.RA_ESTADO) as UF,
-	trim(SRJ.RJ_CODCBO) as CBO,
-	trim(SRA.RA_SEXO) as SEXO,
-	trim(SRA.RA_CIC) as CPF,
-	trim(SRJ.RJ_FUNCAO) as COD_FUNCAO,
-	trim(SRJ.RJ_DESC) as FUNCAO,
-	trim(SQ3.Q3_CARGO) as COD_CARGO,
-	trim(SQ3.Q3_DESCSUM) as CARGO,
-	SRA.RA_SITFOLH as SITUACAO,
+    trim(SRA.RA_MAT) as MATRICULA,
+    trim(SRA.RA_NOMECMP) as NOME,
+    trim(SRJ.RJ_DESC) as FUNCAO,
+    trim(SQ3.Q3_DESCSUM) as CARGO,
+    cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+    cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+    cast(SRA.RA_NASC as date) as NASCIMENTO,
+    cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+    SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-	
-	trim(CTT.CTT_CUSTO) as COD_CC,
-	trim(CTT.CTT_DESC01) as CENTRO_CUSTO,
-	trim(CTD.CTD_ITEM) as COD_ITEM,
-	trim(CTD.CTD_DESC01) as ATIVIDADE,
-	trim(SQB.QB_DEPTO) as DEPTO,
+    trim(CTT.CTT_CUSTO) as CC,
+    trim(CTT.CTT_DESC01) as CCUSTO,
+    trim(CTD.CTD_ITEM) as ITCT,
+    trim(CTD.CTD_DESC01) as ATIVIDADE,
+    trim(SQB.QB_DEPTO) as DEPTO,
     trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-	
-	cast(SRA.RA_NASC as date) as NASCIMENTO,
-	cast(SRA.RA_ADMISSA as date) as ADMISSAO,
-	cast(SRA.RA_DEMISSA as date) as DEMISSAO,
-	cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+    trim(SRJ.RJ_CODCBO) as CBO,
+    trim(SRA.RA_SEXO) as SEXO,
+    trim(SRA.RA_CIC) as CPF,
 	
 	trim(SR8.R8_CID) as CID,
-	TMR.TMR_DOENCA as DESCRICAO,
+	trim(TMR.TMR_DOENCA) as DESCRICAO,
 	concat(trim(SR8.R8_TIPOAFA), ' - ', (select upper(trim(RCM010.RCM_DESCRI)) from RCM010 where RCM010.RCM_TIPO = SR8.R8_TIPOAFA)) as TIPO_AFASTA,
 	
 	trim(SR8.R8_NMMED) as EMITENTE,
 	trim(SR8.R8_CRMMED) as COD_EMITENTE,
 	trim(SR8.R8_IDEOC) as CLASSE_EMITENTE,
 	
-	cast(SR8.R8_DATA as date) as DATA,
-	cast(SR8.R8_DATAINI as date) as INI_AFASTAMENTO,
-	cast(SR8.R8_DATAFIM as date) as FIM_AFASTAMENTO,
+	cast(SR8.R8_DATA as date) as DATA_ALTER,
+	cast(SR8.R8_DATAINI as date) as DATA_INIAFA,
+	cast(SR8.R8_DATAFIM as date) as DATA_FIMAFA,
 	cast(SR8.R8_DURACAO as numeric(15, 2)) as DURACAO,
 	left(SR8.R8_PER, 6) as PERIODO
 
@@ -72,4 +65,6 @@ from SR8010 SR8 (nolock)
 				on SQ3.D_E_L_E_T_ = ''
 				and SQ3.Q3_CARGO = SRJ.RJ_CARGO
 				
-where SR8.D_E_L_E_T_ = ''
+where
+		SR8.D_E_L_E_T_ = ''
+	and SR8.R8_TIPOAFA != '001'

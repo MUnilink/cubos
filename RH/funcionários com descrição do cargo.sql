@@ -12,7 +12,12 @@ select
 	trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_CARGO) as COD_CARGO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
+	trim(SRA.RA_TNOTRAB) as TURNO_COD,
 	(select concat(trim(SR6010.R6_TURNO), ' - ', trim(SR6010.R6_DESC)) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB) as TURNO,
+	trim(SRA.RA_SEQTURN) as TURNO_SEQ,
+	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
+	trim(SRA.RA_BHFOL) as BANCO_FOLHA,
+	SRA.RA_HRSMES as HORAS_MES,
 	
 	concat(trim(CTT.CTT_CUSTO), ' - ', trim(CTT.CTT_DESC01)) as CCUSTO,
 	concat(trim(CTD.CTD_ITEM), ' - ', trim(CTD.CTD_DESC01)) as ATIVIDADE,
@@ -26,7 +31,6 @@ select
 	left(SRA.RA_DTFIMCT, 6) as PERIODO_FIMCTR,
 	case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 	trim(SRA.RA_SITFOLH) as SITUACAO,
-	trim(SRA.RA_ACUMBH) as ACUMULA_BANCO,
 	case SRA.RA_YPARENT when 1 then 'S' when 2 then 'N' else 'outros' end as PAIMAE,
 	(select upper(trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_CHAVE = SRA.RA_ESTCIVI and SX5010.X5_TABELA = '33') as ESTADO_CIVIL,
 	trim(RCE.RCE_DESCRI) as SINDICATO,
@@ -49,6 +53,7 @@ select
 	trim(SRA.RA_RGORG) as RG_ORGEXP,
 	trim(SRA.RA_PIS) as PIS_TITULAR,
 	trim(SRA.RA_NUMCP) as CTPS,
+	trim(SRA.RA_SERCP) as CTPS_SERIE,
 	trim(SRA.RA_EMAIL) as TITULAR_EMAIL,
 	trim(SRA.RA_DDDFONE) as TELEFONE_DDD,
 	trim(SRA.RA_TELEFON) as TELEFONE_NUM,
@@ -65,11 +70,17 @@ select
 		when 3 then upper('Intermitente')
 		else 'outros'
 	end as TIPO_CONTRATO,
+	trim(SRA.RA_CODUNIC) as COD_UNICO,
 	
-	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as PERICULOSIDADES,
-	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as INSALUBRIDADE,
-	case when SRA.RA_ADTPOSE like '%T' then 0.015*SRA.RA_SALARIO else 0.0 end as ADIC_TEMPO,
+	case when SRA.RA_ADCPERI = 2 then SRA.RA_SALARIO *.3 else 0.0 end as VL_PERICULOSIDADES,
+	case when SRA.RA_ADCINS = 4 then 1100 *.4 else 0.0 end as VL_INSALUBRIDADE,
+	case when SRA.RA_ADTPOSE like '%T' then 0.015*SRA.RA_SALARIO else 0.0 end as VL_ADIC_TEMPO,
+	cast(SRA.RA_YAJCUST as numeric(15, 2)) as VL_AJCUSTO,
 	cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
+
+	case SRA.RA_ADCPERI when '1' then 'Não' when '2' then 'Sim' else 'outros' end as PERICULOSIDADES,
+	case SRA.RA_ADCINS when '1' then 'Não' when '2' then 'Insalubridade Mínima' when '3' then 'Insalubridade Média' when '4' then 'Insalubridade Máxima' else 'outros' end as INSALUBRIDADE,
+	SRA.RA_ADTPOSE as ADIC_TEMPO,
 
 	case SRA.RA_TPDEFFI 
 		when '0' then '0 - NENHUMA'

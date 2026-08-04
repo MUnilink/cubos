@@ -28,19 +28,23 @@ select distinct
     
     coalesce
     (
-        SPF.CARGA_HPRO,
+        nullif(SPF.CARGA_HPRO, 0),
+        nullif
         (
-            select avg(SR6010.R6_HRNORMA)
-            from SPF010 PF2
-                left join SR6010
-                    on SR6010.D_E_L_E_T_ = ''
-                    and SR6010.R6_TURNO = PF2.PF_TURNOPA
-            where
-                    PF2.D_E_L_E_T_ = ''
-                and PF2.PF_FILIAL = ST1.T1_FILIAL
-                and PF2.PF_MAT = ST1.T1_CODFUNC
-                and PF2.PF_TURNOPA = (select top 1 last_value(SPF010.PF_TURNOPA) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_FILIAL, SPF010.PF_MAT, SPF010.PF_DATA) from SPF010 where SPF010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = PF2.PF_FILIAL and SPF010.PF_MAT = PF2.PF_MAT and SPF010.PF_DATA < PF2.PF_DATA)
+            (
+                select avg(SR6010.R6_HRNORMA)
+                from SPF010 PF2
+                    left join SR6010
+                        on SR6010.D_E_L_E_T_ = ''
+                        and SR6010.R6_TURNO = PF2.PF_TURNOPA
+                where
+                        PF2.D_E_L_E_T_ = ''
+                    and PF2.PF_FILIAL = ST1.T1_FILIAL
+                    and PF2.PF_MAT = ST1.T1_CODFUNC
+                    and PF2.PF_TURNOPA = (select top 1 last_value(SPF010.PF_TURNOPA) over(partition by SPF010.PF_FILIAL, SPF010.PF_MAT order by SPF010.PF_FILIAL, SPF010.PF_MAT, SPF010.PF_DATA) from SPF010 where SPF010.D_E_L_E_T_ = '' and SPF010.PF_FILIAL = PF2.PF_FILIAL and SPF010.PF_MAT = PF2.PF_MAT and SPF010.PF_DATA < PF2.PF_DATA)
+            ), 0
         ),
+        (select avg(SR6010.R6_HRNORMA) from SR6010 where SR6010.D_E_L_E_T_ = '' and SR6010.R6_TURNO = SRA.RA_TNOTRAB),
         case when SH7.H7_CODIGO in ('001', '015') then 220.0 else 180.0 end,
         0.0
     ) as HORAS_PRO
@@ -89,9 +93,9 @@ from ST1010 ST1 (nolock)
                 SR8010.R8_MAT,
                 SR8010.R8_TIPOAFA,
                 cast(SR8010.R8_DURACAO as numeric(15, 2)) as DIAS_AFA,
-                concat(left(SR8010.R8_DATA, 6), '01') as SR8_PERINI,
-                convert(date, SR8010.R8_DATA, 112) as SR8_INI,
-                convert(date, dateadd(day, SR8010.R8_DURACAO, SR8010.R8_DATA), 112) as SR8_FIM,
+                concat(left(SR8010.R8_DATAINI, 6), '01') as SR8_PERINI,
+                convert(date, SR8010.R8_DATAINI, 112) as SR8_INI,
+                convert(date, dateadd(day, SR8010.R8_DURACAO, SR8010.R8_DATAINI), 112) as SR8_FIM,
                 1 as qtd_SR8
             from SR8010 (nolock)
             where SR8010.D_E_L_E_T_ = ''

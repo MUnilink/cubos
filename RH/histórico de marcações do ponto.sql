@@ -6,7 +6,7 @@ select
     trim(SRJ.RJ_DESC) as FUNCAO,
 	trim(SQ3.Q3_DESCSUM) as CARGO,
     cast(SRA.RA_ADMISSA as date) as ADMISSAO,
-    case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+    SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
     trim(CTT.CTT_CUSTO) as CC,
     trim(CTT.CTT_DESC01) as CCUSTO,
@@ -31,8 +31,8 @@ select
     SPG.PG_DATA,
     SPG.PG_DATAAPO,
     SPG.PG_HORA,
-    SPG.PERIODO_APONT,
-    SPG.PERIODO_MARCA
+    (select left(SPO010.PO_DATAFIM, 6) from SPO010 where SPO010.D_E_L_E_T_ = '' and SPO010.PO_FILIAL = SPG.PG_FILIAL and SPG.PG_DATAAPO between SPO010.PO_DATAINI and SPO010.PO_DATAFIM) as PERIODO_APONT,
+    (select left(SPO010.PO_DATAFIM, 6) from SPO010 where SPO010.D_E_L_E_T_ = '' and SPO010.PO_FILIAL = SPG.PG_FILIAL and SPG.PG_DATA between SPO010.PO_DATAINI and SPO010.PO_DATAFIM) as PERIODO_MARCA
 
 from
     (
@@ -58,10 +58,7 @@ from
 
             left(SPG010.PG_TPMARCA, 1) as ORDEM_APONT,
             right(SPG010.PG_TPMARCA, 1) as TIPO,
-            row_number() over(partition by SPG010.PG_FILIAL, SPG010.PG_MAT, SPG010.PG_DATAAPO order by SPG010.PG_DATAAPO, SPG010.PG_TPMARCA) as SEQ_APONT,
-            
-            left(SPG010.PG_DATAAPO, 6) as PERIODO_APONT,
-            left(SPG010.PG_DATA, 6) as PERIODO_MARCA
+            row_number() over(partition by SPG010.PG_FILIAL, SPG010.PG_MAT, SPG010.PG_DATAAPO order by SPG010.PG_DATAAPO, SPG010.PG_TPMARCA) as SEQ_APONT
         from SPG010 (nolock)
         where
                 SPG010.D_E_L_E_T_ = ''
@@ -88,11 +85,11 @@ from
             and CTD.CTD_ITEM = SRA.RA_ITEM
 
     left join SQB010 SQB (nolock)
-        on SQB.D_E_L_E_T_ = ''
+            on SQB.D_E_L_E_T_ = ''
             and SQB.QB_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SQB.QB_DEPTO = SRA.RA_DEPTO
         inner join SRJ010 SRJ (nolock)
-        on SRJ.D_E_L_E_T_ = ''
+            on SRJ.D_E_L_E_T_ = ''
             and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
             and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
 

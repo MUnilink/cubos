@@ -1,21 +1,22 @@
     select /* benefícios atual */
         trim(SRA.RA_FILIAL) as FILIAL,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_MAT) as MATRICULA,
-    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
-        trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	    trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+        cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+        cast(SRA.RA_NASC as date) as NASCIMENTO,
+        cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+        SRA.RA_SITFOLH as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
@@ -24,6 +25,7 @@
         
         case SR0.R0_TPBEN when 1 then 'TRANSPORTE' when 2 then 'ALIMENTAÇÃO' else null end as BENEFICIO,
 
+        SRA.RA_YVTRPEC as VT_PECUNIA,
         SR0.R0_TPBEN as TIPO_BENEFICIO,
         SR0.R0_CODIGO as COD_BENEFICIO,
         isnull(RFO.RFO_DESCR, SRN.RN_DESC) as DESC_BENEFICIO,
@@ -86,27 +88,26 @@
             and SRN.RN_FILIAL = substring(SR0.R0_FILIAL, 1, 4)
             and SRN.RN_COD = SR0.R0_CODIGO
     where SR0.D_E_L_E_T_ = ''
-
 union
-
     select /* outros benefícios atual */
         trim(SRA.RA_FILIAL) as FILIAL,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_MAT) as MATRICULA,
-    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
-        trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	    trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+        cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+        cast(SRA.RA_NASC as date) as NASCIMENTO,
+        cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+        SRA.RA_SITFOLH as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
@@ -115,6 +116,7 @@ union
 
         case RIQ.RIQ_TPBENE when 81 then 'CESTA' when 84 then 'CESTA' else null end as BENEFICIO,
 
+        SRA.RA_YVTRPEC as VT_PECUNIA,
         RIS.RIS_TPBENE as TIPO_BENEFICIO,
         RIS.RIS_COD as COD_BENEFICIO,
         RIS.RIS_DESC as DESC_BENEFICIO,
@@ -173,27 +175,26 @@ union
             and RIS.RIS_TPBENE = RIQ.RIQ_TPBENE
             and RIS.RIS_COD = RIQ.RIQ_COD
     where RIQ.D_E_L_E_T_ = ''
-
 union
-
     select /* benefícios histórico */
         trim(SRA.RA_FILIAL) as FILIAL,
+        concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_MAT) as MATRICULA,
-    concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         trim(SRA.RA_NOMECMP) as NOME,
         trim(SRJ.RJ_DESC) as FUNCAO,
-        trim(SRA.RA_MUNICIP) as MUNICIPIO,
-	    trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        trim(SQ3.Q3_DESCSUM) as CARGO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
+        cast(SRA.RA_DEMISSA as date) as DEMISSAO,
+        cast(SRA.RA_NASC as date) as NASCIMENTO,
+        cast(SRA.RA_DTFIMCT as date) as FIM_CONTRATO,
+        SRA.RA_SITFOLH as SITUACAO,
         case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
-
         trim(CTT.CTT_CUSTO) as CC,
         trim(CTT.CTT_DESC01) as CCUSTO,
-        trim(CTD.CTD_ITEM) as AT,
+        trim(CTD.CTD_ITEM) as ITCT,
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
-
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
@@ -202,6 +203,7 @@ union
         
         case RG2.RG2_TPBEN when 1 then 'TRANSPORTE' when 2 then 'ALIMENTAÇÃO' else null end as BENEFICIO,
 
+        SRA.RA_YVTRPEC as VT_PECUNIA,
         RG2.RG2_TPBEN as TIPO_BENEFICIO,
         RG2.RG2_CODIGO as COD_BENEFICIO,
         isnull(RFO.RFO_DESCR, SRN.RN_DESC) as DESC_BENEFICIO,

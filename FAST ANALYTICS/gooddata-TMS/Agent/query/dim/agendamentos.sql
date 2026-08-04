@@ -1,0 +1,10 @@
+select
+    concat(trim(DF1.DF1_FILIAL), trim(DF1.DF1_NUMAGE), trim(DF1.DF1_ITEAGE), trim(DF1.DF1_FILDOC), trim(DF1.DF1_DOC), trim(DF1.DF1_SERIE)) as ID_AGENDAMENTO,
+    DF1.DF1_NUMAGE,
+    DF1.DF1_ITEAGE,
+    trim(DF1.DF1_YOSCLI) as DF1_YOSCLI,
+    DF1.DF1_FILDOC,
+    DF1.DF1_DOC,
+    DF1.DF1_SERIE
+from DF1010 DF1
+where DF1.D_E_L_E_T_ = ''

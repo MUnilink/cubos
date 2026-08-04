@@ -4,5 +4,4 @@
         trim(SRJ.RJ_DESC) as DESC_FUNCAO
     from SRJ010 SRJ
     where SRJ.D_E_L_E_T_ = ''
-union
-        select null, null, null
+union select null, null, null

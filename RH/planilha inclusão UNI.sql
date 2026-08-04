@@ -13,7 +13,7 @@ select /* PLANO DE SAÚDE E ODONTO */
     trim(SRA.RA_MUNICIP) as MUNICIPIO,
     trim(SRA.RA_ESTADO) as UF,
     convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
-    case SRA.RA_SITFOLH when '' then 'OK' else SRA.RA_SITFOLH end as SITUACAO,
+    SRA.RA_SITFOLH as SITUACAO,
     case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
     trim(SRA.RA_ESTCIVI) as ESTADO_CIVIL,
     trim(SRA.RA_NATURAL) as NATURALIDADE,

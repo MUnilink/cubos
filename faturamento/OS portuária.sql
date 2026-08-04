@@ -168,7 +168,7 @@ select
 	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(nullif(ZC2.ZC2_HRFIM, '')) = 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end * ZC2.ZC2_QTDREC as HORAS_TOTAIS,
 
     case
-        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A'
+        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A' 
         when day(ZC2.ZC2_DTINI) %2 = 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA PAR'
         when day(ZC2.ZC2_DTINI) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA ÍMPAR'
         when day(ZC2.ZC2_DTINI) %2 = 0 and (datepart(hour, ZC2.ZC2_HRINI) between 19 and 23 or ((day(ZC2.ZC2_DTINI) +1) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 0 and 6)) then 'NOITE PAR'
@@ -177,13 +177,15 @@ select
     end as TURNO,
     
     case
-        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'não se aplica'
+        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A'
         when (select count(ZC2010.ZC2_ITEM) from ZC2010 where ZC2010.D_E_L_E_T_ = '' and ZC2.ZC2_FILIAL = ZC2010.ZC2_FILIAL and ZC2.ZC2_NUM = ZC2010.ZC2_NUM and ZC2.ZC2_ITEM = ZC2010.ZC2_ITEM) > 1 then 'item duplicado na OS'
         when ZC2.ZC2_QTDREC = 0 then 'qtd recurso não pode ser nula'
         when isdate(ZC2.ZC2_DTINI) = 0 or nullif(ZC2.ZC2_DTINI, '') is null or isdate(nullif(ZC2.ZC2_HRINI, '')) = 0 or nullif(ZC2.ZC2_HRINI, '') is null then 'data ou hora ini ausente'
         when isdate(ZC2.ZC2_DTFIM) = 0 or nullif(ZC2.ZC2_DTFIM, '') is null or isdate(nullif(ZC2.ZC2_HRFIM, '')) = 0 or nullif(ZC2.ZC2_HRFIM, '') is null then 'data ou hora fim ausente'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 > 12.999 then 'mais que 13 h apontadas'
         when datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM)) < 0.0 then 'data/hora ini maior que data/hora fim'
+        when trim(ZC1.ZC1_DTENCE) = '' then 'OS não encerrada'
+        when datediff(day, ZC2.ZC2_DATA, ZC1.ZC1_DTENCE) < 0.0 then 'data do adição do item maior que a data de encerramento'
         else 'item OK'
     end as STATUS_APONT,
 
@@ -248,6 +250,6 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
-        (ZC2.ZC2_DATA > '20241231' or ZC2.ZC2_DATA = '')
+        (ZC2.ZC2_DATA > '20250631' or ZC2.ZC2_DATA = '')
     and ZC2.ZC2_TIPO in ('1', '2', '3', '5', '11')
     and ZC2.D_E_L_E_T_ = ''

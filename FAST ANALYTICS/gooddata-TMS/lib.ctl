@@ -29,6 +29,10 @@ date ETL_MAXDATE = dateAdd(str2date("01/" + THIS_MONTH + "/" + THIS_YEAR, "dd/MM
 //            DEFINIÇÃO DE VARIÁVEIS             //
 //===============================================//
 date data;
+date dataHora;
+date dataHora1;
+date dataHora2;
+date hora;
 string TipoPessoa;
 
 //===============================================//
@@ -50,27 +54,6 @@ function integer getTimezoneOffset(string timezone) {
 		string timezone_signal = left(right(timezone, 5), 1);
 		return str2integer(timezone_signal + "1") * (str2integer(timezone_hour) * 60 + str2integer(timezone_minute));
 	}
-}
-
-// Função que retorna o número de segundos passados em determinada data/hora.
-function obj_dto getSecondsFromTime(date data) {
-	
-	obj_dto dto;
-	
-	//Calcula o ajuste de fuso horário de acordo com a configuração de data/hora do servidor de aplicação.
-    integer offset = DATE_TIMEZONE_OFFSET - getTimezoneOffset(date2str(data, "Z", "${DATE_LOCALE}"));
-    
-    //Recalcula a variável de data com o fuso horário correto.
-	dto.Data = dateAdd(data, offset, minute);
-	
-	//Calcula o número de segundos existentes na data.
-    integer dt_hour = date2num(extractTime(dto.Data), hour, "${DATE_LOCALE}");
-    integer dt_minute = date2num(extractTime(dto.Data), minute, "${DATE_LOCALE}");
-    integer dt_second = date2num(extractTime(dto.Data), second, "${DATE_LOCALE}");
-    
-	dto.Offset_seconds = dt_hour * 3600 + dt_minute * 60 + dt_second;
-	
-	return dto;
 }
 
 // Função de tratamento de campos tipo decimal.
@@ -114,12 +97,32 @@ function long formatLong(string  format) {
 // Função de tratamento de campos tipo string.
 function string formatString(string format, string demoValue) {
     if ((format == null) or (trim(format) == "")) {
-        return "N/A";
+        return "";
     } else {
         if ((GOODDATA_DEMO_MODE == "S") and (demoValue <> null)) {
             return demoValue;
         } else {
             return removeNonPrintable(translate(trim(upperCase(format)), "ÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÂÊÎÔÛÃÕÑÇ", "AEIOUAEIOUAEIOUAEIOUAONC"));
+        }
+    }
+}
+
+// Função de tratamento de campos tipo datetime.
+function date formatDatetime(string format) {
+    if ((format == null) or (trim(format) == "")) {
+        return null;
+    } else
+    {
+        if(isDate(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}") == true)
+            dataHora = str2date(format, concat("${DATE_PATTERN}", 'HH:mm:ss'), "${DATE_LOCALE}");
+        if ((dataHora < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) {
+            return null;
+        } else {
+            if ((GOODDATA_DEMO_MODE == "S") and (GOODDATA_DEMO_DATE <> null)) {
+                return dateAdd(dataHora, dateDiff(today(), GOODDATA_DEMO_DATE, day), day);
+            } else {
+                return dataHora;
+            }
         }
     }
 }
@@ -142,6 +145,24 @@ function date formatDate(string format) {
     }
 }
 
+// Função de tratamento de campos tipo date.
+function date formatDate2(string format, string pad)
+{   
+    if ((format == null) or (trim(format) == "")) return null;
+    else
+    {
+        if((pad == null) or (trim(pad) == "")) return null;
+        if(isDate(format, pad) == true) data = str2date(format, pad, "${DATE_LOCALE}");
+        else return null;
+        
+        if((data < GOODDATA_MINDATE) || (data > GOODDATA_MAXDATE)) return null;
+        else
+        {
+            if ((GOODDATA_DEMO_MODE == "S") and (GOODDATA_DEMO_DATE <> null)) return dateAdd(data, dateDiff(today(), GOODDATA_DEMO_DATE, day), day);
+            else return data;
+        }
+    }
+}
 
 
 //Função para calcular a diferença entre duas datas.
@@ -178,6 +199,22 @@ function long subtractDateDay(string valor1, string valor2) {
             return dateDiff(data1, data2, day);
         }
     }
+}
+
+function integer getSecondsFromTime(date data) {
+	
+	//Calcula o ajuste de fuso horário de acordo com a configuração de data/hora do servidor de aplicação.
+    integer offset = DATE_TIMEZONE_OFFSET - getTimezoneOffset(date2str(data, "Z", "${DATE_LOCALE}"));
+    
+    //Recalcula a variável de data com o fuso horário correto.
+	data = dateAdd(data, offset, minute);
+	
+	//Calcula o número de segundos existentes na data.
+    integer dt_hour = date2num(extractTime(data), hour, "${DATE_LOCALE}");
+    integer dt_minute = date2num(extractTime(data), minute, "${DATE_LOCALE}");
+    integer dt_second = date2num(extractTime(data), second, "${DATE_LOCALE}");
+    
+    return dt_hour * 3600 + dt_minute * 60 + dt_second;
 }
 
 // Função de tratamento para chaves PROTHEUS.

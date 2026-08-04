@@ -1,14 +1,5 @@
 select
     concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
-    (
-        select substring(DTW010.DTW_DATREA, 1, 6)
-        from DTW010 (nolock)
-        where 
-                DTW010.D_E_L_E_T_ = ''
-            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
-    ) as PERIODO,
     DTQ.DTQ_VIAGEM,
 
     case DTQ.DTQ_STATUS

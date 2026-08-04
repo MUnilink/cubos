@@ -1,12 +1,15 @@
-SELECT
+select
     SD2.D2_FILIAL as BK_FILIAL,
     SF2.F2_SERIE AS SERIE_DA_NOTA_FISCAL,
     SF2.F2_DOC AS NUMERO_DA_NOTA_FISCAL,
     SD2.D2_ITEM as ITEM_NF,
     trim(SD2.D2_CCUSTO) as CC_NF,
+    (select trim(CTT010.CTT_DESC01) from CTT010 where CTT010.D_E_L_E_T_ = '' and CTT010.CTT_CUSTO = SD2.D2_CCUSTO) as CC_NOME,
     trim(SD2.D2_ITEMCC) as ATIVIDADE_NF,
+    (select trim(CTD010.CTD_DESC01) from CTD010 where CTD010.D_E_L_E_T_ = '' and CTD010.CTD_ITEM = SD2.D2_ITEMCC) as ATIVIDADE_NOME,
     SD2.D2_TIPO AS TIPO_NF,
-    SD2.D2_ORIGLAN AS ORIGEM_NF,
+    trim(SD2.D2_ORIGLAN) AS ORIGEM_LAN,
+    trim(SD2.D2_NFORI) AS ORIGEM_NF,
     
     cast(SF2.F2_EMISSAO as date) as DATA_NF,
     left(SF2.F2_EMISSAO, 6) as PERIODO_NF,
@@ -51,15 +54,38 @@ SELECT
     cast(SC6.C6_VALOR as numeric(15, 2)) as VALOR_PEDIDO,
 
     case
+        when SB1.B1_COD like '2101000[3-4]' and trim(CFOP.X5_CHAVE) like '[5-6]933' and SD2.D2_TES like '50[3-4]' then '310101001'
+        when SB1.B1_COD = '21010003' and (trim(CFOP.X5_CHAVE) like '[5-6]933' or trim(CFOP.X5_CHAVE) = '7949') and SD2.D2_TES in ('522', '525') then '310101002'
+        when SB1.B1_COD = '21010001' and SD2.D2_TES in ('501', '502', '506', '507', '510', '519', '520', '524', '526', '534', '535', '536', '554', '558') and
+        (
+            trim(CFOP.X5_CHAVE) like '[5-6]363' or
+            trim(CFOP.X5_CHAVE) like '[5-6]932' or
+            trim(CFOP.X5_CHAVE) like '[5-6]351' or
+            trim(CFOP.X5_CHAVE) like '[5-6]352' or
+            trim(CFOP.X5_CHAVE) like '[5-6]353' or
+            trim(CFOP.X5_CHAVE) like '[5-6]355' or
+            trim(CFOP.X5_CHAVE) like '[5-6]357' or
+            trim(CFOP.X5_CHAVE) like '[5-6]359' or
+            trim(CFOP.X5_CHAVE) like '[5-6]360'
+        ) then '310101001'
+        when SB1.B1_COD = '21010001' and SD2.D2_TES in ('509', '514', '516', '517', '518', '539') and
+        (
+            trim(CFOP.X5_CHAVE) like '[5-6]363' or
+            trim(CFOP.X5_CHAVE) like '[5-6]932' or
+            trim(CFOP.X5_CHAVE) like '[5-6]351' or
+            trim(CFOP.X5_CHAVE) like '[5-6]352' or
+            trim(CFOP.X5_CHAVE) like '[5-6]353' or
+            trim(CFOP.X5_CHAVE) like '[5-6]355' or
+            trim(CFOP.X5_CHAVE) like '[5-6]357' or
+            trim(CFOP.X5_CHAVE) like '[5-6]359' or
+            trim(CFOP.X5_CHAVE) like '[5-6]360'
+        ) then '310101002'
+        
         /* LP 610-001 */
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF = '08'
         then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES = '511'
         then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES like '50[3-4]'
-        then '310101001'
-        when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and (SD2.D2_TES = '522' or SD2.D2_TES = '525')
-        then '310101002'
         when trim(CFOP.X5_CHAVE) like '[5-6]933' and SF4.F4_CSTCOF != '08' and SD2.D2_TES != '511'
         then concat(trim(SB1.B1_YCTREC3), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC3))
         
@@ -92,9 +118,9 @@ SELECT
         then concat(trim(SB1.B1_YCTREC2), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC2))
         
         /* LP 610-050 */
-        when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES = '522'
+        when (trim(CFOP.X5_CHAVE) like '[5-6]933' or trim(CFOP.X5_CHAVE) = '7949') and SD2.D2_TES = '522'
         then concat(trim(SB1.B1_YCTREC5), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC5))
-        when trim(CFOP.X5_CHAVE) = '7949' and SD2.D2_TES != '522'
+        when (trim(CFOP.X5_CHAVE) like '[5-6]933' or trim(CFOP.X5_CHAVE) = '7949') and SD2.D2_TES != '522'
         then concat(trim(SB1.B1_YCTREC4), ' ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTREC4))
         
         /* LP 610-015 */
@@ -108,7 +134,7 @@ SELECT
         when trim(CFOP.X5_CHAVE) like '[5-6]357' and SD2.D2_TES = '510' then '310101001'
         when trim(CFOP.X5_CHAVE) = '6355' and SD2.D2_TES = '558' then '310101001'
         when trim(CFOP.X5_CHAVE) = '6353' and SD2.D2_TES = '501' then '310101001'
-    else null end as LP_CRE,
+    else null end as CONTA_CONTABIL,
 
     cast(coalesce(SD2.D2_QUANT, 0) as decimal(13, 3)) AS QTD_FATURADA_ITEM,
     cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
@@ -182,12 +208,12 @@ SELECT
         )
     ) as VIAGEM_TMS,
 
-    case DUD.DUD_STATUS
-        when 1 then upper('Em Aberto')
-        when 2 then upper('Em Transito')
-        when 3 then upper('Carregado')
-        when 4 then upper('Encerrado')
-        when 9 then upper('Cancelado')
+    case
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 1 then upper('Em Aberto')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 2 then upper('Em Transito')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 3 then upper('Carregado')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 4 then upper('Encerrado')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 9 then upper('Cancelado')
         else 'Outros'
     end as STATUS_CTE,
     

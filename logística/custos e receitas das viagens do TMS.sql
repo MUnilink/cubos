@@ -148,4 +148,4 @@ from ZE1010 ZE1 (nolock)
         and RAT_IMPR.INSUMO = ZE1.ZE1_COD
 where
         ZE1.D_E_L_E_T_ = ''
-    and ZE1.ZE1_COMPET > '20240731'
+    and ZE1.ZE1_COMPET > '20250531'

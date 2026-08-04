@@ -6,6 +6,7 @@ select
 	ST9.T9_TIPMOD as MODELO,
 	ST9.T9_DTCOMPR as DATA,
 	
+	trim(SA2.A2_COD) + trim(SA2.A2_LOJA) as ID_FORNECEDOR,
     trim(ST9.T9_ITEMCTA) as T9_ITEMCTA,
     trim(ST9.T9_CCUSTO) as T9_CCUSTO,
 
@@ -20,5 +21,10 @@ from TQS010 TQS
 	inner join ST9010 ST9
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = TQS.TQS_CODBEM
+
+		left join SA2010 SA2 (nolock)
+			on SA2.D_E_L_E_T_ = ''
+			and SA2.A2_COD = ST9.T9_FORNECE
+			and SA2.A2_LOJA = ST9.T9_LOJA
 where
 		TQS.D_E_L_E_T_ = ''

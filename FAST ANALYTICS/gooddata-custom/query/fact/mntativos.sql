@@ -66,7 +66,7 @@ select
 	trim(ST1.T1_CODFUNC) as T1_CODFUNC,
 	trim(SB1.B1_GRUPO) as B1_GRUPO,
 	trim(SB1.B1_COD) as B1_COD,
-	trim(SA2.A2_COD) + trim(SA2.A2_LOJA) as ID_FORNECEDOR,
+	case STL.TL_TIPOREG when 'T' then trim(SA2.A2_COD) + trim(SA2.A2_LOJA) when 'P' then trim(SD1.D1_FORNECE) + trim(SD1.D1_LOJA) end as ID_FORNECEDOR,
 	trim(STL.TL_PLANO) as TI_PLANO,
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
@@ -147,6 +147,5 @@ from STJ010 STJ
 				and SA2.A2_COD = SD1.D1_FORNECE
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
-		STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>
-	and STL.D_E_L_E_T_ = ''
+		STL.D_E_L_E_T_ = ''
+	and (STL.TL_DTINICI between <<START_DATE>> AND <<FINAL_DATE>> or STJ.TJ_DTORIGI between <<START_DATE>> AND <<FINAL_DATE>>)

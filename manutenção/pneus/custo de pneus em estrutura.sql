@@ -21,8 +21,8 @@ select
 	ST9.T9_VALCPA as T9_VALCPA,
 	cast(ST9.T9_DTCOMPR as date) as T9_DTCOMPR,
 
-    ZC6.ZC6_BEMPAI as ESTRUTURA,
-    ZC6.ZC6_BEMPA2 as COMPONENTE,
+    trim(ZC6.ZC6_BEMPAI) as ESTRUTURA,
+    trim(ZC6.ZC6_BEMPA2) as COMPONENTE,
     cast(ZC6.ZC6_DTIAPL as date) as DT_INIAPP,
     cast(ZC6.ZC6_DTFAPL as date) as DT_FIMAPP,
     cast(ZC6.ZC6_DTICUS as date) as DT_INICUSTO,

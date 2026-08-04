@@ -5,7 +5,7 @@
         trim(SRA.RA_NOMECMP) as NOME,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
 		case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 		trim(SRA.RA_SITFOLH) as SITUACAO,
         trim(CTT.CTT_CUSTO) as CC,
@@ -45,7 +45,7 @@
 		trim(RCN.RCN_CODIGO) as IDVERBA,
     	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
-		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 when RCN.RCN_CODIGO in ('0045') then 0.0 else SRC.RC_VALOR end as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRC.RC_VALOR*-1 else SRC.RC_VALOR end as VALOR,
 		SRC.RC_HORAS as HORAS,
 		SRJ.RJ_YHRPADR as HORAS_PADRAO,
 
@@ -54,6 +54,7 @@
 		null as INSS,
 		null as IR,
 		null as FGTS,
+		case when trim(SRA.RA_SITFOLH) = 'D' then (select max(concat(trim(SRG010.RG_TIPORES), ' - ', trim(substring(RCC010.RCC_CONTEU, 3, 30)))) from RCC010 inner join SRG010 on SRG010.D_E_L_E_T_ = '' and left(RCC010.RCC_CONTEU, 2) = trim(SRG010.RG_TIPORES) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and SRG010.RG_FILIAL = SRA.RA_FILIAL and SRG010.RG_MAT = SRA.RA_MAT) end as TIPO_RESCISAO,
 
 		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
@@ -98,7 +99,7 @@ union
         trim(SRA.RA_NOMECMP) as NOME,
 		trim(SRA.RA_MUNICIP) as MUNICIPIO,
 		trim(SRA.RA_ESTADO) as UF,
-        convert(date, SRA.RA_ADMISSA, 103) as ADMISSAO,
+        cast(SRA.RA_ADMISSA as date) as ADMISSAO,
 		case when trim(SRA.RA_SITFOLH) != 'D' then 'S' else 'N' end as ATIVO,
 		trim(SRA.RA_SITFOLH) as SITUACAO,
         trim(CTT.CTT_CUSTO) as CC,
@@ -138,7 +139,7 @@ union
 		trim(RCN.RCN_CODIGO) as IDVERBA,
     	trim(RCN.RCN_DESCRI) as IDVERBA_NOME,
 
-		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 when RCN.RCN_CODIGO in ('0045') then 0.0 else SRD.RD_VALOR end as VALOR,
+		case when SRV.RV_TIPOCOD = 2 then SRD.RD_VALOR*-1 else SRD.RD_VALOR end as VALOR,
 		SRD.RD_HORAS as HORAS,
 		null as HORAS_PADRAO,
 
@@ -147,6 +148,7 @@ union
 		SRD.RD_INSS as INSS,
 		SRD.RD_IR as IR,
 		SRD.RD_FGTS as FGTS,
+		case when trim(SRA.RA_SITFOLH) = 'D' then (select max(concat(trim(SRG010.RG_TIPORES), ' - ', trim(substring(RCC010.RCC_CONTEU, 3, 30)))) from RCC010 inner join SRG010 on SRG010.D_E_L_E_T_ = '' and left(RCC010.RCC_CONTEU, 2) = trim(SRG010.RG_TIPORES) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and SRG010.RG_FILIAL = SRA.RA_FILIAL and SRG010.RG_MAT = SRA.RA_MAT) end as TIPO_RESCISAO,
 
 		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
