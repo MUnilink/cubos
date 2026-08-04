@@ -63,7 +63,8 @@ select distinct
     ZE3.ZE3_VALOR as VL_ORIGINAL,
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
-        when left(ZE2.ZE2_COD, 5) = '07203' then ZE3.ZE3_VALOR
+        when left(ZE2.ZE2_COD, 8) = '02101007' then ZE3.ZE3_VALOR*-1
+        when left(ZE2.ZE2_COD, 5) = '072' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
