@@ -62,38 +62,41 @@ select
     case when SRV.RV_COD in ('858') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_AVISO,
     case when SRV.RV_COD in ('760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_MULTA,
     case when SRV.RV_COD in ('759', '761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
-    case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
+    case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L', '99Q') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
     
-    isnull(case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end, 0)
-    +
-    isnull
+    case when trim(SRG.RG_TIPORES) in ('03', '04', '05', '10', '11', '12', '13', '16', '17', '18') then 0 else 1 end *
     (
+        isnull(case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end, 0)
+        +
+        isnull
         (
-            select sum(SRR010.RR_VALOR)
-            from SRR010
-            where
-                    SRR010.D_E_L_E_T_ = ''
-                and SRR010.RR_FILIAL = SRR.RR_FILIAL
-                and SRR010.RR_MAT = SRR.RR_MAT
-                and SRR010.RR_PD = '968'
-                and SRR.RR_PD = '220'
-        ), 0
-    )
-    +
-    isnull
-    (
+            (
+                select sum(SRR010.RR_VALOR)
+                from SRR010
+                where
+                        SRR010.D_E_L_E_T_ = ''
+                    and SRR010.RR_FILIAL = SRR.RR_FILIAL
+                    and SRR010.RR_MAT = SRR.RR_MAT
+                    and SRR010.RR_PD = '968'
+                    and SRR.RR_PD = '220'
+            ), 0
+        )
+        +
+        isnull
         (
-            select sum(SRD010.RD_VALOR)
-            from SRD010
-            where
-                    SRD010.D_E_L_E_T_ = ''
-                and SRD010.RD_FILIAL = SRR.RR_FILIAL
-                and SRD010.RD_MAT = SRR.RR_MAT
-                and SRD010.RD_PD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L')
-                and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
-                and right(SRG.RG_DTAVISO, 2) < 10
-                and SRR.RR_PD = '220'
-        ), 0
+            (
+                select sum(SRD010.RD_VALOR)
+                from SRD010
+                where
+                        SRD010.D_E_L_E_T_ = ''
+                    and SRD010.RD_FILIAL = SRR.RR_FILIAL
+                    and SRD010.RD_MAT = SRR.RR_MAT
+                    and SRD010.RD_PD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L')
+                    and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
+                    and right(SRG.RG_DTAVISO, 2) < 10
+                    and SRR.RR_PD = '220'
+            ), 0
+        )
     ) as VL_APAGAR,
     
     SRR.RR_PERIODO as PERIODO
