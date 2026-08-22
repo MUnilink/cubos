@@ -249,6 +249,8 @@ select
     cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
 	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO,
 	cast(SC7.C7_QUANT as numeric(13, 3)) as QTD_ITEM_PC,
+	cast(SC7.C7_YSAVE as numeric(14, 2)) as VALOR_SAVING,
+	cast(SC7.C7_YTOTAL as numeric(14, 2)) as VALOR_ORIGINAL,
 
     cast(SD1.D1_VALICM as numeric(14, 2)) as VL_NFENT_ICMS,
     cast(SD1.D1_VALIPI as numeric(14, 2)) as VL_NFENT_IPI,
