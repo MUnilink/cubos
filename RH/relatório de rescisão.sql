@@ -64,14 +64,14 @@ select
     case when SRV.RV_COD in ('759', '761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
     case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L', '99Q') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
     
-    case when trim(SRG.RG_TIPORES) in ('03', '04', '05', '10', '11', '12', '13', '16', '17', '18') then 0 else 1 end *
+    case when trim(SRG.RG_TIPORES) in ('03', '04', '05', '10', '11', '12', '13', '16', '17', '18') then 0 else 1 end * /* zera, ou não, o valor a pagar */
     (
-        isnull(case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end, 0)
+        isnull(case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end, 0)  /* FGTS quitação, multa 40% e 13º */
         +
         isnull
         (
             (
-                select sum(SRR010.RR_VALOR)
+                select sum(SRR010.RR_VALOR) /* FGTS diferença dissídio */
                 from SRR010
                 where
                         SRR010.D_E_L_E_T_ = ''
@@ -85,7 +85,7 @@ select
         isnull
         (
             (
-                select sum(SRD010.RD_VALOR)
+                select sum(SRD010.RD_VALOR) /* econsignado mês anterior */
                 from SRD010
                 where
                         SRD010.D_E_L_E_T_ = ''
@@ -98,6 +98,40 @@ select
             ), 0
         )
     ) as VL_APAGAR,
+
+    isnull
+    (
+        (
+            select sum(SRR010.RR_VALOR) /* FGTS diferença dissídio */
+            from SRR010
+            where
+                    SRR010.D_E_L_E_T_ = ''
+                and SRR010.RR_FILIAL = SRR.RR_FILIAL
+                and SRR010.RR_MAT = SRR.RR_MAT
+                and SRR010.RR_PD = '968'
+                and SRR.RR_PD = '220'
+        ), 0
+    ) as VL_APAGAR1,
+    isnull
+    (
+        (
+            select sum(SRD010.RD_VALOR) /* econsignado mês anterior */
+            from SRD010
+            where
+                    SRD010.D_E_L_E_T_ = ''
+                and SRD010.RD_FILIAL = SRR.RR_FILIAL
+                and SRD010.RD_MAT = SRR.RR_MAT
+                and SRD010.RD_PD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L')
+                and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
+                and right(SRG.RG_DTAVISO, 2) < 10
+                and SRR.RR_PD = '220'
+        ), 0
+    ) as VL_APAGAR2,
+    
+    /* FGTS quitação, multa 40% e 13º */
+    case when SRV.RV_COD in ('759') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR3_FGTSQUITACAO,
+    case when SRV.RV_COD in ('760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR4_FGTS40MULTA,
+    case when SRV.RV_COD in ('761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR5_FGTS13SALARIO,
     
     SRR.RR_PERIODO as PERIODO
 
@@ -144,3 +178,4 @@ where
     and SRR.RR_ROTEIR = 'RES'
     and SRG.RG_MAT =:MATRICULA
     and case SRG.RG_RESCDIS when 0 then 'N' else 'C' end =:TIPO_RESCISAO
+    /* and SRG.RG_DATAHOM =:DATA_HOMOLOG */
