@@ -5,4 +5,4 @@ select
     <<CODE_INSTANCE>> AS INSTANCIA
 FROM DA8010
 WHERE DA8010.D_E_L_E_T_ = ' '
-union select null, null, null
+union select null, null, null, null
