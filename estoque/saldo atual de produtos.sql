@@ -1,28 +1,37 @@
 select
-    SB1.B1_COD as contador,
+    concat(trim(SB1.B1_GRUPO), ' ', upper(trim(SBM.BM_DESC))) as GRUPO,
+    concat(SBM.BM_YGRUPO, ' ', (select trim(upper(ZA5010.ZA5_DESC)) from ZA5010 where ZA5010.D_E_L_E_T_ = '' and ZA5010.ZA5_COD = SBM.BM_YGRUPO)) as 'Grupo Primario',
+    concat(SBM.BM_YSUBGRU, ' ', (select trim(upper(ZA6010.ZA6_DESC)) from ZA6010 where ZA6010.D_E_L_E_T_ = '' and ZA6010.ZA6_GRUPO = SBM.BM_YGRUPO and ZA6010.ZA6_SUBGRU = SBM.BM_YSUBGRU)) as 'SubGrupo',
     trim(SB1.B1_COD) as PRODUTO,
-	trim(SB1.B1_DESC) as NOMEPRODUTO,
-	trim(SB1.B1_GRUPO) as GRUPO,
-    trim(SB1.B1_CONTA) as CONTA_ATIVO,
-    isnull(SB1.B1_UPRC, 0.0) as ULT_PRECO,
-    SB2.B2_FILIAL as FILIAL_ATU,
-    SB2.B2_LOCAL as ARMAZEM_ATU,
-    SB2.B2_QATU as QTD_ATU,
-    SB2.B2_VATU1 as VALOR_ATU,
-    SB2.B2_CM1 as CM_ATU,
-    substring(SB9.B9_DATA, 1, 6) as PERIODO,
-    SB9.B9_FILIAL as FILIAL_INI,
-    SB9.B9_LOCAL as ARMAZEM_INI,
-    SB9.B9_QINI as QTD_INI,
-    SB9.B9_VINI1 as VALOR_INI,
-    SB9.B9_CM1 as CM_INI,
-    trim(SB1.B1_UM) as UN
-from SB9010 SB9 (nolock)
-    left join SB2010 SB2 (nolock)
-        on SB2.D_E_L_E_T_ = ''
-        and SB2.B2_COD = SB9.B9_COD
-    left join SB1010 SB1 (nolock)
+    trim(SB1.B1_COD) as contador,
+    cast(SB1.B1_UCOM as date) as 'Data da Ultima Compra',
+    cast(SB1.B1_UREV as date) as 'Data da Ultima Revisao',
+    cast(SB1.B1_DATREF as date) as 'Data Referencia do Custo',
+    cast(SB1.B1_CONINI as date) as 'Data do Consumo Inicial',
+    cast(SB1.B1_DATASUB as date) as 'Data da Substituicao',
+    cast(SB1.B1_VIGENC as date) as 'Data Vigencia Inicial',
+    trim(SB1.B1_DESC) as DESCRICAO,
+    trim(SB1.B1_UM) as UN,
+    trim(SB1.B1_SEGUM) as UN_2,
+    trim(SB1.B1_LOCPAD) as ARMAZEM_PAD,
+    cast(SB1.B1_UPRC as numeric(15, 2)) as ULT_PRECO,
+    trim(SB1.B1_YDESCRI) as DESC_FROTA,
+    trim(SB1.B1_YMARCA) as OP_MARCA,
+    trim(SB1.B1_YPARTNU) as PARTNUMBER,
+
+    SB2.B2_FILIAL as FILIAL,
+    SB2.B2_LOCAL as ARMAZEM,
+    cast(isnull(SB2.B2_QATU, 0) as numeric(15, 2)) as QTD,
+    cast(isnull(SB2.B2_VATU1, 0) as numeric(15, 2)) as VALOR,
+    cast(isnull(SB2.B2_CM1, 0) as numeric(15, 2)) as CM
+from SB2010 SB2
+    inner join SB1010 SB1
         on SB1.D_E_L_E_T_ = ''
-        and SB1.B1_COD = SB9.B9_COD
+        and SB1.B1_COD = SB2.B2_COD
+        and SB1.B1_MSBLQL = '2'
+        
+        inner join SBM010 SBM
+            on SBM.D_E_L_E_T_ = ''
+            and SBM.BM_GRUPO = SB1.B1_GRUPO
 where
-        SB9.B9_COD like '1%' and SB9.B9_DATA like '202312%' and SB9.D_E_L_E_T_ = ''
+        SB2.D_E_L_E_T_ = ''
