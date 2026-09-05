@@ -69,13 +69,21 @@ select
 	convert(datetime, concat(TR4.TR4_DTANAL, ' ', TR4.TR4_HRANAL), 103) as DATA_ANALISE,
 
     (
+        select ST9010.T9_CODBEM
+        from ST9010
+        where
+                ST9010.D_E_L_E_T_ = ''
+            and ST9010.T9_PLACA = TQS.TQS_PLACA
+            and TQS.TQS_PLACA != ''
+    ) as EST_ATUAL,
+    (
         select top 1 last_value(STZ010.TZ_BEMPAI) over (partition by STZ010.TZ_CODBEM order by STZ010.TZ_CODBEM)
         from STZ010 (nolock)
         where
                 STZ010.D_E_L_E_T_ = ''
             and STZ010.TZ_CODBEM = TR8.TR8_CODBEM
             and STZ010.TZ_DATASAI + STZ010.TZ_HORASAI <= TR7.TR7_DTLOTE + TR7.TR7_HRLOTE
-    ) as ULTIMO_CARRO
+    ) as EST_ANTERIOR
 
 from TQS010 TQS (nolock)
     inner join ST9010 ST9 (nolock)
