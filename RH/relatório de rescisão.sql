@@ -32,8 +32,8 @@ select
     cast(SRG.RG_DTGERAR as date) as DT_GERACAOF,
     cast(SRG.RG_DTPROAV as date) as DT_PROJAVIS,
     
-    trim(SRG.RG_TIPORES) as COD_RESCISAO,
-    (select trim(substring(RCC010.RCC_CONTEU, 3, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRG.RG_TIPORES)) as DESC_RESCISAO,
+    SRG.RG_TIPORES as COD_RESCISAO,
+    (select trim(substring(RCC010.RCC_CONTEU, 3, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = SRG.RG_TIPORES) as DESC_RESCISAO,
     trim(RCE.RCE_DESCRI) as SINDICATO,
     trim(SRG.RG_OBS) as OBS,
     
@@ -46,7 +46,7 @@ select
     
     SRA.RA_SALARIO as SALARIO,
     case when SRV.RV_COD = '490' then SRR.RR_VALOR end as VALOR_LIQ,
-    (select SRS010.RS_VALDEP from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRG.RG_FILIAL and SRS010.RS_MAT = SRG.RG_MAT and SRR.RR_PD = '990' and right(SRG.RG_DTAVISO, 2) < 10) as VL_FGTSSALDODEPOSITO,
+    (select SRS010.RS_VALDEP from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRG.RG_FILIAL and SRS010.RS_MAT = SRG.RG_MAT and SRR.RR_PD = '990' and right(SRG.RG_DTAVISO, 2) < 10 and SRG.RG_TIPORES not in ('03', '04', '05', '10', '11', '12', '13', '16', '17', '18')) as VL_FGTSSALDODEPOSITO,
     (select SRS010.RS_SALATU from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRG.RG_FILIAL and SRS010.RS_MAT = SRG.RG_MAT and SRR.RR_PD = '990') as VL_FGTSSALDOATUAL,
     case when SRV.RV_TIPOCOD = '1' then SRR.RR_VALOR end as VALOR_PROV,
     case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then SRR.RR_VALOR end as VALOR_DESC,
@@ -55,50 +55,15 @@ select
     case when SRV.RV_TIPOCOD = '1' then trim(SRV.RV_COD) end as COD_PROV,
     case when SRV.RV_TIPOCOD = '2' and SRV.RV_COD != '490' then trim(SRV.RV_COD) end as COD_DESC,
 
-    case when SRV.RV_COD in ('747') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_BASEFGTSRESCISAO,
-    case when SRV.RV_COD in ('775') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_BASEFGTS13RESCISAO,
-    case when SRV.RV_COD in ('759') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_FGTSQUITACAO,
-    case when SRV.RV_COD in ('761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_FGTS13,
-    case when SRV.RV_COD in ('858') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_AVISO,
-    case when SRV.RV_COD in ('760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_MULTA,
-    case when SRV.RV_COD in ('759', '761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
-    case when SRV.RV_COD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L', '99Q') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
+    case when SRV.RV_COD in ('747') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_BASEFGTSRESCISAO,
+    case when SRV.RV_COD in ('775') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_BASEFGTS13RESCISAO,
+    case when SRV.RV_COD in ('759') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_FGTSQUITACAO,
+    case when SRV.RV_COD in ('761') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_FGTS13,
+    case when SRV.RV_COD in ('858') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_AVISO,
+    case when SRV.RV_COD in ('760') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_MULTA,
+    case when SRV.RV_COD in ('759', '761') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_SALDORESC,
+    case when SRV.RV_COD in ('989', '992', '993', '96A', '96B', '96K', '96L', '97A', '97L', '98A', '98L', '99A', '99L', '99M', '99N', '99O', '99P', '99Q') and SRG.RG_TIPORES not in ('03', '04', '05') then SRR.RR_VALOR end as VL_ECONSIGNADO,
     
-    case when trim(SRG.RG_TIPORES) in ('03', '04', '05', '10', '11', '12', '13', '16', '17', '18') then 0 else 1 end * /* zera, ou não, o valor a pagar */
-    (
-        isnull(case when SRV.RV_COD in ('759', '761', '760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end, 0)  /* FGTS quitação, multa 40% e 13º */
-        +
-        isnull
-        (
-            (
-                select sum(SRR010.RR_VALOR) /* FGTS diferença dissídio */
-                from SRR010
-                where
-                        SRR010.D_E_L_E_T_ = ''
-                    and SRR010.RR_FILIAL = SRR.RR_FILIAL
-                    and SRR010.RR_MAT = SRR.RR_MAT
-                    and SRR010.RR_PD = '968'
-                    and SRR.RR_PD = '220'
-            ), 0
-        )
-        +
-        isnull
-        (
-            (
-                select sum(SRD010.RD_VALOR) /* econsignado mês anterior */
-                from SRD010
-                where
-                        SRD010.D_E_L_E_T_ = ''
-                    and SRD010.RD_FILIAL = SRR.RR_FILIAL
-                    and SRD010.RD_MAT = SRR.RR_MAT
-                    and SRD010.RD_PD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L')
-                    and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
-                    and right(SRG.RG_DTAVISO, 2) < 10
-                    and SRR.RR_PD = '220'
-            ), 0
-        )
-    ) as VL_APAGAR,
-
     isnull
     (
         (
@@ -110,8 +75,9 @@ select
                 and SRR010.RR_MAT = SRR.RR_MAT
                 and SRR010.RR_PD = '968'
                 and SRR.RR_PD = '220'
+                and right(SRG.RG_DTAVISO, 2) < 10
         ), 0
-    ) as VL_APAGAR1,
+    ) as VL_APAGAR_FGTSDISS,
     isnull
     (
         (
@@ -121,17 +87,48 @@ select
                     SRD010.D_E_L_E_T_ = ''
                 and SRD010.RD_FILIAL = SRR.RR_FILIAL
                 and SRD010.RD_MAT = SRR.RR_MAT
-                and SRD010.RD_PD in ('96B', '96K', '96L', '97A', '989', '98A', '992', '993', '99A', '96A', '97L')
+                and SRD010.RD_PD in ('989', '992', '993', '96A', '96B', '96K', '96L', '97A', '97L', '98A', '98L', '99A', '99L', '99M', '99N', '99O', '99P', '99Q')
                 and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
                 and right(SRG.RG_DTAVISO, 2) < 10
                 and SRR.RR_PD = '220'
         ), 0
-    ) as VL_APAGAR2,
+    ) as VL_APAGAR_ECONSIGANT,
     
-    /* FGTS quitação, multa 40% e 13º */
-    case when SRV.RV_COD in ('759') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR3_FGTSQUITACAO,
-    case when SRV.RV_COD in ('760') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR4_FGTS40MULTA,
-    case when SRV.RV_COD in ('761') and trim(SRG.RG_TIPORES) not in ('03', '04', '05') then SRR.RR_VALOR end as VL_APAGAR5_FGTS13SALARIO,
+    case when SRG.RG_TIPORES in ('03', '04', '05', '10', '11', '12', '13', '16', '17', '18') then 0 else /* zera, ou não, o valor a pagar */
+    (
+        isnull(case when SRV.RV_COD in ('989', '992', '993', '96A', '96B', '96K', '96L', '97A', '97L', '98A', '98L', '99A', '99L', '99M', '99N', '99O', '99P', '99Q') then SRR.RR_VALOR end, 0) + /* econsignado rescisão */
+        isnull(case when SRV.RV_COD in ('759', '761', '760') then SRR.RR_VALOR end, 0) +  /* FGTS quitação, multa 40% e 13º */
+        isnull((select SRS010.RS_VALDEP from SRS010 where SRS010.D_E_L_E_T_ = '' and SRS010.RS_FILIAL = SRG.RG_FILIAL and SRS010.RS_MAT = SRG.RG_MAT and SRR.RR_PD = '990' and right(SRG.RG_DTAVISO, 2) < 10), 0) +
+        isnull
+        (
+            (
+                select sum(SRR010.RR_VALOR) /* FGTS diferença dissídio */
+                from SRR010
+                where
+                        SRR010.D_E_L_E_T_ = ''
+                    and SRR010.RR_FILIAL = SRR.RR_FILIAL
+                    and SRR010.RR_MAT = SRR.RR_MAT
+                    and SRR010.RR_PD = '968'
+                    and SRR.RR_PD = '220'
+                    and right(SRG.RG_DTAVISO, 2) < 10
+            ), 0
+        ) +
+        isnull
+        (
+            (
+                select sum(SRD010.RD_VALOR) /* econsignado mês anterior */
+                from SRD010
+                where
+                        SRD010.D_E_L_E_T_ = ''
+                    and SRD010.RD_FILIAL = SRR.RR_FILIAL
+                    and SRD010.RD_MAT = SRR.RR_MAT
+                    and SRD010.RD_PD in ('989', '992', '993', '96A', '96B', '96K', '96L', '97A', '97L', '98A', '98L', '99A', '99L', '99M', '99N', '99O', '99P', '99Q')
+                    and month(SRD010.RD_DATARQ + '01') = month(dateadd(month, -1, SRG.RG_DTAVISO))
+                    and right(SRG.RG_DTAVISO, 2) < 10
+                    and SRR.RR_PD = '220'
+            ), 0
+        )
+    ) end as VL_APAGAR,
     
     SRR.RR_PERIODO as PERIODO
 
