@@ -71,7 +71,7 @@ union
         SD1.D1_QUANT as QTD,
         SD1.D1_QUANT as QTD_MOV,
         'ENT NF' as TIPO_MOV,
-        null as LP_DEB,
+        null as LP_DEB
         
     from SD1010 SD1 (nolock)
         inner join SB1010 SB1 (nolock)
@@ -117,7 +117,7 @@ union
         SD2.D2_QUANT as QTD,
         -1*SD2.D2_QUANT as QTD_MOV,
         'SAI NF' as TIPO_MOV,
-        null as LP_DEB,
+        null as LP_DEB
         
     from SD2010 SD2 (nolock)
         inner join SB1010 SB1 (nolock)

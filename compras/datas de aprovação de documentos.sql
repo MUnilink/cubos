@@ -4,7 +4,7 @@
 		'PC' as TIPO,
 		trim(SC7.C7_ITEM) as ITEM,
 		convert(datetime, concat(SC7.C7_EMISSAO, ' ', isnull(nullif(SC7.C7_YHORAPC, ''), '23:59:59')), 113) as DATAHORA_DOC,
-		convert(datetime, concat(SC7.C7_DATPRF, ' ', isnull(nullif(SC7.C7_YHORAPC, ''), '23:59:59')), 113) as DATAHORA_ITEM,
+		convert(datetime, concat(SC7.C7_DATPRF, ' ', max(isnull(nullif(SC7.C7_YHORAPC, ''), '00:00:00')) over(partition by SC7.C7_FILIAL, SC7.C7_NUM order by SC7.C7_FILIAL, SC7.C7_NUM)), 113) as DATAHORA_ITEM,
 		left(SC7.C7_EMISSAO, 6) as PERIODO,
 		cast(SC7.C7_EMISSAO as date) as DATA_DOC,
 		cast(SC7.C7_DATPRF as date) as DATA_ITEM,
@@ -24,10 +24,15 @@
         null as CONTA,
 		
 		trim(upper(SY1.Y1_NOME)) as SOLICITANTE,
+		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_APROV) as QUEM_APROVA,
 		trim(SCR.CR_APROV) as ITEM_APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		
+		SC7.C7_RESIDUO as RESIDUO,
+		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
+		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
@@ -69,7 +74,8 @@
 			and SY1.Y1_USER = SC7.C7_USER
 	where
 			SC7.D_E_L_E_T_ = ''
-		and datediff(month, SC7.C7_EMISSAO, getdate()) between 0 and 12
+		        and SC7.C7_EMISSAO > 20210101
+
 union
 	select
 		trim(SC1.C1_FILIAL) as FILIAL,
@@ -77,7 +83,7 @@ union
 		'SC' as TIPO,
 		trim(SC1.C1_ITEM) as ITEM,
 		convert(datetime, concat(SC1.C1_EMISSAO, ' ', isnull(nullif(SC1.C1_YHORASC, ''), '23:59:59')), 113) as DATAHORA_DOC,
-		convert(datetime, concat(SC1.C1_DATPRF, ' ', isnull(nullif(SC1.C1_YHORASC, ''), '23:59:59')), 113) as DATAHORA_ITEM,
+		convert(datetime, concat(SC1.C1_DATPRF, ' ', max(isnull(nullif(SC1.C1_YHORASC, ''), '00:00:00')) over(partition by SC1.C1_FILIAL, SC1.C1_NUM order by SC1.C1_FILIAL, SC1.C1_NUM)), 113) as DATAHORA_ITEM,
 		left(SC1.C1_EMISSAO, 6) as PERIODO,
 		cast(SC1.C1_EMISSAO as date) as DATA_DOC,
 		cast(SC1.C1_DATPRF as date) as DATA_ITEM,
@@ -97,10 +103,15 @@ union
         null as CONTA,
 		
 		trim(upper(SC1.C1_SOLICIT)) as SOLICITANTE,
+		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_APROV) as QUEM_APROVA,
 		trim(SCR.CR_APROV) as ITEM_APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		
+		SC1.C1_RESIDUO as RESIDUO,
+		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
+		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
@@ -139,7 +150,7 @@ union
 			and concat(STJ.TJ_ORDEM, 'OS') = left(SC1.C1_OP, 8)
 	where
 			SC1.D_E_L_E_T_ = ''
-		and datediff(month, SC1.C1_EMISSAO, getdate()) between 0 and 12
+		and SC1.C1_EMISSAO between :DATA_INI and :DATA_FIM
 union
 	select
 		trim(SCP.CP_FILIAL) as FILIAL,
@@ -147,7 +158,7 @@ union
 		'SA' as TIPO,
 		trim(SCP.CP_ITEM) as ITEM,
 		convert(datetime, concat(SCP.CP_EMISSAO, ' ', isnull(nullif(SCP.CP_YHORASA, ''), '23:59:59')), 113) as DATAHORA_DOC,
-		convert(datetime, concat(SCP.CP_DATPRF, ' ', isnull(nullif(SCP.CP_YHORASA, ''), '23:59:59')), 113) as DATAHORA_ITEM,
+		convert(datetime, concat(SCP.CP_DATPRF, ' ', max(isnull(nullif(SCP.CP_YHORASA, ''), '00:00:00')) over(partition by SCP.CP_FILIAL, SCP.CP_NUM order by SCP.CP_FILIAL, SCP.CP_NUM)), 113) as DATAHORA_ITEM,
 		left(SCP.CP_EMISSAO, 6) as PERIODO,
 		cast(SCP.CP_EMISSAO as date) as DATA_DOC,
 		cast(SCP.CP_DATPRF as date) as DATA_ITEM,
@@ -167,10 +178,15 @@ union
         concat(trim(SCP.CP_CONTA), ' - ', (select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SCP.CP_CONTA)) as CONTA,
 		
 		(select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where SYS_USR.D_E_L_E_T_ = '' and SYS_USR.USR_ID = SCP.CP_USER) as SOLICITANTE,
+		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_COD = SCR.CR_APROV) as QUEM_APROVA,
 		trim(SCR.CR_APROV) as ITEM_APROVA,
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		
+		SCP.CP_RESIDUO as RESIDUO,
+		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
+		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
@@ -205,4 +221,4 @@ union
             and STJ.TJ_ORDEM = left(SCP.CP_OP, 6)
     where
             SCP.D_E_L_E_T_ = ''
-		and datediff(month, SCP.CP_EMISSAO, getdate()) between 0 and 6
+		and SCP.CP_EMISSAO between :DATA_INI and :DATA_FIM

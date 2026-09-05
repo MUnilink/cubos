@@ -23,8 +23,8 @@ SELECT
     CASE WHEN DEV.A1_COD_MUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_EST, ' '))+RTRIM(COALESCE(DEV.A1_COD_MUN, ' ')), ' '), '|') END AS BK_REGIAO_DEV,
     CASE WHEN DUYDEV.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYDEV.DUY_EST, ' '))+RTRIM(COALESCE(DUYDEV.DUY_CODMUN, ' ')), ' '), '|') END AS BK_REGIAO_CDRCAL,
     CASE WHEN DUYORI.DUY_CODMUN = ' ' THEN 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' ')), ' '), '|') ELSE 'P |01|CC2010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DUYORI.DUY_EST, ' '))+RTRIM(COALESCE(DUYORI.DUY_CODMUN, ' ')), ' '), '|') END AS BK_REGIAO_CDRORI,
+    
     1 AS INSTANCIA,
-
     DT6.DT6_DATEMI as DATA_DOC,
     VIAGEM.CHE_CLIDEV_REAL,
     VIAGEM.SAI_CLIDEV_REAL,
@@ -39,11 +39,17 @@ SELECT
     VIAGEM.ID_VEICULO_RB3,
     VIAGEM.ID_MOTORISTA,
     DF1.DF1_YOSCLI,
+    VIAGEM.ID_ROTA,
     
+    percentile_cont(0.25) within group(order by VIAGEM.km_vga) over(partition by VIAGEM.ID_ROTA) as Q1_km,
+    percentile_cont(0.75) within group(order by VIAGEM.km_vga) over(partition by VIAGEM.ID_ROTA) as Q3_km,
+    cast(avg(VIAGEM.km_vga) over(partition by VIAGEM.ID_ROTA order by VIAGEM.ID_ROTA) as numeric(15, 2)) as MD_km,
+    cast(stdevp(VIAGEM.km_vga) over(partition by VIAGEM.ID_ROTA order by VIAGEM.ID_ROTA) as numeric(15, 2)) as DP_km,
+
     row_number() over(partition by DF1.ID_AGENDAMENTO order by DF1.ID_AGENDAMENTO) as qtd_age,
     row_number() over(partition by VIAGEM.ID_VIAGEM order by VIAGEM.ID_VIAGEM) as qtd_vga,
     row_number() over(partition by DT6.DT6_FILDOC, DT6.DT6_DOC, DT6.DT6_SERIE order by DT6.DT6_FILDOC, DT6.DT6_DOC, DT6.DT6_SERIE) as qtd_doc,
-    VIAGEM.km_fim - VIAGEM.km_ini as km_vga,
+    VIAGEM.km_vga,
     VIAGEM.km_ROTA
 
 FROM DT6010 DT6
@@ -87,70 +93,75 @@ FROM DT6010 DT6
     left join /* ver modelo para adição de dimensão motorista */
     (
         select
-            cast
+            abs
             (
+                cast
                 (
-                    select
-                        coalesce
-                        (
+                    (
+                        select
+                            coalesce
                             (
-                                select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-                                from ZB1010 (nolock)
-                                where
-                                        ZB1010.D_E_L_E_T_ = ''
-                                    and ZB1010.ZB1_STATUS = 'OK'
-                                    and
-                                        dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                                        =
-                                        datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
-                                    and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                                    and ZB1010.ZB1_MACRON = 7
-                                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-                            ),
-                            nullif(APT.DTW_YHODFI, ''),
-                            (select DTQ010.DTQ_KMVGE from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILIAL = DTR.DTR_FILIAL and DTQ010.DTQ_FILORI = DTR.DTR_FILORI and DTQ010.DTQ_VIAGEM = DTR.DTR_VIAGEM)
-                        )
-                    from DTW010 APT (nolock)
-                    where
-                            APT.D_E_L_E_T_ = ''
-                        and APT.DTW_FILORI = DTR.DTR_FILORI
-                        and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
-                        and APT.DTW_ATIVID = 50
-                ) as numeric(15, 2)
-            ) as km_fim,
-            cast
-            (
+                                (
+                                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                                    from ZB1010 (nolock)
+                                    where
+                                            ZB1010.D_E_L_E_T_ = ''
+                                        and ZB1010.ZB1_STATUS = 'OK'
+                                        and
+                                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                                            =
+                                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                                        and ZB1010.ZB1_MACRON = 7
+                                        and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                                ),
+                                nullif(APT.DTW_YHODFI, ''),
+                                (select DTQ010.DTQ_KMVGE from DTQ010 where DTQ010.D_E_L_E_T_ = '' and DTQ010.DTQ_FILIAL = DTR.DTR_FILIAL and DTQ010.DTQ_FILORI = DTR.DTR_FILORI and DTQ010.DTQ_VIAGEM = DTR.DTR_VIAGEM)
+                            )
+                        from DTW010 APT (nolock)
+                        where
+                                APT.D_E_L_E_T_ = ''
+                            and APT.DTW_FILORI = DTR.DTR_FILORI
+                            and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                            and APT.DTW_ATIVID = 50
+                    ) as numeric(15, 2)
+                ) -
+                cast
                 (
-                    select
-                        coalesce
-                        (
+                    (
+                        select
+                            coalesce
                             (
-                                select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
-                                from ZB1010 (nolock)
-                                where
-                                        ZB1010.D_E_L_E_T_ = ''
-                                    and ZB1010.ZB1_STATUS = 'OK'
-                                    and
-                                        dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
-                                        =
-                                        datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
-                                    and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
-                                    and ZB1010.ZB1_MACRON = 1
-                                    and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
-                            ),
-                            nullif(APT.DTW_YHODIN, ''),
-                            0
-                        )
-                    from DTW010 APT (nolock)
-                    where
-                            APT.D_E_L_E_T_ = ''
-                        and APT.DTW_FILORI = DTR.DTR_FILORI
-                        and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
-                        and APT.DTW_ATIVID = 49
-                ) as numeric(15, 2)
-            ) as km_ini,
-            DA8010.DA8_COD as COD_ROTA,
-            DA8010.DA8_DESC as NOME_ROTA,
+                                (
+                                    select top 1 nullif(substring(ZB1010.ZB1_MSGTXT, 2, len(ZB1010.ZB1_MSGTXT)), '')
+                                    from ZB1010 (nolock)
+                                    where
+                                            ZB1010.D_E_L_E_T_ = ''
+                                        and ZB1010.ZB1_STATUS = 'OK'
+                                        and
+                                            dateadd(hour, -3, datetimefromparts(substring(ZB1010.ZB1_MSGTIM, 1, 4), substring(ZB1010.ZB1_MSGTIM, 6, 2), substring(ZB1010.ZB1_MSGTIM, 9, 2), substring(ZB1010.ZB1_MSGTIM, 12, 2), substring(ZB1010.ZB1_MSGTIM, 15, 2), 0, 0))
+                                            =
+                                            datetimefromparts(year(APT.DTW_DATREA), month(APT.DTW_DATREA), day(APT.DTW_DATREA), substring(APT.DTW_HORREA, 1, 2), substring(APT.DTW_HORREA, 3, 4), 0, 0)
+                                        and ZB1010.ZB1_MSGTXT like '&_%' escape '&'
+                                        and ZB1010.ZB1_MACRON = 1
+                                        and ZB1010.ZB1_CODDA3 = DTR.DTR_CODVEI
+                                ),
+                                nullif(APT.DTW_YHODIN, ''),
+                                0
+                            )
+                        from DTW010 APT (nolock)
+                        where
+                                APT.D_E_L_E_T_ = ''
+                            and APT.DTW_FILORI = DTR.DTR_FILORI
+                            and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                            and APT.DTW_ATIVID = 49
+                    ) as numeric(15, 2)
+                )
+            ) as km_vga,
+            
+            concat(trim(DA8010.DA8_FILIAL), trim(DA8010.DA8_COD)) as ID_ROTA,
+            trim(DA8010.DA8_COD) as COD_ROTA,
+            trim(DA8010.DA8_DESC) as NOME_ROTA,
             DA8010.DA8_YKMVGE as km_ROTA,
             DA4010.DA4_COD,
             DTR.DTR_CODVEI,
@@ -191,8 +202,7 @@ FROM DT6010 DT6
             ) as SAI_CLIDEV_REAL,
 
             (
-                select
-                        concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                select concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
@@ -203,8 +213,7 @@ FROM DT6010 DT6
                     and DTW010.DTW_ATIVID = 49
             ) as SAI_VIAGEM_REAL,
             (
-                select
-                        concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                select concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
                 from DTW010
                 where
                         DTW010.D_E_L_E_T_ = ''
@@ -223,6 +232,7 @@ FROM DT6010 DT6
         from DUD010 DUD
             left join DTR010 DTR
                 on DTR.D_E_L_E_T_ = ''
+                and DTR.DTR_FILIAL = DUD.DUD_FILIAL
                 and DTR.DTR_FILORI = DUD.DUD_FILORI
                 and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
                 
@@ -246,7 +256,6 @@ FROM DT6010 DT6
                 left join DA8010
                     on DA8010.D_E_L_E_T_ = ''
                     and DA8010.DA8_COD = DTQ010.DTQ_ROTA
-
         where DUD.D_E_L_E_T_ = ''
     ) VIAGEM
         on DT6.DT6_FILDOC = VIAGEM.DUD_FILDOC

@@ -55,9 +55,15 @@ select
 	datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) as TEMPO_ATIVO,
 	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then 100 / (SN3.N3_TXDEPR1 /12) else 0.0 end as TEMPO_DEPREC,
 	SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as DEPRECMENSAL,
-    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end else 0.0 end as DEPRECATUAL,
-    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate()))))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end else 0.0 end as RESIDUAL,
-	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00 then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) else SN3.N3_VORIG1 end else SN3.N3_VORIG1 end as ACUMULADO
+    
+	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00
+		then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end else 0.0 end as DEPRECATUAL,
+    case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00
+		then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then ((12 * (100 / SN3.N3_TXDEPR1)) - datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate()))))) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) else 0.0 end else 0.0 end as RESIDUAL,
+	case when cast(SN3.N3_TXDEPR1 as numeric(15, 2)) != 0.00
+		then case when (12 * (100 / SN3.N3_TXDEPR1)) > datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) then (SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200)) * datediff(month, SN3.N3_DINDEPR, eomonth(dateadd(month, -1, eomonth(getdate())))) else SN3.N3_VORIG1 end else SN3.N3_VORIG1 end as ACUMULADO,
+
+	case when exists (select 1 from SN4010 where SN4010.D_E_L_E_T_ = '' and SN3.N3_CBASE = SN4010.N4_CBASE and SN3.N3_ITEM = SN4010.N4_ITEM and SN4010.N4_OCORR = '01') then 'BAIXADO' else 'ATIVO' end as BAIXADO
 	/*,((datediff(day, datefromparts(day(datefromparts(@), 12, 31exercicio), 1, 1), eomonth(dateadd(month, -1, eomonth(getdate())))))/30.0) * SN3.N3_VORIG1 * (SN3.N3_TXDEPR1 / 1200) as EXERCICIO*/
 
 from SN1010 SN1 (nolock)

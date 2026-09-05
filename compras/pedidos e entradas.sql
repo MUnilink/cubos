@@ -245,10 +245,12 @@ select
     cast(SC7.C7_VALIMP5 as numeric(14, 2)) as VL_PC_COFINS,
     cast(SC7.C7_VALISS as numeric(14, 2)) as VL_PC_ISS,
     cast(SC7.C7_ICMSRET as numeric(14, 2)) as VL_PC_ICMS_SUBST,
-    cast(SC7.C7_DESC as numeric(12, 2)) as VL_PC_DESCONTO,
+    cast(SC7.C7_VLDESC as numeric(12, 2)) as VL_PC_DESCONTO,
     cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
 	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO,
 	cast(SC7.C7_QUANT as numeric(13, 3)) as QTD_ITEM_PC,
+	cast(SC7.C7_YSAVE as numeric(14, 2)) as VALOR_SAVING,
+	cast(SC7.C7_YTOTAL as numeric(14, 2)) as VALOR_ORIGINAL,
 
     cast(SD1.D1_VALICM as numeric(14, 2)) as VL_NFENT_ICMS,
     cast(SD1.D1_VALIPI as numeric(14, 2)) as VL_NFENT_IPI,
@@ -290,7 +292,8 @@ select
 	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT,
 
 	STJ.TJ_ORDEM as OS_MNT,
-	trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
+	trim(ST9.T9_CODBEM) as EQUIPAMENTO,
+	trim(TQR.TQR_DESMOD) as MODELO,
     cast(STJ.TJ_DTPRINI as date) as DATA_INIOS,
     cast(STJ.TJ_DTPRFIM as date) as DATA_FIMOS,
 	cast(STJ.TJ_DTORIGI as date) as DATA_OS,
@@ -342,10 +345,19 @@ from SC7010 SC7 (nolock)
 			and SE2.E2_FORNECE = SD1.D1_FORNECE
 			and SE2.E2_LOJA = SD1.D1_LOJA
 			and SE2.D_E_L_E_T_ = ''
+
 	left join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''
 		and STJ.TJ_FILIAL = SC1.C1_FILIAL
 		and STJ.TJ_ORDEM + 'OS' + '001' = SC7.C7_OP
+
+		left join ST9010 ST9 (nolock)
+			on ST9.D_E_L_E_T_ = ''
+			and ST9.T9_CODBEM = STJ.TJ_CODBEM
+
+			left join TQR010 TQR (nolock)
+				on TQR.D_E_L_E_T_ = ''
+				and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
 where
 		SC7.D_E_L_E_T_ = ''
 	and SC7.C7_EMISSAO >=:PEDIDOS_DESDE
