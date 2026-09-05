@@ -134,38 +134,36 @@ select
     cast(ZC1.ZC1_EMISSA as date) as DATA_INIOS,
     left(ZC1.ZC1_DTENCE, 6) as PERIODO_ENCOS,
     cast(ZC1.ZC1_DTENCE as date) as DATA_ENCOS,
-    
+
     convert
     (
         datetime,
-        case isdate(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2)))
-            when 1 then concat(ZC1.ZC1_DTINI, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRINI, 1, 2), ':', substring(ZC1.ZC1_HRINI, 3, 2), ':', '00')), ':  :00'), '00:00'))
-            else concat(ZC1.ZC1_DTINI, ' ', '00:00')
-        end, 113
+        case when left(ZC1.ZC1_HRINI, 2) < 24 and right(ZC1.ZC1_HRINI, 2) < 60 and isdate(concat(left(ZC1.ZC1_HRINI, 2), ':', right(ZC1.ZC1_HRINI, 2))) = 1
+            then concat(ZC1.ZC1_DTINI, ' ', concat(left(coalesce(nullif(ZC1.ZC1_HRINI, ''), '00'), 2), ':', right(coalesce(nullif(ZC1.ZC1_HRINI, ''), '00'), 2))) else ZC1.ZC1_DTINI end,
+        113
     ) as DTINI_OS,
     
     convert
     (
         datetime,
-        case isdate(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2)))
-            when 1 then concat(ZC1.ZC1_DTFIM, ' ', isnull(nullif(trim(concat(substring(ZC1.ZC1_HRFIM, 1, 2), ':', substring(ZC1.ZC1_HRFIM, 3, 2), ':', '00')), ':  :00'), '00:00'))
-            else concat(ZC1.ZC1_DTFIM, ' ', '00:00')
-        end, 113
+        case when left(ZC1.ZC1_HRFIM, 2) < 24 and right(ZC1.ZC1_HRFIM, 2) < 60 and isdate(concat(left(ZC1.ZC1_HRFIM, 2), ':', right(ZC1.ZC1_HRFIM, 2))) = 1
+            then concat(ZC1.ZC1_DTFIM, ' ', concat(left(coalesce(nullif(ZC1.ZC1_HRFIM, ''), '00'), 2), ':', right(coalesce(nullif(ZC1.ZC1_HRFIM, ''), '00'), 2))) else ZC1.ZC1_DTFIM end,
+        113
     ) as DTFIM_OS,
     
     left(ZC2.ZC2_COMPET, 6) as PERIODO,
     left(ZC2.ZC2_DATA, 6) as PERIODO_ITEM,
     case when cast(ZC2.ZC2_TIPO as int) in ('2', '3') then left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_DTINI, '')), 6) else left(coalesce(nullif(ZC2.ZC2_DTFIM, ''), nullif(ZC2.ZC2_COMPET, ''), nullif(ZC2.ZC2_DATA, '')), 6) end as PERIODO_APONT,
     
-    convert(date, ZC2.ZC2_DTINI, 103) as DATA_INIAPONT,
-    convert(date, ZC2.ZC2_DTFIM, 103) as DATA_FIMAPONT,
-    convert(date, ZC2.ZC2_DATA, 103) as DATA_ITEM,
+    cast(ZC2.ZC2_DTINI as date) as DATA_INIAPONT,
+    cast(ZC2.ZC2_DTFIM as date) as DATA_FIMAPONT,
+    cast(ZC2.ZC2_DATA as date) as DATA_ITEM,
     trim(ZC2.ZC2_HRINI) as HORA_INIAPONT,
     trim(ZC2.ZC2_HRFIM) as HORA_FIMAPONT,
-    convert(datetime, case when isdate(nullif(ZC2.ZC2_HRINI, '')) = 1 then concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI) else concat(ZC2.ZC2_DTINI, ' ', '00:00') end, 113) as DTINI_APONT,
-    convert(datetime, case when isdate(nullif(ZC2.ZC2_HRFIM, '')) = 1 then concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM) else concat(ZC2.ZC2_DTFIM, ' ', '00:00') end, 113) as DTFIM_APONT,
-    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(nullif(ZC2.ZC2_HRINI, '')) = 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
-	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(nullif(ZC2.ZC2_HRFIM, '')) = 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', ZC2.ZC2_HRINI), concat(ZC2.ZC2_DTFIM, ' ', ZC2.ZC2_HRFIM))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end * ZC2.ZC2_QTDREC as HORAS_TOTAIS,
+    convert(datetime, case when isdate(concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00'))) = 1 then concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00')) else concat(ZC2.ZC2_DTINI, ' ', '00:00') end, 113) as DTINI_APONT,
+    convert(datetime, case when isdate(concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00'))) = 1 then concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00')) else concat(ZC2.ZC2_DTFIM, ' ', '00:00') end, 113) as DTFIM_APONT,
+    case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00'))) = 1 and isdate(concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00'))) = 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00')), concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00')))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end as HORAS_APONT,
+	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00'))) = 1 and isdate(concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00'))) = 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00')), concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00')))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end * ZC2.ZC2_QTDREC as HORAS_TOTAIS,
 
     case
         when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A' 
@@ -250,6 +248,7 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_ITEMPV = SC6.C6_ITEM
 
 where
-        (ZC2.ZC2_DATA > '20250631' or ZC2.ZC2_DATA = '')
+        (ZC2.ZC2_DATA > '20251231' or ZC2.ZC2_DATA = '')
+    and (ZC1.ZC1_DTENCE > '20251231' or ZC1.ZC1_DTENCE = '')
     and ZC2.ZC2_TIPO in ('1', '2', '3', '5', '11')
     and ZC2.D_E_L_E_T_ = ''
