@@ -29,6 +29,10 @@
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		
+		SC7.C7_RESIDUO as RESIDUO,
+		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
+		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
@@ -70,7 +74,8 @@
 			and SY1.Y1_USER = SC7.C7_USER
 	where
 			SC7.D_E_L_E_T_ = ''
-		and SC7.C7_EMISSAO between :DATA_INI and :DATA_FIM
+		        and SC7.C7_EMISSAO > 20210101
+
 union
 	select
 		trim(SC1.C1_FILIAL) as FILIAL,
@@ -103,6 +108,10 @@ union
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		
+		SC1.C1_RESIDUO as RESIDUO,
+		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
+		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
@@ -174,6 +183,10 @@ union
 		trim(SCR.CR_GRUPO) as GRUPO_APROV,
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
+		
+		SCP.CP_RESIDUO as RESIDUO,
+		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
+		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,
 		cast(SCR.CR_DATALIB as date) as DATA_LIB,
 		(select upper(trim(max(SAK010.AK_LOGIN))) from SAK010 (nolock) where SAK010.D_E_L_E_T_ = '' and SAK010.AK_USER = SCR.CR_USERLIB) as APROVADOR,
