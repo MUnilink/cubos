@@ -49,7 +49,7 @@
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_ATIVID = 50
+                        and DTW010.DTW_ATIVID = '050'
                 ) as DATAFIM,
                 
                 concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
@@ -191,7 +191,7 @@ union
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_ATIVID = 50
+                        and DTW010.DTW_ATIVID = '050'
                 ) as DATAFIM,
                 
                 concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
@@ -337,7 +337,7 @@ union
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
                         and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                        and DTW010.DTW_ATIVID = 50
+                        and DTW010.DTW_ATIVID = '050'
                 ) as DATAFIM,
                 
                 concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,

@@ -120,7 +120,7 @@ FROM DT6010 DT6
                             DTW010.D_E_L_E_T_ = ''
                         and DTW010.DTW_FILORI = DUD.DUD_FILORI
                         and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-                        and DTW010.DTW_ATIVID = 50
+                        and DTW010.DTW_ATIVID = '050'
                 ) as DATAFIM,
 
                 concat(trim(DUD.DUD_FILORI), trim(DUD.DUD_VIAGEM)) as ID_VIAGEM,

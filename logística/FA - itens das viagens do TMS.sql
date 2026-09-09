@@ -16,7 +16,7 @@ select
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 49
+            and DTW010.DTW_ATIVID = '049'
     ) as DATAINI,
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -26,7 +26,7 @@ select
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 50
+            and DTW010.DTW_ATIVID = '050'
     ) as DATAFIM,
     (
         select cast(DTW010.DTW_DATREA as date)
@@ -36,7 +36,7 @@ select
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = 50
+            and DTW010.DTW_ATIVID = '050'
     ) as COMPETENCIA,
 
     cast

@@ -124,8 +124,8 @@ FROM DT8010 DT8
                             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
                             and DTW010.DTW_HORREA != ''
                             and DTW010.DTW_DATREA != ''
-                            and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
-                            and DTW010.DTW_CODCLI != 761
+                            and DTW010.DTW_ATIVID = '057' /*58 PONTO DE APOIO*/
+                            and DTW010.DTW_CODCLI != '000761'
                     ) as CHE_CLIDEV_REAL,
                     (
                         select top 1 first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
@@ -136,8 +136,8 @@ FROM DT8010 DT8
                             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
                             and DTW010.DTW_HORREA != ''
                             and DTW010.DTW_DATREA != ''
-                            and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
-                            and DTW010.DTW_CODCLI != 761
+                            and DTW010.DTW_ATIVID = '056' /*58 PONTO DE APOIO*/
+                            and DTW010.DTW_CODCLI != '000761'
                     ) as SAI_CLIDEV_REAL,
 
                     (
@@ -149,7 +149,7 @@ FROM DT8010 DT8
                             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
                             and DTW010.DTW_HORREA != ''
                             and DTW010.DTW_DATREA != ''
-                            and DTW010.DTW_ATIVID = 49
+                            and DTW010.DTW_ATIVID = '049'
                     ) as SAI_VIAGEM_REAL,
                     (
                         select concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
@@ -160,7 +160,7 @@ FROM DT8010 DT8
                             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
                             and DTW010.DTW_HORREA != ''
                             and DTW010.DTW_DATREA != ''
-                            and DTW010.DTW_ATIVID = 50
+                            and DTW010.DTW_ATIVID = '050'
                     ) as CHE_VIAGEM_REAL,
                     
                     DUD.DUD_FILIAL,
