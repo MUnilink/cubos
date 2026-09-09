@@ -30,13 +30,19 @@ SELECT
     CAST(COALESCE(DT8.DT8_VALTOT, 0) AS DECIMAL(14, 2)) AS VALOR_TOTAL,
     1 as INSTANCIA,
     DT6.DT6_DATEMI as DATA_DOC,
+    VIAGEM.CHE_CLIDEV_REAL,
+    VIAGEM.SAI_CLIDEV_REAL,
+    VIAGEM.SAI_VIAGEM_REAL,
+    VIAGEM.CHE_VIAGEM_REAL,
 
+    DF1.ID_AGENDAMENTO,
     VIAGEM.ID_VIAGEM,
     VIAGEM.ID_VEICULO_CM,
     VIAGEM.ID_VEICULO_RB1,
     VIAGEM.ID_VEICULO_RB2,
     VIAGEM.ID_VEICULO_RB3,
-    VIAGEM.ID_MOTORISTA
+    VIAGEM.ID_MOTORISTA,
+    VIAGEM.ID_ROTA
 
 FROM DT8010 DT8
     INNER JOIN DT3010 DT3
@@ -95,52 +101,149 @@ FROM DT8010 DT8
             and DUD.DUD_DOC = DT6.DT6_DOC
             and DUD.DUD_SERIE = DT6.DT6_SERIE
 
-            left join
+            left join /* ver modelo para adição de dimensão motorista */
             (
                 select
-                    DTQ.DTQ_FILIAL,
-                    DTQ.DTQ_FILORI,
-                    DTQ.DTQ_VIAGEM,
-                    DTQ.DTQ_DATGER,
-                    DTQ.DTQ_DATFEC,
-                    DTQ.DTQ_DATENC,
-                    (
-                        select top 1 DTW010.DTW_DATREA
-                        from DTW010 (nolock)
-                        where 
-                                DTW010.D_E_L_E_T_ = ''
-                            and DTW010.DTW_FILORI = DTQ.DTQ_FILORI
-                            and DTW010.DTW_VIAGEM = DTQ.DTQ_VIAGEM
-                            and DTW010.DTW_ATIVID = '050'
-                    ) as DATAFIM,
+                    concat(trim(DA8010.DA8_FILIAL), trim(DA8010.DA8_COD)) as ID_ROTA,
+                    trim(DA8010.DA8_COD) as COD_ROTA,
+                    trim(DA8010.DA8_DESC) as NOME_ROTA,
+                    DA8010.DA8_YKMVGE as km_ROTA,
+                    DA4010.DA4_COD,
+                    DTR.DTR_CODVEI,
+                    DTR.DTR_CODRB1,
+                    DTR.DTR_CODRB2,
+                    DTR.DTR_CODRB3,
 
-                    concat(trim(DTQ.DTQ_FILORI), trim(DTQ.DTQ_VIAGEM)) as ID_VIAGEM,
+                    concat(trim(DUD.DUD_FILDOC), trim(DUD.DUD_VIAGEM)) as ID_VIAGEM,
                     trim(DA4010.DA4_COD) as ID_MOTORISTA,
                     (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODVEI) as ID_VEICULO_CM,
                     (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB1) as ID_VEICULO_RB1,
                     (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB2) as ID_VEICULO_RB2,
-                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3
-                from DTQ010 DTQ (nolock)
-                    left join DTR010 DTR (nolock)
+                    (select trim(DA3010.DA3_COD) from DA3010 where DA3010.D_E_L_E_T_ = '' and DA3010.DA3_COD = DTR.DTR_CODRB3) as ID_VEICULO_RB3,
+
+                    (
+                        select top 1 first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+                        from DTW010
+                        where
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                            and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                            and DTW010.DTW_HORREA != ''
+                            and DTW010.DTW_DATREA != ''
+                            and DTW010.DTW_ATIVID = 57 /*58 PONTO DE APOIO*/
+                            and DTW010.DTW_CODCLI != 761
+                    ) as CHE_CLIDEV_REAL,
+                    (
+                        select top 1 first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
+                        from DTW010
+                        where
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                            and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                            and DTW010.DTW_HORREA != ''
+                            and DTW010.DTW_DATREA != ''
+                            and DTW010.DTW_ATIVID = 56 /*58 PONTO DE APOIO*/
+                            and DTW010.DTW_CODCLI != 761
+                    ) as SAI_CLIDEV_REAL,
+
+                    (
+                        select concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                        from DTW010
+                        where
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                            and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                            and DTW010.DTW_HORREA != ''
+                            and DTW010.DTW_DATREA != ''
+                            and DTW010.DTW_ATIVID = 49
+                    ) as SAI_VIAGEM_REAL,
+                    (
+                        select concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))
+                        from DTW010
+                        where
+                                DTW010.D_E_L_E_T_ = ''
+                            and DTW010.DTW_FILORI = DUD.DUD_FILORI
+                            and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+                            and DTW010.DTW_HORREA != ''
+                            and DTW010.DTW_DATREA != ''
+                            and DTW010.DTW_ATIVID = 50
+                    ) as CHE_VIAGEM_REAL,
+                    
+                    DUD.DUD_FILIAL,
+                    DUD.DUD_FILORI,
+                    DUD.DUD_FILDOC,
+                    DUD.DUD_DOC,
+                    DUD.DUD_SERIE,
+                    DUD.DUD_VIAGEM
+
+                from DUD010 DUD
+                    left join DTR010 DTR
                         on DTR.D_E_L_E_T_ = ''
-                        and DTR.DTR_FILORI = DTQ.DTQ_FILORI
-                        and DTR.DTR_VIAGEM = DTQ.DTQ_VIAGEM
+                        and DTR.DTR_FILIAL = DUD.DUD_FILIAL
+                        and DTR.DTR_FILORI = DUD.DUD_FILORI
+                        and DTR.DTR_VIAGEM = DUD.DUD_VIAGEM
                         
-                        left join DUP010 (nolock)
+                        left join DUP010
                             on DUP010.D_E_L_E_T_ = ''
                             and DUP010.DUP_FILORI = DTR.DTR_FILORI
                             and DUP010.DUP_VIAGEM = DTR.DTR_VIAGEM
                             and DUP010.DUP_ITEDTR = DTR.DTR_ITEM
                             and DUP010.DUP_CODVEI = DTR.DTR_CODVEI
 
-                            left join DA4010 (nolock)
+                            left join DA4010
                                 on DA4010.D_E_L_E_T_ = ''
                                 and DA4010.DA4_COD = DUP010.DUP_CODMOT
-                where DTQ.D_E_L_E_T_ = ''
+                    
+                    left join DTQ010
+                        on DTQ010.D_E_L_E_T_ = ''
+                        and DTQ010.DTQ_FILIAL = DUD.DUD_FILIAL
+                        and DTQ010.DTQ_FILORI = DUD.DUD_FILORI
+                        and DTQ010.DTQ_VIAGEM = DUD.DUD_VIAGEM
+                        
+                        left join DA8010
+                            on DA8010.D_E_L_E_T_ = ''
+                            and DA8010.DA8_COD = DTQ010.DTQ_ROTA
+                where DUD.D_E_L_E_T_ = ''
             ) VIAGEM
-                on substring(VIAGEM.DTQ_FILIAL, 1, 4) = DUD.DUD_FILIAL
-                and VIAGEM.DTQ_FILORI = DUD.DUD_FILORI
-                and VIAGEM.DTQ_VIAGEM = DUD.DUD_VIAGEM
+                on VIAGEM.DUD_FILIAL = DUD.DUD_FILIAL
+                and VIAGEM.DUD_FILORI = DUD.DUD_FILORI
+                and VIAGEM.DUD_VIAGEM = DUD.DUD_VIAGEM
+
+            left join
+                (
+                    select
+                        concat(trim(DF1010.DF1_FILIAL), trim(DF1010.DF1_NUMAGE), trim(DF1010.DF1_ITEAGE), trim(DF1010.DF1_FILDOC), trim(DF1010.DF1_DOC), trim(DF1010.DF1_SERIE)) as ID_AGENDAMENTO,
+                        DF1010.DF1_NUMAGE,
+                        DF1010.DF1_ITEAGE,
+                        DF1010.DF1_YOSCLI,
+                        DF1010.DF1_FILDOC,
+                        DF1010.DF1_DOC,
+                        DF1010.DF1_SERIE,
+                        DTC010.DTC_FILDOC,
+                        DTC010.DTC_DOC,
+                        DTC010.DTC_SERIE,
+                        concat(DF1010.DF1_DATPRC, DF1010.DF1_HORPRC) as PREV_COL,
+                        concat(DF1010.DF1_DATPRE, DF1010.DF1_HORPRE) as PREV_ENT,
+                        coalesce
+                        (
+                            concat(DF1010.DF1_DATPRC, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRC, 1, 2), ':', substring(DF1010.DF1_HORPRC, 3, 2), ':', substring(DF1010.DF1_HORPRC, 5, 2), '00')), ':  :00')),
+                            concat(DF1010.DF1_DATPRE, ' ', nullif(trim(concat(substring(DF1010.DF1_HORPRE, 1, 2), ':', substring(DF1010.DF1_HORPRE, 3, 2), ':', substring(DF1010.DF1_HORPRE, 5, 2), '00')), ':  :00'))
+                        ) as CHE_CLIDEV_PREV,
+
+                        /* RM */
+                        DTC010.DTC_NUMNFC,
+                        DTC010.DTC_SERNFC
+
+                    from DF1010
+                        inner join DTC010
+                            on DTC010.D_E_L_E_T_ = ''
+                            and DTC010.DTC_FILDOC = DF1010.DF1_FILDOC
+                            and DTC010.DTC_NUMSOL = DF1010.DF1_DOC
+                    where DF1010.D_E_L_E_T_ = ''
+                ) DF1
+                    on DF1.DTC_FILDOC = VIAGEM.DUD_FILDOC
+                    and DF1.DTC_DOC = VIAGEM.DUD_DOC
+                    and DF1.DTC_SERIE = VIAGEM.DUD_SERIE
 
         INNER JOIN SD2010 SD2
             on SD2.D_E_L_E_T_ = ''
