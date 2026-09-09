@@ -95,13 +95,7 @@ FROM DT8010 DT8
             AND SX5.X5_CHAVE = DT6.DT6_SERVIC
             AND SX5.D_E_L_E_T_ = ' '
 
-        inner join DUD010 DUD
-            on DUD.D_E_L_E_T_ = ''
-            and DUD.DUD_FILDOC = DT6.DT6_FILDOC
-            and DUD.DUD_DOC = DT6.DT6_DOC
-            and DUD.DUD_SERIE = DT6.DT6_SERIE
-
-            left join /* ver modelo para adição de dimensão motorista */
+            left join
             (
                 select
                     concat(trim(DA8010.DA8_FILIAL), trim(DA8010.DA8_COD)) as ID_ROTA,
@@ -205,11 +199,11 @@ FROM DT8010 DT8
                             and DA8010.DA8_COD = DTQ010.DTQ_ROTA
                 where DUD.D_E_L_E_T_ = ''
             ) VIAGEM
-                on VIAGEM.DUD_FILIAL = DUD.DUD_FILIAL
-                and VIAGEM.DUD_FILORI = DUD.DUD_FILORI
-                and VIAGEM.DUD_VIAGEM = DUD.DUD_VIAGEM
+                on VIAGEM.DUD_FILDOC = DT6.DT6_FILDOC
+                and VIAGEM.DUD_DOC = DT6.DT6_DOC
+                and VIAGEM.DUD_SERIE = DT6.DT6_SERIE
 
-            left join
+                left join
                 (
                     select
                         concat(trim(DF1010.DF1_FILIAL), trim(DF1010.DF1_NUMAGE), trim(DF1010.DF1_ITEAGE), trim(DF1010.DF1_FILDOC), trim(DF1010.DF1_DOC), trim(DF1010.DF1_SERIE)) as ID_AGENDAMENTO,
@@ -253,4 +247,3 @@ FROM DT8010 DT8
             and SD2.D2_LOJA = DT6.DT6_LOJDEV
 WHERE
         DT8.D_E_L_E_T_ = ' '
-    and VIAGEM.DATAFIM > 20211231

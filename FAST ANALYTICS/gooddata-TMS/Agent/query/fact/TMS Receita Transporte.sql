@@ -1,7 +1,7 @@
 SELECT
     'P |01|01' AS BK_EMPRESA,
     CASE WHEN DT8_FILIAL IS NULL THEN 'P |01||' ELSE 'P |01|01'+ CAST(DT8_FILIAL AS CHAR (8)) END AS BK_FILIAL,
-    VIAGEM.DATAFIM AS DATA_EMISSAO,
+    VIAGEM.CHE_CLIDEV_REAL AS DATA_EMISSAO,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(REM.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIREM, ' '))+RTRIM(COALESCE(DT6_LOJREM, ' ')), ' '), '|') AS BK_REMETENTE,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DES.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDES, ' '))+RTRIM(COALESCE(DT6_LOJDES, ' ')), ' '), '|') AS BK_DESTINATARIO,
     'P |01|SA1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(DEV.A1_FILIAL, ' '))+'|'+RTRIM(COALESCE(DT6_CLIDEV, ' '))+RTRIM(COALESCE(DT6_LOJDEV, ' ')), ' '), '|') AS BK_DEVEDOR,
@@ -95,13 +95,7 @@ FROM DT8010 DT8
             AND SX5.X5_CHAVE = DT6.DT6_SERVIC
             AND SX5.D_E_L_E_T_ = ' '
 
-        inner join DUD010 DUD
-            on DUD.D_E_L_E_T_ = ''
-            and DUD.DUD_FILDOC = DT6.DT6_FILDOC
-            and DUD.DUD_DOC = DT6.DT6_DOC
-            and DUD.DUD_SERIE = DT6.DT6_SERIE
-
-            left join /* ver modelo para adição de dimensão motorista */
+            left join
             (
                 select
                     concat(trim(DA8010.DA8_FILIAL), trim(DA8010.DA8_COD)) as ID_ROTA,
@@ -205,11 +199,11 @@ FROM DT8010 DT8
                             and DA8010.DA8_COD = DTQ010.DTQ_ROTA
                 where DUD.D_E_L_E_T_ = ''
             ) VIAGEM
-                on VIAGEM.DUD_FILIAL = DUD.DUD_FILIAL
-                and VIAGEM.DUD_FILORI = DUD.DUD_FILORI
-                and VIAGEM.DUD_VIAGEM = DUD.DUD_VIAGEM
+                on VIAGEM.DUD_FILDOC = DT6.DT6_FILDOC
+                and VIAGEM.DUD_DOC = DT6.DT6_DOC
+                and VIAGEM.DUD_SERIE = DT6.DT6_SERIE
 
-            left join
+                left join
                 (
                     select
                         concat(trim(DF1010.DF1_FILIAL), trim(DF1010.DF1_NUMAGE), trim(DF1010.DF1_ITEAGE), trim(DF1010.DF1_FILDOC), trim(DF1010.DF1_DOC), trim(DF1010.DF1_SERIE)) as ID_AGENDAMENTO,
