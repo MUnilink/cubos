@@ -49,6 +49,7 @@
         case when SRC.RC_PD in ('796') then SRC.RC_VALOR else 0.0 end as VLTRANP_BASE,
         case when SRC.RC_PD in ('749') then SRC.RC_VALOR else 0.0 end as VLCESTA_BASE,
         case when SRC.RC_PD in ('719') then SRC.RC_VALOR else 0.0 end as VLALIM_BASE,
+        case when SRC.RC_PD in ('998') then SRC.RC_VALOR else 0.0 end as VLCOMB_BASE,
 
         case when SRC.RC_PD in ('290', '300') then SRC.RC_HORAS else 0.0 end as AVOS_13,
         case when SRC.RC_PD in ('015', '167') then SRC.RC_VALOR else 0.0 end as INSALUBRIDADE_13,
@@ -149,6 +150,7 @@ union
         case when SRD.RD_PD in ('796') then SRD.RD_VALOR else 0.0 end as VLTRANP_BASE,
         case when SRD.RD_PD in ('749') then SRD.RD_VALOR else 0.0 end as VLCESTA_BASE,
         case when SRD.RD_PD in ('719') then SRD.RD_VALOR else 0.0 end as VLALIM_BASE,
+        case when SRD.RD_PD in ('998') then SRD.RD_VALOR else 0.0 end as VLCOMB_BASE,
 
         case when SRD.RD_PD in ('290', '300') then SRD.RD_HORAS else 0.0 end as AVOS_13,
         case when SRD.RD_PD in ('015', '167') then SRD.RD_VALOR else 0.0 end as INSALUBRIDADE_13,
