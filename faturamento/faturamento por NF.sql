@@ -153,7 +153,6 @@ select
     cast(coalesce(SD2.D2_PRUNIT, 0) as decimal(16, 4)) as VL_UNITARIO,
     cast(coalesce(SD2.D2_SEGURO, 0) as decimal(14, 2)) as VL_SEGURO,
     cast(coalesce(SD2.D2_PESO * SD2.D2_QUANT, 0) as decimal(12, 4)) as PESO_LIQUIDO,
-    1 as contador,
     
     trim(ZC2.ZC2_NUM) as OS_PORTUARIA,
     substring(ZC2.ZC2_NUM, 6, 10) as OS,
@@ -225,7 +224,8 @@ select
     trim(REG_COL.DUY_EST) as UF_COLETA,
 	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
 	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
-	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA
+	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
+    1 as contador
 
 from SD2010 SD2 (nolock)
     inner join SF2010 SF2 (nolock)
