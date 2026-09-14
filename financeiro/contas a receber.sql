@@ -4,7 +4,7 @@ select
 	trim(SE1.E1_NUM) as TITULO,
 	trim(SE1.E1_TIPO) as TIPO_TITULO,
 	cast(SE1.E1_EMISSAO as date) as DATA_TITULO,
-	left(SE1.E1_EMISSAO, 6) as PERIODO,
+	left(SE1.E1_EMISSAO, 6) as PERIODO_TITULO,
 	cast(SE1.E1_VENCTO as date) as VENCIMENTO,
 	left(SE1.E1_VENCTO, 6) as PERIODO_VENCIMENTO,
 	cast(SE1.E1_VENCREA as date) as VENCREAL,
@@ -39,6 +39,7 @@ select
     SE1.E1_NUMBOR as BORDERO,
     trim(SE1.E1_YTITORI) as TITULO_ORI,
     trim(SE1.E1_ORIGEM) as ORIGEM,
+    trim(DT6.DT6_CHVCTE) as CHAVE_NF,
 
 	trim(SE1.E1_NATUREZ) as NATUREZA,
 	trim(SED.ED_DESCRIC) as DESC_NATUREZA,
@@ -148,6 +149,10 @@ select
                 and SD2.D2_LOJA = SC5010.C5_LOJACLI
         )
     ) as VIAGEM_TMS,
+    
+    trim(DF1.DF1_NUMAGE) as AGENDAMENTO,
+    trim(DF1.DF1_ITEAGE) as AGENDAMENTO_ITEM,
+    trim(DF1.DF1_YOSCLI) as OS_CLIENTE,
 
     case
         when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 1 then upper('Em Aberto')
@@ -170,89 +175,99 @@ select
 
     1 as contador
 
-from SE1010 SE1 (nolock)
-	left join SA1010 SA1 (nolock)
+from SE1010 SE1
+	left join SA1010 SA1
 		on SA1.D_E_L_E_T_ = ''
 		and SA1.A1_COD = SE1.E1_CLIENTE
 		and SA1.A1_LOJA = SE1.E1_LOJA
 	
-    left join SD2010 SD2 (nolock)
+    left join SD2010 SD2
         on SD2.D2_FILIAL = SE1.E1_FILIAL
         and SD2.D2_DOC = SE1.E1_NUM
         and SD2.D2_CLIENTE = SE1.E1_CLIENTE
         and SD2.D2_LOJA = SE1.E1_LOJA
         and SD2.D_E_L_E_T_ = ''
 	
-        left join SC6010 SC6 (nolock)
+        left join SC6010 SC6
             on SC6.D_E_L_E_T_ = ''
             and SC6.C6_FILIAL = SD2.D2_FILIAL
             and SC6.C6_NUM = SD2.D2_PEDIDO
             and SC6.C6_ITEM = SD2.D2_ITEMPV
 
-            left join ZC2010 ZC2 (nolock)
+            left join ZC2010 ZC2
                 on ZC2.D_E_L_E_T_ = ''
                 and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
                 and ZC2.ZC2_NUM = SC6.C6_YOS
                 and ZC2.ZC2_ITEM = SC6.C6_YITOS
 
-                left join ZC1010 ZC1 (nolock)
+                left join ZC1010 ZC1
                     on ZC1.D_E_L_E_T_ = ''
                     and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
                     and ZC1.ZC1_NUM = ZC2.ZC2_NUM
 
-        left join DUD010 DUD (nolock)
+        left join DUD010 DUD
             on DUD.D_E_L_E_T_ = ''
             and DUD.DUD_FILDOC = SD2.D2_FILIAL
             and DUD.DUD_DOC = SD2.D2_DOC
             and DUD.DUD_SERIE = SD2.D2_SERIE
             and DUD.DUD_SERIE != 'COL'
 
-            left join DT6010 DT6 (nolock)
+            left join DTC010 DTC
+                on DTC.D_E_L_E_T_ = ''
+                and DTC.DTC_FILDOC = DUD.DUD_FILDOC
+                and DTC.DTC_DOC = DUD.DUD_DOC
+                and DTC.DTC_SERIE = DUD.DUD_SERIE
+
+                left join DF1010 DF1
+                    on DF1.D_E_L_E_T_ = ''
+                    and DF1.DF1_FILDOC = DTC.DTC_FILDOC
+                    and DF1.DF1_DOC = DTC.DTC_NUMSOL
+            
+            left join DT6010 DT6
                 on DT6.D_E_L_E_T_ = ''
                 and DT6.DT6_FILDOC = DUD.DUD_FILDOC
                 and DT6.DT6_DOC = DUD.DUD_DOC
                 and DT6.DT6_SERIE = DUD.DUD_SERIE
 
-                left join DUY010 REG_COL (nolock)
+                left join DUY010 REG_COL
                     on REG_COL.D_E_L_E_T_ = ''
                     and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
                     and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
-                left join DUY010 REG_ENT (nolock)
+                left join DUY010 REG_ENT
                     on REG_ENT.D_E_L_E_T_ = ''
                     and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
                     and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
 
-        left join SD2010 COMP (nolock)
+        left join SD2010 COMP
             on COMP.D_E_L_E_T_ = ''
             and COMP.D2_DOC = SD2.D2_NFORI
             and COMP.D2_SERIE = SD2.D2_SERIORI
             and COMP.D2_CLIENTE = SD2.D2_CLIENTE
             and COMP.D2_LOJA = SD2.D2_LOJA
 
-            left join DUD010 VGA2 (nolock)
+            left join DUD010 VGA2
                 on VGA2.D_E_L_E_T_ = ''
                 and VGA2.DUD_FILDOC = COMP.D2_FILIAL
                 and VGA2.DUD_DOC = COMP.D2_DOC
                 and VGA2.DUD_SERIE = COMP.D2_SERIE
         
-        left join SB1010 SB1 (nolock)
+        left join SB1010 SB1
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = SD2.D2_COD
 
-            left join SBM010 SBM (nolock)
+            left join SBM010 SBM
                 on SBM.D_E_L_E_T_ = ''
                 and SBM.BM_GRUPO = SB1.B1_GRUPO
         
-    left join CTT010 CTT (nolock)
+    left join CTT010 CTT
         on CTT.D_E_L_E_T_ = ''
         and CTT.CTT_CUSTO = SE1.E1_CCUSTO
-    left join CTD010 CTD (nolock)
+    left join CTD010 CTD
         on CTD.D_E_L_E_T_ = ''
         and CTD.CTD_ITEM = SE1.E1_ITEMCTA
-	left join SED010 SED (nolock)
+	left join SED010 SED
 		on SED.D_E_L_E_T_ = ''
 		and SED.ED_CODIGO = SE1.E1_NATUREZ
-
 where
         SE1.D_E_L_E_T_ = ''
     and SD2.D2_EMISSAO >=:DATAINI_DOCUMENTO
