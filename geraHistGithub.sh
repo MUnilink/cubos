@@ -9,7 +9,8 @@ git -c core.quotepath=false log \
     --until="$2" \
     --date=short \
     --name-only \
-    --pretty=format:"##Commit %h%nAutor: %an%nData: %ad%nDescrição: %s%n" \
+    --pretty=format:"%ad | %h | %s" \
+    --date=format:"%d/%m/%Y %H:%M:%S" \
     >> relatorio.md
 
 echo "Relatório criado."
