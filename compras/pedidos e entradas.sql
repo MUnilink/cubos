@@ -107,11 +107,11 @@ select
 			and SCR010.CR_FILIAL = SC7.C7_FILIAL
 			and SCR010.CR_NUM = SC7.C7_NUM
 	) as DATAAPROV_PC,
-	
+
 	datediff(minute,
 		concat(SC7.C7_EMISSAO, ' ', isnull(nullif(SC7.C7_YHORAPC, ''), '00:00:00')),
 		(
-			select top 1 convert(date, SCR010.CR_DATALIB, 103)
+			select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
 			from SCR010
 			where
 					SCR010.D_E_L_E_T_ = ''
@@ -208,7 +208,22 @@ select
 	left(SD1.D1_DTDIGIT, 6) as NF_PERIODO,
 	case when exists (select * from SD2010 where SD2010.D_E_L_E_T_ = '' and SD2010.D2_TIPO = 'D' and SD2010.D2_NFORI = SD1.D1_DOC and SD2010.D2_SERIORI = SD1.D1_SERIE and SD2010.D2_ITEMORI = SD1.D1_ITEM and SD2010.D2_CLIENTE = SD1.D1_FORNECE and SD2010.D2_LOJA = SD1.D1_LOJA)
 		then 'R' else SD1.D1_TIPO end as NF_TIPO,
-	
+
+	datediff(minute, SD1.D1_EMISSAO, SD1.D1_DTDIGIT)/(60*24.0) as DIAS_NF,
+	datediff(minute,
+		(
+			select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
+			from SCR010
+			where
+					SCR010.D_E_L_E_T_ = ''
+				and SCR010.CR_LIBAPRO is not null
+				and SCR010.CR_TIPO = 'PC'
+				and SCR010.CR_FILIAL = SC7.C7_FILIAL
+				and SCR010.CR_NUM = SC7.C7_NUM
+		),
+		SD1.D1_EMISSAO
+	)/(60*24.0) as DIASAPROV_PC_EMINF,
+
 	datediff(minute,
 		(
 			select top 1 convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113)
