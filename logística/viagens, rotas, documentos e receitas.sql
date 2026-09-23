@@ -14,9 +14,9 @@ select
 	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
 	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
 
-    trim(DUYORI.DUY_DESCRI) as ORIGEM,
-    trim(DUYDES.DUY_DESCRI) as DESTINO,
-    trim(DUYDEV.DUY_DESCRI) as DEVEDOR,
+    trim(DUYORI.DUY_DESCRI) as REG_ORIGEM,
+    trim(DUYDES.DUY_DESCRI) as REG_DESTINO,
+    trim(DUYDEV.DUY_DESCRI) as REG_DEVEDOR,
     trim(REM.A1_NOME) as CLI_ORIGEM,
     trim(DES.A1_NOME) as CLI_DESTINO,
     trim(DEV.A1_NOME) as CLI_DEVEDOR,
@@ -28,9 +28,9 @@ select
     cast(DTQ.DTQ_DATFEC as date) as DT_FECVGA,
     cast(DTQ.DTQ_DATENC as date) as DT_ENCVGA,
 
-    left(DTQ.DTQ_DATGER, 1, 6) as PERIODO_GERVGA,
-    left(DTQ.DTQ_DATFEC, 1, 6) as PERIODO_FECVGA,
-    left(DTQ.DTQ_DATENC, 1, 6) as PERIODO_ENCVGA,
+    left(DTQ.DTQ_DATGER, 6) as PERIODO_GERVGA,
+    left(DTQ.DTQ_DATFEC, 6) as PERIODO_FECVGA,
+    left(DTQ.DTQ_DATENC, 6) as PERIODO_ENCVGA,
 
     case DTQ.DTQ_TIPVIA
         when '1' then upper('Normal')
@@ -102,6 +102,7 @@ select
     cast(DT6.DT6_VALFRE as decimal(14, 2)) as CTE_TOTAL,
     cast(DT6.DT6_VALIMP as decimal(14, 2)) as CTE_IMPOSTO,
     cast(DT6.DT6_VALMER as decimal(14, 2)) as VALOR_MERCADORIA,
+    cast(DT6.DT6_PRZENT as date) as CTE_PRZENT,
 
     DTC.DTC_CTRDPC as CTE_CLIENTE,
     DTC.DTC_FILORI,
@@ -141,6 +142,12 @@ select
     DF1.DF1_CODOBC,
     DF1.DF1_YDSARM as NOME_ARMADORA,
 
+    coalesce
+    (
+        concat(DF1.DF1_DATPRC, ' ', nullif(trim(concat(substring(DF1.DF1_HORPRC, 1, 2), ':', substring(DF1.DF1_HORPRC, 3, 2), ':', substring(DF1.DF1_HORPRC, 5, 2), '00')), ':  :00')),
+        concat(DF1.DF1_DATPRE, ' ', nullif(trim(concat(substring(DF1.DF1_HORPRE, 1, 2), ':', substring(DF1.DF1_HORPRE, 3, 2), ':', substring(DF1.DF1_HORPRE, 5, 2), '00')), ':  :00'))
+    ) as DATA_CHECLI_PREV,
+
     COMP.D2_DOC as COMP_DOC,
     COMP.D2_SERIE as COMP_SERIE,
     COMP.D2_TOTAL as COMP_TOTAL,
@@ -161,27 +168,31 @@ select
     SE1.E1_EMISSAO as ND_EMISSAO,
 
     (
-        select substring(DTW010.DTW_DATREA, 1, 6)
+        select top 1 first_value(substring(DTW010.DTW_DATREA, 1, 6)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
-            and DTW010.DTW_ATIVID = '050'
+            and DTW010.DTW_HORREA != ''
+            and DTW010.DTW_DATREA != ''
+            and DTW010.DTW_ATIVID = '049'
     ) as COMPETENCIA_INIVGA,
     (
-        select substring(DTW010.DTW_DATREA, 1, 6)
+        select top 1 first_value(substring(DTW010.DTW_DATREA, 1, 6)) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN)
         from DTW010 (nolock)
         where 
                 DTW010.D_E_L_E_T_ = ''
             and DTW010.DTW_FILIAL = DUD.DUD_FILIAL
             and DTW010.DTW_FILORI = DUD.DUD_FILORI
             and DTW010.DTW_VIAGEM = DUD.DUD_VIAGEM
+            and DTW010.DTW_HORREA != ''
+            and DTW010.DTW_DATREA != ''
             and DTW010.DTW_ATIVID = '050'
     ) as COMPETENCIA_FIMVGA,
     (
-        select convert(datetime, concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00')), 113)
+        select top 1 convert(datetime, first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN), 113)
         from DTW010
         where
                 DTW010.D_E_L_E_T_ = ''
@@ -192,7 +203,7 @@ select
             and DTW010.DTW_ATIVID = '049'
     ) as DATAINI,
     (
-        select convert(datetime, concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00')), 113)
+        select top 1 convert(datetime, first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN), 113)
         from DTW010
         where
                 DTW010.D_E_L_E_T_ = ''
@@ -203,7 +214,7 @@ select
             and DTW010.DTW_ATIVID = '050'
     ) as DATAFIM,
     (
-        select top 1 convert(datetime, first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN), 113)
+        select top 1 convert(datetime, first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN), 113)
         from DTW010
         where
                 DTW010.D_E_L_E_T_ = ''
@@ -215,7 +226,7 @@ select
             and DTW010.DTW_CODCLI != '000761'
     ) as DATA_CHECLI,
     (
-        select top 1 convert(datetime, first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over (partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN), 113)
+        select top 1 convert(datetime, first_value(concat(DTW010.DTW_DATREA, ' ', concat(substring(DTW010.DTW_HORREA, 1, 2), ':', substring(DTW010.DTW_HORREA, 3, 2), ':', '00'))) over(partition by DTW010.DTW_FILORI, DTW010.DTW_VIAGEM, DTW010.DTW_ATIVID order by DTW010.DTW_SEQUEN), 113)
         from DTW010
         where
                 DTW010.D_E_L_E_T_ = ''
@@ -268,6 +279,8 @@ select
                     APT.D_E_L_E_T_ = ''
                 and APT.DTW_FILORI = DTR.DTR_FILORI
                 and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                and APT.DTW_HORREA != ''
+                and APT.DTW_DATREA != ''
                 and APT.DTW_ATIVID = 50
         ) as numeric(15, 2)
     ) as km_fim,
@@ -299,6 +312,8 @@ select
                     APT.D_E_L_E_T_ = ''
                 and APT.DTW_FILORI = DTR.DTR_FILORI
                 and APT.DTW_VIAGEM = DTR.DTR_VIAGEM
+                and APT.DTW_HORREA != ''
+                and APT.DTW_DATREA != ''
                 and APT.DTW_ATIVID = 49
         ) as numeric(15, 2)
     ) as km_ini,
@@ -335,17 +350,13 @@ from DUD010 DUD (nolock)
         and DT5.DT5_NUMSOL = DUD.DUD_DOC
         and DUD.DUD_SERIE = 'COL'
 
-        left join DF1010 DF1 (nolock)
-            on DF1.D_E_L_E_T_ = ''
-            and DF1.DF1_FILDOC = DT5.DT5_FILORI
-            and DF1.DF1_DOC = DT5.DT5_DOC
-            and DF1.DF1_SERIE = DT5.DT5_SERIE
-
     left join DT6010 DT6 (nolock)
         on DT6.D_E_L_E_T_ = ''
         and DT6.DT6_FILDOC = DUD.DUD_FILDOC
         and DT6.DT6_DOC = DUD.DUD_DOC
         and DT6.DT6_SERIE = DUD.DUD_SERIE
+        and DT6.DT6_SERIE <> 'COL'
+        and DT6.DT6_SERIE <> 'PED'
         
         left join DT8010 DT8
             on DT8.D_E_L_E_T_ = ' '
@@ -353,8 +364,6 @@ from DUD010 DUD (nolock)
             and DT8.DT8_FILDOC = DT6.DT6_FILDOC
             and DT8.DT8_DOC = DT6.DT6_DOC
             and DT8.DT8_SERIE = DT6.DT6_SERIE
-            and DT6.DT6_SERIE <> 'COL'
-            and DT6.DT6_SERIE <> 'PED'
 
             left join DT3010 DT3
                 on DT3.DT3_FILIAL = DT8.DT8_FILIAL
@@ -410,6 +419,10 @@ from DUD010 DUD (nolock)
         and DTC.DTC_DOC = DT6.DT6_DOC
         and DTC.DTC_SERIE = DT6.DT6_SERIE
 
+        left join DF1010 DF1 (nolock)
+            on DTC.D_E_L_E_T_ = ''
+            and DF1.DF1_FILDOC = DTC.DTC_FILDOC
+            and DF1.DF1_DOC = DTC.DTC_NUMSOL
         left join SB1010 SB1 (nolock)
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = DTC.DTC_CODPRO
@@ -429,4 +442,6 @@ from DUD010 DUD (nolock)
     left join SE1010 SE1 (nolock)
         on SE1.D_E_L_E_T_ = ''
         and (SE1.E1_YVIATMS = DUD.DUD_VIAGEM or SE1.E1_YVIAGEM = DUD.DUD_VIAGEM)
-where DUD.D_E_L_E_T_ = ''
+where
+        DUD.D_E_L_E_T_ = ''
+    and DTQ.DTQ_DATGER > 20251231
