@@ -17,6 +17,9 @@
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+        concat(trim(CTT.CTT_CUSTO), ' - ', trim(CTT.CTT_DESC01)) as CCUSTO_NOME,
+        concat(trim(CTD.CTD_ITEM), ' - ', trim(CTD.CTD_DESC01)) as ATIVIDADE_NOME,
+        concat(trim(SQB.QB_DEPTO), ' - ', trim(SQB.QB_DESCRIC)) as DEPARTAMENTO_NOME,
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
@@ -72,6 +75,11 @@
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                 and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+                
+                left join SQ3010 SQ3 (nolock)
+                    on SQ3.D_E_L_E_T_ = ''
+                    and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+            
             inner join CTD010 CTD (nolock)
                 on CTD.D_E_L_E_T_ = ''
                 and CTD.CTD_ITEM = SRA.RA_ITEM
@@ -108,6 +116,9 @@ union
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+        concat(trim(CTT.CTT_CUSTO), ' - ', trim(CTT.CTT_DESC01)) as CCUSTO_NOME,
+        concat(trim(CTD.CTD_ITEM), ' - ', trim(CTD.CTD_DESC01)) as ATIVIDADE_NOME,
+        concat(trim(SQB.QB_DEPTO), ' - ', trim(SQB.QB_DESCRIC)) as DEPARTAMENTO_NOME,
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
@@ -163,6 +174,11 @@ union
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                 and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                left join SQ3010 SQ3 (nolock)
+                    on SQ3.D_E_L_E_T_ = ''
+                    and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+            
             inner join CTT010 CTT (nolock)
                 on CTT.D_E_L_E_T_ = ''
                 and CTT.CTT_CUSTO = SRA.RA_CC
@@ -195,6 +211,9 @@ union
         trim(CTD.CTD_DESC01) as ATIVIDADE,
         trim(SQB.QB_DEPTO) as DEPTO,
         trim(SQB.QB_DESCRIC) as DEPARTAMENTO,
+        concat(trim(CTT.CTT_CUSTO), ' - ', trim(CTT.CTT_DESC01)) as CCUSTO_NOME,
+        concat(trim(CTD.CTD_ITEM), ' - ', trim(CTD.CTD_DESC01)) as ATIVIDADE_NOME,
+        concat(trim(SQB.QB_DEPTO), ' - ', trim(SQB.QB_DESCRIC)) as DEPARTAMENTO_NOME,
         trim(SRJ.RJ_CODCBO) as CBO,
         trim(SRA.RA_SEXO) as SEXO,
         trim(SRA.RA_CIC) as CPF,
@@ -250,6 +269,11 @@ union
                 on SRJ.D_E_L_E_T_ = ''
                 and SRJ.RJ_FILIAL = substring(SRA.RA_FILIAL, 1, 4)
                 and SRJ.RJ_FUNCAO = SRA.RA_CODFUNC
+
+                left join SQ3010 SQ3 (nolock)
+                    on SQ3.D_E_L_E_T_ = ''
+                    and SQ3.Q3_CARGO = SRJ.RJ_CARGO
+            
             inner join CTD010 CTD (nolock)
                 on CTD.D_E_L_E_T_ = ''
                 and CTD.CTD_ITEM = SRA.RA_ITEM
