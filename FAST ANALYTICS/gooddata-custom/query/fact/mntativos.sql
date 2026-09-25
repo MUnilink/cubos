@@ -71,7 +71,7 @@ select
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
-	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 last_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI), '')) as ATIVIDADE,
+	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 last_value(trim(TPN010.TPN_XITEMC)) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI), '')) as ATIVIDADE,
 	trim(SD1.D1_PEDIDO) as PEDCOMPRA,
 	
 	case
