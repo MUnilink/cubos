@@ -6,3 +6,4 @@ select
 	trim(SA2.A2_NREDUZ) as A2_NREDUZ
 from SA2010 as SA2
 where SA2.D_E_L_E_T_ = ''
+union select null, null, null, null, null
