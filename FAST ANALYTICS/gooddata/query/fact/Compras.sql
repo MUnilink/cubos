@@ -96,6 +96,9 @@ SELECT
     SC7.C7_PRECO as VALOR_UNITARIO, 
     SC7.C7_TOTAL as VALOR_TOTAL,
 
+    cast(SC7.C7_YTOTAL as numeric(15, 2)) as VALOR_TOTALSAV,
+    cast(SC7.C7_YSAVE as numeric(15, 2)) as VALOR_SAVING,
+
     cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
     cast(SC7.C7_VALIPI as numeric(14, 2)) as VL_PC_IPI,
     cast(SC7.C7_VALFRE as numeric(14, 2)) as VL_PC_FRETE_NF,
@@ -104,7 +107,7 @@ SELECT
     cast(SC7.C7_VALIMP5 as numeric(14, 2)) as VL_PC_COFINS,
     cast(SC7.C7_VALISS as numeric(14, 2)) as VL_PC_ISS,
     cast(SC7.C7_ICMSRET as numeric(14, 2)) as VL_PC_ICMS_SUBST,
-    cast(SC7.C7_VLDESC + SC7.C7_YSAVE as numeric(12, 2)) as VL_PC_DESCONTO,
+    cast(SC7.C7_VLDESC as numeric(12, 2)) as VL_PC_DESCONTO,
     cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
 	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO
 
