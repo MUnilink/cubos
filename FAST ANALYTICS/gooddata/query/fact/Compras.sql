@@ -96,7 +96,7 @@ SELECT
     SC7.C7_PRECO as VALOR_UNITARIO, 
     SC7.C7_TOTAL as VALOR_TOTAL,
 
-    cast(SC7.C7_YTOTAL as numeric(15, 2)) as VALOR_TOTALSAV,
+    cast(coalesce(nullif(SC7.C7_YTOTAL, ''), SC7.C7_TOTAL) as numeric(15, 2)) as VALOR_TOTALSAV,
     cast(SC7.C7_YSAVE as numeric(15, 2)) as VALOR_SAVING,
 
     cast(SC7.C7_VALICM as numeric(14, 2)) as VL_PC_ICMS,
