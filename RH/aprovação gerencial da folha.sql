@@ -1,3 +1,71 @@
+with SRV as
+(
+    select
+        SRV010.RV_COD,
+        isnull(nullif(trim(SRV010.RV_DESCDET), ''), SRV010.RV_DESC) as DESC_VERBA,
+        SRV010.RV_TIPOCOD,
+        case when SRV010.RV_COD in ('290', '300', '990') then 1 else 0 end as SALARIO_BASE,
+        case when SRV010.RV_COD in ('182', '183', '995', '999') then 1 else 0 end as VALOR_LIQUIDO,
+        
+        /* proventos */
+        case when SRV010.RV_COD in ('020') then 1 else 0 end as DIAS_TRABALHADOS,
+        case when SRV010.RV_COD in ('013', '017', '039', '215') then 1 else 0 end as ADIC_RISCO,
+        case when SRV010.RV_COD in ('030', '041', '371') then 1 else 0 end as ADIC_NOTURNO,
+        case when SRV010.RV_COD in ('451', '452') then 1 else 0 end as DOBRAS_DOMINGOS,
+        case when SRV010.RV_COD in ('011', '247', '353') then 1 else 0 end as ADIC_TEMPOSERVICO,
+        case when SRV010.RV_COD in ('029', '061', '062', '063', '064', '112', '113', '116', '344', '370') then 1 else 0 end as HREXTRA_APROVADA,
+        case when SRV010.RV_COD in ('091', '140', '147', '304') then 1 else 0 end as ARRED_PROV,
+        
+        /* descontos */
+        case when SRV010.RV_COD in ('420', '421', '422', '423') then 1 else 0 end as IR,
+        case when SRV010.RV_COD in ('401', '402', '403') then 1 else 0 end as INSS,
+        case when SRV010.RV_COD in ('373', '374', '414', '530', '532', '533', '535') then 1 else 0 end as PENSAO_ALIM,
+        case when SRV010.RV_COD in ('407') then 1 else 0 end as MENS_SINDICAL,
+        case when SRV010.RV_COD in ('738') then 1 else 0 end as PLANO_SAUDE,
+        case when SRV010.RV_COD in ('461') then 1 else 0 end as ARRED_DESC,
+        case when SRV010.RV_COD in ('562') then 1 else 0 end as VLCESTA_DESC,
+        case when SRV010.RV_COD in ('561') then 1 else 0 end as VLTRANP_DESC,
+
+        /* base provento */
+        case when SRV010.RV_COD in ('057') then 1 else 0 end as DIARIAS,
+        case when SRV010.RV_COD in ('456', '457') then 1 else 0 end as PROV_ECONSIG,
+        case when SRV010.RV_COD in ('796') then 1 else 0 end as VLTRANP_BASE,
+        case when SRV010.RV_COD in ('749') then 1 else 0 end as VLCESTA_BASE,
+        case when SRV010.RV_COD in ('719') then 1 else 0 end as VLALIM_BASE,
+        case when SRV010.RV_COD in ('998') then 1 else 0 end as VLCOMB_BASE,
+
+        /* base desconto */
+        case when SRV010.RV_COD in ('290', '300') then 1 else 0 end as AVOS_13,
+        case when SRV010.RV_COD in ('015', '167') then 1 else 0 end as INSALUBRIDADE_13,
+        case when SRV010.RV_COD in ('208', '772') then 1 else 0 end as ADRISCO_MATER_13,
+        case when SRV010.RV_COD in ('009', '204', '307', '768') then 1 else 0 end as MEDIA_VL_13,
+        case when SRV010.RV_COD in ('010', '205', '306', '769') then 1 else 0 end as MEDIA_HR_13,
+        case when SRV010.RV_COD in ('35A') then 1 else 0 end as VLEX_TEMPOCASA,
+
+        /* bases encargos */
+        case when SRV010.RV_COD in ('701', '702') then 1 else 0 end as BASE_IR,
+        case when SRV010.RV_COD in ('725', '726') then 1 else 0 end as BASE_INSS,
+        case when SRV010.RV_COD in ('745', '747') then 1 else 0 end as BASE_FGTS,
+        
+        /* valores encargos */
+        case when SRV010.RV_COD in ('759', '760', '761', '800') then 1 else 0 end as FGTS,
+        case when SRV010.RV_COD in ('950', '955', '960', '961', '962') then 1 else 0 end as INCRA_SISTEMA_S,
+        case when SRV010.RV_COD in ('815', '817') then 1 else 0 end as INSS_ACIDPATR,
+        /* valores benefícios */
+        /* econsignado provento */
+        case when SRV010.RV_COD in ('454', '457') then 1 else 0 end as ECONSIGNADO_PROV,
+
+        case trim(SRV010.RV_TIPOCOD)
+            when '1' then 'PROVENTO'
+            when '2' then 'DESCONTO'
+            when '3' then 'BASE PROVENTO'
+            when '4' then 'BASE DESCONTO'
+            else '-'
+        end as TIPO_VERBA
+    from SRV010
+    where SRV010.D_E_L_E_T_ = ''
+)
+
     select
         SRC.RC_FILIAL as FILIAL,
         SRC.RC_PERIODO as PERIODO,
@@ -6,7 +74,7 @@
         SRC.RC_MAT as MATRICULA,
         concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         SRC.RC_PD as VERBA,
-        isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
+        SRV.DESC_VERBA,
         SRC.RC_SEQ as SEQ,
         SRC.RC_ROTEIR as ROTEIRO,
 
@@ -19,44 +87,53 @@
         end as TIPO_VERBA,
         
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
-        case trim(SRV.RV_TIPOCOD) when '1' then SRC.RC_VALOR else 0.0 end as PROVENTOS,
+        case when trim(SRV.RV_TIPOCOD) = '1' and SRV.RV_COD not in ('454', '457') then SRC.RC_VALOR else 0.0 end as PROVENTOS,
         case when trim(SRV.RV_TIPOCOD) != '1' then 0.0 when trim(SRV.RV_TIPOCOD) = '1' and SRC.RC_PD not in ('020', '039', '215', '041', '030', '371', '451', '452', '353', '057', '113', '061', '062', '063', '064', '112', '116', '370', '344', '147', '091', '140', '304', '039', '215', '041', '030', '371', '451', '452', '353', '057', '113', '061', '062', '063', '064', '112', '116', '370', '344', '147', '091', '140', '304', '009', '010', '011', '017', '768', '769', '772', '029', '457') then SRC.RC_VALOR else 0.0 end as OUTROS_PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRC.RC_VALOR else 0.0 end as DESCONTOS,
         case when trim(SRV.RV_TIPOCOD) != '2' then 0.0 when trim(SRV.RV_TIPOCOD) = '2' and SRC.RC_PD not in ('420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '456', '420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '045', '414', '533') then SRC.RC_VALOR else 0.0 end as OUTROS_DESCONTOS,
         
-        case when SRC.RC_PD in ('290', '300', '990') then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
-        case when SRC.RC_PD in ('182', '183', '995', '999') then SRC.RC_VALOR else 0.0 end as VALOR_LIQUIDO,
+        SRA.RA_SALARIO * SRV.SALARIO_BASE as SALARIO_BASE,
+        SRC.RC_VALOR * SRV.VALOR_LIQUIDO as VALOR_LIQUIDO,
         
-        case when SRC.RC_PD in ('020') then SRC.RC_VALOR else 0.0 end as DIAS_TRABALHADOS,
-        case when SRC.RC_PD in ('013', '017', '039', '215') then SRC.RC_VALOR else 0.0 end as ADIC_RISCO,
-        case when SRC.RC_PD in ('030', '041', '371') then SRC.RC_VALOR else 0.0 end as ADIC_NOTURNO,
-        case when SRC.RC_PD in ('451', '452') then SRC.RC_VALOR else 0.0 end as DOBRAS_DOMINGOS,
-        case when SRC.RC_PD in ('011', '247', '353') then SRC.RC_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
-        case when SRC.RC_PD in ('029', '061', '062', '063', '064', '112', '113', '116', '344', '370') then SRC.RC_VALOR else 0.0 end as HREXTRA_APROVADA,
-        case when SRC.RC_PD in ('091', '140', '147', '304') then SRC.RC_VALOR else 0.0 end as ARRED_PROV,
+        SRC.RC_VALOR * SRV.DIAS_TRABALHADOS as DIAS_TRABALHADOS,
+        SRC.RC_VALOR * SRV.ADIC_RISCO as ADIC_RISCO,
+        SRC.RC_VALOR * SRV.ADIC_NOTURNO as ADIC_NOTURNO,
+        SRC.RC_VALOR * SRV.DOBRAS_DOMINGOS as DOBRAS_DOMINGOS,
+        SRC.RC_VALOR * SRV.ADIC_TEMPOSERVICO as ADIC_TEMPOSERVICO,
+        SRC.RC_VALOR * SRV.HREXTRA_APROVADA as HREXTRA_APROVADA,
+        SRC.RC_VALOR * SRV.ARRED_PROV as ARRED_PROV,
+        /**/
+        SRC.RC_VALOR * SRV.IR as IR,
+        SRC.RC_VALOR * SRV.INSS as INSS,
+        SRC.RC_VALOR * SRV.PENSAO_ALIM as PENSAO_ALIM,
+        SRC.RC_VALOR * SRV.MENS_SINDICAL as MENS_SINDICAL,
+        SRC.RC_VALOR * SRV.PLANO_SAUDE as PLANO_SAUDE,
+        SRC.RC_VALOR * SRV.ARRED_DESC as ARRED_DESC,
+        SRC.RC_VALOR * SRV.VLCESTA_DESC as VLCESTA_DESC,
+        SRC.RC_VALOR * SRV.VLTRANP_DESC as VLTRANP_DESC,
+        /**/
+        SRC.RC_VALOR * SRV.DIARIAS as DIARIAS,
+        SRC.RC_VALOR * SRV.PROV_ECONSIG as PROV_ECONSIG,
+        SRC.RC_VALOR * SRV.VLTRANP_BASE as VLTRANP_BASE,
+        SRC.RC_VALOR * SRV.VLCESTA_BASE as VLCESTA_BASE,
+        SRC.RC_VALOR * SRV.VLALIM_BASE as VLALIM_BASE,
+        SRC.RC_VALOR * SRV.VLCOMB_BASE as VLCOMB_BASE,
         
-        case when SRC.RC_PD in ('420', '421', '422', '423') then SRC.RC_VALOR else 0.0 end as IR,
-        case when SRC.RC_PD in ('401', '402', '403') then SRC.RC_VALOR else 0.0 end as INSS,
-        case when SRC.RC_PD in ('373', '374', '414', '530', '532', '533', '535') then SRC.RC_VALOR else 0.0 end as PENSAO_ALIM,
-        case when SRC.RC_PD in ('407') then SRC.RC_VALOR else 0.0 end as MENS_SINDICAL,
-        case when SRC.RC_PD in ('738') then SRC.RC_VALOR else 0.0 end as PLANO_SAUDE,
-        case when SRC.RC_PD in ('461') then SRC.RC_VALOR else 0.0 end as ARRED_DESC,
-        case when SRC.RC_PD in ('562') then SRC.RC_VALOR else 0.0 end as VLCESTA_DESC,
-        case when SRC.RC_PD in ('561') then SRC.RC_VALOR else 0.0 end as VLTRANP_DESC,
+        /* 13º SALÁRIO */
+        SRC.RC_HORAS * SRV.AVOS_13 as AVOS_13,
+        SRC.RC_VALOR * SRV.INSALUBRIDADE_13 as INSALUBRIDADE_13,
+        SRC.RC_VALOR * SRV.ADRISCO_MATER_13 as ADRISCO_MATER_13,
+        SRC.RC_VALOR * SRV.MEDIA_VL_13 as MEDIA_VL_13,
+        SRC.RC_VALOR * SRV.MEDIA_HR_13 as MEDIA_HR_13,
+        SRC.RC_VALOR * SRV.VLEX_TEMPOCASA as VLEX_TEMPOCASA,
 
-        case when SRC.RC_PD in ('057') then SRC.RC_VALOR else 0.0 end as DIARIAS,
-        case when SRC.RC_PD in ('456', '457') then SRC.RC_VALOR else 0.0 end as PROV_ECONSIG,
-        case when SRC.RC_PD in ('796') then SRC.RC_VALOR else 0.0 end as VLTRANP_BASE,
-        case when SRC.RC_PD in ('749') then SRC.RC_VALOR else 0.0 end as VLCESTA_BASE,
-        case when SRC.RC_PD in ('719') then SRC.RC_VALOR else 0.0 end as VLALIM_BASE,
-        case when SRC.RC_PD in ('998') then SRC.RC_VALOR else 0.0 end as VLCOMB_BASE,
-
-        case when SRC.RC_PD in ('290', '300') then SRC.RC_HORAS else 0.0 end as AVOS_13,
-        case when SRC.RC_PD in ('015', '167') then SRC.RC_VALOR else 0.0 end as INSALUBRIDADE_13,
-        case when SRC.RC_PD in ('208', '772') then SRC.RC_VALOR else 0.0 end as ADRISCO_MATER_13,
-        case when SRC.RC_PD in ('009', '204', '307', '768') then SRC.RC_VALOR else 0.0 end as MEDIA_VL_13,
-        case when SRC.RC_PD in ('010', '205', '306', '769') then SRC.RC_VALOR else 0.0 end as MEDIA_HR_13,
-        case when SRC.RC_PD in ('35A') then SRC.RC_VALOR else 0.0 end as VLEX_TEMPOCASA,
+        SRC.RC_VALOR * SRV.BASE_IR as BASE_IR,
+        SRC.RC_VALOR * SRV.BASE_INSS as BASE_INSS,
+        SRC.RC_VALOR * SRV.BASE_FGTS as BASE_FGTS,
+        SRC.RC_VALOR * SRV.FGTS as FGTS,
+        SRC.RC_VALOR * SRV.INCRA_SISTEMA_S as INCRA_SISTEMA_S,
+        SRC.RC_VALOR * SRV.INSS_ACIDPATR as INSS_ACIDPATR,
+        SRC.RC_VALOR * SRV.ECONSIGNADO_PROV as ECONSIGNADO_PROV,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -94,9 +171,8 @@
         left join CTT010 (nolock)
             on CTT010.D_E_L_E_T_ = ''
             and CTT010.CTT_CUSTO = SRC.RC_CC
-        left join SRV010 SRV (nolock)
+        left join SRV
             on SRV.RV_COD = SRC.RC_PD
-            and SRV.D_E_L_E_T_ = ''
     where SRC.D_E_L_E_T_ = ''
 union
     select
@@ -107,7 +183,7 @@ union
         SRD.RD_MAT as MATRICULA,
         concat(substring(trim(SRA.RA_ADMISSA), 6, 1), substring(trim(SRA.RA_MAT), 6, 1), right(trim(SRA.RA_CIC), 2), substring(trim(SRA.RA_MAT), 5, 1), substring(trim(SRA.RA_NASC), 6, 1)) as PSID,
         SRD.RD_PD as VERBA,
-        isnull(nullif(trim(SRV.RV_DESC), ''), SRV.RV_DESCDET) as DESC_VERBA,
+        SRV.DESC_VERBA,
         SRD.RD_SEQ as SEQ,
         SRD.RD_ROTEIR as ROTEIRO,
 
@@ -120,44 +196,54 @@ union
         end as TIPO_VERBA,
         
         cast(SRA.RA_SALARIO as numeric(15, 2)) as SALARIO,
-        case trim(SRV.RV_TIPOCOD) when '1' then SRD.RD_VALOR else 0.0 end as PROVENTOS,
+        case when trim(SRV.RV_TIPOCOD) = '1' and SRV.RV_COD not in ('454', '457') then SRD.RD_VALOR else 0.0 end as PROVENTOS,
         case when trim(SRV.RV_TIPOCOD) != '1' then 0.0 when trim(SRV.RV_TIPOCOD) = '1' and SRD.RD_PD not in ('020', '039', '215', '041', '030', '371', '451', '452', '353', '057', '113', '061', '062', '063', '064', '112', '116', '370', '344', '147', '091', '140', '304', '039', '215', '041', '030', '371', '451', '452', '353', '057', '113', '061', '062', '063', '064', '112', '116', '370', '344', '147', '091', '140', '304', '009', '010', '011', '017', '768', '769', '772', '029', '457') then SRD.RD_VALOR else 0.0 end as OUTROS_PROVENTOS,
         case trim(SRV.RV_TIPOCOD) when '2' then SRD.RD_VALOR else 0.0 end as DESCONTOS,
         case when trim(SRV.RV_TIPOCOD) != '2' then 0.0 when trim(SRV.RV_TIPOCOD) = '2' and SRD.RD_PD not in ('420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '456', '420', '421', '422', '401', '403', '402', '373', '535', '532', '530', '407', '738', '461', '045', '414', '533') then SRD.RD_VALOR else 0.0 end as OUTROS_DESCONTOS,
         
-        case when SRD.RD_PD in ('290', '300', '990') then SRA.RA_SALARIO else 0.0 end as SALARIO_BASE,
-        case when SRD.RD_PD in ('182', '183', '995', '999') then SRD.RD_VALOR else 0.0 end as VALOR_LIQUIDO,
+        SRA.RA_SALARIO * SRV.SALARIO_BASE as SALARIO_BASE,
+        SRD.RD_VALOR * SRV.VALOR_LIQUIDO as VALOR_LIQUIDO,
         
-        case when SRD.RD_PD in ('020') then SRD.RD_VALOR else 0.0 end as DIAS_TRABALHADOS,
-        case when SRD.RD_PD in ('013', '017', '039', '215') then SRD.RD_VALOR else 0.0 end as ADIC_RISCO,
-        case when SRD.RD_PD in ('030', '041', '371') then SRD.RD_VALOR else 0.0 end as ADIC_NOTURNO,
-        case when SRD.RD_PD in ('451', '452') then SRD.RD_VALOR else 0.0 end as DOBRAS_DOMINGOS,
-        case when SRD.RD_PD in ('011', '247', '353') then SRD.RD_VALOR else 0.0 end as ADIC_TEMPOSERVICO,
-        case when SRD.RD_PD in ('029', '061', '062', '063', '064', '112', '113', '116', '344', '370') then SRD.RD_VALOR else 0.0 end as HREXTRA_APROVADA,
-        case when SRD.RD_PD in ('091', '140', '147', '304') then SRD.RD_VALOR else 0.0 end as ARRED_PROV,
+        SRD.RD_VALOR * SRV.DIAS_TRABALHADOS as DIAS_TRABALHADOS,
+        SRD.RD_VALOR * SRV.ADIC_RISCO as ADIC_RISCO,
+        SRD.RD_VALOR * SRV.ADIC_NOTURNO as ADIC_NOTURNO,
+        SRD.RD_VALOR * SRV.DOBRAS_DOMINGOS as DOBRAS_DOMINGOS,
+        SRD.RD_VALOR * SRV.ADIC_TEMPOSERVICO as ADIC_TEMPOSERVICO,
+        SRD.RD_VALOR * SRV.HREXTRA_APROVADA as HREXTRA_APROVADA,
+        SRD.RD_VALOR * SRV.ARRED_PROV as ARRED_PROV,
+        /**/
+        SRD.RD_VALOR * SRV.IR as IR,
+        SRD.RD_VALOR * SRV.INSS as INSS,
+        SRD.RD_VALOR * SRV.PENSAO_ALIM as PENSAO_ALIM,
+        SRD.RD_VALOR * SRV.MENS_SINDICAL as MENS_SINDICAL,
+        SRD.RD_VALOR * SRV.PLANO_SAUDE as PLANO_SAUDE,
+        SRD.RD_VALOR * SRV.ARRED_DESC as ARRED_DESC,
+        SRD.RD_VALOR * SRV.VLCESTA_DESC as VLCESTA_DESC,
+        SRD.RD_VALOR * SRV.VLTRANP_DESC as VLTRANP_DESC,
+        /**/
+        SRD.RD_VALOR * SRV.DIARIAS as DIARIAS,
+        SRD.RD_VALOR * SRV.PROV_ECONSIG as PROV_ECONSIG,
+        SRD.RD_VALOR * SRV.VLTRANP_BASE as VLTRANP_BASE,
+        SRD.RD_VALOR * SRV.VLCESTA_BASE as VLCESTA_BASE,
+        SRD.RD_VALOR * SRV.VLALIM_BASE as VLALIM_BASE,
+        SRD.RD_VALOR * SRV.VLCOMB_BASE as VLCOMB_BASE,
         
-        case when SRD.RD_PD in ('420', '421', '422', '423') then SRD.RD_VALOR else 0.0 end as IR,
-        case when SRD.RD_PD in ('401', '402', '403') then SRD.RD_VALOR else 0.0 end as INSS,
-        case when SRD.RD_PD in ('373', '374', '414', '530', '532', '533', '535') then SRD.RD_VALOR else 0.0 end as PENSAO_ALIM,
-        case when SRD.RD_PD in ('407') then SRD.RD_VALOR else 0.0 end as MENS_SINDICAL,
-        case when SRD.RD_PD in ('738') then SRD.RD_VALOR else 0.0 end as PLANO_SAUDE,
-        case when SRD.RD_PD in ('461') then SRD.RD_VALOR else 0.0 end as ARRED_DESC,
-        case when SRD.RD_PD in ('562') then SRD.RD_VALOR else 0.0 end as VLCESTA_DESC,
-        case when SRD.RD_PD in ('561') then SRD.RD_VALOR else 0.0 end as VLTRANP_DESC,
+        /* 13º SALÁRIO */
+        SRD.RD_HORAS * SRV.AVOS_13 as AVOS_13,
+        SRD.RD_VALOR * SRV.INSALUBRIDADE_13 as INSALUBRIDADE_13,
+        SRD.RD_VALOR * SRV.ADRISCO_MATER_13 as ADRISCO_MATER_13,
+        SRD.RD_VALOR * SRV.MEDIA_VL_13 as MEDIA_VL_13,
+        SRD.RD_VALOR * SRV.MEDIA_HR_13 as MEDIA_HR_13,
+        SRD.RD_VALOR * SRV.VLEX_TEMPOCASA as VLEX_TEMPOCASA,
 
-        case when SRD.RD_PD in ('057') then SRD.RD_VALOR else 0.0 end as DIARIAS,
-        case when SRD.RD_PD in ('456', '457') then SRD.RD_VALOR else 0.0 end as PROV_ECONSIG,
-        case when SRD.RD_PD in ('796') then SRD.RD_VALOR else 0.0 end as VLTRANP_BASE,
-        case when SRD.RD_PD in ('749') then SRD.RD_VALOR else 0.0 end as VLCESTA_BASE,
-        case when SRD.RD_PD in ('719') then SRD.RD_VALOR else 0.0 end as VLALIM_BASE,
-        case when SRD.RD_PD in ('998') then SRD.RD_VALOR else 0.0 end as VLCOMB_BASE,
-
-        case when SRD.RD_PD in ('290', '300') then SRD.RD_HORAS else 0.0 end as AVOS_13,
-        case when SRD.RD_PD in ('015', '167') then SRD.RD_VALOR else 0.0 end as INSALUBRIDADE_13,
-        case when SRD.RD_PD in ('208', '772') then SRD.RD_VALOR else 0.0 end as ADRISCO_MATER_13,
-        case when SRD.RD_PD in ('009', '204', '307', '768') then SRD.RD_VALOR else 0.0 end as MEDIA_VL_13,
-        case when SRD.RD_PD in ('010', '205', '306', '769') then SRD.RD_VALOR else 0.0 end as MEDIA_HR_13,
-        case when SRD.RD_PD in ('35A') then SRD.RD_VALOR else 0.0 end as VLEX_TEMPOCASA,
+        /* bases encargos */
+        SRD.RD_VALOR * SRV.BASE_IR as BASE_IR,
+        SRD.RD_VALOR * SRV.BASE_INSS as BASE_INSS,
+        SRD.RD_VALOR * SRV.BASE_FGTS as BASE_FGTS,
+        SRD.RD_VALOR * SRV.FGTS as FGTS,
+        SRD.RD_VALOR * SRV.INCRA_SISTEMA_S as INCRA_SISTEMA_S,
+        SRD.RD_VALOR * SRV.INSS_ACIDPATR as INSS_ACIDPATR,
+        SRD.RD_VALOR * SRV.ECONSIGNADO_PROV as ECONSIGNADO_PROV,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -195,9 +281,8 @@ union
         left join CTT010 (nolock)
             on CTT010.D_E_L_E_T_ = ''
             and CTT010.CTT_CUSTO = SRD.RD_CC
-        left join SRV010 SRV (nolock)
+        left join SRV
             on SRV.RV_COD = SRD.RD_PD
-            and SRV.D_E_L_E_T_ = ''
     where
-            datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 7
+            datediff(month, concat(SRD.RD_DATARQ, '01'), getdate()) < 23
         and SRD.D_E_L_E_T_ = ''
