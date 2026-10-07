@@ -23,6 +23,7 @@ SELECT
         then 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_DIG.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_DIG.Y1_COD, ' ')), ' '), '|')
         else 'P |01|SY1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(Y1_COM.Y1_FILIAL, ' '))+'|'+RTRIM(COALESCE(Y1_COM.Y1_COD, ' ')), ' '), '|')
     end as ID_NEGOCIADOR,
+    'P |01|NNR010|'+ COALESCE(NULLIF(RTRIM(COALESCE(NNR.NNR_FILIAL, ' '))+'|'+RTRIM(COALESCE(NNR.NNR_CODIGO, ' ')), ' '), '|') as ID_ARMAZEM,
     
     (
         select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
@@ -236,5 +237,5 @@ FROM SCP010 SCP
         and CTD.CTD_FILIAL = '      '
         and CTD.CTD_ITEM = SCP.CP_ITEMCTA
 where 
-        SCP.CP_EMISSAO like 
+        SCP.CP_EMISSAO like '2026%'
     and SCP.D_E_L_E_T_ = ' '
