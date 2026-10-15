@@ -81,6 +81,7 @@ select
 	case SRA.RA_ADCPERI when '1' then 'Não' when '2' then 'Sim' else 'outros' end as PERICULOSIDADES,
 	case SRA.RA_ADCINS when '1' then 'Não' when '2' then 'Insalubridade Mínima' when '3' then 'Insalubridade Média' when '4' then 'Insalubridade Máxima' else 'outros' end as INSALUBRIDADE,
 	SRA.RA_ADTPOSE as ADIC_TEMPO,
+	SRA.RA_PERCADT as PERC_ADIANTAMENTO,
 
 	case SRA.RA_TPDEFFI 
 		when '0' then '0 - NENHUMA'
