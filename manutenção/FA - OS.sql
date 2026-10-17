@@ -84,7 +84,7 @@ select
 	/*
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
 	*/
-
+	trim(STJ.TJ_YITMCT) as AT,
 	(select top 1 last_value(trim(TPN010.TPN_XITEMC)) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI) as AT_TPN,
 
 	case
@@ -248,5 +248,5 @@ from STJ010 STJ (nolock)
 				and SA2.A2_COD = SD1.D1_FORNECE
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
-		STJ.TJ_DTORIGI >=:DATA_INI
+		STL.TL_DTFIM >=:DATA_INI
 	and STL.D_E_L_E_T_ = ''
