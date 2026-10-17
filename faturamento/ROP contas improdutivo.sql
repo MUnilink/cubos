@@ -10,7 +10,8 @@ set @PERIODO =:COMPETENCIA
         ZC2.ZC2_COD as CODIGO,
         ZG1.*,
         ZC2.ZC2_TOTAL as TOTAL_OSVGA,
-        ZC2.ZC2_TOTAL * ZG1.VL_RIMP as TOTAL_RAT
+        ZC2.ZC2_TOTAL * ZG1.VL_RIMP as TOTAL_RAT,
+        ZC2.ZC2_TOTAL * ZG1.VL_RIMP *-1 as TOTAL_RAT
     from
     (
         select
