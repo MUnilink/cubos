@@ -37,7 +37,7 @@ select
     DYX.DYX_DATDIA as DATA_DIARIA,
     
     cast(DYX.DYX_QTDE as int) as QTD,
-    cast(DYX.DYX_VLRUNI as numeric(15, 2)) as VALOR_UNI,
+    cast(DYX.DYX_VLRTOT as numeric(15, 2)) as VALOR_UNI,
     trim(SE2.E2_NUM) as TITULO,
     cast(SE2.E2_VALOR as numeric(15, 2)) as VL_TITULO,
     cast(SE2.E2_VALLIQ as numeric(15, 2)) as VL_LIQUIDO,
