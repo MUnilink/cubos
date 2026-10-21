@@ -1,43 +1,4 @@
-with SR8 as
-(
-	select
-		SR8010.R8_MAT as MATRICULA,
-		SR8010.R8_FILIAL as FILIAL,
-		floor(datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM))) as AFASTA_MESES,
-		
-		cast
-		(
-			case
-				when SR8010.R8_TIPOAFA = '001' then SR8010.R8_DATAINI
-				when SR8010.R8_DURACAO > 15 and datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM)) = 0 then SR8010.R8_DATAINI /* afastamento no mês */
-				when SR8010.R8_DURACAO > 15 and floor(datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM))) = 1 and 1 + datediff(day, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAINI)) > 14 then eomonth(SR8010.R8_DATAINI)
-				when SR8010.R8_DURACAO > 15 and floor(datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM))) = 1 and 1 + datediff(day, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAINI)) <= 14 then dateadd(day, 1, eomonth(SR8010.R8_DATAINI))
-			end as date
-		) as DATA_INI,
-
-		cast
-		(
-			case
-				when SR8010.R8_TIPOAFA = '001' then SR8010.R8_DATAFIM
-				when SR8010.R8_DURACAO > 15 and datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM)) = 0 then SR8010.R8_DATAFIM /* afastamento no mês */
-				when SR8010.R8_DURACAO > 15 and floor(datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM))) = 1 and 1 + datediff(day, concat(left(SR8010.R8_DATAFIM, 6), '01'), SR8010.R8_DATAFIM) > 14 then eomonth(SR8010.R8_DATAFIM)
-				when SR8010.R8_DURACAO > 15 and floor(datediff(month, SR8010.R8_DATAINI, eomonth(SR8010.R8_DATAFIM))) = 1 and 1 + datediff(day, concat(left(SR8010.R8_DATAFIM, 6), '01'), SR8010.R8_DATAFIM) <= 14 then dateadd(day, -1, concat(left(SR8010.R8_DATAFIM, 6), '01'))
-			end as date
-		) as DATA_FIM,
-
-		SR8010.R8_TIPOAFA,
-		case when SR8010.R8_TIPOAFA = '001' then 'F' when SR8010.R8_DURACAO > 15 then 'A' end as SITUACAO,
-		cast(SR8010.R8_DATA as date) as DATA_ALTER,
-		cast(SR8010.R8_DATAINI as date) as DATA_INIAFA,
-		cast(SR8010.R8_DATAFIM as date) as DATA_FIMAFA,
-		cast(SR8010.R8_DURACAO as numeric(15, 2)) as DURACAO,
-		left(SR8010.R8_PER, 6) as PERIODO_AFASTA
-
-	from SR8010 (nolock)
-	where SR8010.D_E_L_E_T_ = ''
-),
-
-SRV as
+with SRV as
 (
     select
         SRV010.RV_COD,
@@ -186,16 +147,11 @@ SRV as
         cast(SRA.RA_DEMISSA as date) as DEMISSAO,
 
         SRC.RC_VALOR as VALOR,
-        SRC.RC_HORAS as HORAS,
-        SR8.SITUACAO as SITUACAO_FOLHA
+        SRC.RC_HORAS as HORAS
 
     from SRC010 SRC (nolock)
         left join SRV
             on SRV.RV_COD = SRC.RC_PD
-        left join SR8
-            on eomonth(concat(SRC.RC_PERIODO, '01')) between eomonth(SR8.DATA_INI) and eomonth(SR8.DATA_FIM)
-            and SR8.MATRICULA = SRC.RC_MAT
-            and SR8.FILIAL = SRC.RC_FILIAL
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SRC.RC_FILIAL
@@ -301,16 +257,11 @@ union
         cast(SRA.RA_DEMISSA as date) as DEMISSAO,
 
         SRD.RD_VALOR as VALOR,
-        SRD.RD_HORAS as HORAS,
-        SR8.SITUACAO as SITUACAO_FOLHA
+        SRD.RD_HORAS as HORAS
 
     from SRD010 SRD (nolock)
         left join SRV
             on SRV.RV_COD = SRD.RD_PD
-        left join SR8
-            on eomonth(concat(SRD.RD_DATARQ, '01')) between eomonth(SR8.DATA_INI) and eomonth(SR8.DATA_FIM)
-            and SR8.MATRICULA = SRD.RD_MAT
-            and SR8.FILIAL = SRD.RD_FILIAL
         inner join SRA010 SRA (nolock)
             on SRA.D_E_L_E_T_ = ''
             and SRA.RA_FILIAL = SRD.RD_FILIAL
