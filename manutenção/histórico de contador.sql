@@ -1,8 +1,12 @@
 select
 	trim(ST9.T9_CODBEM) as EQUIPAMENTO,
+	trim(ST9.T9_NOME) as NOME,
+	trim(TQR.TQR_DESMOD) as MODELO,
+	trim(ST9.T9_PLACA) as PLACA,
+	trim(ST9.T9_CODFAMI) as FAMILIA,
+	trim(ST7.T7_NOME) as FABRICANTE,
     trim(STP.TP_CCUSTO) as CC,
     trim(ST9.T9_ITEMCTA) as ITEM,
-	trim(ST9.T9_CODFAMI) as FAMILIA,
 	trim(ST9.T9_TEMCONT) as TIPO_CONT,
 	ST9.T9_STATUS as STATUS,
 	case ST9.T9_PROPRIE when 1 then 'SIM' when '2' then 'NAO' else 'OUTROS' end as PROPRIO,
@@ -33,6 +37,14 @@ from STP010 STP (nolock)
 	inner join ST9010 ST9 (nolock)
 		on ST9.D_E_L_E_T_ = ''
 		and ST9.T9_CODBEM = STP.TP_CODBEM
+		and ST9.T9_CATBEM != 3
+
+		inner join TQR010 TQR (nolock)
+			on TQR.D_E_L_E_T_ = ''
+			and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+			
+			inner join ST7010 ST7 (nolock)
+				on ST7.D_E_L_E_T_ = ''
+				and ST7.T7_FABRICA = TQR.TQR_FABRIC
 where
-		ST9.T9_CATBEM != 3
-	and STP.D_E_L_E_T_ = ''
+		STP.D_E_L_E_T_ = ''
