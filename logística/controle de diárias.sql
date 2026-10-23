@@ -19,7 +19,7 @@ select
 
     cast(DYX.DYX_QTDE as int) as QTD,
     cast(DYX.DYX_VLRUNI as numeric(15, 2)) as VL_UNI,
-    upper(DYX.DYX_USRAPR) as APROVADORA,
+    (select upper(trim(SYS_USR.USR_CODIGO)) from SYS_USR where USR_ID = DYX.DYX_USRAPR and SYS_USR.D_E_L_E_T_ = '') as APROVADO_POR,
     trim(SE2.E2_NUM) as TITULO,
     cast(SE2.E2_VALOR as numeric(15, 2)) as VL_TITULO,
     cast(SE2.E2_SALDO as numeric(15, 2)) as SALDO,
@@ -42,18 +42,18 @@ select
 	cast(SE2.E2_BAIXA as date) as BAIXA,
     trim(SE2.E2_HIST) as HISTORICO
 
-from DYV010 DYV (nolock)
-    inner join DYX010 DYX (nolock)
-        on DYX.D_E_L_E_T_ = ''
-        and DYX.DYX_IDCDIA = DYV.DYV_IDCDIA
-        
-        left join SE2010 SE2 (nolock)
-            on SE2.D_E_L_E_T_ = ''
-            and SE2.E2_PREFIXO = DYX.DYX_PRETIT
-            and SE2.E2_NUM = DYX.DYX_NUMTIT
+from DYX010 DYX
+    left join SE2010 SE2
+        on SE2.D_E_L_E_T_ = ''
+        and SE2.E2_PREFIXO = DYX.DYX_PRETIT
+        and SE2.E2_NUM = DYX.DYX_NUMTIT
 
-    inner join DA4010 DA4 (nolock)
-        on DA4.D_E_L_E_T_ = ''
-        and DA4.DA4_COD = DYV.DYV_CODMOT
-where
-        DYV.D_E_L_E_T_ = ''
+    inner join DYV010 DYV
+        on DYV.D_E_L_E_T_ = ''
+        and DYV.DYV_IDCDIA = DYX.DYX_IDCDIA
+
+        inner join DA4010 DA4
+            on DA4.D_E_L_E_T_ = ''
+            and DA4.DA4_COD = DYV.DYV_CODMOT
+
+where DYX.D_E_L_E_T_ = ''
