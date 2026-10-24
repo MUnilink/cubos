@@ -28,10 +28,13 @@ select
 	SD1.D1_TOTAL as NF_TOTAL,
 	SD1.D1_CUSTO as NF_CUSTO,
 	SD1.D1_VALDESC as NF_VALDESC,
-    SD1.D1_TES as TES,
-    SF4.F4_TEXTO as DESC_TES,
-    SF4.F4_FINALID as FIM_TES,
-    SF4.F4_CF as CF,
+    
+	trim(SD1.D1_TES) as TES,
+	trim(SD1.D1_CF) as CFOP,
+    (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '13' and SX5010.X5_CHAVE = SD1.D1_CF) as DESC_CFOP,
+    trim(SF4.F4_TEXTO) as DESC_TES,
+    trim(SF4.F4_FINALID) as FIM_TES,
+    trim(SF4.F4_CF) as CF,
     (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '13' and SX5010.X5_CHAVE = SF4.F4_CF) as DESC_CF,
 	
 	SC1.C1_QUANT as QTD_SC_PEDIDA,
@@ -51,64 +54,6 @@ select
 	cast(SC7.C7_EMISSAO as date) as DATA_PEDIDO,
 	substring(SC7.C7_EMISSAO, 1, 6) as PERIODO_PC,
 	trim(upper(SY1.Y1_NOME)) as SOLICITANTE_PC,
-
-	(
-		select cast(max(SCR010.CR_NIVEL) as int)
-		from SCR010 (nolock)
-		where
-				SCR010.D_E_L_E_T_ = ''
-			and SCR010.CR_TIPO = 'PC'
-			and SCR010.CR_FILIAL = SC7.C7_FILIAL
-            and SCR010.CR_NUM = SC7.C7_NUM
-	) as NUM_NIVEL,
-
-	(
-        select max('P |01|SAK010|'+ COALESCE(NULLIF(RTRIM(COALESCE(SAK010.AK_FILIAL, ' '))+'|'+RTRIM(COALESCE(SAK010.AK_COD, ' ')), ' '), '|'))
-         from SCR010 SCR
-            inner join SAK010
-                on SAK010.D_E_L_E_T_ = ''
-                and SAK010.AK_COD = SCR.CR_LIBAPRO
-		where
-				SCR.D_E_L_E_T_ = ''
-			and SCR.CR_TIPO = 'PC'
-			and SCR.CR_FILIAL = SC7.C7_FILIAL
-			and SCR.CR_NUM = SC7.C7_NUM
-			and SCR.CR_NIVEL =
-		(
-			select max(SCR010.CR_NIVEL)
-			from SCR010 (nolock)
-			where
-					SCR010.D_E_L_E_T_ = ''
-				and SCR010.CR_TIPO = SCR.CR_TIPO
-				and SCR010.CR_FILIAL = SCR.CR_FILIAL
-				and SCR010.CR_NUM = SCR.CR_NUM
-				and SCR010.CR_STATUS = '3'
-		)
-    ) as BK_APROVADOR,
-
-	(
-		select upper(trim(max(SAK010.AK_LOGIN)))
-        from SCR010 SCR
-            inner join SAK010
-                on SAK010.D_E_L_E_T_ = ''
-                and SAK010.AK_COD = SCR.CR_LIBAPRO
-		where
-				SCR.D_E_L_E_T_ = ''
-			and SCR.CR_TIPO = 'PC'
-			and SCR.CR_FILIAL = SC7.C7_FILIAL
-			and SCR.CR_NUM = SC7.C7_NUM
-			and SCR.CR_NIVEL =
-		(
-			select max(SCR010.CR_NIVEL)
-			from SCR010 (nolock)
-			where
-					SCR010.D_E_L_E_T_ = ''
-				and SCR010.CR_TIPO = SCR.CR_TIPO
-				and SCR010.CR_FILIAL = SCR.CR_FILIAL
-				and SCR010.CR_NUM = SCR.CR_NUM
-				and SCR010.CR_STATUS = '3'
-		)
-	) as APROVADOR,
 
 	SC7.C7_COND as COND,
 	trim(SE4.E4_DESCRI) as CONDPGTO,
@@ -156,44 +101,43 @@ select
 	case when trim(SC7.C7_YOS) = '2024/0' then right(left(replace(replace(SC7.C7_OBS, char(10), ''), char(13), ''), 63), 11) else SC7.C7_YOS end as OS_PORT,
 	isnull(nullif(SC7.C7_YOSIT, ''), '0') as ITEMOS_PORT
 
-from SD1010 SD1 (nolock)
-	left join SF4010 SF4 (nolock)
+from SD1010 SD1
+	inner join SA2010 SA2
+		on SA2.D_E_L_E_T_ = ''
+		and SA2.A2_COD = SD1.D1_FORNECE
+		and SA2.A2_LOJA = SD1.D1_LOJA
+	inner join SF4010 SF4
 		on SF4.D_E_L_E_T_ = ''
 		and SF4.F4_CODIGO = SD1.D1_TES
-
-	left join SB1010 SB1 (nolock)
+	inner join SB1010 SB1
 		on SB1.D_E_L_E_T_ = ''
 		and SB1.B1_COD = SD1.D1_COD
 
-		inner join SBM010 SBM (nolock)
+		inner join SBM010 SBM
 			on SBM.D_E_L_E_T_ = ''
 			and SBM.BM_GRUPO = SB1.B1_GRUPO
 
-    left join SC7010 SC7 (nolock)
-		on SD1.D_E_L_E_T_ = ''
+    left join SC7010 SC7
+		on SC7.D_E_L_E_T_ = ''
 		and SC7.C7_FILIAL = SD1.D1_FILIAL
 		and SC7.C7_NUM = SD1.D1_PEDIDO
 		and SC7.C7_ITEM = SD1.D1_ITEMPC
 
-		left join SC1010 SC1 (nolock)
+		left join SC1010 SC1
 			on SC1.D_E_L_E_T_ = ''
 			and SC1.C1_FILIAL = SC7.C7_FILIAL
 			and SC1.C1_NUM = SC7.C7_NUMSC
 			and SC1.C1_ITEM = SC7.C7_ITEMSC
-
-	inner join SA2010 SA2 (nolock)
-		on SA2.D_E_L_E_T_ = ''
-		and SA2.A2_COD = SC7.C7_FORNECE
-		and SA2.A2_LOJA = SC7.C7_LOJA
-	left join SE4010 SE4 (nolock)
-		on SE4.D_E_L_E_T_ = ''
-		and SE4.E4_CODIGO = SC7.C7_COND
-	left join SY1010 SY1 (nolock)
-		on SY1.Y1_USER = SC7.C7_USER
-	left join CTT010 CTT (nolock)
+		left join SE4010 SE4
+			on SE4.D_E_L_E_T_ = ''
+			and SE4.E4_CODIGO = SC7.C7_COND
+		left join SY1010 SY1
+			on SY1.Y1_USER = SC7.C7_USER
+	
+	left join CTT010 CTT
 		on CTT.D_E_L_E_T_ = ''
-		and CTT.CTT_CUSTO = SC7.C7_CC
-	left join CTD010 CTD (nolock)
+		and CTT.CTT_CUSTO = SD1.D1_CC
+	left join CTD010 CTD
 		on CTD.D_E_L_E_T_ = ''
-		and CTD.CTD_ITEM = SC7.C7_ITEMCTA
-where SC7.D_E_L_E_T_ = ''
+		and CTD.CTD_ITEM = SD1.D1_ITEMCTA
+where SD1.D_E_L_E_T_ = ''

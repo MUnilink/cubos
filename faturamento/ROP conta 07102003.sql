@@ -3,7 +3,7 @@
         ZC2.ZC2_NUM as NUM,
         ZC2.ZC2_CC as CC,
         ZC2.ZC2_ATIVD as ITEM,
-        sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) as TOTAL
+        sum(ZC2.ZC2_TOTAL * ZG1.VL_RIMP) *-1 as TOTAL
     from
     (
         select
@@ -63,7 +63,7 @@ union
         ZE1.ZE1_NUM as NUM,
         ZG1.ZG1_CC as CC,
         ZG1.ZG1_ITEMCT as ITEM,
-        sum(ZE1.ZE1_TOTAL * ZG1.VL_RIMP) as TOTAL
+        sum(ZE1.ZE1_TOTAL * ZG1.VL_RIMP) *-1 as TOTAL
     from ZE1010 ZE1
         inner join
         (

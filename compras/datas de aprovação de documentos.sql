@@ -74,8 +74,7 @@
 			and SY1.Y1_USER = SC7.C7_USER
 	where
 			SC7.D_E_L_E_T_ = ''
-		        and SC7.C7_EMISSAO > 20210101
-
+		and SC7.C7_EMISSAO between :DATA_INI and :DATA_FIM
 union
 	select
 		trim(SC1.C1_FILIAL) as FILIAL,
@@ -184,7 +183,7 @@ union
 		trim(SCR.CR_ITGRP) as ITEM_GRUPO,
 		trim(SCR.CR_NIVEL) as NIVEL,
 		
-		SCP.CP_RESIDUO as RESIDUO,
+		null as RESIDUO,
 		cast(SCR.CR_EMISSAO as date) as DATA_ALCADA,
 		left(SCR.CR_EMISSAO, 6) as PERIODO_ALCADA,
 		convert(datetime, concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), 113) as DATAHORA_LIB,

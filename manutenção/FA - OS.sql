@@ -71,7 +71,7 @@ select
 	trim(STL.TL_FILIAL) as COD_FILIAL,
 	trim(STJ.TJ_SERVICO) as T4_SERVICO,
 	trim(STJ.TJ_CCUSTO) as CC,
-	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 last_value(TPN010.TPN_XITEMC) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI), '')) as ATIVIDADE,
+	coalesce(nullif(trim(STJ.TJ_YITMCT), ''), nullif((select top 1 last_value(trim(TPN010.TPN_XITEMC)) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI), '')) as ATIVIDADE,
 	trim(SD1.D1_PEDIDO) as PEDCOMPRA,
 	
 	case
@@ -84,6 +84,8 @@ select
 	/*
 		**** ABAIXO DADOS DE CONTROLE PELO RM ****
 	*/
+	trim(STJ.TJ_YITMCT) as AT,
+	(select top 1 last_value(trim(TPN010.TPN_XITEMC)) over(partition by TPN010.TPN_CODBEM order by TPN010.TPN_CODBEM, TPN010.TPN_DTINIC, TPN010.TPN_HRINIC) from TPN010 where TPN010.D_E_L_E_T_ = '' and TPN010.TPN_CODBEM = STJ.TJ_CODBEM and TPN010.TPN_DTINIC <= STL.TL_DTINICI) as AT_TPN,
 
 	case
 		when STL.TL_TIPOREG = 'P' and (STL.TL_LOCAL like '[0-1]%' or STL.TL_LOCAL = '20') then concat(trim(SB1.B1_YCTCUST), ' ',(select trim(CT1010.CT1_DESC01) from CT1010 where CT1010.D_E_L_E_T_ = '' and CT1010.CT1_CONTA = SB1.B1_YCTCUST))
@@ -246,5 +248,5 @@ from STJ010 STJ (nolock)
 				and SA2.A2_COD = SD1.D1_FORNECE
 				and SA2.A2_LOJA = SD1.D1_LOJA
 where
-		STJ.TJ_DTORIGI between '20201231' and '20281231'
+		STL.TL_DTFIM >=:DATA_INI
 	and STL.D_E_L_E_T_ = ''

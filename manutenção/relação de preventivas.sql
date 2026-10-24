@@ -1,6 +1,7 @@
 select
     trim(STI.TI_FILIAL) as FILIAL,
     trim(STI.TI_DESCRIC) as NOME_PLANO,
+    cast(STI.TI_DATAPLA as date) as DATA_PLANO,
 
     trim(STJ.TJ_CCUSTO) as CC,
     trim(STJ.TJ_CODBEM) as EQUIPAMENTO,
@@ -10,6 +11,7 @@ select
     trim(STJ.TJ_SERVICO) as SERVICO,
     trim(ST4.T4_NOME) as DESC_SERVICO,
     
+    cast(STJ.TJ_DTORIGI as date) as DT_GERA_OS,
     cast(STJ.TJ_DTMRINI as date) as DT_REAL_INI,
     cast(STJ.TJ_DTMRFIM as date) as DT_REAL_FIM,
     cast(STJ.TJ_DTMPINI as date) as DT_PREV_INI,

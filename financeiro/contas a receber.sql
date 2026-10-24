@@ -4,7 +4,7 @@ select
 	trim(SE1.E1_NUM) as TITULO,
 	trim(SE1.E1_TIPO) as TIPO_TITULO,
 	cast(SE1.E1_EMISSAO as date) as DATA_TITULO,
-	left(SE1.E1_EMISSAO, 6) as PERIODO,
+	left(SE1.E1_EMISSAO, 6) as PERIODO_TITULO,
 	cast(SE1.E1_VENCTO as date) as VENCIMENTO,
 	left(SE1.E1_VENCTO, 6) as PERIODO_VENCIMENTO,
 	cast(SE1.E1_VENCREA as date) as VENCREAL,
@@ -39,6 +39,7 @@ select
     SE1.E1_NUMBOR as BORDERO,
     trim(SE1.E1_YTITORI) as TITULO_ORI,
     trim(SE1.E1_ORIGEM) as ORIGEM,
+    trim(DT6.DT6_CHVCTE) as CHAVE_NF,
 
 	trim(SE1.E1_NATUREZ) as NATUREZA,
 	trim(SED.ED_DESCRIC) as DESC_NATUREZA,
@@ -95,42 +96,178 @@ select
     cast(coalesce(SD2.D2_PRUNIT, 0) as decimal(16, 4)) as VL_UNITARIO,
     cast(coalesce(SD2.D2_SEGURO, 0) as decimal(14, 2)) as VL_SEGURO,
     cast(coalesce(SD2.D2_PESO * SD2.D2_QUANT, 0) as decimal(12, 4)) as PESO_LIQUIDO,
+
+    trim(ZC2.ZC2_NUM) as OS_PORTUARIA,
+    substring(ZC2.ZC2_NUM, 6, 10) as OS,
+    left(ZC1.ZC1_EMISSA, 6) as PERIODO_OS,
+    cast(ZC1.ZC1_EMISSA as date) as DATA_OS,
+    (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC) as TABELA_PRECO,
+    trim(ZC2.ZC2_ITEM) as ITEMOS,
+    trim(upper(ZC2.ZC2_NMUSU)) as USUARIO_OS,
+    ZC2.ZC2_QTDPRV as QTD_PREV,
+    ZC2.ZC2_QTDREA as QTD_REAL,
+    ZC2.ZC2_VLUPRV as VAL_PREV,
+    ZC2.ZC2_VLUREA as VAL_REAL,
+    
+    (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
+    (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
+    trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
+
+    case ZC1.ZC1_STATUS
+        when 1 then 'ABERTA'
+        when 2 then 'SOLICITADO CANCELAMENTO'
+        when 3 then 'CANCELADA'
+        when 5 then 'CORTESIA'
+        when 6 then 'ENCERRADA'
+        else 'OUTROS'
+    end as STATUS_OS,
+    
+    case ZC1.ZC1_STATU2
+        when 1 then 'PENDENTE'
+        when 2 then 'PARCIAL'
+        when 3 then 'FINALIZADO'
+        else 'OUTROS'
+    end as STATUS_PEDIDO,
+
+    coalesce
+    (
+        DUD.DUD_VIAGEM, /* viagem normal */
+        VGA2.DUD_VIAGEM, /* se viagem atrelada ao complemento */
+        (
+            select distinct DUD010.DUD_VIAGEM /* NF de receita extra da viagem */
+            from DUD010 (nolock)
+                inner join SC5010 (nolock)
+                    on SC5010.D_E_L_E_T_ = ' '
+                    and nullif(SC5010.C5_YVIAGEM, '') = DUD010.DUD_VIAGEM
+            where
+                    DUD010.D_E_L_E_T_ = ''
+                and DUD010.DUD_STATUS != 9
+                and SD2.D2_FILIAL = SC5010.C5_FILIAL
+                and SD2.D2_DOC = SC5010.C5_NOTA
+                and SD2.D2_SERIE = SC5010.C5_SERIE
+                and SD2.D2_CLIENTE = SC5010.C5_CLIENTE
+                and SD2.D2_LOJA = SC5010.C5_LOJACLI
+        )
+    ) as VIAGEM_TMS,
+    
+    trim(DF1.DF1_NUMAGE) as AGENDAMENTO,
+    trim(DF1.DF1_ITEAGE) as AGENDAMENTO_ITEM,
+    trim(DF1.DF1_YOSCLI) as OS_CLIENTE,
+
+    case
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 1 then upper('Em Aberto')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 2 then upper('Em Transito')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 3 then upper('Carregado')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 4 then upper('Encerrado')
+        when coalesce(DUD.DUD_STATUS, VGA2.DUD_STATUS) = 9 then upper('Cancelado')
+        else 'Outros'
+    end as STATUS_CTE,
+
+    cast(DT6.DT6_DATEMI as date) as DATA_CTE,
+    DT6.DT6_VALFRE as VL_CTE,
+    DT6.DT6_VALIMP as VL_CTEIMP,
+    DT6.DT6_VALTOT as VL_CTETOTAL,
+    DT6.DT6_VALMER as VL_MERCAD,
+    trim(REG_COL.DUY_EST) as UF_COLETA,
+	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
+	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
+	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
+
     1 as contador
 
-from SE1010 SE1 (nolock)
-	left join SA1010 SA1 (nolock)
+from SE1010 SE1
+	left join SA1010 SA1
 		on SA1.D_E_L_E_T_ = ''
 		and SA1.A1_COD = SE1.E1_CLIENTE
 		and SA1.A1_LOJA = SE1.E1_LOJA
 	
-    left join SD2010 SD2 (nolock)
+    left join SD2010 SD2
         on SD2.D2_FILIAL = SE1.E1_FILIAL
         and SD2.D2_DOC = SE1.E1_NUM
         and SD2.D2_CLIENTE = SE1.E1_CLIENTE
         and SD2.D2_LOJA = SE1.E1_LOJA
         and SD2.D_E_L_E_T_ = ''
 	
-        left join SC6010 SC6 (nolock)
+        left join SC6010 SC6
             on SC6.D_E_L_E_T_ = ''
             and SC6.C6_FILIAL = SD2.D2_FILIAL
             and SC6.C6_NUM = SD2.D2_PEDIDO
             and SC6.C6_ITEM = SD2.D2_ITEMPV
-        left join SB1010 SB1 (nolock)
+
+            left join ZC2010 ZC2
+                on ZC2.D_E_L_E_T_ = ''
+                and ZC2.ZC2_FILIAL = SC6.C6_FILIAL
+                and ZC2.ZC2_NUM = SC6.C6_YOS
+                and ZC2.ZC2_ITEM = SC6.C6_YITOS
+
+                left join ZC1010 ZC1
+                    on ZC1.D_E_L_E_T_ = ''
+                    and ZC1.ZC1_FILIAL = ZC2.ZC2_FILIAL
+                    and ZC1.ZC1_NUM = ZC2.ZC2_NUM
+
+        left join DUD010 DUD
+            on DUD.D_E_L_E_T_ = ''
+            and DUD.DUD_FILDOC = SD2.D2_FILIAL
+            and DUD.DUD_DOC = SD2.D2_DOC
+            and DUD.DUD_SERIE = SD2.D2_SERIE
+            and DUD.DUD_SERIE != 'COL'
+
+            left join DTC010 DTC
+                on DTC.D_E_L_E_T_ = ''
+                and DTC.DTC_FILDOC = DUD.DUD_FILDOC
+                and DTC.DTC_DOC = DUD.DUD_DOC
+                and DTC.DTC_SERIE = DUD.DUD_SERIE
+
+                left join DF1010 DF1
+                    on DF1.D_E_L_E_T_ = ''
+                    and DF1.DF1_FILDOC = DTC.DTC_FILDOC
+                    and DF1.DF1_DOC = DTC.DTC_NUMSOL
+            
+            left join DT6010 DT6
+                on DT6.D_E_L_E_T_ = ''
+                and DT6.DT6_FILDOC = DUD.DUD_FILDOC
+                and DT6.DT6_DOC = DUD.DUD_DOC
+                and DT6.DT6_SERIE = DUD.DUD_SERIE
+
+                left join DUY010 REG_COL
+                    on REG_COL.D_E_L_E_T_ = ''
+                    and REG_COL.DUY_FILIAL = DT6.DT6_FILIAL
+                    and REG_COL.DUY_GRPVEN = DT6.DT6_CDRORI
+                left join DUY010 REG_ENT
+                    on REG_ENT.D_E_L_E_T_ = ''
+                    and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
+                    and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
+
+        left join SD2010 COMP
+            on COMP.D_E_L_E_T_ = ''
+            and COMP.D2_DOC = SD2.D2_NFORI
+            and COMP.D2_SERIE = SD2.D2_SERIORI
+            and COMP.D2_CLIENTE = SD2.D2_CLIENTE
+            and COMP.D2_LOJA = SD2.D2_LOJA
+
+            left join DUD010 VGA2
+                on VGA2.D_E_L_E_T_ = ''
+                and VGA2.DUD_FILDOC = COMP.D2_FILIAL
+                and VGA2.DUD_DOC = COMP.D2_DOC
+                and VGA2.DUD_SERIE = COMP.D2_SERIE
+        
+        left join SB1010 SB1
             on SB1.D_E_L_E_T_ = ''
             and SB1.B1_COD = SD2.D2_COD
 
-            left join SBM010 SBM (nolock)
+            left join SBM010 SBM
                 on SBM.D_E_L_E_T_ = ''
                 and SBM.BM_GRUPO = SB1.B1_GRUPO
         
-    left join CTT010 CTT (nolock)
+    left join CTT010 CTT
         on CTT.D_E_L_E_T_ = ''
         and CTT.CTT_CUSTO = SE1.E1_CCUSTO
-    left join CTD010 CTD (nolock)
+    left join CTD010 CTD
         on CTD.D_E_L_E_T_ = ''
         and CTD.CTD_ITEM = SE1.E1_ITEMCTA
-	left join SED010 SED (nolock)
+	left join SED010 SED
 		on SED.D_E_L_E_T_ = ''
 		and SED.ED_CODIGO = SE1.E1_NATUREZ
-
-where SE1.D_E_L_E_T_ = ''
+where
+        SE1.D_E_L_E_T_ = ''
+    and SD2.D2_EMISSAO >=:DATAINI_DOCUMENTO

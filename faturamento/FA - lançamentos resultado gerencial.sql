@@ -81,7 +81,7 @@ select distinct
 
     case
         when ZE2.ZE2_ORIGEM = 'F' then ZE3.ZE3_VALOR
-        when left(ZE2.ZE2_COD, 8) in ('02101007', '02501002') or ZE2.ZE2_COD like '072%' then ZE3.ZE3_VALOR
+        when left(ZE2.ZE2_COD, 8) in ('02101007', '02501002') or ZE2.ZE2_COD like '07_%' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '01' then ZE3.ZE3_VALOR
         when left(ZE2.ZE2_COD, 2) = '11' then ZE3.ZE3_VALOR*-1
         when left(ZE2.ZE2_COD, 2) like '[0-9][2-9]' then ZE3.ZE3_VALOR*-1
@@ -187,5 +187,5 @@ from ZE3010 ZE3 (nolock)
         on CTD010.D_E_L_E_T_ = ''
         and CTD010.CTD_ITEM = ZE3.ZE3_ITORIG
 where
-        ZE3.ZE3_COMPET LIKE '20251%'
+        ZE3.ZE3_COMPET LIKE '2026%'
     and ZE3.D_E_L_E_T_ = ''

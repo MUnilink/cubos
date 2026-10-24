@@ -83,17 +83,17 @@ SELECT
             and SCR.CR_FILIAL = SC1.C1_FILIAL
             and SCR.CR_NUM = SC1.C1_NUM
     ) as BK_APROVOU_SC,
-
+    
     null as BK_APROVOU_SA,
 
     SD1.D1_QUANT as QTD_ATENDIDA,
     SD1.D1_TOTAL as VALOR_TOTAL,
 
     trim(concat(SC1.C1_EMISSAO, ' ', SC1.C1_YHORASC)) as DATA_SC,
-    SD1.D1_EMISSAO as DATA_EMINF,
+    trim(SD1.D1_EMISSAO) as DATA_EMINF,
     trim(concat(SF1.F1_DTDIGIT, ' ', SF1.F1_YHORANF)) as DATA_DIGNF, /* data */
     trim(concat(SC7.C7_EMISSAO, ' ', SC7.C7_YHORAPC)) as DATA_EMIPC,
-    SC7.C7_DATPRF as DATA_PRVPC,
+    trim(SC7.C7_DATPRF) as DATA_PRVPC,
     
     (
         select top 1 coalesce(concat(SCR.CR_DATALIB, ' ', SCR.CR_YHRLIB), '')
@@ -143,6 +143,7 @@ SELECT
             and SCR.CR_NUM = SC1.C1_NUM
     ) as DATAAPROV_SC, /* data aprovação SC */
 
+    null as DATA_SA, /* data emissão SA * ver datas "reais", pois SAs costumam manter a data original */
     null as DATAAPROV_SA, /* data aprovação SA */
     
     case when
@@ -168,7 +169,7 @@ SELECT
     case when datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF) > 0 then 1 else 0 end as QTD_ADIANTADA, /* diferença entre data classificação e data prevista */
     case when datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT) < 0 then 1 else 0 end as QTD_ATRASADA, /* diferença entre data prevista e data classificação */
     case when (datediff(day, SD1.D1_DTDIGIT, SC7.C7_DATPRF) = 0) and (datediff(day, SC7.C7_DATPRF, SD1.D1_DTDIGIT) = 0) then 1 else 0 end as QTD_EMDIA, /* recebimento em dia */
-    case when (SD1.D1_QUANT >= SC7.C7_QUANT) then 1 else 0 end as QRECUN /* se quantidade atendida maior que quantidade pedida*/
+    case when (SD1.D1_QUANT >= SC7.C7_QUANT) then 1 else 0 end as QRECUN /* se quantidade atendida maior que quantidade pedida */
 
 FROM SD1010 SD1
     LEFT JOIN SB1010 SB1

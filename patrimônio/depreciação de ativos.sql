@@ -1,10 +1,12 @@
 select
-    SN1.N1_GRUPO as GRUPO,
+    trim(SN1.N1_GRUPO) as GRUPO,
 	trim(isnull(SN1.N1_CBASE, '-')) as ATIVO,
-	SN1.N1_CBASE as qtd,
+	trim(SN3.N3_ITEM) ITEM_ATIVO,
+	trim(SN1.N1_CBASE) as qtd,
 	trim(isnull(SN1.N1_DESCRIC, '-')) as DESC_ATIVO,
     trim(isnull(ST9.T9_CODBEM, '-')) as T9_CODBEM,
 	SN3.N3_TIPO,
+	(select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = 'G1' and SX5010.X5_CHAVE = SN3.N3_TIPO) as TIPO_ATIVO,
 	trim(SN3.N3_FIMDEPR) as FIMDEPR,
 	cast(SN3.N3_DINDEPR as date) as INI_DEPREC,
 	cast(SN3.N3_TXDEPR1 /12 as numeric(15, 3)) as DEPREC_MENSAL,
@@ -70,8 +72,7 @@ select
 from SN4010 SN4 (nolock)
 	inner join SN3010 SN3 (nolock)
 		on SN3.D_E_L_E_T_ = ''
-		and SN3.N3_CBASE = SN4.N4_CBASE
-		and SN3.N3_ITEM = SN4.N4_ITEM
+		and SN4.N4_CBASE + SN4.N4_ITEM + SN4.N4_TIPO + SN4.N4_SEQ = SN3.N3_CBASE + SN3.N3_ITEM + SN3.N3_TIPO + SN3.N3_SEQ
 
 		left join SN1010 SN1 (nolock)
 			on SN1.D_E_L_E_T_ = ''

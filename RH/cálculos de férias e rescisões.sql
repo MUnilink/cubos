@@ -47,6 +47,7 @@ select
     cast(SRR.RR_DATA as date) as DT_GERACALC,
     SRG.RG_RESCDIS as FASE_RESCISAO,
     concat(trim(SRG.RG_TIPORES), ' - ', (select trim(substring(RCC010.RCC_CONTEU, 2, 32)) from RCC010 where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and left(RCC010.RCC_CONTEU, 2) = trim(SRG.RG_TIPORES))) as TIPO_RESCISAO,
+    left(SRG.RG_DTPROAV, 6) as PERIODO_PRAVISO,
     
     trim(SRG.RG_OBS) as OBS,
     SRG.RG_DAVCUM as DIAS_REC_CUMPRIDO,

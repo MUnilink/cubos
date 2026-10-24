@@ -58,6 +58,7 @@
             and SD1.D1_LOJA = SFT.FT_LOJA
             and SD1.D1_DOC = SFT.FT_NFISCAL
             and SD1.D1_SERIE = SFT.FT_SERIE
+            and SD1.D1_ITEM = SFT.FT_ITEM
 
             left join SF1010 SF1 (nolock)
                 on SF1.F1_FILIAL = SD1.D1_FILIAL
@@ -152,6 +153,7 @@ union
             and SD2.D2_LOJA = SFT.FT_LOJA
             and SD2.D2_DOC = SFT.FT_NFISCAL
             and SD2.D2_SERIE = SFT.FT_SERIE
+            and SD2.D2_ITEM = SFT.FT_ITEM
             and SD2.D2_TIPO not in ('B', 'D')
 
             left join SF2010 SF2 (nolock)
