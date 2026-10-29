@@ -30,6 +30,9 @@
 
         cast(SFT.FT_ICMSCOM as numeric(15, 2)) as ICMS_COMPL,
         cast(SFT.FT_DIFAL as numeric(15, 2)) as DIFAL,
+        cast(SFT.FT_BASEICM as numeric(15, 2)) as BASE_ICMS,
+        cast(SFT.FT_VALICM as numeric(15, 2)) as VALOR_ICMS,
+
 
         cast(coalesce(SD1.D1_TOTAL, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
         cast(coalesce(SD1.D1_VALICM, 0) as decimal(14, 2)) as VL_ICMS_FATURAMENTO,
@@ -126,6 +129,8 @@ union
 
         cast(SFT.FT_ICMSCOM as numeric(15, 2)) as ICMS_COMPL,
         cast(SFT.FT_DIFAL as numeric(15, 2)) as DIFAL,
+        cast(SFT.FT_BASEICM as numeric(15, 2)) as BASE_ICMS,
+        cast(SFT.FT_VALICM as numeric(15, 2)) as VALOR_ICMS,
         
         cast(coalesce(SD2.D2_VALBRUT, 0) as decimal(14, 2)) as VL_FATURAMENTO_TOTAL,
         cast(coalesce(SD2.D2_VALICM, 0) as decimal(14, 2)) as VL_ICMS_FATURAMENTO,
