@@ -1,89 +1,88 @@
-SELECT BK_EMPRESA,
+select
+       BK_EMPRESA,
        BK_FILIAL,
        BK_CONTA,
-NORMAL,
+       normal,
        CTARES,
        TIPOCONTA,
        GRUPO,
        NATCTA,
        CT1DTEXSF,
        DESCCTA,
-       DATA,
-       CAST(COALESCE(SALDOANTDB, 0) AS DECIMAL(16, 2)) AS SALDOANTDB,
-       CAST(COALESCE(SALDOANTCR, 0) AS DECIMAL(16, 2)) AS SALDOANTCR,
-       CAST(COALESCE(SALDODEB, 0) AS DECIMAL(16, 2)) AS SALDODEB,
-       CAST(COALESCE(SALDOCRD, 0) AS DECIMAL(16, 2)) AS SALDOCRD
-FROM
-  (SELECT DISTINCT 'P |01|01' AS BK_EMPRESA,
-                   CASE
-                       WHEN CQ1_FILIAL IS NULL THEN 'P |01||'
-                       ELSE 'P |01|01'+ CAST(CQ1_FILIAL AS CHAR (6))
-                   END AS BK_FILIAL,
-                   'P |01|CT1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CT1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CQ1_CONTA, ' ')), ' '), '|') AS BK_CONTA,
-                   CT1_NORMAL AS
-   NORMAL,
-                   CT1_RES AS CTARES,
-                   CT1_CLASSE AS TIPOCONTA,
-                   CT1_GRUPO AS GRUPO,
-                   CT1_NATCTA AS NATCTA,
-                   CT1_DTEXSF AS CT1DTEXSF,
-                   CT1_DESC01 AS DESCCTA,<<FINAL_DATE>> AS DATA,
+       data,
+       CAST(COALESCE(SALDOANTDB, 0) as DECIMAL(16, 2)) as SALDOANTDB,
+       CAST(COALESCE(SALDOANTCR, 0) as DECIMAL(16, 2)) as SALDOANTCR,
+       CAST(COALESCE(SALDODEB, 0) as DECIMAL(16, 2)) as SALDODEB,
+       CAST(COALESCE(SALDOCRD, 0) as DECIMAL(16, 2)) as SALDOCRD
+from
+    (
+       select
+              distinct 'P |01|01' as BK_EMPRESA,
+              case when CQ1_FILIAL is null then 'P |01||' else 'P |01|01'+ CAST(CQ1_FILIAL as CHAR (6)) end as BK_FILIAL,
+              'P |01|CT1010|'+ COALESCE(NULLIF(RTRIM(COALESCE(CT1_FILIAL, ' '))+'|'+RTRIM(COALESCE(CQ1_CONTA, ' ')), ' '), '|') as BK_CONTA,
+              CT1_NORMAL as normal,
+              CT1_RES as CTARES,
+              CT1_CLASSE as TIPOCONTA,
+              CT1_GRUPO as GRUPO,
+              CT1_NATCTA as NATCTA,
+              CT1_DTEXSF as CT1DTEXSF,
+              CT1_DESC01 as DESCCTA,
+              <<FINAL_DATE>> as data,
 
-     (SELECT CASE
-                 WHEN SUM(CQ1_DEBITO) IS NULL THEN 0
-                 ELSE SUM(CQ1_DEBITO)
-             END AS SALDOANTDB
-      FROM CQ1010 CQ11
-      WHERE CQ11.CQ1_CONTA = CQ1.CQ1_CONTA
-        AND CQ11.CQ1_TPSALD = '1'
-        AND CQ11.CQ1_DATA < <<START_DATE>>
-        AND CQ11.D_E_L_E_T_ = ' '
-        AND CQ11.CQ1_FILIAL = CQ1.CQ1_FILIAL
-        AND CQ11.CQ1_MOEDA = '01') AS SALDOANTDB,
+              (
+                     select case when SUM(CQ1_DEBITO) is null then 0 else SUM(CQ1_DEBITO) end as SALDOANTDB
+                     from CQ1010 CQ11
+                     where
+                            CQ11.CQ1_CONTA = CQ1.CQ1_CONTA
+                            and CQ11.CQ1_TPSALD = '1'
+                            and CQ11.CQ1_DATA < <<START_DATE>>
+                            and CQ11.D_E_L_E_T_ = ' '
+                            and CQ11.CQ1_FILIAL = CQ1.CQ1_FILIAL
+                            and CQ11.CQ1_MOEDA = '01'
+              ) as SALDOANTDB,
 
-     (SELECT CASE
-                 WHEN SUM(CQ1_CREDIT) IS NULL THEN 0
-                 ELSE SUM(CQ1_CREDIT)
-             END AS SALDOANTCR
-      FROM CQ1010 CQ12
-      WHERE CQ12.CQ1_CONTA = CQ1.CQ1_CONTA
-        AND CQ12.CQ1_TPSALD = '1'
-        AND CQ12.CQ1_DATA < <<START_DATE>>
-        AND CQ12.D_E_L_E_T_ = ' '
-        AND CQ12.CQ1_FILIAL = CQ1.CQ1_FILIAL
-        AND CQ12.CQ1_MOEDA = '01') AS SALDOANTCR,
+              (
+                     select case when SUM(CQ1_CREDIT) is null then 0 else SUM(CQ1_CREDIT) end as SALDOANTCR
+                     from CQ1010 CQ12
+                     where
+                            CQ12.CQ1_CONTA = CQ1.CQ1_CONTA
+                            and CQ12.CQ1_TPSALD = '1'
+                            and CQ12.CQ1_DATA < <<START_DATE>>
+                            and CQ12.D_E_L_E_T_ = ' '
+                            and CQ12.CQ1_FILIAL = CQ1.CQ1_FILIAL
+                            and CQ12.CQ1_MOEDA = '01'
+              ) as SALDOANTCR,
 
-     (SELECT CASE
-                 WHEN SUM(CQ1_DEBITO) IS NULL THEN 0
-                 ELSE SUM(CQ1_DEBITO)
-             END AS SALDODEB
-      FROM CQ1010 CQ13
-      WHERE CQ13.CQ1_CONTA = CQ1.CQ1_CONTA
-        AND CQ13.CQ1_TPSALD = '1'
-        AND CQ13.CQ1_DATA >= <<START_DATE>>
-        AND CQ13.CQ1_DATA <= <<FINAL_DATE>>
-        AND CQ13.D_E_L_E_T_ = ' '
-        AND CQ13.CQ1_FILIAL = CQ1.CQ1_FILIAL
-        AND CQ13.CQ1_MOEDA = '01') AS SALDODEB,
+              (
+                     select case when SUM(CQ1_DEBITO) is null then 0 else SUM(CQ1_DEBITO) end as SALDODEB
+                     from CQ1010 CQ13
+                     where
+                            CQ13.CQ1_CONTA = CQ1.CQ1_CONTA
+                            and CQ13.CQ1_TPSALD = '1'
+                            and CQ13.CQ1_DATA >= <<START_DATE>>
+                            and CQ13.CQ1_DATA <= <<FINAL_DATE>>
+                            and CQ13.D_E_L_E_T_ = ' '
+                            and CQ13.CQ1_FILIAL = CQ1.CQ1_FILIAL
+                            and CQ13.CQ1_MOEDA = '01'
+              ) as SALDODEB,
 
-     (SELECT CASE
-                 WHEN SUM(CQ1_CREDIT) IS NULL THEN 0
-                 ELSE SUM(CQ1_CREDIT)
-             END AS SALDOCRD
-      FROM CQ1010 CQ14
-      WHERE CQ14.CQ1_CONTA = CQ1.CQ1_CONTA
-        AND CQ14.CQ1_TPSALD = '1'
-        AND CQ14.CQ1_DATA >= <<START_DATE>>
-        AND CQ14.CQ1_DATA <= <<FINAL_DATE>>
-        AND CQ14.D_E_L_E_T_ = ' '
-        AND CQ14.CQ1_FILIAL = CQ1.CQ1_FILIAL
-        AND CQ14.CQ1_MOEDA = '01') AS SALDOCRD
-   FROM CQ1010 CQ1
-   INNER JOIN CT1010 CT1 ON CT1_FILIAL = CQ1_FILIAL
-   AND CT1_CONTA = CQ1_CONTA
-   AND CT1.D_E_L_E_T_ = ' '
-   WHERE CQ1.D_E_L_E_T_ = ' '
-     AND CQ1.CQ1_MOEDA = '01' ) SALDOARQ
-WHERE (SALDOANTDB - SALDOANTCR <> 0
-       OR SALDODEB <> 0
-       OR SALDOCRD <> 0)
+              (
+                     select case when SUM(CQ1_CREDIT) is null then 0 else SUM(CQ1_CREDIT) end as SALDOCRD
+                     from CQ1010 CQ14
+                     where
+                            CQ14.CQ1_CONTA = CQ1.CQ1_CONTA
+                            and CQ14.CQ1_TPSALD = '1'
+                            and CQ14.CQ1_DATA >= <<START_DATE>>
+                            and CQ14.CQ1_DATA <= <<FINAL_DATE>>
+                            and CQ14.D_E_L_E_T_ = ' '
+                            and CQ14.CQ1_FILIAL = CQ1.CQ1_FILIAL
+                            and CQ14.CQ1_MOEDA = '01'
+              ) as SALDOCRD
+       from CQ1010 CQ1
+       inner join CT1010 CT1
+              on CT1_FILIAL = CQ1_FILIAL
+              and CT1_CONTA = CQ1_CONTA
+              and CT1.D_E_L_E_T_ = ' '
+       where CQ1.D_E_L_E_T_ = ' ' and CQ1.CQ1_MOEDA = '01'
+) SALDOARQ
+where (SALDOANTDB - SALDOANTCR <> 0 or SALDODEB <> 0 or SALDOCRD <> 0)
