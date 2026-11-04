@@ -51,7 +51,10 @@ with SRV as
         case when SRV010.RV_COD in ('759', '760', '761', '800') then 1 else 0 end as FGTS,
         case when SRV010.RV_COD in ('950', '955', '960', '961', '962') then 1 else 0 end as INCRA_SISTEMA_S,
         case when SRV010.RV_COD in ('815', '817') then 1 else 0 end as INSS_ACIDPATR,
-        /* valores benefícios */
+        /* valores rescisão */
+        case when SRV010.RV_COD in ('759') then 1 else 0 end as FGTS_QUITA_RESCISAO,
+        case when SRV010.RV_COD in ('761') then 1 else 0 end as FGTS_13SAL_RESCISAO,
+        case when SRV010.RV_COD in ('760') then 1 else 0 end as FGTS_MULTA_RESCISAO,
         /* econsignado provento */
         case when SRV010.RV_COD in ('454', '457') then 1 else 0 end as ECONSIGNADO_PROV,
 
@@ -134,6 +137,11 @@ with SRV as
         SRC.RC_VALOR * SRV.INCRA_SISTEMA_S as INCRA_SISTEMA_S,
         SRC.RC_VALOR * SRV.INSS_ACIDPATR as INSS_ACIDPATR,
         SRC.RC_VALOR * SRV.ECONSIGNADO_PROV as ECONSIGNADO_PROV,
+
+        /* verbas FGTS rescisão */
+        SRC.RC_VALOR * SRV.FGTS_QUITA_RESCISAO as FGTS_QUITA_RESCISAO,
+        SRC.RC_VALOR * SRV.FGTS_13SAL_RESCISAO as FGTS_13SAL_RESCISAO,
+        SRC.RC_VALOR * SRV.FGTS_MULTA_RESCISAO as FGTS_MULTA_RESCISAO,
 
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
@@ -245,6 +253,11 @@ union
         SRD.RD_VALOR * SRV.INSS_ACIDPATR as INSS_ACIDPATR,
         SRD.RD_VALOR * SRV.ECONSIGNADO_PROV as ECONSIGNADO_PROV,
 
+        /* verbas FGTS rescisão */
+        SRD.RD_VALOR * SRV.FGTS_QUITA_RESCISAO as FGTS_QUITA_RESCISAO,
+        SRD.RD_VALOR * SRV.FGTS_13SAL_RESCISAO as FGTS_13SAL_RESCISAO,
+        SRD.RD_VALOR * SRV.FGTS_MULTA_RESCISAO as FGTS_MULTA_RESCISAO,
+
         trim(CTD010.CTD_DESC01) as ATIVIDADE,
         trim(CTT010.CTT_DESC01) as CENTRO_CUSTO,
         trim(SRA.RA_NOMECMP) as NOME,
@@ -284,5 +297,5 @@ union
             on CTT010.D_E_L_E_T_ = ''
             and CTT010.CTT_CUSTO = SRD.RD_CC
     where
-            SRD.RD_DATARQ > '202501'
+            SRD.RD_DATARQ > '202412'
         and SRD.D_E_L_E_T_ = ''
