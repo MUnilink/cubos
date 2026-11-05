@@ -13,7 +13,7 @@ union
         SF5.F5_CODIGO as COD_TES,
         SF5.F5_TEXTO as DESC_TES,
         null as GERA_DUPLICATA_TES,
-        null as GERA_ESTOQUE_TES,
+        SF5.F5_TIPO as GERA_ESTOQUE_TES,
         null as TIPO_OPERACAO_TES
     from SF5010 SF5
     where SF5.D_E_L_E_T_ = ' '
