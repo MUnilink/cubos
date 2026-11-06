@@ -93,7 +93,7 @@ SELECT
     1 as QORDCP, /* qtd de SCs */
     SC7.C7_QUANT as QTD_SOLICITADA,
     SC7.C7_QUJE as QTD_ATENDIDA,
-    SC7.C7_PRECO as VALOR_UNITARIO, 
+    SC7.C7_PRECO as VALOR_UNITARIO,
     SC7.C7_TOTAL as VALOR_TOTAL,
 
     cast(coalesce(nullif(SC7.C7_YTOTAL, ''), SC7.C7_TOTAL) as numeric(15, 2)) as VALOR_TOTALSAV,
@@ -109,7 +109,9 @@ SELECT
     cast(SC7.C7_ICMSRET as numeric(14, 2)) as VL_PC_ICMS_SUBST,
     cast(SC7.C7_VLDESC as numeric(12, 2)) as VL_PC_DESCONTO,
     cast(SC7.C7_VALINS as numeric(14, 2)) as VL_PC_INSS,
-	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO
+	cast(SC7.C7_SEGURO as numeric(14, 2)) as VL_PC_SEGURO,
+
+    trim(replace(replace(SC7.C7_OBS, char(10), ''), char(13), '')) as OBS_PC
 
 FROM SC7010 SC7
     left join SB1010 SB1
