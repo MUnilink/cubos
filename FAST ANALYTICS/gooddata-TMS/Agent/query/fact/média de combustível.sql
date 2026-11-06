@@ -24,7 +24,7 @@ with MEDIACOMB as
 		cast(TQN.TQN_VALTOT as numeric(15, 2)) as VLTOTAL_ORI,
 		TQN.TQN_HODOM as CONTADOR,
 		left(TQN.TQN_DTABAS, 6) as PERIODO,
-		convert(datetime, concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS), 113) as DATA_ABA,
+		case when isdate(concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS)) = 1 then concat(TQN.TQN_DTABAS, ' ', TQN.TQN_HRABAS) end as DATA_ABA,
 		lag(TQN.TQN_HODOM, 1, null) over(partition by TQN.TQN_FROTA order by TQN.TQN_FROTA, TQN.TQN_DTABAS, TQN.TQN_HRABAS) as CONTADOR_ANT,
 		sum(case when TQN.TQN_YTIPO = 'C' then 1 else 0 end) over(partition by TQN.TQN_FROTA order by TQN.TQN_FROTA, TQN.TQN_DTABAS, TQN.TQN_HRABAS) as SEQ_CONT,
 		case when TQN.TQN_YTIPO = 'P' then 1 else 0 end + sum(case when TQN.TQN_YTIPO = 'C' then 1 else 0 end) over(partition by TQN.TQN_FROTA order by TQN.TQN_FROTA, TQN.TQN_DTABAS, TQN.TQN_HRABAS) as SEQ_VALORES
@@ -57,7 +57,7 @@ select
 	case when MEDIACOMB.TIPO_ABA = 'C' then MEDIACOMB.CONTADOR - min(MEDIACOMB.CONTADOR_ANT) over(partition by MEDIACOMB.FROTA, MEDIACOMB.SEQ_VALORES order by MEDIACOMB.DATA_ABA) else 0.0 end as ZD3_KMRD,
 	0.0 as ZD3_KML,
 	case when MEDIACOMB.TIPO_ABA = 'C' then cast(sum(MEDIACOMB.VLTOTAL_ORI) over(partition by MEDIACOMB.FROTA, MEDIACOMB.SEQ_VALORES order by MEDIACOMB.DATA_ABA) as numeric(15, 2)) else 0.0 end as ZD3_TOTAL,
-	convert(date, MEDIACOMB.DATA_ABA, 112) as DATA_ABA,
+	MEDIACOMB.DATA_ABA as DATA_ABA,
 	
 	MEDIACOMB.TANQUE as TQI_TANQUE,
 	trim(ST9.T9_CODBEM) as T9_CODBEM,
