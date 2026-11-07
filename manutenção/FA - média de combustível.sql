@@ -31,7 +31,7 @@ with MEDIACOMB as
 
 		,TQN.TQN_DTABAS
 	from TQN010 TQN
-		inner join TQI010 TQI
+		left join TQI010 TQI
 			on TQI.D_E_L_E_T_ = ''
 			and TQI.TQI_FILIAL = TQN.TQN_FILIAL
 			and TQI.TQI_CODPOS = TQN.TQN_POSTO
