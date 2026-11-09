@@ -166,7 +166,8 @@ select
 	case when cast(ZC2.ZC2_TIPO as int) in (2, 3) then case when isdate(concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00'))) = 1 and isdate(concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00'))) = 1 then cast(datediff(minute, concat(ZC2.ZC2_DTINI, ' ', coalesce(nullif(ZC2.ZC2_HRINI, ''), '00:00')), concat(ZC2.ZC2_DTFIM, ' ', coalesce(nullif(ZC2.ZC2_HRFIM, ''), '00:00')))/60.0 as numeric(15, 4)) else 0.0 end else 0.0 end * ZC2.ZC2_QTDREC as HORAS_TOTAIS,
 
     case
-        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A' 
+        when cast(ZC2.ZC2_TIPO as int) not in (2, 3) then 'N/A'
+        when isdate(ZC2.ZC2_DTINI) + isdate(ZC2.ZC2_HRINI) + isdate(ZC2.ZC2_DTFIM) + isdate(ZC2.ZC2_HRFIM) < 4 then 'data ou hora inconsistente'
         when day(ZC2.ZC2_DTINI) %2 = 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA PAR'
         when day(ZC2.ZC2_DTINI) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 7 and 18 then 'DIA ÍMPAR'
         when day(ZC2.ZC2_DTINI) %2 = 0 and (datepart(hour, ZC2.ZC2_HRINI) between 19 and 23 or ((day(ZC2.ZC2_DTINI) +1) %2 != 0 and datepart(hour, ZC2.ZC2_HRINI) between 0 and 6)) then 'NOITE PAR'
