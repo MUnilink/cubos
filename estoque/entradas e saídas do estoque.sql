@@ -13,13 +13,29 @@
         trim(SB1.B1_UM) as UN,
         left(SD3.D3_EMISSAO, 6) as PERIODO,
         cast(SD3.D3_EMISSAO as date) as EMISSAO,
-        SD3.D3_OP as OP,
+        SD3.D3_OP as OPROD,
         SD3.D3_YOS as OS_PORT,
         SD3.D3_NUMSA as SA,
         SD3.D3_FILIAL as FILIAL,
         SD3.D3_LOCAL as ARMAZEM,
         SD3.D3_TM as TM,
-        SD3.D3_CF as CF,
+        
+        case
+            when SD3.D3_CF like 'ER[0-1]' then SD3.D3_CF + ' - ' + 'Estorno de produção manual/automática'
+            when SD3.D3_CF like 'PR[0-1]' then SD3.D3_CF + ' - ' + 'Produção manual/automática'
+            when right(SD3.D3_CF, 1) = '0' then left(SD3.D3_CF, 2) + ' - ' + 'Operação Manual (custo médio no estoque)'
+            when right(SD3.D3_CF, 1) = '1' then left(SD3.D3_CF, 2) + ' - ' + 'Operação Automática (custo médio no estoque)'
+            when right(SD3.D3_CF, 1) = '2' then left(SD3.D3_CF, 2) + ' - ' + 'Operação Automática (apropriação interna)'
+            when right(SD3.D3_CF, 1) = '3' then left(SD3.D3_CF, 2) + ' - ' + 'Operação Manual (Apropriação Interna)'
+            when right(SD3.D3_CF, 1) = '4' then left(SD3.D3_CF, 2) + ' - ' + 'Transferência (custo médio no estoque por local físico)'
+            when right(SD3.D3_CF, 1) = '5' then left(SD3.D3_CF, 2) + ' - ' + 'Requisição para OP na NF (usa o custo do documento fiscal)'
+            when right(SD3.D3_CF, 1) = '6' then left(SD3.D3_CF, 2) + ' - ' + 'Requisição Valorizada'
+            when right(SD3.D3_CF, 1) = '7' then left(SD3.D3_CF, 2) + ' - ' + 'Transferência Múltipla (desmontagem de produtos)'
+            when right(SD3.D3_CF, 1) = '8' then left(SD3.D3_CF, 2) + ' - ' + 'OBSOLETO - Integração com NF de Produtos Importados (SIGAEIC até a versão Advanced Protheus 6.09)'
+            when right(SD3.D3_CF, 1) = '9' then left(SD3.D3_CF, 2) + ' - ' + 'Movimento para OP sem agreg. custo'
+            when right(SD3.D3_CF, 1) = 'A' then left(SD3.D3_CF, 2) + ' - ' + 'Movimento Interno REA / DEA Gerado pela rotina MATA338'
+        else 'outros' end as CF,
+        
         SD3.D3_DOC as DOC,
         null as CLIFOR_COD,
         null as CLIFOR_LOJA,
@@ -31,7 +47,7 @@
 
         STJ.TJ_ORDEM as OS_MNT,
         trim(ST9.T9_CODBEM) as EQUIPAMENTO,
-        trim(TQR.TQR_DESMOD) as MODELO,
+        case when ST9.T9_CODBEM like 'UTM%' then 'UTM' else trim(TQR.TQR_DESMOD) end as MODELO,
         
         SD3.D3_CUSTO1 as CUSTO,
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_CUSTO1 else SD3.D3_CUSTO1 end as CUSTO_MOV,
@@ -61,7 +77,7 @@
                         and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
     where
             SD3.D_E_L_E_T_ = ''
-        and SD3.D3_EMISSAO >=:DATA_INI_MOV
+        and SD3.D3_EMISSAO between :DATA_INI_MOV and :DATA_FIM_MOV
 union
     select
         SB1.B1_COD as contador,
@@ -78,13 +94,29 @@ union
         trim(SB1.B1_UM) as UN,
         left(SD1.D1_DTDIGIT, 6) as PERIODO,
         cast(SD1.D1_DTDIGIT as date) as EMISSAO,
-        SD1.D1_OP as OP,
+        SD1.D1_OP as OPROD,
         SD1.D1_YOS as OS_PORT,
         null as SA,
         SD1.D1_FILIAL as FILIAL,
         SD1.D1_LOCAL as ARMAZEM,
         SD1.D1_TES as TM,
-        SD1.D1_CF as CF,
+        
+        case
+            when SD1.D1_CF like 'ER[0-1]' then SD1.D1_CF + ' - ' + 'Estorno de produção manual/automática'
+            when SD1.D1_CF like 'PR[0-1]' then SD1.D1_CF + ' - ' + 'Produção manual/automática'
+            when right(SD1.D1_CF, 1) = '0' then left(SD1.D1_CF, 2) + ' - ' + 'Operação Manual (custo médio no estoque)'
+            when right(SD1.D1_CF, 1) = '1' then left(SD1.D1_CF, 2) + ' - ' + 'Operação Automática (custo médio no estoque)'
+            when right(SD1.D1_CF, 1) = '2' then left(SD1.D1_CF, 2) + ' - ' + 'Operação Automática (apropriação interna)'
+            when right(SD1.D1_CF, 1) = '3' then left(SD1.D1_CF, 2) + ' - ' + 'Operação Manual (Apropriação Interna)'
+            when right(SD1.D1_CF, 1) = '4' then left(SD1.D1_CF, 2) + ' - ' + 'Transferência (custo médio no estoque por local físico)'
+            when right(SD1.D1_CF, 1) = '5' then left(SD1.D1_CF, 2) + ' - ' + 'Requisição para OP na NF (usa o custo do documento fiscal)'
+            when right(SD1.D1_CF, 1) = '6' then left(SD1.D1_CF, 2) + ' - ' + 'Requisição Valorizada'
+            when right(SD1.D1_CF, 1) = '7' then left(SD1.D1_CF, 2) + ' - ' + 'Transferência Múltipla (desmontagem de produtos)'
+            when right(SD1.D1_CF, 1) = '8' then left(SD1.D1_CF, 2) + ' - ' + 'OBSOLETO - Integração com NF de Produtos Importados (SIGAEIC até a versão Advanced Protheus 6.09)'
+            when right(SD1.D1_CF, 1) = '9' then left(SD1.D1_CF, 2) + ' - ' + 'Movimento para OP sem agreg. custo'
+            when right(SD1.D1_CF, 1) = 'A' then left(SD1.D1_CF, 2) + ' - ' + 'Movimento Interno REA / DEA Gerado pela rotina MATA338'
+        else 'outros' end as CF,
+        
         SD1.D1_DOC as DOC,
         trim(SA2.A2_COD) as CLIFOR_COD,
         trim(SA2.A2_LOJA) as CLIFOR_LOJA,
@@ -96,7 +128,7 @@ union
 
         STJ.TJ_ORDEM as OS_MNT,
         trim(ST9.T9_CODBEM) as EQUIPAMENTO,
-        trim(TQR.TQR_DESMOD) as MODELO,
+        case when ST9.T9_CODBEM like 'UTM%' then 'UTM' else trim(TQR.TQR_DESMOD) end as MODELO,
         
         SD1.D1_CUSTO as CUSTO,
         SD1.D1_CUSTO as CUSTO_MOV,
@@ -131,7 +163,7 @@ union
             and SA2.A2_LOJA = SD1.D1_LOJA
     where
             SD1.D_E_L_E_T_ = ''
-        and SD1.D1_DTDIGIT >=:DATA_INI_MOV
+        and SD1.D1_DTDIGIT between :DATA_INI_MOV and :DATA_FIM_MOV
 union
     select
         SB1.B1_COD as contador,
@@ -148,13 +180,29 @@ union
         trim(SB1.B1_UM) as UN,
         left(SD2.D2_EMISSAO, 6) as PERIODO,
         cast(SD2.D2_EMISSAO as date) as EMISSAO,
-        SD2.D2_OP as OP,
+        SD2.D2_OP as OPROD,
         null as OS_PORT,
         null as SA,
         SD2.D2_FILIAL as FILIAL,
         SD2.D2_LOCAL as ARMAZEM,
         SD2.D2_TES as TM,
-        SD2.D2_CF as CF,
+        
+        case
+            when SD2.D2_CF like 'ER[0-1]' then SD2.D2_CF + ' - ' + 'Estorno de produção manual/automática'
+            when SD2.D2_CF like 'PR[0-1]' then SD2.D2_CF + ' - ' + 'Produção manual/automática'
+            when right(SD2.D2_CF, 1) = '0' then left(SD2.D2_CF, 2) + ' - ' + 'Operação Manual (custo médio no estoque)'
+            when right(SD2.D2_CF, 1) = '1' then left(SD2.D2_CF, 2) + ' - ' + 'Operação Automática (custo médio no estoque)'
+            when right(SD2.D2_CF, 1) = '2' then left(SD2.D2_CF, 2) + ' - ' + 'Operação Automática (apropriação interna)'
+            when right(SD2.D2_CF, 1) = '3' then left(SD2.D2_CF, 2) + ' - ' + 'Operação Manual (Apropriação Interna)'
+            when right(SD2.D2_CF, 1) = '4' then left(SD2.D2_CF, 2) + ' - ' + 'Transferência (custo médio no estoque por local físico)'
+            when right(SD2.D2_CF, 1) = '5' then left(SD2.D2_CF, 2) + ' - ' + 'Requisição para OP na NF (usa o custo do documento fiscal)'
+            when right(SD2.D2_CF, 1) = '6' then left(SD2.D2_CF, 2) + ' - ' + 'Requisição Valorizada'
+            when right(SD2.D2_CF, 1) = '7' then left(SD2.D2_CF, 2) + ' - ' + 'Transferência Múltipla (desmontagem de produtos)'
+            when right(SD2.D2_CF, 1) = '8' then left(SD2.D2_CF, 2) + ' - ' + 'OBSOLETO - Integração com NF de Produtos Importados (SIGAEIC até a versão Advanced Protheus 6.09)'
+            when right(SD2.D2_CF, 1) = '9' then left(SD2.D2_CF, 2) + ' - ' + 'Movimento para OP sem agreg. custo'
+            when right(SD2.D2_CF, 1) = 'A' then left(SD2.D2_CF, 2) + ' - ' + 'Movimento Interno REA / DEA Gerado pela rotina MATA338'
+        else 'outros' end as CF,
+        
         SD2.D2_DOC as DOC,
         trim(SA1.A1_COD) as CLIFOR_COD,
         trim(SA1.A1_LOJA) as CLIFOR_LOJA,
@@ -166,7 +214,7 @@ union
 
         STJ.TJ_ORDEM as OS_MNT,
         trim(ST9.T9_CODBEM) as EQUIPAMENTO,
-        trim(TQR.TQR_DESMOD) as MODELO,
+        case when ST9.T9_CODBEM like 'UTM%' then 'UTM' else trim(TQR.TQR_DESMOD) end as MODELO,
         
         SD2.D2_CUSTO1 as CUSTO,
         -1*SD2.D2_CUSTO1 as CUSTO_MOV,
@@ -201,4 +249,4 @@ union
             and SA1.A1_LOJA = SD2.D2_LOJA
     where
             SD2.D_E_L_E_T_ = ''
-        and SD2.D2_EMISSAO >=:DATA_INI_MOV
+        and SD2.D2_EMISSAO between :DATA_INI_MOV and :DATA_FIM_MOV
