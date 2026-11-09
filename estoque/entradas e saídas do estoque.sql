@@ -28,6 +28,10 @@
         SD3.D3_ESTORNO as ESTORNO,
         trim(SD3.D3_CC) as CCUSTO,
         trim(SD3.D3_ITEMCTA) as ATIVIDADE,
+
+        STJ.TJ_ORDEM as OS_MNT,
+        trim(ST9.T9_CODBEM) as EQUIPAMENTO,
+        trim(TQR.TQR_DESMOD) as MODELO,
         
         SD3.D3_CUSTO1 as CUSTO,
         case when SD3.D3_CF like 'R%' then -1*SD3.D3_CUSTO1 else SD3.D3_CUSTO1 end as CUSTO_MOV,
@@ -42,8 +46,22 @@
             and SB1.B1_COD = SD3.D3_COD
             and SB1.B1_GRUPO like '1%'
             and SB1.B1_GRUPO != '1130'
+        	
+            left join STJ010 STJ (nolock)
+                on STJ.D_E_L_E_T_ = ''
+                and STJ.TJ_FILIAL = SD3.D3_FILIAL
+                and STJ.TJ_ORDEM + 'OS' + '001' = SD3.D3_OP
+
+                left join ST9010 ST9 (nolock)
+                    on ST9.D_E_L_E_T_ = ''
+                    and ST9.T9_CODBEM = STJ.TJ_CODBEM
+
+                    left join TQR010 TQR (nolock)
+                        on TQR.D_E_L_E_T_ = ''
+                        and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
     where
             SD3.D_E_L_E_T_ = ''
+        and SD3.D3_EMISSAO >=:DATA_INI_MOV
 union
     select
         SB1.B1_COD as contador,
@@ -75,6 +93,10 @@ union
         null as ESTORNO,
         trim(SD1.D1_CC) as CCUSTO,
         trim(SD1.D1_ITEMCTA) as ATIVIDADE,
+
+        STJ.TJ_ORDEM as OS_MNT,
+        trim(ST9.T9_CODBEM) as EQUIPAMENTO,
+        trim(TQR.TQR_DESMOD) as MODELO,
         
         SD1.D1_CUSTO as CUSTO,
         SD1.D1_CUSTO as CUSTO_MOV,
@@ -89,12 +111,27 @@ union
             and SB1.B1_COD = SD1.D1_COD
             and SB1.B1_GRUPO like '1%'
             and SB1.B1_GRUPO != '1130'
+        	
+            left join STJ010 STJ (nolock)
+                on STJ.D_E_L_E_T_ = ''
+                and STJ.TJ_FILIAL = SD1.D1_FILIAL
+                and STJ.TJ_ORDEM + 'OS' + '001' = SD1.D1_OP
+
+                left join ST9010 ST9 (nolock)
+                    on ST9.D_E_L_E_T_ = ''
+                    and ST9.T9_CODBEM = STJ.TJ_CODBEM
+
+                    left join TQR010 TQR (nolock)
+                        on TQR.D_E_L_E_T_ = ''
+                        and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+        
         left join SA2010 SA2 (nolock)
             on SA2.D_E_L_E_T_= ''
             and SA2.A2_COD = SD1.D1_FORNECE
             and SA2.A2_LOJA = SD1.D1_LOJA
     where
             SD1.D_E_L_E_T_ = ''
+        and SD1.D1_DTDIGIT >=:DATA_INI_MOV
 union
     select
         SB1.B1_COD as contador,
@@ -126,6 +163,10 @@ union
         null as ESTORNO,
         trim(SD2.D2_CCUSTO) as CCUSTO,
         trim(SD2.D2_ITEMCC) as ATIVIDADE,
+
+        STJ.TJ_ORDEM as OS_MNT,
+        trim(ST9.T9_CODBEM) as EQUIPAMENTO,
+        trim(TQR.TQR_DESMOD) as MODELO,
         
         SD2.D2_CUSTO1 as CUSTO,
         -1*SD2.D2_CUSTO1 as CUSTO_MOV,
@@ -140,9 +181,24 @@ union
             and SB1.B1_COD = SD2.D2_COD
             and SB1.B1_GRUPO like '1%'
             and SB1.B1_GRUPO != '1130'
+        	
+            left join STJ010 STJ (nolock)
+                on STJ.D_E_L_E_T_ = ''
+                and STJ.TJ_FILIAL = SD2.D2_FILIAL
+                and STJ.TJ_ORDEM + 'OS' + '001' = SD2.D2_OP
+
+                left join ST9010 ST9 (nolock)
+                    on ST9.D_E_L_E_T_ = ''
+                    and ST9.T9_CODBEM = STJ.TJ_CODBEM
+
+                    left join TQR010 TQR (nolock)
+                        on TQR.D_E_L_E_T_ = ''
+                        and TQR.TQR_TIPMOD = ST9.T9_TIPMOD
+
         left join SA1010 SA1 (nolock)
             on SA1.D_E_L_E_T_= ''
             and SA1.A1_COD = SD2.D2_CLIENTE
             and SA1.A1_LOJA = SD2.D2_LOJA
     where
             SD2.D_E_L_E_T_ = ''
+        and SD2.D2_EMISSAO >=:DATA_INI_MOV
