@@ -1,3 +1,62 @@
+
+with
+MercadoriaDesc as
+(
+    SELECT B1_COD, UPPER(TRIM(B1_DESC)) AS MERCADORIA_DESC
+    FROM SB1010
+    WHERE D_E_L_E_T_ = ''
+),
+PortoDesc as
+(
+    SELECT X5_CHAVE, TRIM(X5_DESCRI) AS DESC_PORTO
+    FROM SX5010
+    WHERE D_E_L_E_T_ = '' AND X5_TABELA = '_1'
+),
+NavioDesc as
+(
+    SELECT ZA3_COD, TRIM(ZA3_DESC) AS DESC_NAVIO
+    FROM ZA3010
+    WHERE D_E_L_E_T_ = ''
+),
+TabelaPrecoDesc as
+(
+    SELECT DA0_CODTAB, TRIM(DA0_DESCRI) AS DA0_DESCRI
+    FROM DA0010
+    WHERE D_E_L_E_T_ = ''
+),
+CargoDesc as
+(
+    SELECT Q3_CARGO, TRIM(Q3_DESCSUM) AS Q3_DESCSUM
+    FROM SQ3010
+    WHERE D_E_L_E_T_ = ''
+),
+ZA7Desc as
+(
+    SELECT ZA7_COD, TRIM(ZA7_DESC) AS ZA7_DESC
+    FROM ZA7010
+    WHERE D_E_L_E_T_ = ''
+),
+SB1010Desc as
+(
+    SELECT B1_COD, MAX(TRIM(B1_DESC)) AS B1_DESC
+    FROM SB1010
+    WHERE D_E_L_E_T_ = ''
+    GROUP BY B1_COD
+),
+ST9010Desc as
+(
+    SELECT T9_CODBEM, MAX(TRIM(T9_CODBEM)) AS T9_CODBEM_DESC, MAX(TRIM(T9_CODFAMI)) AS T9_CODFAMI
+    FROM ST9010
+    WHERE D_E_L_E_T_ = ''
+    GROUP BY T9_CODBEM
+),
+UsrAtivos as
+(
+    SELECT USR_CODIGO, USR_MSBLQL
+    FROM SYS_USR
+    WHERE D_E_L_E_T_ = ''
+)
+
 select
     case
         when (ZC1.ZC1_DTINI <= ZC2.ZC2_DATA AND (ZC1.ZC1_DTFIM >= ZC2.ZC2_DATA OR ZC1.ZC1_DTFIM = ' ')) and (ZC1.ZC1_EMISSA <= ZC2.ZC2_DATA and (ZC1.ZC1_DTENCE >= ZC2.ZC2_DATA OR ZC1.ZC1_DTENCE = ' ')) then 'OK, item dentro das datas da OS' /* se ini OS antes do apontamento e fim OS pós apontamento ou fim OS vazio */ 
@@ -13,9 +72,9 @@ select
     (select upper(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_= '' and SB1010.B1_COD = ZC1.ZC1_MERCAD) as MERCADORIA,
     
     ZC1.ZC1_PORTO as PORTO,
-    (select trim(SX5010.X5_DESCRI) from SX5010 where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '_1' and SX5010.X5_CHAVE = ZC1.ZC1_PORTO) as DESC_PORTO,
+    P.DESC_PORTO,
     ZC1.ZC1_NAVIO as NAVIO,
-    (select trim(ZA3010.ZA3_DESC) from ZA3010 where ZA3010.D_E_L_E_T_ = '' and ZA3010.ZA3_COD = ZC1.ZC1_NAVIO) as DESC_NAVIO,
+    N.DESC_NAVIO,
     trim(ZC1.ZC1_VIAGEM) as VIAGEM_PORT,
 
     DEV.A1_COD as CLI_CODIGO,
@@ -37,7 +96,7 @@ select
     trim(DES.A2_EMAIL) as DES_EMAIL,
     
     ZC2.ZC2_INCLUS as TIPO_INCLUSAO,
-    concat(trim(ZC1.ZC1_TABPRC), ' - ', (select trim(DA0010.DA0_DESCRI) from DA0010 where DA0010.D_E_L_E_T_ = '' and DA0010.DA0_CODTAB = ZC1.ZC1_TABPRC)) as TABELA_PRECO,
+    concat(trim(ZC1.ZC1_TABPRC), ' - ', TP.DA0_DESCRI) as TABELA_PRECO,
     
     case cast(ZC2.ZC2_TIPO as int)
         when 1 then 'RECEITA'
@@ -62,17 +121,18 @@ select
     trim(ZC2.ZC2_COD) as INSUMO,
     
     case cast(ZC2.ZC2_TIPO as int)
-        when 2 then (select trim(SQ3010.Q3_DESCSUM) from SQ3010 (nolock) where SQ3010.D_E_L_E_T_ = '' and SQ3010.Q3_CARGO = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 2)
-        when 7 then (select trim(ZA7010.ZA7_DESC) from ZA7010 (nolock) where ZA7010.D_E_L_E_T_ = '' and trim(ZA7010.ZA7_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 7)
+        when 2 then CD.Q3_DESCSUM
+        when 7 then ZA7.ZA7_DESC
         when 8 then null
-    else
-        case
-            when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then (select max(trim(SB1010.B1_DESC)) from SB1010 (nolock) where SB1010.D_E_L_E_T_ = '' and trim(SB1010.B1_COD) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11))
-            when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 16) then (select max(trim(ST9010.T9_CODBEM)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13))
-        else null end
+        else
+            case
+                when cast(ZC2.ZC2_TIPO as int) in (1, 4, 11) then SB.B1_DESC
+                when cast(ZC2.ZC2_TIPO as int) in (3, 6, 9, 10, 12, 13, 16) then ST9.T9_CODBEM
+                else null
+            end
     end as DESC_INSUMO,
     
-    case cast(ZC2.ZC2_TIPO as int) when 3 then (select max(trim(ST9010.T9_CODFAMI)) from ST9010 (nolock) where ST9010.D_E_L_E_T_ = '' and trim(ST9010.T9_CODBEM) = trim(ZC2.ZC2_COD) and cast(ZC2.ZC2_TIPO as int) = 3) else '-' end as FAMILIA_EQUIP,
+    case when cast(ZC2.ZC2_TIPO as int) = 3 then ST9.T9_CODFAMI else '-' end as FAMILIA_EQUIP,
 
     case ZC1.ZC1_STATUS
         when 1 then 'ABERTA'
@@ -190,7 +250,7 @@ select
 
     dense_rank() over(partition by ZC1.ZC1_FILIAL, ZC1.ZC1_NUM, ZC2.ZC2_DTINI, ZC2.ZC2_DTFIM order by ZC2.ZC2_DTINI, ZC2.ZC2_DTFIM) as TURNO_OS,
     trim(upper(ZC2.ZC2_NMUSU)) as USUARIO,
-    case when (select SYS_USR.USR_MSBLQL from SYS_USR where USR_CODIGO = ZC2.ZC2_NMUSU and SYS_USR.D_E_L_E_T_ = '') = 2 then 'S' else 'N' end as USR_ATIVO
+    case when UA.USR_MSBLQL = 2 then 'S' else 'N' end as USR_ATIVO
 
 from ZC2010 ZC2 (nolock)
     inner join ZC1010 ZC1 (nolock)
@@ -247,7 +307,29 @@ from ZC2010 ZC2 (nolock)
             and SD2.D2_FILIAL = SC6.C6_FILIAL
             and SD2.D2_PEDIDO = SC6.C6_NUM
             and SD2.D2_ITEMPV = SC6.C6_ITEM
+    
+    left join MercadoriaDesc M
+        on M.B1_COD = ZC1.ZC1_MERCAD
 
+    left join PortoDesc P
+        on P.X5_CHAVE = ZC1.ZC1_PORTO
+
+    left join NavioDesc N
+        on N.ZA3_COD = ZC1.ZC1_NAVIO
+
+    left join TabelaPrecoDesc TP
+        on TP.DA0_CODTAB = ZC1.ZC1_TABPRC
+
+    left join CargoDesc CD
+        on CD.Q3_CARGO = trim(ZC2.ZC2_COD)
+        and cast(ZC2.ZC2_TIPO as int) = 2
+
+    left join SB1010Desc SB
+        on SB.B1_COD = trim(ZC2.ZC2_COD)
+        and cast(ZC2.ZC2_TIPO as int) in (1, 4, 11)
+
+    left join UsrAtivos UA
+        on UA.USR_CODIGO = ZC2.ZC2_NMUSU
 where
         (ZC2.ZC2_DATA > '20251231' or ZC2.ZC2_DATA = '')
     and (ZC1.ZC1_DTENCE > '20251231' or ZC1.ZC1_DTENCE = '')
