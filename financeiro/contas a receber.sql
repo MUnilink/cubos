@@ -18,13 +18,6 @@ select
 	trim(SA1.A1_CGC) as CNPJ,
 	trim(SA1.A1_EST) as UF,
 
-	month(SE1.E1_EMISSAO) as TITULO_MES,
-	year(SE1.E1_EMISSAO) as TITULO_ANO,
-	month(SE1.E1_VENCTO) as VENCIMENTO_MES,
-	year(SE1.E1_VENCTO) as VENCIMENTO_ANO,
-	month(SE1.E1_VENCREA) as VENCREAL_MES,
-	year(SE1.E1_VENCREA) as VENCREAL_ANO,
-
     trim(SE1.E1_HIST) as HISTORICO,
 	trim(CTD.CTD_DESC01) as ATIVIDADE,
 	trim(CTT.CTT_DESC01) as CCUSTO,
@@ -37,9 +30,9 @@ select
     cast(SE1.E1_CORREC as numeric(15, 2)) as CORREC,
     cast(SE1.E1_VALLIQ as numeric(15, 2)) as VALOR_LIQ,
     SE1.E1_NUMBOR as BORDERO,
+    trim(SE1.E1_NFELETR) as NFELETRONICA,
     trim(SE1.E1_YTITORI) as TITULO_ORI,
     trim(SE1.E1_ORIGEM) as ORIGEM,
-    trim(DT6.DT6_CHVCTE) as CHAVE_NF,
 
 	trim(SE1.E1_NATUREZ) as NATUREZA,
 	trim(SED.ED_DESCRIC) as DESC_NATUREZA,
@@ -69,6 +62,11 @@ select
 	SD2.D2_SERIE as NF_SERIE,
 	cast(SD2.D2_EMISSAO as date) as NF_DATA,
 	substring(SD2.D2_EMISSAO, 1, 6) as NF_PERIODO,
+
+    SF2.F2_ESPECIE as NF_ESPECIE,
+    SD2.D2_TIPO as NF_TIPO,
+    SD2.D2_NFORI as NF_ORIGEM,
+    SD2.D2_SERIORI as NF_SERORI,
 	
 	SD2.D2_CCUSTO as NF_CC,
 	SD2.D2_ITEMCC as NF_AT,
@@ -172,7 +170,7 @@ select
 	trim(REG_COL.DUY_DESCRI) as MUN_COLETA,
 	trim(REG_ENT.DUY_EST) as UF_ENTREGA,
 	trim(REG_ENT.DUY_DESCRI) as MUN_ENTREGA,
-
+    DT6_CHAVE.DT6_CHVCTE as CHAVE_NF,
     1 as contador
 
 from SE1010 SE1
@@ -180,13 +178,20 @@ from SE1010 SE1
 		on SA1.D_E_L_E_T_ = ''
 		and SA1.A1_COD = SE1.E1_CLIENTE
 		and SA1.A1_LOJA = SE1.E1_LOJA
-	
     left join SD2010 SD2
         on SD2.D2_FILIAL = SE1.E1_FILIAL
         and SD2.D2_DOC = SE1.E1_NUM
         and SD2.D2_CLIENTE = SE1.E1_CLIENTE
         and SD2.D2_LOJA = SE1.E1_LOJA
         and SD2.D_E_L_E_T_ = ''
+
+        left join SF2010 SF2
+            on SF2.F2_FILIAL = SD2.D2_FILIAL
+            and SF2.F2_CLIENTE = SD2.D2_CLIENTE
+            and SF2.F2_LOJA = SD2.D2_LOJA
+            and SF2.F2_DOC = SD2.D2_DOC
+            and SF2.F2_SERIE = SD2.D2_SERIE
+            and SF2.D_E_L_E_T_= ' '
 	
         left join SC6010 SC6
             on SC6.D_E_L_E_T_ = ''
@@ -238,18 +243,24 @@ from SE1010 SE1
                     and REG_ENT.DUY_FILIAL = DT6.DT6_FILIAL
                     and REG_ENT.DUY_GRPVEN = DT6.DT6_CDRCAL
 
-        left join SD2010 COMP
+        left join SD2010 COMP /* documentos emitidos com vínculo a uma NF original */
             on COMP.D_E_L_E_T_ = ''
             and COMP.D2_DOC = SD2.D2_NFORI
             and COMP.D2_SERIE = SD2.D2_SERIORI
             and COMP.D2_CLIENTE = SD2.D2_CLIENTE
             and COMP.D2_LOJA = SD2.D2_LOJA
 
-            left join DUD010 VGA2
+            left join DUD010 VGA2 /* viagens vinculadas indiretamente aos documentos originais da viagem */
                 on VGA2.D_E_L_E_T_ = ''
                 and VGA2.DUD_FILDOC = COMP.D2_FILIAL
                 and VGA2.DUD_DOC = COMP.D2_DOC
                 and VGA2.DUD_SERIE = COMP.D2_SERIE
+        
+        left join DT6010 DT6_CHAVE
+            on DT6_CHAVE.D_E_L_E_T_ = ''
+            and DT6_CHAVE.DT6_FILDOC = SD2.D2_FILIAL
+            and DT6_CHAVE.DT6_DOC = SD2.D2_DOC
+            and DT6_CHAVE.DT6_SERIE = SD2.D2_SERIE
         
         left join SB1010 SB1
             on SB1.D_E_L_E_T_ = ''
