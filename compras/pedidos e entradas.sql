@@ -1,3 +1,67 @@
+with CRSA as
+(
+	select
+		SCR010.CR_FILIAL as FILIAL,
+		SCR010.CR_NUM as DOC,
+		SCR010.CR_NIVEL as NIVEL,
+		SCR010.CR_STATUS as STATUS_CR,
+		SCR010.CR_LIBAPRO as APR_LIB,
+		SCR010.CR_USERLIB as USR_LIB,
+		upper(trim(SAK010.AK_LOGIN)) as USR_APROVA,
+		SCR010.CR_VALLIB as VALOR_LIB,
+		SCR010.CR_TOTAL as VALOR_DOC,
+		convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113) as DATA_HORA
+	from SCR010
+		inner join SAK010
+			on SAK010.D_E_L_E_T_ = ''
+			and SAK010.AK_USER = SCR010.CR_USERLIB
+	where
+			SCR010.D_E_L_E_T_ = ''
+		and SCR010.CR_TIPO = 'SA'
+),
+CRSC as
+(
+	select
+		SCR010.CR_FILIAL as FILIAL,
+		SCR010.CR_NUM as DOC,
+		SCR010.CR_NIVEL as NIVEL,
+		SCR010.CR_STATUS as STATUS_CR,
+		SCR010.CR_LIBAPRO as APR_LIB,
+		SCR010.CR_USERLIB as USR_LIB,
+		upper(trim(SAK010.AK_LOGIN)) as USR_APROVA,
+		SCR010.CR_VALLIB as VALOR_LIB,
+		SCR010.CR_TOTAL as VALOR_DOC,
+		convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113) as DATA_HORA
+	from SCR010
+		inner join SAK010
+			on SAK010.D_E_L_E_T_ = ''
+			and SAK010.AK_USER = SCR010.CR_USERLIB
+	where
+			SCR010.D_E_L_E_T_ = ''
+		and SCR010.CR_TIPO = 'SC'
+),
+CRPC as
+(
+	select
+		SCR010.CR_FILIAL as FILIAL,
+		SCR010.CR_NUM as DOC,
+		SCR010.CR_NIVEL as NIVEL,
+		SCR010.CR_STATUS as STATUS_CR,
+		SCR010.CR_LIBAPRO as APR_LIB,
+		SCR010.CR_USERLIB as USR_LIB,
+		upper(trim(SAK010.AK_LOGIN)) as USR_APROVA,
+		SCR010.CR_VALLIB as VALOR_LIB,
+		SCR010.CR_TOTAL as VALOR_DOC,
+		convert(datetime, concat(SCR010.CR_DATALIB, ' ', SCR010.CR_YHRLIB), 113) as DATA_HORA
+	from SCR010
+		inner join SAK010
+			on SAK010.D_E_L_E_T_ = ''
+			and SAK010.AK_USER = SCR010.CR_USERLIB
+	where
+			SCR010.D_E_L_E_T_ = ''
+		and SCR010.CR_TIPO = 'PC'
+)
+
 select
 	trim(SC7.C7_FILIAL) as FILIAL,
 	trim(SB1.B1_COD) as PRODUTO,
@@ -243,7 +307,8 @@ select
 	trim(SD1.D1_CC) as NF_CC,
 	trim(SD1.D1_ITEMCTA) as NF_AT,
 	trim(SD1.D1_ITEM) as NF_ITEM,
-	trim(SD1.D1_TES) as NF_TES,
+	concat(trim(SF4.F4_CODIGO), ' - ', trim(SF4.F4_TEXTO)) as NF_TES,
+	concat(trim(CT1.CT1_CONTA), ' - ', trim(CT1.CT1_DESC01)) as NF_CCONTABIL,
 	(select concat(trim(SD1.D1_CF), ' - ', trim(SX5010.X5_DESCRI)) from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '13' and SX5010.X5_CHAVE = SD1.D1_CF) as CFOP,
 	SD1.D1_QUANT as NF_QUANT,
 	SD1.D1_VUNIT as NF_VUNIT,
@@ -280,17 +345,6 @@ select
     cast(SD1.D1_VALINS as numeric(14, 2)) as VL_NFENT_INSS,
 	cast(SD1.D1_SEGURO as numeric(14, 2)) as VL_NFENT_SEGURO,
 	cast(SD1.D1_PESO * SD1.D1_QUANT as numeric(12, 4)) as PESO_LIQUIDO_NFENT,
-
-	trim(SE2.E2_FILIAL) as FILIAL_TITULO,
-	trim(SE2.E2_PREFIXO) as PREFIXO,
-	trim(SE2.E2_NUM) as TITULO,
-	trim(SE2.E2_TIPO) as TIPO_TITULO,
-	cast(SE2.E2_EMISSAO as date) as DATA_TITULO,
-	cast(SE2.E2_VENCTO as date) as VENCIMENTO,
-	cast(SE2.E2_VENCREA as date) as VENCREAL,
-	cast(SE2.E2_BAIXA as date) as BAIXA,
-	SE2.E2_PARCELA as PARCELA,
-	SE2.E2_VALOR as VALOR_TITULO,
 
 	case
 		when SB1.B1_GRUPO like '51%' then 'DESPESAS'
@@ -352,14 +406,14 @@ from SC7010 SC7 (nolock)
 		and SD1.D1_FILIAL = SC7.C7_FILIAL
 		and SD1.D1_PEDIDO = SC7.C7_NUM
 		and SD1.D1_ITEMPC = SC7.C7_ITEM
-		
-		left join SE2010 SE2 (nolock)
-			on SE2.E2_TIPO = 'PA'
-			and SE2.E2_FILIAL = SD1.D1_FILIAL
-			and SE2.E2_NUM = SD1.D1_DOC
-			and SE2.E2_FORNECE = SD1.D1_FORNECE
-			and SE2.E2_LOJA = SD1.D1_LOJA
-			and SE2.D_E_L_E_T_ = ''
+
+		left join CT1010 CT1
+			on CT1.D_E_L_E_T_ = ''
+			and CT1.CT1_CONTA = SD1.D1_CONTA
+		left join SF4010 SF4
+			on SF4.F4_FILIAL = '      '
+			and SF4.F4_CODIGO = SD1.D1_TES
+			and SF4.D_E_L_E_T_ = ' '
 
 	left join STJ010 STJ (nolock)
 		on STJ.D_E_L_E_T_ = ''

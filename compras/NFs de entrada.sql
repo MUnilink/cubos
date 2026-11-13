@@ -29,6 +29,8 @@ select
 	SD1.D1_CUSTO as NF_CUSTO,
 	SD1.D1_VALDESC as NF_VALDESC,
     
+	concat(trim(SF4.F4_CODIGO), ' - ', trim(SF4.F4_TEXTO)) as NF_TES,
+	concat(trim(CT1.CT1_CONTA), ' - ', trim(CT1.CT1_DESC01)) as NF_CCONTABIL,
 	trim(SD1.D1_TES) as TES,
 	trim(SD1.D1_CF) as CFOP,
     (select SX5010.X5_DESCRI from SX5010 (nolock) where SX5010.D_E_L_E_T_ = '' and SX5010.X5_TABELA = '13' and SX5010.X5_CHAVE = SD1.D1_CF) as DESC_CFOP,
@@ -134,6 +136,9 @@ from SD1010 SD1
 		left join SY1010 SY1
 			on SY1.Y1_USER = SC7.C7_USER
 	
+	left join CT1010 CT1
+		on CT1.D_E_L_E_T_ = ''
+		and CT1.CT1_CONTA = SD1.D1_CONTA
 	left join CTT010 CTT
 		on CTT.D_E_L_E_T_ = ''
 		and CTT.CTT_CUSTO = SD1.D1_CC
