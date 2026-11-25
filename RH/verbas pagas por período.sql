@@ -1,3 +1,11 @@
+with PD_ECONSIGNADO as
+(
+	select distinct SRK.RK_PD as PD_VLFUT
+	from SRK010 SRK
+	where
+			SRK.D_E_L_E_T_ = ''
+		and exists (select 1 from RCC010 inner join SRV010 on SRV010.RV_NATUREZ = left(RCC010.RCC_CONTEU, 4) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S047' and left(RCC010.RCC_CONTEU, 4) = '9253' and SRV010.RV_COD = SRK.RK_PD)
+)
 	select
 		trim(SRA.RA_FILIAL) as FILIAL,
         trim(SRA.RA_MAT) as MATRICULA,
@@ -54,16 +62,28 @@
 		null as INSS,
 		null as IR,
 		null as FGTS,
+		
 		case when trim(SRA.RA_SITFOLH) = 'D' then (select max(concat(trim(SRG010.RG_TIPORES), ' - ', trim(substring(RCC010.RCC_CONTEU, 3, 30)))) from RCC010 inner join SRG010 on SRG010.D_E_L_E_T_ = '' and left(RCC010.RCC_CONTEU, 2) = trim(SRG010.RG_TIPORES) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and SRG010.RG_FILIAL = SRA.RA_FILIAL and SRG010.RG_MAT = SRA.RA_MAT) end as TIPO_RESCISAO,
+
+		case
+			when SRC.RC_PD in ('182', '183', '995', '999') then 'LIQUIDO'
+			when SRC.RC_PD = '457' then 'ECONSIGNADO PROVENTO'
+			when PD_ECONSIGNADO.PD_VLFUT is not null then 'ECONSIGNADO DESC'
+			when SRV.RV_TIPOCOD = '1' then 'PROVENTO'
+			when SRV.RV_TIPOCOD = '2' then 'DESCONTO'
+			when SRV.RV_TIPOCOD = '3' then 'BASE PROVENTO'
+			when SRV.RV_TIPOCOD = '4' then 'BASE DESCONTO'
+		else 'OUTRAS' end as VERBA_DESTAQUE,
 
 		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
 	from SRC010 SRC (nolock)
 		inner join SRV010 SRV (nolock)
 			on SRV.D_E_L_E_T_ = ''
-			and substring(SRC.RC_FILIAL, 1, 4) = SRV.RV_FILIAL
 			and SRC.RC_PD = SRV.RV_COD
-
+			
+			left join PD_ECONSIGNADO
+				on PD_ECONSIGNADO.PD_VLFUT = SRV.RV_COD
 			left join RCN010 RCN (nolock)
 				on RCN.D_E_L_E_T_ = ''
 				and RCN.RCN_CODIGO = SRV.RV_CODFOL
@@ -148,16 +168,28 @@ union
 		SRD.RD_INSS as INSS,
 		SRD.RD_IR as IR,
 		SRD.RD_FGTS as FGTS,
+		
 		case when trim(SRA.RA_SITFOLH) = 'D' then (select max(concat(trim(SRG010.RG_TIPORES), ' - ', trim(substring(RCC010.RCC_CONTEU, 3, 30)))) from RCC010 inner join SRG010 on SRG010.D_E_L_E_T_ = '' and left(RCC010.RCC_CONTEU, 2) = trim(SRG010.RG_TIPORES) where RCC010.D_E_L_E_T_ = '' and RCC010.RCC_CODIGO = 'S043' and SRG010.RG_FILIAL = SRA.RA_FILIAL and SRG010.RG_MAT = SRA.RA_MAT) end as TIPO_RESCISAO,
+
+		case
+			when SRD.RD_PD in ('182', '183', '995', '999') then 'LIQUIDO'
+			when SRD.RD_PD = '457' then 'ECONSIGNADO PROVENTO'
+			when PD_ECONSIGNADO.PD_VLFUT is not null then 'ECONSIGNADO DESC'
+			when SRV.RV_TIPOCOD = '1' then 'PROVENTO'
+			when SRV.RV_TIPOCOD = '2' then 'DESCONTO'
+			when SRV.RV_TIPOCOD = '3' then 'BASE PROVENTO'
+			when SRV.RV_TIPOCOD = '4' then 'BASE DESCONTO'
+		else 'OUTRAS' end as VERBA_DESTAQUE,
 
 		case when RCN.RCN_CODIGO in ('0045', '0021', '0047', '0102', '0126', '0202', '0303', '0546', '0678', '0836', '0977', '1411') then 1 else 0 end as contador_func
 
 	from SRD010 SRD (nolock)
 		inner join SRV010 SRV (nolock)
 			on SRV.D_E_L_E_T_ = ''
-			and substring(SRD.RD_FILIAL, 1, 4) = SRV.RV_FILIAL
 			and SRD.RD_PD = SRV.RV_COD
-				
+
+			left join PD_ECONSIGNADO
+				on PD_ECONSIGNADO.PD_VLFUT = SRV.RV_COD
 			left join RCN010 RCN (nolock)
 				on RCN.D_E_L_E_T_ = ''
 				and RCN.RCN_CODIGO = SRV.RV_CODFOL
